@@ -56,6 +56,7 @@ public class PrimitiveArrayGraphic<O,G> extends PrimitiveArrayGraphicSupport<O,G
     // PROPERTY PATTERNS
     //
 
+    @Override
     public AttributeSet getStyle() {
         return style;
     }

@@ -76,7 +76,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** Constructs with default settings */
     public GraphicComposite() {
         setTooltipEnabled(true);
-        setBoundingBoxVisible(false);
+        boundingBoxGraphic.setStyleHint(StyleHints.HIDDEN_HINT, true);
     }
 
     @Override
@@ -139,8 +139,7 @@ public class GraphicComposite<G> extends Graphic<G> {
             return styleContext;
         } else {
             checkState(parent != null);
-            StyleContext res = parent.getStyleContext();
-            return res;
+            return parent.getStyleContext();
         }
     }
     
@@ -160,6 +159,7 @@ public class GraphicComposite<G> extends Graphic<G> {
         } 
     }
 
+    @Override
     @Nullable 
     public AttributeSet getStyle() {
         return style;
@@ -219,8 +219,9 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** Add w/o events */
     private boolean addHelp(Graphic<G> en) {
         if (entries.add(en)) {
-            if (en.getParent() != null) {
-                en.getParent().removeGraphic(en);
+            GraphicComposite par = en.getParent();
+            if (par != null) {
+                par.removeGraphic(en);
             }
             en.setParent(this);
             return true;
@@ -471,19 +472,20 @@ public class GraphicComposite<G> extends Graphic<G> {
     public Graphic<G> mouseGraphicAt(Point2D point) {
         // return the first graphic containing the point, in draw order
         for (Graphic<G> en : functionalEntriesInReverse()) {
-            if (en.isMouseEnabled()) {
-                if (en instanceof GraphicComposite) {
-                    Graphic<G> s = ((GraphicComposite<G>)en).mouseGraphicAt(point);
-                    if (s != null) {
-                        return s;
-                    }
-                } else if (en.contains(point)) {
-                    return en;
+            if (!en.isMouseEnabled()) {
+                // ignore
+            } else if (en instanceof GraphicComposite) {
+                Graphic<G> s = ((GraphicComposite<G>)en).mouseGraphicAt(point);
+                if (s != null) {
+                    return s;
                 }
+            } else if (en.contains(point)) {
+                return en;
             }
         }
         Rectangle2D rect = boundingBox();
-        if (GraphicUtils.isFunctional(boundingBoxGraphic) && rect != null && rect.contains(point)) {
+        if (GraphicUtils.isFunctional(boundingBoxGraphic) && rect != null
+                && rect.contains(point)) {
             return this;
         }
         return null;

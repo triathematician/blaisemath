@@ -67,6 +67,8 @@ public final class ObjectStyler<S> {
             return src == null ? "null" : src.toString(); 
         }
     };
+
+    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     
     //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHODS">
@@ -268,8 +270,6 @@ public final class ObjectStyler<S> {
     //
     // PROPERTY CHANGE HANDLING
     //
-
-    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);

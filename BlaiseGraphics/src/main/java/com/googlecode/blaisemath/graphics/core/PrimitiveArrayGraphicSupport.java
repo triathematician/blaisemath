@@ -132,6 +132,7 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
         return -1;
     }
     
+    @Override
     public void renderTo(G canvas) {
         if (renderer == null) {
             return;
@@ -153,10 +154,12 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
         return res;
     }
 
+    @Override
     public boolean contains(Point2D point) {
         return indexOf(point) != -1;
     }
 
+    @Override
     public boolean intersects(Rectangle2D box) {
         if (renderer == null) {
             return false;

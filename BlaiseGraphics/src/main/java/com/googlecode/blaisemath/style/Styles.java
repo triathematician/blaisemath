@@ -81,7 +81,6 @@ public final class Styles {
     public static final String OFFSET = "offset";
     
     /** Tooltip text */
-    // TODO - check whether this is an existing SVG attribute, and if so, change it
     public static final String TOOLTIP = "tooltip";
     
     //</editor-fold>
@@ -337,6 +336,7 @@ public final class Styles {
         private Color selectFill = null;
         private Color selectStroke = null;
                 
+        @Override
         public AttributeSet apply(AttributeSet style, AttributeSet hints) {
             AttributeSet res = style;
             if (hints.contains(StyleHints.HILITE_HINT)) {
@@ -395,6 +395,7 @@ public final class Styles {
 
     /** Modifier that overrides all colors in the source style using the supplied hints. */
     public static class ColorModifier implements StyleModifier {
+        @Override
         public AttributeSet apply(AttributeSet style, AttributeSet hints) {
             AttributeSet res = new AttributeSet(style);
             for (String key : style.getAllAttributes(Color.class)) {
@@ -406,6 +407,7 @@ public final class Styles {
 
     /** Modifier that modifies stroke-width in the supplied style using the supplied hints. */
     public static class StrokeWidthModifier implements StyleModifier {
+        @Override
         public AttributeSet apply(AttributeSet style, AttributeSet hints) {
             return new AttributeSet(style)
                     .and(STROKE_WIDTH, StyleHints.modifyStrokeWidthDefault(style.getFloat(STROKE_WIDTH), hints));

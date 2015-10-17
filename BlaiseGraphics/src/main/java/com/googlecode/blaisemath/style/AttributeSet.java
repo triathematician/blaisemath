@@ -33,6 +33,8 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,6 +48,8 @@ import javax.swing.event.EventListenerList;
  */
 public class AttributeSet implements Cloneable {
     
+    private static final Logger LOG = Logger.getLogger(AttributeSet.class.getName());
+    
     /** Constant representing the empty attribute set */
     public static final AttributeSet EMPTY = new ImmutableAttributeSet();
     
@@ -54,8 +58,8 @@ public class AttributeSet implements Cloneable {
     /** The map of style key/value pairs */
     protected final Map<String,Object> attributeMap = Maps.newHashMap();
     
-    private transient final ChangeEvent changeEvent = new ChangeEvent(this);
-    private transient final EventListenerList listenerList = new EventListenerList();
+    private final transient ChangeEvent changeEvent = new ChangeEvent(this);
+    private final transient EventListenerList listenerList = new EventListenerList();
 
     public AttributeSet() {
         this.parent = Optional.absent();
@@ -293,7 +297,8 @@ public class AttributeSet implements Cloneable {
         try {
             return cls.cast(contains(key) ? (C) get(key) : def);
         } catch (ClassCastException x) {
-            throw new ClassCastException("Cast from "+get(key)+" to "+cls+" failed.");
+            LOG.log(Level.WARNING, "Cast from "+get(key)+" to "+cls+" failed.", x);
+            throw x;
         }
     }
 

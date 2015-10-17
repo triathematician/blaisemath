@@ -36,15 +36,17 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 /**
- * Displays a segment between two points.
- * By default displays an arrowhead at the end, and allows the endpoints of the arrow to be moved.
+ * <p>
+ *   Displays a line segment between two points, with the possibility of adding
+ *   arrows on one or both ends.
+ * </p>
  *
  * @author Elisha
  */
 public class SegmentGraphic extends TwoPointGraphic {
 
     /** Entry with the line */
-    protected PrimitiveGraphic segmentGraphic;
+    protected PrimitiveGraphic lineGraphic;
     /** Where arrows are displayed */
     protected ArrowLocation arrowLoc;
 
@@ -62,8 +64,8 @@ public class SegmentGraphic extends TwoPointGraphic {
     @Override
     protected void initGraphics() {
         // ensure line is added first
-        segmentGraphic = JGraphics.path(new GeneralPath());
-        addGraphic(segmentGraphic);        
+        lineGraphic = JGraphics.path(new GeneralPath());
+        addGraphic(lineGraphic);        
         super.initGraphics();
         
         start.setStyle(AttributeSet.with(Styles.MARKER, Markers.CIRCLE)
@@ -78,15 +80,15 @@ public class SegmentGraphic extends TwoPointGraphic {
     @Override
     protected void pointsUpdated() {
         super.pointsUpdated();
-        segmentGraphic.setPrimitive(new Line2D.Double(start.getPrimitive(), end.getPrimitive()));
+        lineGraphic.setPrimitive(new Line2D.Double(start.getPrimitive(), end.getPrimitive()));
     }
 
     public AttributeSet getLineStyle() { 
-        return segmentGraphic.getStyle();
+        return lineGraphic.getStyle();
     }
     
     public void setLineStyle(AttributeSet s) { 
-        segmentGraphic.setStyle(s); 
+        lineGraphic.setStyle(s); 
     }
 
     public ArrowLocation getArrowLocation() {

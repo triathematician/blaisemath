@@ -98,10 +98,11 @@ public final class StyleContext {
     @Nonnull
     public AttributeSet applyModifiers(AttributeSet style, AttributeSet hints) {
         checkNotNull(style);
+        AttributeSet res = style;
         for (StyleModifier mod : getAllModifiers()) {
-            style = mod.apply(style, hints);
+            res = mod.apply(res, hints);
         }
-        return style;
+        return res;
     }
 
 }

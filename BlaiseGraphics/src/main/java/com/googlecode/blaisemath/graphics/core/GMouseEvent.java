@@ -29,8 +29,13 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 /**
- * A mouse event that captures both the point of the event and the source
- * {@link Graphic} for the event.
+ * <p>
+ *   A mouse event that captures both the point of the event and the source
+ *   {@link Graphic} for the event.
+ * </p>
+ * <p>
+ *   This event is not designed for serialization.
+ * </p>
  *
  * @author Elisha
  */
@@ -39,7 +44,7 @@ public final class GMouseEvent extends MouseEvent {
     /** Source event */
     private final MouseEvent baseEvent;
     /** The graphic associated with the event. */
-    private Graphic graphic;
+    private transient Graphic graphic;
     /** Location of event, in graphic coordinates. */
     private final Point2D loc;
 

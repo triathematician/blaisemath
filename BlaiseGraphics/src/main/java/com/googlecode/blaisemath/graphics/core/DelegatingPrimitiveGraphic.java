@@ -1,5 +1,5 @@
 /**
- * GraphicDelegating.java
+ * DelegatingPrimitiveGraphic.java
  * Created Jul 31, 2014
  */
 

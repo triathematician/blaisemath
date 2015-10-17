@@ -1,5 +1,5 @@
 /**
- * GraphicBasic.java
+ * PrimitiveGraphic.java
  * Created Jul 31, 2014
  */
 

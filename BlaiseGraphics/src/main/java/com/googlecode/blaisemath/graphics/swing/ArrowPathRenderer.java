@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.BasicStroke;
@@ -46,13 +47,25 @@ public class ArrowPathRenderer extends PathRenderer {
 
     protected ArrowLocation arrowLoc = ArrowLocation.END;
 
+    /**
+     * Initialize renderer w/ default arrow location (end).
+     */
     public ArrowPathRenderer() {
     }
     
+    /**
+     * Initialize renderer w/ specified arrow location.
+     * @param dir arrow location(s)
+     */
     public ArrowPathRenderer(ArrowLocation dir) {
+        checkNotNull(dir);
         this.arrowLoc = dir;
     }
     
+    /**
+     * Get instance of the arrow renderer.
+     * @return instance
+     */
     public static ArrowPathRenderer getInstance() {
         return new ArrowPathRenderer();
     }
@@ -78,7 +91,10 @@ public class ArrowPathRenderer extends PathRenderer {
     }
     
     public void setArrowLocation(ArrowLocation loc) {
-        
+        checkNotNull(loc);
+        if (this.arrowLoc != loc) {
+            this.arrowLoc = loc;
+        }
     }
     
     //</editor-fold>

@@ -54,7 +54,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * GUI form for editing an {@link AttributeSet} for points.
+ * <p>
+ *   GUI form for editing an {@link AttributeSet} for points.
+ * </p>
+ * <p>
+ *   This class is not designed for serialization.
+ * </p>
  *
  * @author elisha
  */
@@ -62,16 +67,16 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         ChangeListener, PropertyChangeListener {
 
     /** The style being edited */
-    private AttributeSet style = Styles.defaultPointStyle().copy();
+    private transient AttributeSet style = Styles.defaultPointStyle().copy();
 
     /** Spinner for radius */
     private JSpinner radiusSp = null;
     /** Spinner for stroke */
     private JSpinner strokeSp = null;
     /** Color editor for fill */
-    private ColorEditor fillEd = null;
+    private transient ColorEditor fillEd = null;
     /** Color editor for stroke */
-    private ColorEditor strokeEd = null;
+    private transient ColorEditor strokeEd = null;
     /** Combo box for shapes */
     private JComboBox shapeCombo = null;
 
@@ -139,6 +144,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         add(shapeCombo, gbc);
         shapeCombo.setRenderer(new ShapeListCellRenderer());
         shapeCombo.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e) {
                 style.put(Styles.MARKER, (Marker) shapeCombo.getSelectedItem());
                 fireStyleChanged();
@@ -153,6 +159,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         return style;
     }
 
+    @Override
     public void setObject(Object bean) {
         if (!(bean instanceof AttributeSet)) {
             throw new IllegalArgumentException();
@@ -163,11 +170,12 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         strokeSp.setValue(style.getFloat(Styles.STROKE_WIDTH));
         fillEd.setValue(style.getColor(Styles.FILL));
         strokeEd.setValue(style.getColor(Styles.STROKE));
-        if (style.get(Styles.MARKER) == null) {
+        Object marker = style.get(Styles.MARKER);
+        if (marker == null) {
             shapeCombo.setSelectedItem(Markers.CIRCLE);
         } else {
             for (int i = 0; i < shapeCombo.getItemCount(); i++) {
-                if (shapeCombo.getItemAt(i).getClass() == style.get(Styles.MARKER).getClass()) {
+                if (shapeCombo.getItemAt(i).getClass() == marker.getClass()) {
                     shapeCombo.setSelectedIndex(i);
                     break;
                 }
@@ -185,6 +193,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         firePropertyChange("style", null, style);
     }
 
+    @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == radiusSp) {
             style.put(Styles.MARKER_RADIUS, ((Number)radiusSp.getValue()).floatValue());
@@ -196,6 +205,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         fireStyleChanged();
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getSource() == fillEd) {
             style.put(Styles.FILL, fillEd.getNewValue() == null ? fillEd.getValue() : fillEd.getNewValue());
@@ -231,6 +241,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
             this.shape = shape;
         }
 
+        @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
             ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
@@ -240,10 +251,12 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
             style.put(Styles.MARKER, shape1);
         }
 
+        @Override
         public int getIconWidth() { 
             return 50;
         }
 
+        @Override
         public int getIconHeight() {
             return 50;
         }

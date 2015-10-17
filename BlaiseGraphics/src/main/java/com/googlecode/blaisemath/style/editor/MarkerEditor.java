@@ -36,10 +36,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -56,7 +56,8 @@ import javax.swing.JPanel;
  */
 public class MarkerEditor extends MPanelEditorSupport {
     
-    private final Class<? extends Marker>[] MARKER_OPTIONS = new Class[]{
+    /** Static array of classes displayed as options. */
+    private static final Class<? extends Marker>[] MARKER_OPTIONS = new Class[]{
         Markers.NoShape.class, Markers.CircleShape.class,
         Markers.SquareShape.class, Markers.DiamondShape.class, Markers.TriangleShape.class,
         Markers.StarShape.class, Markers.Star7Shape.class, Markers.Star11Shape.class,
@@ -65,8 +66,11 @@ public class MarkerEditor extends MPanelEditorSupport {
         Markers.TrianglePointerShape.class, Markers.TriangleFlagShape.class, Markers.TeardropShape.class,
         Markers.CarShape.class
     };
+    
+    /** Box used to select marker. */
     private final JComboBox combo;
     
+    /** Initialize the editor. */
     public MarkerEditor() {
         combo = new JComboBox();
         combo.setModel(new DefaultComboBoxModel(MARKER_OPTIONS));
@@ -98,6 +102,11 @@ public class MarkerEditor extends MPanelEditorSupport {
         combo.setSelectedItem(getNewValue());
     }
     
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    
+    /**
+     * Renders markers as icons in a list.
+     */
     public static class MarkerCellRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -114,6 +123,9 @@ public class MarkerEditor extends MPanelEditorSupport {
         }
     }
     
+    /**
+     * Renders marker as an icon.
+     */
     private static class MarkerIcon implements Icon {
         private final AttributeSet style = Styles.fillStroke(Color.white, Color.black, 1f);
         private final int size;
@@ -126,7 +138,7 @@ public class MarkerEditor extends MPanelEditorSupport {
 
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
-            Shape sh = marker.create(new Point2D.Double(size/2, size/2), 0, size/2-1);
+            Shape sh = marker.create(new Point(size/2, size/2), 0, size/2-1);
             ShapeRenderer.getInstance().render(sh, style, (Graphics2D) g);
         }
 
@@ -140,6 +152,8 @@ public class MarkerEditor extends MPanelEditorSupport {
             return size;
         }        
     }
+    
+    //</editor-fold>
     
     
 }

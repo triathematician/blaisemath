@@ -28,12 +28,10 @@ package com.googlecode.blaisemath.graphics.core;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.util.Collections;
 import javax.annotation.Nullable;
 
 /**

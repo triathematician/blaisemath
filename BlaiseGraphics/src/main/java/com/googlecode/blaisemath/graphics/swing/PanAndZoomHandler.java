@@ -161,17 +161,17 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     private void mouseDraggedResizeMode(Point winPt) {
         if (winPt.x < pressedAt.x) {
             zoomBox.x = winPt.x;
-            zoomBox.width = -winPt.x + pressedAt.x;
+            zoomBox.width = (double) -winPt.x + pressedAt.x;
         } else {
             zoomBox.x = pressedAt.x;
-            zoomBox.width = winPt.x - pressedAt.x;
+            zoomBox.width = (double) winPt.x - pressedAt.x;
         }
         if (winPt.y < pressedAt.y) {
             zoomBox.y = winPt.y;
-            zoomBox.height = -winPt.y + pressedAt.y;
+            zoomBox.height = (double) -winPt.y + pressedAt.y;
         } else {
             zoomBox.y = pressedAt.y;
-            zoomBox.height = winPt.y - pressedAt.y;
+            zoomBox.height = (double) winPt.y - pressedAt.y;
         }
         component.repaint();
     }

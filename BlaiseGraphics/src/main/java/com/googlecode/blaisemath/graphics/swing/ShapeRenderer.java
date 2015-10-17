@@ -71,6 +71,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         return fill;
     }
     
+    @Override
     public void render(Shape primitive, AttributeSet style, Graphics2D canvas) {
         boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
         if (filled) {
@@ -87,6 +88,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         }
     }
 
+    @Override
     public Rectangle2D boundingBox(Shape primitive, AttributeSet style) {
         boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
         Shape sh = PathRenderer.strokedShape(primitive, style);
@@ -101,6 +103,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         }
     }
 
+    @Override
     public boolean contains(Shape primitive, AttributeSet style, Point2D point) {
         boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
         if (filled && primitive.contains(point)) {
@@ -111,6 +114,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         }
     }
 
+    @Override
     public boolean intersects(Shape primitive, AttributeSet style, Rectangle2D rect) {
         boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
         if (filled && primitive.intersects(rect)) {

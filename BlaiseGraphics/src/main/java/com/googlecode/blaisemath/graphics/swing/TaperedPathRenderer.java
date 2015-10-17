@@ -64,14 +64,15 @@ public class TaperedPathRenderer extends PathRenderer {
         if(strokeWidth <= 0f || stroke == null) {
             return;
         }
-        if (s instanceof Line2D.Double || s instanceof GeneralPath) {
-            s = createBezierShape(s, strokeWidth);
-        }
+        Shape shape = s instanceof Line2D.Double ? createBezierShape((Line2D.Double) s, strokeWidth)
+                : s instanceof GeneralPath ? createBezierShape((GeneralPath) s, strokeWidth)                
+                : s;
+        
         Color cAlpha = new Color(stroke.getRed(), stroke.getGreen(), stroke.getBlue(), stroke.getAlpha()/2);
         canvas.setColor(cAlpha);
-        canvas.fill(s);
+        canvas.fill(shape);
         canvas.setColor(stroke);
-        canvas.draw(s);
+        canvas.draw(shape);
     }
 
     
@@ -79,27 +80,35 @@ public class TaperedPathRenderer extends PathRenderer {
     // STATIC SHAPE METHODS
     //
     
-    public static Shape createBezierShape(Shape s, float strokeWidth) {
-        if (s instanceof Line2D.Double) {
-            Line2D.Double line = (Line2D.Double) s;
-            return createBezierShape((float) line.x1, (float) line.y1, (float) line.x2, (float) line.y2, strokeWidth);
-        } else if (s instanceof GeneralPath) {
-            GeneralPath shape = new GeneralPath();
-            GeneralPath gp = (GeneralPath) s;
-            PathIterator pi = gp.getPathIterator(null);
-            float[] cur = new float[6], last = new float[6];
-            while (!pi.isDone()) {
-                int type = pi.currentSegment(cur);
-                if (type == PathIterator.SEG_LINETO) {
-                    shape.append(createBezierShape(last[0], last[1], cur[0], cur[1], strokeWidth), false);
-                }
-                System.arraycopy(cur, 0, last, 0, 6);
-                pi.next();
+    /** 
+     * Returns path representing a "fancy shape" between points, using Bezier curves.
+     * @param line a line
+     * @param strokeWidth stroke width
+     * @return created shape
+     */
+    public static Shape createBezierShape(Line2D.Double line, float strokeWidth) {
+        return createBezierShape((float) line.x1, (float) line.y1, (float) line.x2, (float) line.y2, strokeWidth);
+    }
+    
+    /** 
+     * Returns path representing a "fancy shape" between points, using Bezier curves.
+     * @param path a multi-step path
+     * @param strokeWidth stroke width
+     * @return created shape
+     */
+    public static Shape createBezierShape(GeneralPath path, float strokeWidth) {
+        GeneralPath shape = new GeneralPath();
+        PathIterator pi = path.getPathIterator(null);
+        float[] cur = new float[6], last = new float[6];
+        while (!pi.isDone()) {
+            int type = pi.currentSegment(cur);
+            if (type == PathIterator.SEG_LINETO) {
+                shape.append(createBezierShape(last[0], last[1], cur[0], cur[1], strokeWidth), false);
             }
-            return shape;
-        } else {
-            return s;
+            System.arraycopy(cur, 0, last, 0, 6);
+            pi.next();
         }
+        return shape;
     }
     
     /** 

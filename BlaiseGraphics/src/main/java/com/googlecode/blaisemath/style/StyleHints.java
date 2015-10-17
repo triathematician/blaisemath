@@ -83,17 +83,15 @@ public class StyleHints {
      * @return transformed width
      */
     public static float modifyStrokeWidthDefault(@Nullable Float width, AttributeSet hints) {
-        if (width == null || width.isNaN() || width.isInfinite()) {
-            width = 1f;
-        }
+        float wid = width == null || width.isNaN() || width.isInfinite() ? 1f : width;
         if (hints.getBoolean(HIDDEN_HINT, false)) {
             return 0f;
         } else if (hints.getBoolean(SELECTED_HINT, false)) {
-            return width+1f;
+            return wid+1f;
         } else if (hints.getBoolean(HILITE_HINT, false)) {
-            return Math.max(width-1f, width/2f);
+            return Math.max(wid-1f, wid/2f);
         } else {
-            return width;
+            return wid;
         }
     }
     

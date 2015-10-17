@@ -92,6 +92,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             @InvokedFromThread("unknown")
             public void coordinatesChanged(CoordinateChangeEvent<S,Point2D> evt) {
                 BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+                    @Override
                     public void run() {
                         updateEdgeGraphics(pointManager.getActiveLocationCopy(), new ArrayList<Graphic<G>>());
                     }

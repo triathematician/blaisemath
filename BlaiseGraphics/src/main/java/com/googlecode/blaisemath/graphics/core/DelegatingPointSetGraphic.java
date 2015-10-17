@@ -232,7 +232,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             }
             this.manager = mgr;
             this.manager.addCoordinateListener(coordListener);
-            updatePointGraphics(mgr.getActiveLocationCopy(), Collections.EMPTY_SET);
+            updatePointGraphics(mgr.getActiveLocationCopy(), Collections.<S>emptySet());
         }
     }
 

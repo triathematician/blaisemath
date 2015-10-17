@@ -40,14 +40,14 @@ package com.googlecode.blaisemath.style;
 import java.awt.Point;
 import java.awt.Shape;
 import java.util.List;
-import static org.junit.Assert.assertNotNull;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
  *
  * @author Elisha
  */
-public class MarkersTest {
+public class MarkersTest extends TestCase {
     
     public MarkersTest() {
     }
@@ -56,6 +56,7 @@ public class MarkersTest {
     public void testGetAvailableMarkers() {
         System.out.println("getAvailableMarkers");
         List<Marker> result = Markers.getAvailableMarkers();
+        assertFalse(result.isEmpty());
         for (Marker m : result) {
             Shape s = m.create(new Point(), .5, 1f);
             assertNotNull(s);

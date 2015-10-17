@@ -46,10 +46,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Draws text with line breaks, respecting the location of the line breaks.
- *
- * TODO - calculate boundaries of multiline text
- * TODO - use text alignment
+ * <p>
+ *   Draw text on multiple lines, using standard line breaks.
+ *   The text is left-aligned, but shifted so that the anchor point is at the
+ *   associated location of the text's bounding box.
+ * </p>
+ * 
+ * @todo enable center and right alignment
  * 
  * @author petereb1
  */
@@ -96,6 +99,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         }
     }
 
+    @Override
     public Rectangle2D boundingBox(AnchoredText text, AttributeSet style) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return null;
@@ -126,6 +130,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
                 : anchor instanceof String ? Anchor.valueOf((String) anchor)
                 : null;
         Point2D offset = style.getPoint(Styles.OFFSET, new Point());
+        assert offset != null;
         if (textAnchor == Anchor.SOUTHWEST) {
             return new Rectangle2D.Double(
                     text.getX() + offset.getX(), 

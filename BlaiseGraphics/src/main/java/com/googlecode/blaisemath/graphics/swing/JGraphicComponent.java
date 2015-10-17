@@ -54,6 +54,9 @@ import javax.annotation.Nullable;
  *   The shapes and their styles are enclosed within a {@link JGraphicRoot} class,
  *   which also sets up the requisite mouse handling and manages the drawing.
  * </p>
+ * <p>
+ *   This class is not designed for serialization.
+ * </p>
  *
  * @see JGraphicRoot
  *
@@ -62,7 +65,7 @@ import javax.annotation.Nullable;
 public class JGraphicComponent extends javax.swing.JComponent implements TransformedCoordinateSpace {
 
     /** The visible shapes. */
-    protected final JGraphicRoot root;
+    protected final transient JGraphicRoot root;
     /** Affine transform applied to graphics canvas before drawing (enables pan and zoom). */
     @Nullable
     protected AffineTransform transform = null;
@@ -71,12 +74,12 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
     protected AffineTransform inverseTransform = null;
     
     /** Underlay painters */
-    protected final List<CanvasPainter> underlays = Lists.newArrayList();
+    protected final transient List<CanvasPainter> underlays = Lists.newArrayList();
     /** Overlay painters */
-    protected final List<CanvasPainter> overlays = Lists.newArrayList();
+    protected final transient List<CanvasPainter> overlays = Lists.newArrayList();
     
     /** Used for selecting graphics */
-    protected final JGraphicSelectionHandler selector = new JGraphicSelectionHandler(this);
+    protected final transient JGraphicSelectionHandler selector = new JGraphicSelectionHandler(this);
 
     /** Whether antialias is enabled */
     protected boolean antialias = true;

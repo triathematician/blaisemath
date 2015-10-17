@@ -35,22 +35,28 @@ import java.awt.Component;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * Describes editable attributes of an {@link AttributeSet}, along with their types.
- * This is useful when you want to make sure an attribute set has a given set
- * of attributes, e.g. when saving/restoring the set, or when editing the attributes
- * of the set.
+ * <p>
+ *   Describes editable attributes of an {@link AttributeSet}, along with their types.
+ *   This is useful when you want to make sure an attribute set has a given set
+ *   of attributes, e.g. when saving/restoring the set, or when editing the attributes
+ *   of the set.
+ * </p>
+ * <p>
+ *   This class is not designed for serialization.
+ * </p>
  * 
  * @author Elisha
  */
 public class AttributeSetPropertyModel extends PropertyModelSupport {
     
     /** List of expected attribute names */
-    private final List<String> attributes = Lists.newArrayList();
+    private final transient List<String> attributes = Lists.newArrayList();
     /** Mapping of expected attribute names and types */
-    private final Map<String,Class<?>> typeMap = Maps.newLinkedHashMap();
+    private final transient Map<String,Class<?>> typeMap = Maps.newLinkedHashMap();
     /** The attribute set for editing */
-    private final AttributeSet aSet;
+    private final transient AttributeSet aSet;
 
     public AttributeSetPropertyModel(AttributeSet aSet, Map<String,Class<?>> typeMap) {
         this.aSet = checkNotNull(aSet);
@@ -68,26 +74,32 @@ public class AttributeSetPropertyModel extends PropertyModelSupport {
         return new PropertySheet(model);
     }
 
+    @Override
     public int getSize() {
         return attributes.size();
     }
 
+    @Override
     public String getElementAt(int index) {
         return attributes.get(index);
     }
 
+    @Override
     public Class<?> getPropertyType(int i) {
         return typeMap.get(attributes.get(i));
     }
 
+    @Override
     public boolean isWritable(int i) {
         return true;
     }
 
+    @Override
     public Object getPropertyValue(int i) {
         return aSet.get(attributes.get(i));
     }
 
+    @Override
     public void setPropertyValue(int i, Object o) {
         aSet.put(attributes.get(i), o);
     }

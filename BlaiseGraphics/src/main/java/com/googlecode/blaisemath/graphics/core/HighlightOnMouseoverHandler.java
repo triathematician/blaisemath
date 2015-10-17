@@ -39,7 +39,7 @@ public final class HighlightOnMouseoverHandler extends MouseAdapter {
     @Override
     public void mouseEntered(MouseEvent e) {
         Graphic g = ((GMouseEvent)e).getGraphicSource();
-        if (!(g instanceof Graphic) || ((Graphic)g).isHighlightEnabled()) {
+        if (g.isHighlightEnabled()) {
             g.getStyleHints().put(StyleHints.HILITE_HINT, true);
         }
     }

@@ -24,6 +24,8 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
@@ -32,18 +34,23 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * Provides several custom shapes that can be used to draw points.
- *
- * TODO - configure these shapes in a resource file, or load them dynamically
  *
  * @author Elisha Peterson
  */
 public final class Markers {
 
+    /** Caches markers loaded from resources file. */
+    private static final List<Marker> MARKER_CACHE = Lists.newArrayList();
+    /** Singleton for empty path. */
+    private static final GeneralPath EMPTY_PATH = new GeneralPath();
+    
+    //<editor-fold defaultstate="collapsed" desc="STATIC INSTANCES">
     public static final NoShape NONE = new NoShape();
     public static final CircleShape CIRCLE = new CircleShape();
     public static final SquareShape SQUARE = new SquareShape();
@@ -62,9 +69,8 @@ public final class Markers {
     public static final TriangleFlagShape ARROWHEAD = new TriangleFlagShape();
     public static final TeardropShape TEARDROP = new TeardropShape();
     public static final CarShape CAR = new CarShape();
-
-    static final GeneralPath EMPTY_PATH = new GeneralPath();
-
+    //</editor-fold>
+    
     /**
      * Utility class
      */
@@ -76,14 +82,11 @@ public final class Markers {
      * @return list of marker constants
      */
     public static List<Marker> getAvailableMarkers() {
-        return Arrays.asList(
-                NONE, CIRCLE, SQUARE, DIAMOND, TRIANGLE,
-                STAR, STAR7, STAR11,
-                PLUS, CROSS, CROSSHAIRS,
-                HAPPYFACE, HOUSE,
-                ARROW, TRIANGLE_ARROW, ARROWHEAD, TEARDROP,
-                CAR
-        );
+        if (MARKER_CACHE.isEmpty()) {
+            ServiceLoader<Marker> loader = ServiceLoader.load(Marker.class);
+            Iterables.addAll(MARKER_CACHE, loader);
+        }
+        return Collections.unmodifiableList(MARKER_CACHE);
     }
 
     /**

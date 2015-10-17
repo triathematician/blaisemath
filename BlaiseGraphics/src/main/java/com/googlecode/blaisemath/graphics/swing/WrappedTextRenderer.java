@@ -49,7 +49,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Draws a string within the boundaries of a given clip.
+ * <p>
+ *   Draws a string within the boundaries of a given clip. The string is wrapped
+ *   at word breaks as needed to stay within the clip. It is truncated if necessary,
+ *   and ellipsis (...) used to indicate truncation.
+ * </p>
  *
  * @author petereb1
  */
@@ -241,7 +245,7 @@ public class WrappedTextRenderer extends TextRenderer {
             lines.add(string);
         } else {
             // need to wrap string
-            double totHt = font.getSize()+2;
+            double totHt = (double) font.getSize()+2;
             int pos0 = 0;
             int pos1 = 1;
             while (pos1 < string.length()) {

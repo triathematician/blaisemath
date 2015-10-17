@@ -42,7 +42,7 @@ package com.googlecode.blaisemath.style;
  * @author Elisha
  */
 public final class ImmutableAttributeSet extends AttributeSet {
-
+    
     public ImmutableAttributeSet() {
         super();
     }
@@ -76,16 +76,23 @@ public final class ImmutableAttributeSet extends AttributeSet {
 
     @Override
     public Object remove(String key) {
-        throw new UnsupportedOperationException("ImmutableAttributeSet cannot be modified.");
+        notSupported();
+        return null;
     }
 
     @Override
     public Object put(String key, Object value) {
-        throw new UnsupportedOperationException("ImmutableAttributeSet cannot be modified.");
+        notSupported();
+        return null;
     }
 
     @Override
     public AttributeSet and(String key, Object val) {
+        notSupported();
+        return null;
+    }
+    
+    private void notSupported() {
         throw new UnsupportedOperationException("ImmutableAttributeSet cannot be modified.");
     }
     

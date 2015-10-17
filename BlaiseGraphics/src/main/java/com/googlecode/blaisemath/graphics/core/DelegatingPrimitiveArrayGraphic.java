@@ -1,5 +1,5 @@
 /**
- * GraphicDelegating.java
+ * DelegatingPrimitiveArrayGraphic.java
  * Created Jul 31, 2014
  */
 
@@ -65,6 +65,7 @@ public class DelegatingPrimitiveArrayGraphic<S,O,G> extends PrimitiveArrayGraphi
     // PROPERTY PATTERNS
     //
 
+    @Override
     public AttributeSet getStyle() {
         return styler.style(source);
     }
