@@ -48,8 +48,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Displays a bounding box around the object, with controls for resizing it.
- * Clicking outside of the object (or controls) cancels the gesture.
+ * <p>
+ *   Displays a bounding box around the object, with controls for resizing it.
+ *   Clicking outside of the object (or controls) cancels the gesture.
+ * </p>
  * 
  * @author elisha
  */
@@ -100,16 +102,20 @@ public class ControlBoxGesture extends MouseGestureSupport {
         return primitive instanceof Shape || primitive instanceof AnchoredImage;
     }
     
-    private Rectangle2D box() {
+    private Rectangle2D controlBox() {
         return graphic.boundingBox();
+    }
+    
+    private Rectangle2D controlBox(Shape shape) {
+        return graphic.getRenderer().boundingBox(shape, graphic.renderStyle());
     }
 
     @Override
     public void paint(Graphics2D g) {
         AffineTransform at = view.getTransform() == null ? new AffineTransform() : view.getTransform();
-        Shape transformed = at.createTransformedShape(box());
+        Shape transformed = at.createTransformedShape(controlBox());
         ShapeRenderer.getInstance().render(transformed, boxStyle, g);
-        Rectangle2D bds = transformed.getBounds2D();
+        Rectangle2D bds = controlBox(transformed);
         for (ControlPoint cp : ControlPoint.values()) {
             Point2D pt = cp.location(bds);
             AttributeSet sty = cp == controlPoint ? selectedControlStyle : controlStyle;
@@ -129,7 +135,7 @@ public class ControlBoxGesture extends MouseGestureSupport {
             Logger.getLogger(ControlBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
             return;
         }
-        controlPoint = capture(startShape.getBounds2D(), pressPoint);
+        controlPoint = capture(controlBox(startShape), pressPoint);
         move = controlPoint == null && startShape.contains(pressPoint);
     }
 
@@ -139,7 +145,7 @@ public class ControlBoxGesture extends MouseGestureSupport {
         double dx = locPoint.getX() - pressPoint.getX();
         double dy = locPoint.getY() - pressPoint.getY();
         if (controlPoint != null) {
-            AffineTransform transf = controlPoint.resize(startShape.getBounds2D(), dx, dy);
+            AffineTransform transf = controlPoint.resize(controlBox(startShape), dx, dy);
             applyTransformToGraphic(transf);
         } else if (move) {
             applyTransformToGraphic(new AffineTransformBuilder().translate(dx, dy).build());
@@ -164,7 +170,7 @@ public class ControlBoxGesture extends MouseGestureSupport {
             graphic.setPrimitive(shape);
         } else if (prim instanceof AnchoredImage) {
             AnchoredImage img = (AnchoredImage) prim;
-            Rectangle2D newBounds = transf.createTransformedShape(startShape).getBounds2D();
+            Rectangle2D newBounds = controlBox(transf.createTransformedShape(startShape));
             graphic.setPrimitive(new AnchoredImage(newBounds.getX(), newBounds.getY(), newBounds.getWidth(), newBounds.getHeight(),
                     img.getOriginalImage(), img.getReference()));
         } else {
@@ -189,7 +195,7 @@ public class ControlBoxGesture extends MouseGestureSupport {
     // ControlPoint handling
     //
 
-    // get the control point for the given press point
+    /** Get the control point for the given mouse location */
     private ControlPoint capture(Rectangle2D box, Point2D pressPoint) {
         AffineTransform transf = view.getTransform();
         double cap = transf == null ? CAPTURE_RAD 
