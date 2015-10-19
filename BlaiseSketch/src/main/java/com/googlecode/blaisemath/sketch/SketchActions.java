@@ -34,6 +34,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.firestarter.PropertySheetDialog;
 import com.googlecode.blaisemath.graphics.core.Graphic;
@@ -46,12 +47,13 @@ import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import com.googlecode.blaisemath.util.Points;
 import com.googlecode.blaisemath.util.CoordinateBean;
+import com.googlecode.blaisemath.util.SetSelectionModel;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
@@ -70,8 +72,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 /**
  * Utility library with various actions.
@@ -136,6 +138,58 @@ public class SketchActions {
         }
     };
     
+    /** Ordering for z order of graphics */
+    private static final Comparator<Graphic<Graphics2D>> Z_COMPARATOR = new Comparator<Graphic<Graphics2D>>() {
+        @Override
+        public int compare(Graphic<Graphics2D> left, Graphic<Graphics2D> right) {
+            if (left == right) {
+                return 0;
+            }
+            
+            // find the common parent of the two graphics, then compare position relative to that
+            List<Graphic<Graphics2D>> parLeft = graphicPath(left);
+            List<Graphic<Graphics2D>> parRight = graphicPath(right);
+            int firstDiffer = -1;
+            int commonSize = Math.min(parLeft.size(), parRight.size());
+            for (int i = 0; i < commonSize; i++) {
+                if (parLeft.get(i) != parRight.get(i)) {
+                    firstDiffer = i;
+                    break;
+                }
+            }
+            
+            if (firstDiffer == 0) {
+                // different trees, default to basic comparison
+                return Ordering.arbitrary().compare(left, right);
+            } else if (firstDiffer == -1) {
+                // they agree on overlap, so one must be a parent of the other
+                Graphic<Graphics2D> commonParent = parLeft.get(commonSize-1);
+                if (left == commonParent) {
+                    return -1;
+                } else if (right == commonParent) {
+                    return 1;
+                } else {
+                    throw new IllegalStateException("unexpected");
+                }
+            } else {
+                // they disagree at some point past the first index
+                GraphicComposite<Graphics2D> commonParent = (GraphicComposite<Graphics2D>) parLeft.get(firstDiffer-1);
+                List<Graphic<Graphics2D>> children = Lists.newArrayList(commonParent.getGraphics());
+                return children.indexOf(parLeft.get(firstDiffer)) - children.indexOf(parRight.get(firstDiffer));
+            }
+        }
+
+        private List<Graphic<Graphics2D>> graphicPath(Graphic<Graphics2D> gfc) {
+            List<Graphic<Graphics2D>> res = Lists.newArrayList();
+            Graphic<Graphics2D> cur = gfc;
+            while (cur != null) {
+                res.add(0, cur);
+                cur = cur.getParent();
+            }
+            return res;
+        }
+    };
+    
     // utility class
     private SketchActions() {
     }
@@ -145,9 +199,8 @@ public class SketchActions {
     /** 
      * Copies the supplied graphic object to the system clipboard.
      * @param sel the graphic to copy
-     * @param activeCanvas the canvas of the graphic
      */
-    public static void copy(Graphic<Graphics2D> sel, JGraphicComponent activeCanvas) {
+    public static void copy(Graphic<Graphics2D> sel) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Graphic<Graphics2D> copy = SketchGraphicUtils.copy(sel);
         GraphicTransferable transf = new GraphicTransferable(copy);
@@ -289,9 +342,13 @@ public class SketchActions {
     
     //<editor-fold defaultstate="collapsed" desc="EDITING">
 
-    public static void editGraphic(Graphic<Graphics2D> src, JGraphicComponent comp) {
-        Window window = SwingUtilities.getWindowAncestor(comp);
-        PropertySheetDialog dialog = new PropertySheetDialog((Frame) window, true, src);
+    /**
+     * Edit the graphic's properties with the given frame as root for the dialog
+     * @param frame root for dialog
+     * @param src graphic to edit
+     */
+    public static void editGraphic(@Nullable Frame frame, Graphic<Graphics2D> src) {
+        PropertySheetDialog dialog = new PropertySheetDialog(frame, true, src);
         dialog.setVisible(true);
     }
 
@@ -299,11 +356,10 @@ public class SketchActions {
     /**
      * Edits the style attributes of the given graphic. Only supports attributes that
      * the graphic already has.
+     * @param frame root for dialog
      * @param gr graphics to add attribute to
-     * @param comp current canvas
      */
-    public static void editGraphicStyle(Graphic<Graphics2D> gr, JGraphicComponent comp) {
-        Window window = SwingUtilities.getWindowAncestor(comp);
+    public static void editGraphicStyle(@Nullable Frame frame, Graphic<Graphics2D> gr) {
         AttributeSet style = gr.getStyle();
         Map<String,Class<?>> styleClassMap = Maps.newLinkedHashMap();
         for (String k : style.getAllAttributes()) {
@@ -315,31 +371,31 @@ public class SketchActions {
             }
         }
         AttributeSetPropertyModel pModel = new AttributeSetPropertyModel(style, styleClassMap);
-        PropertySheetDialog dialog = new PropertySheetDialog((Frame) window, true, style, pModel);
+        PropertySheetDialog dialog = new PropertySheetDialog(frame, true, style, pModel);
         dialog.setVisible(true);
     }
 
     /**
      * Adds a general attribute to the given graphics.
+     * @param parent parent component for editing
      * @param gr graphic to add attribute to
-     * @param comp current canvas
      */
-    public static void addAttribute(Graphic<Graphics2D> gr, JGraphicComponent comp) {
-        addAttribute(Collections.singleton(gr), comp);
+    public static void addAttribute(@Nullable Component parent, Graphic<Graphics2D> gr) {
+        addAttribute(parent, Collections.singleton(gr));
     }
 
     /**
      * Adds a general attribute to the given graphics.
+     * @param parent parent component for editing
      * @param gr graphics to add attribute to
-     * @param comp current canvas
      * TODO - support values of other types
      */
-    public static void addAttribute(Iterable<Graphic<Graphics2D>> gr, JGraphicComponent comp) {
-        String name = JOptionPane.showInputDialog("Enter attribute name:");
+    public static void addAttribute(@Nullable Component parent, Iterable<Graphic<Graphics2D>> gr) {
+        String name = JOptionPane.showInputDialog(parent, "Enter attribute name:");
         if (Strings.isNullOrEmpty(name)) {
             return;            
         }
-        String value = JOptionPane.showInputDialog("Enter value for attribute "+name+":");
+        String value = JOptionPane.showInputDialog(parent, "Enter value for attribute "+name+":");
         if (Strings.isNullOrEmpty(value)) {
             return;
         }
@@ -352,8 +408,13 @@ public class SketchActions {
     
     //<editor-fold defaultstate="collapsed" desc="REMOVING">
 
-    public static void deleteGraphic(Graphic<Graphics2D> src, JGraphicComponent comp) {
-        comp.getSelectionModel().deselect(src);
+    /**
+     * Delete the given graphic, and also deselect if it is selected.
+     * @param src the gfc to delete
+     * @param sel selection model
+     */
+    public static void deleteGraphic(SetSelectionModel<Graphic<Graphics2D>> sel, Graphic<Graphics2D> src) {
+        sel.deselect(src);
         GraphicComposite gc = src.getParent();
         if (gc != null) {
             gc.removeGraphic(src);
@@ -362,28 +423,32 @@ public class SketchActions {
         }
     }
     
-    public static void deleteSelected(JGraphicComponent comp) {
-        Set<Graphic<Graphics2D>> selection = comp.getSelectionModel().getSelection();
+    /**
+     * Delete the graphics currently selected.
+     * @param sel selection model
+     */
+    public static void deleteSelected(SetSelectionModel<Graphic<Graphics2D>> sel) {
+        Set<Graphic<Graphics2D>> selection = sel.getSelection();
         for (Graphic g : selection) {
             GraphicComposite gc = g.getParent();
             if (gc != null) {
                 gc.removeGraphics(selection);
             }
         }
-        comp.getSelectionModel().setSelection(Collections.EMPTY_SET);
+        sel.setSelection(Collections.EMPTY_SET);
     }
     
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="LOCKING">
     
-    public static void setLockPosition(Set<Graphic<Graphics2D>> gfcs, JGraphicComponent comp, boolean lock) {
+    public static void setLockPosition(Set<Graphic<Graphics2D>> gfcs, boolean lock) {
         for (Graphic<Graphics2D> g : gfcs) {
-            setLockPosition(g, comp, lock);
+            setLockPosition(g, lock);
         }
     }
     
-    public static void setLockPosition(Graphic<Graphics2D> toLock, JGraphicComponent comp, boolean lock) {
+    public static void setLockPosition(Graphic<Graphics2D> toLock, boolean lock) {
         if (toLock instanceof PrimitiveGraphicSupport) {
             ((PrimitiveGraphicSupport) toLock).setDragEnabled(!lock);
         } else {
@@ -395,11 +460,15 @@ public class SketchActions {
     
     //<editor-fold defaultstate="collapsed" desc="GROUPING">
     
-    public static void groupSelected(JGraphicComponent comp) {
-        Set<Graphic<Graphics2D>> selection = comp.getSelectionModel().getSelection();
+    /**
+     * Group the selected set of graphics within the selected composite.
+     * @param sel the elements to group
+     * @param composite the composite graphic containing the elements
+     */
+    public static void groupSelected(GraphicComposite<Graphics2D> composite, SetSelectionModel<Graphic<Graphics2D>> sel) {
+        List<Graphic<Graphics2D>> selection = Ordering.from(Z_COMPARATOR).sortedCopy(sel.getSelection());
         
         // try to reuse the existing parent graphic if possible
-        GraphicComposite<Graphics2D> parentGraphic = comp.getGraphicRoot();
         Set<GraphicComposite> parents = Sets.newHashSet();
         for (Graphic g : selection) {
             parents.add(g.getParent());
@@ -408,20 +477,24 @@ public class SketchActions {
         if (parents.isEmpty()) {
             throw new IllegalStateException();
         } else if (parents.size() == 1) {
-            parentGraphic = Iterables.getFirst(parents, null);
+            composite = Iterables.getFirst(parents, null);
         }
         
         // create the new group and add it to the new parent
         GraphicComposite<Graphics2D> groupGraphic = new GraphicComposite<Graphics2D>();
         SketchGraphicUtils.configureGraphic(groupGraphic);
         groupGraphic.addGraphics(selection);
-        parentGraphic.addGraphic(groupGraphic);
+        composite.addGraphic(groupGraphic);
         
-        comp.getSelectionModel().setSelection(Sets.<Graphic<Graphics2D>>newHashSet(groupGraphic));
+        sel.setSelection(Sets.<Graphic<Graphics2D>>newHashSet(groupGraphic));
     }
     
-    public static void ungroupSelected(JGraphicComponent comp) {
-        Set<Graphic<Graphics2D>> selection = comp.getSelectionModel().getSelection();
+    /**
+     * Ungroup the items in the provided selection.
+     * @param sel the selection
+     */
+    public static void ungroupSelected(SetSelectionModel<Graphic<Graphics2D>> sel) {
+        Set<Graphic<Graphics2D>> selection = sel.getSelection();
         checkState(selection.size() == 1);
         Graphic<Graphics2D> gfc = Iterables.getFirst(selection, null);
         checkState(gfc instanceof GraphicComposite);
@@ -431,20 +504,20 @@ public class SketchActions {
         par.removeGraphic(gc);
         par.addGraphics(Lists.newArrayList(childGfcs));
         
-        comp.getSelectionModel().setSelection(Sets.newHashSet(childGfcs));
+        sel.setSelection(Sets.newHashSet(childGfcs));
     }
     
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="ARRANGING">
 
-    public static void moveForward(Set<Graphic<Graphics2D>> selection, JGraphicComponent comp) {
+    public static void moveForward(Set<Graphic<Graphics2D>> selection) {
         for (Graphic<Graphics2D> g : selection) {
-            moveForward(g, comp);
+            moveForward(g);
         }
     }
 
-    public static void moveForward(Graphic<Graphics2D> gr, JGraphicComponent comp) {
+    public static void moveForward(Graphic<Graphics2D> gr) {
         GraphicComposite<Graphics2D> parent = gr.getParent();
         List<Graphic<Graphics2D>> gfcs = Lists.newArrayList(parent.getGraphics());
         int idx = gfcs.indexOf(gr);
@@ -455,13 +528,13 @@ public class SketchActions {
         parent.replaceGraphics(Lists.newArrayList(parent.getGraphics()), gfcs);
     }
 
-    public static void moveBackward(Set<Graphic<Graphics2D>> selection, JGraphicComponent comp) {
+    public static void moveBackward(Set<Graphic<Graphics2D>> selection) {
         for (Graphic<Graphics2D> g : selection) {
-            moveBackward(g, comp);
+            moveBackward(g);
         }
     }
 
-    public static void moveBackward(Graphic<Graphics2D> gr, JGraphicComponent comp) {
+    public static void moveBackward(Graphic<Graphics2D> gr) {
         GraphicComposite<Graphics2D> parent = gr.getParent();
         List<Graphic<Graphics2D>> gfcs = Lists.newArrayList(parent.getGraphics());
         int idx = gfcs.indexOf(gr);
@@ -472,13 +545,13 @@ public class SketchActions {
         parent.replaceGraphics(Lists.newArrayList(parent.getGraphics()), gfcs);
     }
 
-    public static void moveToFront(Set<Graphic<Graphics2D>> selection, JGraphicComponent comp) {
+    public static void moveToFront(Set<Graphic<Graphics2D>> selection) {
         for (Graphic<Graphics2D> g : selection) {
-            moveToFront(g, comp);
+            moveToFront(g);
         }
     }
 
-    public static void moveToFront(Graphic<Graphics2D> gr, JGraphicComponent comp) {
+    public static void moveToFront(Graphic<Graphics2D> gr) {
         GraphicComposite<Graphics2D> parent = gr.getParent();
         List<Graphic<Graphics2D>> gfcs = Lists.newArrayList(parent.getGraphics());
         int idx = gfcs.indexOf(gr);
@@ -489,13 +562,13 @@ public class SketchActions {
         parent.replaceGraphics(Lists.newArrayList(parent.getGraphics()), gfcs);
     }
 
-    public static void moveToBack(Set<Graphic<Graphics2D>> selection, JGraphicComponent comp) {
+    public static void moveToBack(Set<Graphic<Graphics2D>> selection) {
         for (Graphic<Graphics2D> g : selection) {
-            moveToBack(g, comp);
+            moveToBack(g);
         }
     }
 
-    public static void moveToBack(Graphic<Graphics2D> gr, JGraphicComponent comp) {
+    public static void moveToBack(Graphic<Graphics2D> gr) {
         GraphicComposite<Graphics2D> parent = gr.getParent();
         List<Graphic<Graphics2D>> gfcs = Lists.newArrayList(parent.getGraphics());
         int idx = gfcs.indexOf(gr);

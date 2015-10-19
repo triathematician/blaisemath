@@ -59,9 +59,9 @@ Menubar:
         - createText
         - createImage
     Zoom:
-        - zoomSelected
-        - zoomAll
-        - zoom100
+        - zoomToSelected
+        - zoomToAll
+        - resetTransform
 Toolbar:
     - load
     - save

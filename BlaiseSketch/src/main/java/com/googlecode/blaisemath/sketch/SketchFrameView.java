@@ -25,17 +25,11 @@ package com.googlecode.blaisemath.sketch;
  */
 
 
-import com.google.common.base.Converter;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGesture;
-import com.googlecode.blaisemath.gesture.swing.ControlBoxGesture;
-import com.googlecode.blaisemath.gesture.swing.ControlLineGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateCircleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateEllipseGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateImageGesture;
@@ -44,40 +38,29 @@ import com.googlecode.blaisemath.gesture.swing.CreateMarkerGesture;
 import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
-import com.googlecode.blaisemath.gesture.swing.JGraphicGestureLayerUI;
 import com.googlecode.blaisemath.gesture.swing.CanvasHandlerGesture;
 import com.googlecode.blaisemath.gesture.swing.SelectGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
-import com.googlecode.blaisemath.graphics.svg.SVGElementGraphicConverter;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
-import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.MarkerEditor;
-import com.googlecode.blaisemath.svg.SVGElement;
 import com.googlecode.blaisemath.svg.SVGRoot;
 import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.MenuConfig;
 import com.googlecode.blaisemath.util.RollupPanel;
-import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditorManager;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +70,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JLayer;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -111,14 +93,11 @@ public final class SketchFrameView extends FrameView {
     public static final String CLIPBOARD_GRAPHIC_PROP = "clipboardGraphic";
     public static final String CLIPBOARD_DIMENSION_PROP = "clipboardDimension";
     public static final String CLIPBOARD_STYLE_PROP = "clipboardStyle";
-        
-    private static final String SELECTION_CM_KEY = "Selection";
-    private static final String CANVAS_CM_KEY = "Canvas";
     
     private final JFileChooser chooser = new JFileChooser();
     
-    private final JGraphicGestureLayerUI gestureUI;
-    private final JGraphicComponent activeCanvas;
+    private final SketchCanvas canvas;
+    private final SetSelectionModel<Graphic<Graphics2D>> selectionModel;
     
     private final RollupPanel detailsPanel;
     private final MPanel selectionPanel;
@@ -134,9 +113,11 @@ public final class SketchFrameView extends FrameView {
     public SketchFrameView(SketchApp app) {
         super(app);
         
-        activeCanvas = new JGraphicComponent();
-        activeCanvas.setSelectionEnabled(true);
-        PanAndZoomHandler.install(activeCanvas);
+        ActionMap am = app.getContext().getActionMap(this);
+        canvas = new SketchCanvas(am);
+        initGestureListening();
+        
+        selectionModel = canvas.getSelectionModel();
         initSelectionListening();
         
         detailsPanel = new RollupPanel();
@@ -146,16 +127,9 @@ public final class SketchFrameView extends FrameView {
         detailsPanel.add(overviewPanel);
 
         // set up menus
-        ActionMap am = app.getContext().getActionMap(this);
         try {
             setMenuBar(MenuConfig.readMenuBar(SketchApp.class, am));
             setToolBar(MenuConfig.readToolBar(SketchApp.class, am));
-            List<String> selCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(SELECTION_CM_KEY);
-            activeCanvas.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
-                    "Selection", am, selCm.toArray(new String[0])));
-            List<String> cnvCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(CANVAS_CM_KEY); 
-            activeCanvas.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
-                    null, am, cnvCm.toArray(new String[0])));
         } catch (IOException ex) {
             Logger.getLogger(SketchFrameView.class.getName()).log(Level.SEVERE, 
                     "Menu config failure.", ex);
@@ -174,34 +148,28 @@ public final class SketchFrameView extends FrameView {
         
         EditorRegistration.registerEditors();
         PropertyEditorManager.registerEditor(Marker.class, MarkerEditor.class);
-
-        //<editor-fold defaultstate="collapsed" desc="create gesture controller with overlay for intercepting events and rendering gesture hints">
-        gestureUI = new JGraphicGestureLayerUI();
-        gestureUI.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
-            new PropertyChangeListener(){
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    activeGestureUpdated((MouseGesture) evt.getNewValue());
-                }
-            });
-        JLayer<JGraphicComponent> canvasWithLayer = new JLayer<JGraphicComponent>(activeCanvas, gestureUI);
-        GestureOrchestrator go = gestureUI.getGestureOrchestrator();
-        assert go != null;
-        go.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
-        go.setDefaultGesture(new SelectGesture(go));
-        //</editor-fold>
         
         JSplitPane mainPanel = new JSplitPane();
         mainPanel.setResizeWeight(.9);
-        mainPanel.add(canvasWithLayer, JSplitPane.LEFT);
+        mainPanel.add(canvas.getViewComponent(), JSplitPane.LEFT);
         mainPanel.add(new JScrollPane(detailsPanel), JSplitPane.RIGHT);
         
         setComponent(mainPanel);
     }
     
     //<editor-fold defaultstate="collapsed" desc="INITIALIZERS">
+    private void initGestureListening() {
+        canvas.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
+            new PropertyChangeListener(){
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    activeGestureUpdated((MouseGesture) evt.getNewValue());    
+                }
+            });
+    }
+    
     private void initSelectionListening() {
-        activeCanvas.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
+        selectionModel.addPropertyChangeListener(new PropertyChangeListener(){
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 boolean selEmpty = isSelectionEmpty();
@@ -238,13 +206,6 @@ public final class SketchFrameView extends FrameView {
             PropertySheet ps = PropertySheet.forBean(new GraphicStyleProxy(pgfc));
             selectionPanel.setTitle(gfc+"");
             selectionPanel.setPrimaryComponent(ps);
-            if (pgfc.getPrimitive() instanceof Line2D) {
-                gestureUI.setActiveGesture(new ControlLineGesture(gestureUI.getGestureOrchestrator(), pgfc));
-            } else if (ControlBoxGesture.supports(pgfc.getPrimitive())) {
-                gestureUI.setActiveGesture(new ControlBoxGesture(gestureUI.getGestureOrchestrator(), pgfc));
-            } else {
-                // controls not available
-            }
         } else if (gfc instanceof Set) {
             Set gfx = (Set) gfc;
             selectionPanel.setTitle(gfx.size()+" graphics selected.");
@@ -261,7 +222,13 @@ public final class SketchFrameView extends FrameView {
                     "Unable to handle selection of: {0}", gfc);
         }
     }
+
+    /** Activates the gesture layer, and allows the user to complete the gesture. */
+    private void activeGestureUpdated(MouseGesture gesture) {
+        setStatusMessage(gesture == null ? "" : gesture.getName()+" | "+gesture.getDesription(), 5000);
+    }
     
+    /** Updates flags indicating status of clipboard. */
     private void updateClipboardProps() {
         boolean gfc = isClipboardGraphic();
         boolean dim = isClipboardDimension();
@@ -273,12 +240,21 @@ public final class SketchFrameView extends FrameView {
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     
-    public JGraphicComponent getActiveCanvas() {
-        return activeCanvas;
+    public boolean isSelectionEmpty() {
+        return selectionModel.getSelection().isEmpty();
     }
     
-    public boolean isSelectionEmpty() {
-        return activeCanvas.getSelectionModel().isEmpty();
+    public boolean isOneSelected() {
+        return selectionModel.getSelection().size() == 1;
+    }
+    
+    public boolean isMoreThanOneSelected() {
+        return selectionModel.getSelection().size() > 1;
+    }
+    
+    public boolean isGroupSelected() {
+        Set<Graphic<Graphics2D>> gfx = selectionModel.getSelection();
+        return gfx.size() == 1 && Iterables.get(gfx, 0) instanceof GraphicComposite;
     }
     
     public boolean isClipboardGraphic() {
@@ -293,21 +269,6 @@ public final class SketchFrameView extends FrameView {
         return SketchActions.isClipboardStyle();
     }
     
-    public boolean isOneSelected() {
-        Set<Graphic<Graphics2D>> gfx = activeCanvas.getSelectionModel().getSelection();
-        return gfx.size() == 1;
-    }
-    
-    public boolean isMoreThanOneSelected() {
-        Set<Graphic<Graphics2D>> gfx = activeCanvas.getSelectionModel().getSelection();
-        return gfx.size() > 1;
-    }
-    
-    public boolean isGroupSelected() {
-        Set<Graphic<Graphics2D>> gfx = activeCanvas.getSelectionModel().getSelection();
-        return gfx.size() == 1 && Iterables.get(gfx, 0) instanceof GraphicComposite;
-    }
-    
     public void setStatusMessage(String msg, int timeout) {
         statusLabel.setText(msg);
         statusLabel.repaint();
@@ -317,36 +278,14 @@ public final class SketchFrameView extends FrameView {
 
     //<editor-fold defaultstate="collapsed" desc="I/O ACTIONS">
     
-    private SVGRoot toSVG() {
-        Converter<Graphic<Graphics2D>, SVGElement> conv = SVGElementGraphicConverter.getInstance().reverse();
-        JGraphicRoot gr = activeCanvas.getGraphicRoot();
-        SVGRoot r = new SVGRoot();
-        for (Graphic<Graphics2D> g : gr.getGraphics()) {
-            r.addElement(conv.convert(g));
-        }
-        return r;
-    }
-    
-    private Iterable<Graphic<Graphics2D>> fromSVG(SVGRoot r) {
-        Converter<SVGElement, Graphic<Graphics2D>> conv = SVGElementGraphicConverter.getInstance();
-        List<Graphic<Graphics2D>> res = Lists.newArrayList();
-        for (SVGElement el : r.getElements()) {
-            res.add(conv.convert(el));
-        }
-        return res;
-    }
-    
     @Action
     public void load() {        
         if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(getFrame())) {
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(chooser.getSelectedFile());
-                SVGRoot r = SVGRoot.load(fis);
-                activeCanvas.clearGraphics();
-                Iterable<Graphic<Graphics2D>> gfcs = fromSVG(r);
-                activeCanvas.addGraphics(gfcs);
-                SketchGraphicUtils.configureGraphicTree(activeCanvas.getGraphicRoot(), false);
+                SVGRoot svg = SVGRoot.load(fis);
+                canvas.setCanvasGraphics(SketchIO.fromSVG(svg));
             } catch (IOException x) {
                 Logger.getLogger(SketchFrameView.class.getName()).log(Level.SEVERE, null, x);
             } finally {
@@ -367,7 +306,7 @@ public final class SketchFrameView extends FrameView {
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream(chooser.getSelectedFile());
-                SVGRoot r = toSVG();
+                SVGRoot r = SketchIO.toSVG(canvas.getGraphicRoot());
                 SVGRoot.save(r, out);
             } catch (IOException ex) {
                 Logger.getLogger(SketchFrameView.class.getName()).log(Level.SEVERE, "Save failed", ex);
@@ -391,102 +330,101 @@ public final class SketchFrameView extends FrameView {
     @Action
     public void clearCanvas() {
         if (JOptionPane.showConfirmDialog(getFrame(), "Are you sure?") == JOptionPane.OK_OPTION) {
-            activeCanvas.clearGraphics();
+            canvas.clearCanvas();
         }
+    }
+    
+    @Action
+    public void selectAll() {
+        canvas.selectAll();
     }
     
     @Action(enabledProperty=ONE_SELECTED_PROP)
     public void copySelected() {
-        Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
-        SketchActions.copy(sel, activeCanvas);
+        Graphic<Graphics2D> sel = Iterables.getFirst(selectionModel.getSelection(), null);
+        SketchActions.copy(sel);
         updateClipboardProps();
     }
     
     @Action(enabledProperty=CLIPBOARD_GRAPHIC_PROP)
     public void pasteGraphic() {
         Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
-        Point compLoc = activeCanvas.getLocationOnScreen();
-        Point2D canvasLoc = activeCanvas.toGraphicCoordinate(new Point(mouseLoc.x-compLoc.x, mouseLoc.y-compLoc.y));
-        SketchActions.paste(activeCanvas, canvasLoc);
+        Point compLoc = canvas.getViewComponent().getLocationOnScreen();
+        canvas.pasteGraphic(new Point(mouseLoc.x-compLoc.x, mouseLoc.y-compLoc.y));
     }
     
     @Action(enabledProperty=ONE_SELECTED_PROP)
     public void copySelectedStyle() {
-        Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
+        Graphic<Graphics2D> sel = Iterables.getFirst(selectionModel.getSelection(), null);
         SketchActions.copyStyle(sel);
         updateClipboardProps();
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void pasteSelectedStyle() {
-        Set<Graphic<Graphics2D>> sel = activeCanvas.getSelectionModel().getSelection();
+        Set<Graphic<Graphics2D>> sel = selectionModel.getSelection();
         SketchActions.pasteStyle(sel);
     }
     
     @Action(enabledProperty=ONE_SELECTED_PROP)
     public void copySelectedDimension() {
-        Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
+        Graphic<Graphics2D> sel = Iterables.getFirst(selectionModel.getSelection(), null);
         SketchActions.copyDimension(sel);
         updateClipboardProps();
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void pasteSelectedDimension() {
-        Set<Graphic<Graphics2D>> sel = activeCanvas.getSelectionModel().getSelection();
+        Set<Graphic<Graphics2D>> sel = selectionModel.getSelection();
         SketchActions.pasteDimension(sel);
-    }
-    
-    @Action
-    public void selectAll() {
-        activeCanvas.getSelectionModel().setSelection(Sets.newHashSet(activeCanvas.getGraphicRoot().getGraphics()));
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void clearSelection() {
-        activeCanvas.getSelectionModel().setSelection(Collections.EMPTY_SET);
+        canvas.setSelection(Collections.EMPTY_SET);
     }
     
     @Action(enabledProperty=ONE_SELECTED_PROP)
     public void editSelected() {
-        Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
-        SketchActions.editGraphic(sel, activeCanvas);
+        Graphic<Graphics2D> sel = Iterables.getFirst(selectionModel.getSelection(), null);
+        SketchActions.editGraphic(getFrame(), sel);
     }
     
     @Action(enabledProperty=ONE_SELECTED_PROP)
     public void editSelectedStyle() {
-        Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
-        SketchActions.editGraphicStyle(sel, activeCanvas);
+        Graphic<Graphics2D> sel = Iterables.getFirst(selectionModel.getSelection(), null);
+        SketchActions.editGraphicStyle(getFrame(), sel);
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void addAttributeToSelected() {
-        Set<Graphic<Graphics2D>> sel = activeCanvas.getSelectionModel().getSelection();
-        SketchActions.addAttribute(sel, activeCanvas);
+        Set<Graphic<Graphics2D>> sel = selectionModel.getSelection();
+        SketchActions.addAttribute(getFrame(), sel);
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void deleteSelected() {
-        SketchActions.deleteSelected(activeCanvas);
+        SketchActions.deleteSelected(selectionModel);
     }
     
     @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
     public void groupSelected() {
-        SketchActions.groupSelected(activeCanvas);
+        SketchActions.groupSelected(canvas.getGraphicRoot(), selectionModel);
     }
     
     @Action(enabledProperty=GROUP_SELECTED_PROP)
     public void ungroupSelected() {
-        SketchActions.ungroupSelected(activeCanvas);
+        SketchActions.ungroupSelected(selectionModel);
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void lockSelected() {
-        SketchActions.setLockPosition(activeCanvas.getSelectionModel().getSelection(), activeCanvas, true);
+        SketchActions.setLockPosition(selectionModel.getSelection(), true);
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void unlockSelected() {
-        SketchActions.setLockPosition(activeCanvas.getSelectionModel().getSelection(), activeCanvas, false);
+        SketchActions.setLockPosition(selectionModel.getSelection(), false);
     }
     
     //</editor-fold>
@@ -495,42 +433,42 @@ public final class SketchFrameView extends FrameView {
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void moveForward() {
-        SketchActions.moveForward(activeCanvas.getSelectionModel().getSelection(), activeCanvas);
+        SketchActions.moveForward(selectionModel.getSelection());
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void moveBackward() {
-        SketchActions.moveBackward(activeCanvas.getSelectionModel().getSelection(), activeCanvas);
+        SketchActions.moveBackward(selectionModel.getSelection());
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void moveToFront() {
-        SketchActions.moveToFront(activeCanvas.getSelectionModel().getSelection(), activeCanvas);
+        SketchActions.moveToFront(selectionModel.getSelection());
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void moveToBack() {
-        SketchActions.moveToBack(activeCanvas.getSelectionModel().getSelection(), activeCanvas);
+        SketchActions.moveToBack(selectionModel.getSelection());
     }
 
     @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
     public void alignHorizontal() {
-        SketchActions.alignHorizontal(activeCanvas.getSelectionModel().getSelection());
+        SketchActions.alignHorizontal(selectionModel.getSelection());
     }
 
     @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
     public void alignVertical() {
-        SketchActions.alignVertical(activeCanvas.getSelectionModel().getSelection());        
+        SketchActions.alignVertical(selectionModel.getSelection());        
     }
 
     @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
     public void distributeHorizontal() {
-        SketchActions.distributeHorizontal(activeCanvas.getSelectionModel().getSelection());
+        SketchActions.distributeHorizontal(selectionModel.getSelection());
     }
 
     @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
     public void distributeVertical() {
-        SketchActions.distributeVertical(activeCanvas.getSelectionModel().getSelection());
+        SketchActions.distributeVertical(selectionModel.getSelection());
     }
     
     //</editor-fold>
@@ -539,52 +477,52 @@ public final class SketchFrameView extends FrameView {
     
     @Action
     public void canvasTool() {
-        enableGesture(CanvasHandlerGesture.class);
+        canvas.enableGesture(CanvasHandlerGesture.class);
     }
     
     @Action
     public void selectionTool() {
-        enableGesture(SelectGesture.class);
+        canvas.enableGesture(SelectGesture.class);
     }
     
     @Action
     public void createMarker() {
-        enableGesture(CreateMarkerGesture.class);
+        canvas.enableGesture(CreateMarkerGesture.class);
     }
     
     @Action
     public void createLine() {
-        enableGesture(CreateLineGesture.class);
+        canvas.enableGesture(CreateLineGesture.class);
     }
     
     @Action
     public void createPath() {
-        enableGesture(CreatePathGesture.class);
+        canvas.enableGesture(CreatePathGesture.class);
     }
     
     @Action
     public void createRect() {
-        enableGesture(CreateRectangleGesture.class);
+        canvas.enableGesture(CreateRectangleGesture.class);
     }
     
     @Action
     public void createCircle() {
-        enableGesture(CreateCircleGesture.class);
+        canvas.enableGesture(CreateCircleGesture.class);
     }
     
     @Action
     public void createEllipse() {
-        enableGesture(CreateEllipseGesture.class);
+        canvas.enableGesture(CreateEllipseGesture.class);
     }
     
     @Action
     public void createText() {
-        enableGesture(CreateTextGesture.class);
+        canvas.enableGesture(CreateTextGesture.class);
     }
     
     @Action
     public void createImage() {
-        enableGesture(CreateImageGesture.class);
+        canvas.enableGesture(CreateImageGesture.class);
     }
     
     //</editor-fold>
@@ -592,18 +530,18 @@ public final class SketchFrameView extends FrameView {
     //<editor-fold defaultstate="collapsed" desc="ZOOM ACTIONS">
     
     @Action
-    public void zoomAll() {
-        activeCanvas.zoomToAll();
+    public void zoomToAll() {
+        canvas.zoomToAll();
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
-    public void zoomSelected() {
-        activeCanvas.zoomToSelected();
+    public void zoomToSelected() {
+        canvas.zoomToSelected();
     }
     
     @Action
-    public void zoom100() {
-        activeCanvas.resetTransform();
+    public void resetTransform() {
+        canvas.resetTransform();
     }
     
     //</editor-fold>
@@ -612,37 +550,37 @@ public final class SketchFrameView extends FrameView {
     
     @Action
     public void editGraphic(ActionEvent e) {
-        SketchActions.editGraphic((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+        SketchActions.editGraphic(getFrame(), (Graphic<Graphics2D>) e.getSource());
     }
     
     @Action
     public void editGraphicStyle(ActionEvent e) {
-        SketchActions.editGraphicStyle((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+        SketchActions.editGraphicStyle(getFrame(), (Graphic<Graphics2D>) e.getSource());
     }
     
     @Action
     public void lockGraphic(ActionEvent e) {
-        SketchActions.setLockPosition((Graphic<Graphics2D>) e.getSource(), activeCanvas, true);
+        SketchActions.setLockPosition((Graphic<Graphics2D>) e.getSource(), true);
     }
     
     @Action
     public void unlockGraphic(ActionEvent e) {
-        SketchActions.setLockPosition((Graphic<Graphics2D>) e.getSource(), activeCanvas, false);
+        SketchActions.setLockPosition((Graphic<Graphics2D>) e.getSource(), false);
     }
     
     @Action
     public void addGraphicAttribute(ActionEvent e) {
-        SketchActions.addAttribute((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+        SketchActions.addAttribute(getFrame(), (Graphic<Graphics2D>) e.getSource());
     }
     
     @Action
     public void deleteGraphic(ActionEvent e) {
-        SketchActions.deleteGraphic((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+        SketchActions.deleteGraphic(selectionModel, (Graphic<Graphics2D>) e.getSource());
     }
     
     @Action
     public void copy(ActionEvent e) {
-        SketchActions.copy((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+        SketchActions.copy((Graphic<Graphics2D>) e.getSource());
         updateClipboardProps();
     }
     
@@ -669,33 +607,5 @@ public final class SketchFrameView extends FrameView {
     }
     
     // </editor-fold>
-    
-    /** Activates the gesture layer, and allows the user to complete the gesture. */
-    private <G extends MouseGesture> void enableGesture(Class<G> gType) {
-        checkNotNull(gType);
-        try {
-            Constructor<G> con = gType.getConstructor(GestureOrchestrator.class);
-            G gesture = con.newInstance(gestureUI.getGestureOrchestrator());
-            gestureUI.setActiveGesture(gesture);
-        } catch (InstantiationException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (NoSuchMethodException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (SecurityException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException(ex);
-        } catch (InvocationTargetException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-    }
-    
-    /** Activates the gesture layer, and allows the user to complete the gesture. */
-    private void activeGestureUpdated(MouseGesture gesture) {
-        setStatusMessage(gesture == null ? "" : gesture.getName()+" | "+gesture.getDesription(), 5000);
-    }
-
     
 }
