@@ -6,11 +6,16 @@ package com.googlecode.blaisemath.gesture.swing;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.MultilineTextRenderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Graphics2D;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
+import static javax.swing.JOptionPane.OK_OPTION;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /*
  * #%L
@@ -47,16 +52,23 @@ public class CreateTextGesture extends JGraphicCreatorGesture {
 
     @Override
     public void initiate() {
-        text = JOptionPane.showInputDialog("Enter text:");
-        if (Strings.isNullOrEmpty(text)) {
-            finish();
+        JTextArea textArea = new JTextArea();
+        if (OK_OPTION == JOptionPane.showConfirmDialog(null, new JScrollPane(textArea),
+                "Enter text", OK_CANCEL_OPTION)) {
+            text = textArea.getText();
+            if (Strings.isNullOrEmpty(text)) {
+                finish();
+            }
         }
     }
 
     @Override
     protected Graphic<Graphics2D> createGraphic() {
         return locPoint == null ? null
-                : JGraphics.text(new AnchoredText(locPoint, text), Styles.DEFAULT_TEXT_STYLE.copy());
+                : new PrimitiveGraphic<AnchoredText,Graphics2D>(
+                        new AnchoredText(locPoint, text), 
+                        Styles.DEFAULT_TEXT_STYLE.copy(), 
+                        MultilineTextRenderer.getInstance());
     }
     
 }
