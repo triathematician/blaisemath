@@ -129,8 +129,8 @@ public final class SketchFrameView extends FrameView {
 
         // set up menus
         try {
-            setMenuBar(MenuConfig.readMenuBar(SketchApp.class, am));
-            setToolBar(MenuConfig.readToolBar(SketchApp.class, am));
+            setMenuBar(MenuConfig.readMenuBar(SketchApp.class, this, canvas));
+            setToolBar(MenuConfig.readToolBar(SketchApp.class, this, canvas));
         } catch (IOException ex) {
             Logger.getLogger(SketchFrameView.class.getName()).log(Level.SEVERE, 
                     "Menu config failure.", ex);
@@ -211,7 +211,7 @@ public final class SketchFrameView extends FrameView {
             Set gfx = (Set) gfc;
             selectionPanel.setTitle(gfx.size()+" graphics selected.");
             selectionPanel.setPrimaryComponent(new JLabel("No options."));
-            selectionTool();
+            canvas.selectionTool();
         } else if (gfc instanceof GraphicComposite) {
             // activate controls gesture
             GraphicComposite gc = (GraphicComposite) gfc;
@@ -476,94 +476,6 @@ public final class SketchFrameView extends FrameView {
     @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
     public void distributeVertical() {
         SketchActions.distributeVertical(selectionModel.getSelection());
-    }
-    
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="TOOL ACTIONS">
-    
-    @Action
-    public void canvasTool() {
-        canvas.enableGesture(CanvasHandlerGesture.class);
-    }
-    
-    @Action
-    public void selectionTool() {
-        canvas.enableGesture(SelectGesture.class);
-    }
-    
-    @Action
-    public void createMarker() {
-        canvas.enableGesture(CreateMarkerGesture.class);
-    }
-    
-    @Action
-    public void createLine() {
-        canvas.enableGesture(CreateLineGesture.class);
-    }
-    
-    @Action
-    public void createPath() {
-        canvas.enableGesture(CreatePathGesture.class);
-    }
-    
-    @Action
-    public void createRect() {
-        canvas.enableGesture(CreateRectangleGesture.class);
-    }
-    
-    @Action
-    public void createCircle() {
-        canvas.enableGesture(CreateCircleGesture.class);
-    }
-    
-    @Action
-    public void createEllipse() {
-        canvas.enableGesture(CreateEllipseGesture.class);
-    }
-    
-    @Action
-    public void createText() {
-        canvas.enableGesture(CreateTextGesture.class);
-    }
-    
-    @Action
-    public void createImage() {
-        canvas.enableGesture(CreateImageGesture.class);
-    }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="ZOOM ACTIONS">
-    
-    @Action
-    public void zoomToCanvas() {
-        canvas.zoomToCanvas();
-    }
-
-    @Action
-    public void zoomIn() {
-        canvas.zoomIn();
-    }
-
-    @Action
-    public void zoomOut() {
-        canvas.zoomOut();
-    }
-    
-    @Action
-    public void zoomToAll() {
-        canvas.zoomToAll();
-    }
-    
-    @Action(disabledProperty=SELECTION_EMPTY_PROP)
-    public void zoomToSelected() {
-        canvas.zoomToSelected();
-    }
-    
-    @Action
-    public void resetTransform() {
-        canvas.resetTransform();
     }
     
     //</editor-fold>

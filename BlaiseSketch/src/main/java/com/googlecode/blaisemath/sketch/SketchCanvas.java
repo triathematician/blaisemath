@@ -30,8 +30,17 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGesture;
+import com.googlecode.blaisemath.gesture.swing.CanvasHandlerGesture;
 import com.googlecode.blaisemath.gesture.swing.ControlBoxGesture;
 import com.googlecode.blaisemath.gesture.swing.ControlLineGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateCircleGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateEllipseGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateImageGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateLineGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateMarkerGesture;
+import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
 import com.googlecode.blaisemath.gesture.swing.JGraphicGestureLayerUI;
 import com.googlecode.blaisemath.gesture.swing.SelectGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
@@ -61,6 +70,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ActionMap;
 import javax.swing.JLayer;
+import org.jdesktop.application.Action;
 
 /**
  * <p>
@@ -205,6 +215,10 @@ public final class SketchCanvas {
         canvas.getSelectionModel().setSelection(sel);
     }
     
+    public boolean isSelectionEmpty() {
+        return canvas.getSelectionModel().getSelection().isEmpty();
+    }
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="CANVAS ACTIONS">
@@ -212,6 +226,7 @@ public final class SketchCanvas {
     /**
      * Remove all graphics from the canvas.
      */
+    @Action
     public void clearCanvas() {
         canvas.clearGraphics();
     }
@@ -231,6 +246,7 @@ public final class SketchCanvas {
     //<editor-fold defaultstate="collapsed" desc="SELECTION ACTIONS">
     
     /** Select all graphics on the canvas. */
+    @Action
     public void selectAll() {
         setSelection(Sets.newHashSet(canvas.getGraphicRoot().getGraphics()));
     }
@@ -239,6 +255,7 @@ public final class SketchCanvas {
     
     //<editor-fold defaultstate="collapsed" desc="ZOOM ACTIONS">
     
+    @Action
     public void zoomToCanvas() {
         Rectangle2D bounds = canvasModel.getBoundingBox();
         PanAndZoomHandler.zoomCoordBoxAnimated(canvas, new Point2D.Double(
@@ -246,24 +263,83 @@ public final class SketchCanvas {
                     new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
     }
 
+    @Action
     public void zoomIn() {
         canvas.zoomIn();
     }
 
+    @Action
     public void zoomOut() {
         canvas.zoomOut();
     }
 
+    @Action
     public void zoomToAll() {
         canvas.zoomToAll();
     }
     
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void zoomToSelected() {
         canvas.zoomToSelected();
     }
     
+    @Action
     public void resetTransform() {
         canvas.resetTransform();
+    }
+    
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="TOOL/GESTURE ACTIONS">
+    
+    @Action
+    public void canvasTool() {
+        enableGesture(CanvasHandlerGesture.class);
+    }
+    
+    @Action
+    public void selectionTool() {
+        enableGesture(SelectGesture.class);
+    }
+    
+    @Action
+    public void createMarker() {
+        enableGesture(CreateMarkerGesture.class);
+    }
+    
+    @Action
+    public void createLine() {
+        enableGesture(CreateLineGesture.class);
+    }
+    
+    @Action
+    public void createPath() {
+        enableGesture(CreatePathGesture.class);
+    }
+    
+    @Action
+    public void createRect() {
+        enableGesture(CreateRectangleGesture.class);
+    }
+    
+    @Action
+    public void createCircle() {
+        enableGesture(CreateCircleGesture.class);
+    }
+    
+    @Action
+    public void createEllipse() {
+        enableGesture(CreateEllipseGesture.class);
+    }
+    
+    @Action
+    public void createText() {
+        enableGesture(CreateTextGesture.class);
+    }
+    
+    @Action
+    public void createImage() {
+        enableGesture(CreateImageGesture.class);
     }
     
     //</editor-fold>

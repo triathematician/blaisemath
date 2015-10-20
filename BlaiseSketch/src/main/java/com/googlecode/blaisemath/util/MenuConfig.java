@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.util;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -39,19 +40,25 @@ import javax.swing.ActionMap;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
 import org.yaml.snakeyaml.Yaml;
 
 /**
  * Utility for reading a .yaml configuration file and generating menus and toolbars.
  * 
  * @author elisha
- * @version 1.0
+ * @version 1.1
  */
-public class MenuConfig {
+public final class MenuConfig {
 
     public static final String MENU_SUFFIX = "_menu";
     public static final String DEFAULT_TOOLBAR_KEY = "Toolbar";
     public static final String DEFAULT_MENUBAR_KEY = "Menubar";
+
+    /** utility class - prevent instantiation */
+    private MenuConfig() {
+    }
     
     /** 
      * Reads menu components from file.
@@ -96,19 +103,20 @@ public class MenuConfig {
     
     /**
      * Create toolbar component from file
-     * @param cls
-     * @param am
+     * @param appClass root application type
+     * @param actionParents potential parents for actions
      * @return toolbar
      * @throws java.io.IOException 
      */
-    public static JToolBar readToolBar(Class cls, ActionMap am) throws IOException {
-        List<String> config = readToolBarConfig(cls, DEFAULT_TOOLBAR_KEY);
+    public static JToolBar readToolBar(Class<? extends Application> appClass, Object... actionParents) throws IOException {
+        Map<String,javax.swing.Action> actionMap = actionMap(appClass, actionParents);
+        List<String> config = readToolBarConfig(appClass, DEFAULT_TOOLBAR_KEY);
         JToolBar res = new JToolBar();
         for (String k : config) {
             if (Strings.isNullOrEmpty(k)) {
                 res.addSeparator();
             } else {
-                res.add(am.get(k));
+                res.add(actionMap.get(k));
             }
         }
         return res;
@@ -116,17 +124,18 @@ public class MenuConfig {
     
     /**
      * Create menubar from file
-     * @param cls
-     * @param am
+     * @param appClass root application type
+     * @param actionParents potential parents for actions
      * @return menu bar
      * @throws java.io.IOException 
      */
-    public static JMenuBar readMenuBar(Class cls, ActionMap am) throws IOException {
-        Map<String, List> config = readMenuBarConfig(cls, DEFAULT_MENUBAR_KEY);
+    public static JMenuBar readMenuBar(Class appClass, Object... actionParents) throws IOException {
+        Map<String,javax.swing.Action> actionMap = actionMap(appClass, actionParents);
+        Map<String, List> config = readMenuBarConfig(appClass, DEFAULT_MENUBAR_KEY);
         JMenuBar res = new JMenuBar();
         for (Entry<String, List> en : config.entrySet()) {
             JMenu menu = new JMenu(en.getKey());
-            addMenuBarItems(menu, en.getValue(), am);
+            addMenuBarItems(menu, en.getValue(), actionMap);
             res.add(menu);
         }
         return res;
@@ -138,7 +147,7 @@ public class MenuConfig {
      * @param items the values to add
      * @param am string/action mapping
      */
-    private static void addMenuBarItems(JMenu menu, List items, ActionMap am) {
+    private static void addMenuBarItems(JMenu menu, List items, Map<String,javax.swing.Action> am) {
         for (Object it : items) {
             if (it == null) {
                 menu.addSeparator();
@@ -156,6 +165,27 @@ public class MenuConfig {
                         "Invalid menu item:{0}", it);
             }
         }
+    }
+
+    /**
+     * Uses a variable number of parent objects as potential action owners, creating a common lookup table for actions.
+     * If more than one object has the same action, the result table will use the first it finds.
+     * @param appClass 
+     * @param actionParents
+     * @return 
+     */
+    private static Map<String, javax.swing.Action> actionMap(Class<? extends Application> appClass, Object... actionParents) {
+        ApplicationContext appContext = Application.getInstance(appClass).getContext();
+        Map<String, javax.swing.Action> res = Maps.newHashMap();
+        for (Object o : actionParents) {
+            ActionMap am = appContext.getActionMap(o);
+            for (Object k : am.allKeys()) {
+                if (!res.containsKey((String) k)) {
+                    res.put(((String) k), am.get(k));
+                }
+            }
+        }
+        return res;
     }
     
 }
