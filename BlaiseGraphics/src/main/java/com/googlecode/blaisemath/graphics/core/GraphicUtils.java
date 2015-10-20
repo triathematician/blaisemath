@@ -28,10 +28,14 @@ package com.googlecode.blaisemath.graphics.core;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import java.util.Comparator;
+import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -57,6 +61,9 @@ public class GraphicUtils {
             return StyleHints.isFunctional(input.getStyleHints());
         }
     };
+    
+    /** Comparator for z-order of graphics */
+    private static final Comparator<Graphic> Z_COMPARATOR = new ZOrderComparator();
     
     //</editor-fold>
     
@@ -132,6 +139,31 @@ public class GraphicUtils {
     
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="COMPARATORS">
+    
+    /**
+     * Return z-order comparator for graphics.
+     * @param <G> type of graphic being compared
+     * @return comparator
+     */
+    public static <G extends Graphic> Comparator<G> zOrderComparator() {
+        return (Comparator<G>) Z_COMPARATOR;
+    }
+    
+    /**
+     * Sort graphics by z order.
+     * @param <G> type of graphic being compared
+     * @param graphics graphics to sort
+     * @return ordered graphics
+     */
+    public static <G extends Graphic> List<G> zOrderSort(Iterable<G> graphics) {
+        return Ordering.from(GraphicUtils.zOrderComparator()).sortedCopy(graphics);
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="BOUNDING BOX UTILS">
+    
     /**
      * Get the bounding box surrounding the given set of graphics.
      * @param <G> type of graphic canvas
@@ -166,5 +198,62 @@ public class GraphicUtils {
         return res;
     }
     
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    
+    /** Comparator for z order of graphics */
+    private static class ZOrderComparator implements Comparator<Graphic> {
+        @Override
+        public int compare(Graphic left, Graphic right) {
+            if (left == right) {
+                return 0;
+            }
+            
+            // find the common parent of the two graphics, then compare position relative to that
+            List<Graphic> parLeft = graphicPath(left);
+            List<Graphic> parRight = graphicPath(right);
+            int firstDiffer = -1;
+            int commonSize = Math.min(parLeft.size(), parRight.size());
+            for (int i = 0; i < commonSize; i++) {
+                if (parLeft.get(i) != parRight.get(i)) {
+                    firstDiffer = i;
+                    break;
+                }
+            }
+            
+            if (firstDiffer == 0) {
+                // different trees, default to basic comparison
+                return Ordering.arbitrary().compare(left, right);
+            } else if (firstDiffer == -1) {
+                // they agree on overlap, so one must be a parent of the other
+                Graphic commonParent = parLeft.get(commonSize-1);
+                if (left == commonParent) {
+                    return -1;
+                } else if (right == commonParent) {
+                    return 1;
+                } else {
+                    throw new IllegalStateException("unexpected");
+                }
+            } else {
+                // they disagree at some point past the first index
+                GraphicComposite commonParent = (GraphicComposite) parLeft.get(firstDiffer-1);
+                List<Graphic> children = Lists.newArrayList(commonParent.getGraphics());
+                return children.indexOf(parLeft.get(firstDiffer)) - children.indexOf(parRight.get(firstDiffer));
+            }
+        }
+
+        private List<Graphic> graphicPath(Graphic gfc) {
+            List<Graphic> res = Lists.newArrayList();
+            Graphic cur = gfc;
+            while (cur != null) {
+                res.add(0, cur);
+                cur = cur.getParent();
+            }
+            return res;
+        }
+    }
+    
+    //</editor-fold>
     
 }
