@@ -4,6 +4,27 @@
  */
 package com.googlecode.blaisemath.sketch;
 
+/*
+ * #%L
+ * BlaiseSketch
+ * --
+ * Copyright (C) 2014 - 2015 Elisha Peterson
+ * --
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+
 import com.google.common.base.Objects;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
@@ -17,6 +38,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -28,10 +50,10 @@ import java.beans.PropertyChangeSupport;
  */
 public final class SketchCanvasModel {
 
-    public static final String P_BOUNDS = "bounds";
+    public static final String P_DIMENSIONS = "dimensions";
     
-    private Dimension bounds = new Dimension(800, 600);
-    private AttributeSet style = Styles.strokeWidth(new Color(255, 0, 0, 128), .5f);
+    private Dimension dim = new Dimension(800, 600);
+    private final AttributeSet style = Styles.strokeWidth(new Color(255, 0, 0, 128), .5f);
     
     /** Handles property listening */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -40,17 +62,41 @@ public final class SketchCanvasModel {
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    
-    public Dimension getBounds() {
-        return bounds;
+
+    /**
+     * Get the dimensions of the canvas.
+     * @return dimensions
+     */
+    public Dimension getDimensions() {
+        return dim;
     }
     
-    public void setBounds(Dimension bounds) {
-        if (!Objects.equal(this.bounds, bounds)) {
-            Object old = this.bounds;
-            this.bounds = bounds;
-            pcs.firePropertyChange(P_BOUNDS, old, bounds);
+    /**
+     * Set the dimensions of the canvas.
+     * @param dim dimensions
+     */
+    public void setDimensions(Dimension dim) {
+        if (!Objects.equal(this.dim, dim)) {
+            Object old = this.dim;
+            this.dim = dim;
+            pcs.firePropertyChange(P_DIMENSIONS, old, dim);
         }
+    }
+
+    /**
+     * Get the bounding box around the canvas.
+     * @return bounding box
+     */
+    public Rectangle2D getBoundingBox() {
+        return new Rectangle(0, 0, dim.width, dim.height);
+    }
+    
+    /**
+     * Get the paint style of the canvas.
+     * @return paint style
+     */
+    public AttributeSet getStyle() {
+        return style;
     }
     
     //</editor-fold>
@@ -64,7 +110,7 @@ public final class SketchCanvasModel {
             @Override
             public void paint(Component component, Graphics2D canvas) {
                 JGraphicComponent gc = (JGraphicComponent) component;
-                Shape r = new Rectangle(0, 0, bounds.width, bounds.height);
+                Shape r = getBoundingBox();
                 AffineTransform at = gc.getTransform();
                 if (at != null) {
                     r = at.createTransformedShape(r);

@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.sketch;
 import com.google.common.collect.Iterables;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
+import com.googlecode.blaisemath.firestarter.PropertySheetDialog;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateCircleGesture;
@@ -335,6 +336,12 @@ public final class SketchFrameView extends FrameView {
     }
     
     @Action
+    public void editCanvas() {
+        PropertySheetDialog dialog = new PropertySheetDialog(getFrame(), true, canvas.getCanvasModel());
+        dialog.setVisible(true);
+    }
+    
+    @Action
     public void selectAll() {
         canvas.selectAll();
     }
@@ -528,6 +535,21 @@ public final class SketchFrameView extends FrameView {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="ZOOM ACTIONS">
+    
+    @Action
+    public void zoomToCanvas() {
+        canvas.zoomToCanvas();
+    }
+
+    @Action
+    public void zoomIn() {
+        canvas.zoomIn();
+    }
+
+    @Action
+    public void zoomOut() {
+        canvas.zoomOut();
+    }
     
     @Action
     public void zoomToAll() {

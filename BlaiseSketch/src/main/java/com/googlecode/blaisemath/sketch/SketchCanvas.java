@@ -48,6 +48,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -173,6 +174,14 @@ public final class SketchCanvas {
     }
 
     /**
+     * Get model object for the canvas.
+     * @return model object
+     */
+    public SketchCanvasModel getCanvasModel() {
+        return canvasModel;
+    }
+
+    /**
      * Get the model for the selected items on the canvas.
      * @return selection model
      */
@@ -230,6 +239,21 @@ public final class SketchCanvas {
     
     //<editor-fold defaultstate="collapsed" desc="ZOOM ACTIONS">
     
+    public void zoomToCanvas() {
+        Rectangle2D bounds = canvasModel.getBoundingBox();
+        PanAndZoomHandler.zoomCoordBoxAnimated(canvas, new Point2D.Double(
+                    bounds.getMinX(), bounds.getMinY()),
+                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+    }
+
+    public void zoomIn() {
+        canvas.zoomIn();
+    }
+
+    public void zoomOut() {
+        canvas.zoomOut();
+    }
+
     public void zoomToAll() {
         canvas.zoomToAll();
     }

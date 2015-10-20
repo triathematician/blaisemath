@@ -5,6 +5,7 @@ Menubar:
         - load
         - save
         - 
+        - editCanvas
         - clearCanvas
         - 
         - quit
@@ -59,8 +60,12 @@ Menubar:
         - createText
         - createImage
     Zoom:
+        - zoomIn
+        - zoomOut
+        -
         - zoomToSelected
         - zoomToAll
+        - zoomToCanvas
         - resetTransform
 Toolbar:
     - load
