@@ -1,0 +1,57 @@
+<!--
+  #%L
+  BlaiseGestures
+  --
+  Copyright (C) 2015 Elisha Peterson
+  --
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>com.googlecode.blaisemath.gesture</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>The Gesture API</h1>
+        <p>
+            The gesture API provides advanced mouse handling support.
+            {@code GestureOrchestrator} maintains a registry of {@code MouseGesture}s,
+            allowing clients to intelligently pass along mouse events to appropriate
+            gestures.
+        </p>
+        <p>
+            In addition to receiving mouse events, gestures support a lifecycle
+            of activation and use:
+        </p>
+        <ul>
+            <li>Gestures are registered with the orchestrator in priority.</li>
+            <li>Gestures determine the conditions under which they may be activated.</li>
+            <li>Gestures are activated when these conditions are met, and they have priority over other gestures.</li>
+            <li>When active, gestures are passed mouse events from the owning component.</li>
+            <li>Active gestures may be <i>canceled</i>, which resets their state and inactivates them.</li>
+            <li>Active gestures may be <i>finalized</i>, which completes the gesture and takes appropriate action.</li>
+        </ul>
+        <h1>In Practice</h1>
+        <p>
+            In practice, a {@code LayerUI} is used to setup mouse handling for the
+            component owning an orchestrator, using {@link com.googlecode.blaisemath.gesture.GestureLayerUI}.
+            If there is no active gesture, the set of gestures registered with the orchestrator
+            are given the opportunity to "claim" mouse events and activate themselves
+            (in order of priority). Once a gesture has been activated, it receives
+            all mouse events until it is completed or canceled.
+        </p>
+    </body>
+</html>

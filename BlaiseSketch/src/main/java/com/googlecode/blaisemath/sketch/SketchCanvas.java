@@ -41,7 +41,7 @@ import com.googlecode.blaisemath.gesture.swing.CreateMarkerGesture;
 import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
-import com.googlecode.blaisemath.gesture.swing.JGraphicGestureLayerUI;
+import com.googlecode.blaisemath.gesture.GestureLayerUI;
 import com.googlecode.blaisemath.gesture.swing.SelectGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
@@ -64,6 +64,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -84,11 +85,18 @@ public final class SketchCanvas {
         
     private static final String SELECTION_CM_KEY = "Selection";
     private static final String CANVAS_CM_KEY = "Canvas";
-    
-    private final SketchCanvasModel canvasModel;
-    private final JGraphicComponent canvas;
-    private final JGraphicGestureLayerUI gestureUI;
+
+    /** The layer component wrapping the graphic canvas. */
     private final JLayer<JGraphicComponent> layer;
+    /** The graphic canvas. */
+    private final JGraphicComponent canvas;
+    /** Data model for the canvas, with dimensions and style. */
+    private final SketchCanvasModel canvasModel;
+    
+    /** The gesture orchestrator for the canvas. */
+    private final GestureOrchestrator<JGraphicComponent> orchestrator;
+    /** The select gesture (default gesture). */
+    private final MouseGesture selectGesture;
     
     /** Handles property listening */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -119,19 +127,20 @@ public final class SketchCanvas {
         }
 
         //<editor-fold defaultstate="collapsed" desc="create gesture controller with overlay for intercepting events and rendering gesture hints">
-        gestureUI = new JGraphicGestureLayerUI();
-        gestureUI.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
+        GestureLayerUI gestureUI = new GestureLayerUI();
+        layer = new JLayer<JGraphicComponent>(canvas, gestureUI);
+        orchestrator = gestureUI.getGestureOrchestrator();
+        assert orchestrator != null;
+        orchestrator.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
             new PropertyChangeListener(){
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     pcs.firePropertyChange(evt);
                 }
             });
-        layer = new JLayer<JGraphicComponent>(canvas, gestureUI);
-        GestureOrchestrator go = gestureUI.getGestureOrchestrator();
-        assert go != null;
-        go.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
-        go.setDefaultGesture(new SelectGesture(go));
+        orchestrator.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
+        selectGesture = new SelectGesture(orchestrator);
+        orchestrator.addGesture(selectGesture);
         //</editor-fold>
         
         initSelectionHandling();
@@ -150,19 +159,30 @@ public final class SketchCanvas {
                 
                 // set active gesture
                 Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
-                Graphic gfc = Iterables.getFirst(sel, null);
-                if (gfc instanceof PrimitiveGraphicSupport) {
-                    PrimitiveGraphicSupport pgfc = (PrimitiveGraphicSupport) gfc;
-                    if (pgfc.getPrimitive() instanceof Line2D) {
-                        gestureUI.setActiveGesture(new ControlLineGesture(gestureUI.getGestureOrchestrator(), pgfc));
-                    } else if (ControlBoxGesture.supports(pgfc.getPrimitive())) {
-                        gestureUI.setActiveGesture(new ControlBoxGesture(gestureUI.getGestureOrchestrator(), pgfc));
-                    } else {
-                        // controls not available
-                    }
+                if (!sel.isEmpty()) {
+                    initSelectionGesture(sel);
                 }
             }
         });
+    }
+    
+    /** Initializes selection gesture for the given selection. */
+    private void initSelectionGesture(Set<Graphic> sel) {
+        if (sel.size() == 1) {
+            Graphic gfc = Iterables.getFirst(sel, null);
+            if (gfc instanceof PrimitiveGraphicSupport) {
+                PrimitiveGraphicSupport pgfc = (PrimitiveGraphicSupport) gfc;
+                if (pgfc.getPrimitive() instanceof Line2D) {
+                    orchestrator.addGesture(new ControlLineGesture(orchestrator, pgfc));
+                } else if (ControlBoxGesture.supports(pgfc.getPrimitive())) {
+                    orchestrator.addGesture(new ControlBoxGesture(orchestrator, pgfc));
+                } else {
+                    // controls not available
+                }
+            }
+        } else if (sel.size() > 1) {
+            // TODO - set up bounding box gesture for multiple items
+        }
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -258,9 +278,9 @@ public final class SketchCanvas {
     @Action
     public void zoomToCanvas() {
         Rectangle2D bounds = canvasModel.getBoundingBox();
-        PanAndZoomHandler.zoomCoordBoxAnimated(canvas, new Point2D.Double(
-                    bounds.getMinX(), bounds.getMinY()),
-                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+        PanAndZoomHandler.zoomCoordBoxAnimated(canvas, 
+                new Point2D.Double(bounds.getMinX()-10, bounds.getMinY()-10),
+                new Point2D.Double(bounds.getMaxX()+10, bounds.getMaxY()+10));
     }
 
     @Action
@@ -294,65 +314,67 @@ public final class SketchCanvas {
     
     @Action
     public void canvasTool() {
-        enableGesture(CanvasHandlerGesture.class);
+        setFocalGesture(CanvasHandlerGesture.class);
     }
     
     @Action
     public void selectionTool() {
-        enableGesture(SelectGesture.class);
+        setFocalGesture(SelectGesture.class);
     }
     
     @Action
     public void createMarker() {
-        enableGesture(CreateMarkerGesture.class);
+        setFocalGesture(CreateMarkerGesture.class);
     }
     
     @Action
     public void createLine() {
-        enableGesture(CreateLineGesture.class);
+        setFocalGesture(CreateLineGesture.class);
     }
     
     @Action
     public void createPath() {
-        enableGesture(CreatePathGesture.class);
+        setFocalGesture(CreatePathGesture.class);
     }
     
     @Action
     public void createRect() {
-        enableGesture(CreateRectangleGesture.class);
+        setFocalGesture(CreateRectangleGesture.class);
     }
     
     @Action
     public void createCircle() {
-        enableGesture(CreateCircleGesture.class);
+        setFocalGesture(CreateCircleGesture.class);
     }
     
     @Action
     public void createEllipse() {
-        enableGesture(CreateEllipseGesture.class);
+        setFocalGesture(CreateEllipseGesture.class);
     }
     
     @Action
     public void createText() {
-        enableGesture(CreateTextGesture.class);
+        setFocalGesture(CreateTextGesture.class);
     }
     
     @Action
     public void createImage() {
-        enableGesture(CreateImageGesture.class);
+        setFocalGesture(CreateImageGesture.class);
     }
     
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="GESTURE HANDLING">
     
-    /** Activates the gesture layer, and allows the user to complete the gesture. */
-    <G extends MouseGesture> void enableGesture(Class<G> gType) {
+    /** 
+     * Places the given gesture at the top of the gesture stack of the orchestrator.
+     */
+    <G extends MouseGesture> void setFocalGesture(Class<G> gType) {
         checkNotNull(gType);
         try {
             Constructor<G> con = gType.getConstructor(GestureOrchestrator.class);
-            G gesture = con.newInstance(gestureUI.getGestureOrchestrator());
-            gestureUI.setActiveGesture(gesture);
+            G gesture = con.newInstance(orchestrator);
+            orchestrator.setGestureStack(Arrays.asList(gesture, selectGesture));
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException 
                 | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
             throw new IllegalArgumentException(ex);

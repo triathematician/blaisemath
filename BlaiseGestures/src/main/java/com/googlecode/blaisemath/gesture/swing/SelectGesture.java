@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.gesture.swing;
  */
 
 
-import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGestureSupport;
 import com.googlecode.blaisemath.graphics.core.Graphic;
@@ -38,21 +37,18 @@ import java.awt.event.MouseEvent;
 import java.util.Collections;
 
 /**
- * Gesture that allows for selection of graphics.
+ * <p>
+ *   Supports selection of graphics.
+ * </p>
  * @see JGraphicSelectionHandler
  * @author elisha
  */
-public class SelectGesture extends MouseGestureSupport {
+public final class SelectGesture extends MouseGestureSupport<JGraphicComponent> {
     
-    private final JGraphicComponent view;
     private final SetSelectionModel<Graphic<Graphics2D>> selectionModel;
 
-    public SelectGesture(GestureOrchestrator orchestrator) {
+    public SelectGesture(GestureOrchestrator<JGraphicComponent> orchestrator) {
         super(orchestrator, "Select", "Select graphics");
-        
-        checkArgument(orchestrator.getComponent() instanceof JGraphicComponent, 
-                "Orchestrator must use a JGraphicComponent");
-        view = (JGraphicComponent) orchestrator.getComponent();
         selectionModel = view.getSelectionModel();
         setConsuming(false);
     }
@@ -62,9 +58,9 @@ public class SelectGesture extends MouseGestureSupport {
         super.mouseMoved(e);
         Graphic gfc = view.graphicAt(e.getPoint());
         if (gfc != null && gfc.isSelectionEnabled()) {
-            orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            orchestrator.setComponentCursor(Cursor.HAND_CURSOR);
         } else {
-            orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            orchestrator.setComponentCursor(Cursor.DEFAULT_CURSOR);
         }
     }
 

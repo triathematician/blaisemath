@@ -36,54 +36,47 @@ import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 /**
  * Displays control points on a line, allowing it to be changed.
  * 
  * @author elisha
  */
-public class ControlLineGesture extends MouseGestureSupport {
+public class ControlLineGesture extends MouseGestureSupport<JGraphicComponent> {
     
     private static final int CAPTURE_RAD = 5;
     
-    private final JGraphicComponent view;
-    
-    private final PrimitiveGraphicSupport graphic;
+    //<editor-fold defaultstate="collapsed" desc="STYLES">
     private final AttributeSet controlStyle = Styles.fillStroke(new Color(0,0,255,64), null)
             .and(Styles.MARKER, Markers.CIRCLE)
             .and(Styles.MARKER_RADIUS, CAPTURE_RAD);
     private final AttributeSet selectedControlStyle = Styles.fillStroke(new Color(0,0,255,128), null)
             .and(Styles.MARKER, Markers.CIRCLE)
             .and(Styles.MARKER_RADIUS, CAPTURE_RAD);
+    //</editor-fold>
     
+    /** The graphic being edited */
+    private final PrimitiveGraphicSupport graphic;
     /** Current active control */
     private ControlPoint controlPoint;
     /** Line at start of drag */
     private Line2D startShape;
     
-    public ControlLineGesture(GestureOrchestrator orchestrator, PrimitiveGraphicSupport graphic) {
+    public ControlLineGesture(GestureOrchestrator<JGraphicComponent> orchestrator, PrimitiveGraphicSupport graphic) {
         super(orchestrator, "Line editor", "Edit line control points");
-        
-        checkArgument(orchestrator.getComponent() instanceof JGraphicComponent, 
-                "Orchestrator must use a JGraphicComponent");
         checkArgument(graphic != null && graphic.getPrimitive() instanceof Line2D);
-        
-        view = (JGraphicComponent) orchestrator.getComponent();
         this.graphic = graphic;
-    }
-    
-    private Rectangle2D box() {
-        return graphic.boundingBox();
     }
 
     @Override
     public void paint(Graphics2D g) {
-        AffineTransform at = view.getTransform() == null ? new AffineTransform() : view.getTransform();
+        AffineTransform vt = view.getTransform();
+        AffineTransform at = vt == null ? new AffineTransform() : vt;
         Line2D line = (Line2D) graphic.getPrimitive();
         Point2D trStart = at.transform(line.getP1(), null);
         Point2D trEnd = at.transform(line.getP2(), null);
@@ -94,6 +87,23 @@ public class ControlLineGesture extends MouseGestureSupport {
             MarkerRenderer.getInstance().render(pt, sty, g);
         }
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="GESTURE LIFECYCLE">
+
+    @Override
+    public boolean activatesWith(MouseEvent evt) {
+        return super.activatesWith(evt);
+    }
+    
+    @Override
+    public void complete() {
+        controlPoint = null;
+        startShape = null;
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="MOUSE HANDLING">
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -114,29 +124,20 @@ public class ControlLineGesture extends MouseGestureSupport {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-        super.mouseReleased(e);
-        controlPoint = null;
-        startShape = null;
-    }
-
-    @Override
-    public void finish() {
-        controlPoint = null;
-        startShape = null;
-    }
-
-    @Override
     public void mouseClicked(MouseEvent e) {
         if (graphic != null) {
             Point2D clickPt = transformedPoint(e);
+            // clicking outside the graphic de-activates the gesture
             if (!graphic.contains(clickPt) && capture((Line2D) graphic.getPrimitive(), clickPt) == null) {
-                orchestrator.finishGesture(this);
+                orchestrator.complete(this);
                 view.getSelectionModel().deselect(graphic);
             }
         }
     }
     
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="ControlPoint HANDLING">
     //
     // ControlPoint handling
     //
@@ -193,5 +194,7 @@ public class ControlLineGesture extends MouseGestureSupport {
             return dist < CAPTURE_RAD;
         }
     }
+    
+    //</editor-fold>
     
 }

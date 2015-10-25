@@ -51,15 +51,14 @@ public class CreateTextGesture extends JGraphicCreatorGesture {
     }
 
     @Override
-    public void initiate() {
+    public boolean activate() {
         JTextArea textArea = new JTextArea();
         if (OK_OPTION == JOptionPane.showConfirmDialog(null, new JScrollPane(textArea),
                 "Enter text", OK_CANCEL_OPTION)) {
             text = textArea.getText();
-            if (Strings.isNullOrEmpty(text)) {
-                finish();
-            }
+            return !Strings.isNullOrEmpty(text);
         }
+        return false;
     }
 
     @Override

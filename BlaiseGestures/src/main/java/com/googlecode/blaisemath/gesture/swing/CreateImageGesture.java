@@ -56,7 +56,7 @@ public class CreateImageGesture extends JGraphicCreatorGesture {
     }
 
     @Override
-    public void initiate() {
+    public boolean activate() {
         imageFile = JFileChooser.APPROVE_OPTION == CHOOSER.showOpenDialog(null)
                 ? CHOOSER.getSelectedFile() : null;
         image = null;
@@ -70,8 +70,9 @@ public class CreateImageGesture extends JGraphicCreatorGesture {
         }
         if (image == null) {
             JOptionPane.showMessageDialog(null, "Not an image: "+imageFile, "Error", JOptionPane.ERROR_MESSAGE);
-            finish();
+            return false;
         }
+        return true;
     }
 
     @Override

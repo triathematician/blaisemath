@@ -1,5 +1,5 @@
 /**
- * SketchGesture.java
+ * MouseGesture.java
  * Created Oct 11, 2014
  */
 package com.googlecode.blaisemath.gesture;
@@ -24,20 +24,26 @@ package com.googlecode.blaisemath.gesture;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * A gesture based on mouse events that can be initiated and finished or canceled.
- * Also provides user-friendly name and description fields.
- * 
- * Prior to receiving mouse events, the gesture's {@link #initiate()} method will
- * be called. When the gesture is completed, it may yield control by calling
- * {@link #finish()}, or if another gesture takes over control the {@link #cancel()}
- * method will be called.
+ * <p>
+ *   A gesture based on mouse events that can be initiated and finished or canceled.
+ *   Also provides user-friendly name and description fields.
+ * </p>
+ * <p>
+ *   Prior to receiving mouse events, the gesture's {@link #activate()} method will
+ *   be called. When the gesture is completed, it may yield control by calling
+ *   {@link #complete()}, or if another gesture takes over control the {@link #cancel()}
+ *   method will be called.
+ * </p>
  * 
  * @author elisha
  */
+@Beta
 public interface MouseGesture extends MouseListener, MouseMotionListener {
 
     /**
@@ -52,32 +58,41 @@ public interface MouseGesture extends MouseListener, MouseMotionListener {
      */
     String getDesription();
 
-
-    /**
-     * Get the orchestrator that manages the gesture's state
-     * @return orchestrator
-     */
-    GestureOrchestrator getOrchestrator();
-        
-    /**
-     * Enable the gesture, preparing it to be used.
-     */
-    void initiate();
-
-    /**
-     * Disable the gesture, canceling any pending operations.
-     */
-    void cancel();
-
-    /**
-     * Finish the gesture, applying the result.
-     */
-    void finish();
-
     /**
      * Whether gesture consumes mouse events that it receives, forbidding others to use them.
      * @return true if consuming, else false
      */
     boolean isConsuming();
+    
+    
+    // LIFECYCLE
+    
+    /**
+     * Return true if the gesture can use the given event to activate.
+     * @param evt mouse event to test
+     * @return true if the gesture calls "activatesWith" on the point, false otherwise
+     */
+    boolean activatesWith(MouseEvent evt);
+        
+    /**
+     * Activate the gesture, preparing it to handle mouse events.
+     * Should be called by the orchestrator, not directly invoked.
+     * If this method returns false, the orchestrator will not activate the gesture.
+     * 
+     * @return true if activation was successful, false otherwise
+     */
+    boolean activate();
+
+    /**
+     * Disable the gesture, canceling any pending operations.
+     * Should be called by the orchestrator, not directly invoked.
+     */
+    void cancel();
+
+    /**
+     * Completes the gesture, performing final steps and resetting state.
+     * Should be called by the orchestrator, not directly invoked.
+     */
+    void complete();
     
 }

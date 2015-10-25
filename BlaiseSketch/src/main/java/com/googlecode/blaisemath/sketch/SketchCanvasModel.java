@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.sketch;
 
 import com.google.common.base.Objects;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.PathRenderer;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
@@ -38,6 +39,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -51,9 +53,10 @@ import java.beans.PropertyChangeSupport;
 public final class SketchCanvasModel {
 
     public static final String P_DIMENSIONS = "dimensions";
+    public static final String P_STYLE = "style";
     
     private Dimension dim = new Dimension(800, 600);
-    private final AttributeSet style = Styles.strokeWidth(new Color(255, 0, 0, 128), .5f);
+    private final AttributeSet style = Styles.fillStroke(new Color(250, 250, 250), new Color(255, 0, 0, 128), .5f);
     
     /** Handles property listening */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -99,6 +102,18 @@ public final class SketchCanvasModel {
         return style;
     }
     
+    public Color getBackground() {
+        return style.getColor(Styles.FILL, new Color(250, 250, 250));
+    }
+    
+    public void setBackground(Color c) {
+        Object old = getBackground();
+        if (old != c) {
+            style.put(Styles.FILL, c);
+            pcs.firePropertyChange(P_STYLE, null, style);
+        }
+    }
+    
     //</editor-fold>
     
     /**
@@ -115,7 +130,10 @@ public final class SketchCanvasModel {
                 if (at != null) {
                     r = at.createTransformedShape(r);
                 }
-                ShapeRenderer.getInstance().render(r, style, canvas);
+                Area area = new Area(canvas.getClip());
+                area.subtract(new Area(r));
+                ShapeRenderer.getInstance().render(area, Styles.fillStroke(getBackground(), null), canvas);
+                PathRenderer.getInstance().render(r, style, canvas);
             }
         };
     }

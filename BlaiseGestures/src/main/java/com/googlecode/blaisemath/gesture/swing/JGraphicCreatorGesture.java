@@ -15,6 +15,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
 import javax.annotation.Nullable;
 
 /*
@@ -43,15 +44,10 @@ import javax.annotation.Nullable;
  * 
  * @author Elisha
  */
-public abstract class JGraphicCreatorGesture extends MouseGestureSupport {
+public abstract class JGraphicCreatorGesture extends MouseGestureSupport<JGraphicComponent> {
     
-    private final JGraphicComponent view;
-    
-    public JGraphicCreatorGesture(GestureOrchestrator orchestrator, String name, String description) {
+    public JGraphicCreatorGesture(GestureOrchestrator<JGraphicComponent> orchestrator, String name, String description) {
         super(orchestrator, name, description);
-        checkArgument(orchestrator.getComponent() instanceof JGraphicComponent, 
-                "Orchestrator must use a JGraphicComponent");
-        view = (JGraphicComponent) orchestrator.getComponent();
     }
     
     /**
@@ -64,11 +60,11 @@ public abstract class JGraphicCreatorGesture extends MouseGestureSupport {
     @Override
     public void mouseMoved(MouseEvent e) {
         super.mouseMoved(e);  
-        orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        orchestrator.setComponentCursor(Cursor.CROSSHAIR_CURSOR);
     }
 
     @Override
-    public void finish() {
+    public void complete() {
         Graphic<Graphics2D> gfc = createGraphic();
         if (gfc != null) {
             view.addGraphic(gfc);
@@ -76,14 +72,13 @@ public abstract class JGraphicCreatorGesture extends MouseGestureSupport {
             if (configurer != null) {
                 configurer.configure(gfc);
             }
+            view.getSelectionModel().setSelection(Collections.singleton(gfc));
         }
-        orchestrator.setActiveGesture(null);
-        orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     @Override
     public void cancel() {
-        orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        orchestrator.setComponentCursor(Cursor.DEFAULT_CURSOR);
     }
 
     @Override

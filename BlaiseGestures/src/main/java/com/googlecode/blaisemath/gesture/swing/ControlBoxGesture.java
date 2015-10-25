@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.gesture.swing;
  */
 
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGestureSupport;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
@@ -39,6 +39,7 @@ import com.googlecode.blaisemath.util.AffineTransformBuilder;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -55,14 +56,11 @@ import java.util.logging.Logger;
  * 
  * @author elisha
  */
-public class ControlBoxGesture extends MouseGestureSupport {
+public class ControlBoxGesture extends MouseGestureSupport<JGraphicComponent> {
     
     private static final int CAPTURE_RAD = 5;
     
-    protected final JGraphicComponent view;
-    
-    protected final PrimitiveGraphicSupport graphic;
-    
+    //<editor-fold defaultstate="collapsed" desc="STYLES">
     private final AttributeSet boxStyle = Styles.strokeWidth(new Color(0,0,255,64), 1f);
     private final AttributeSet controlStyle = Styles.fillStroke(new Color(0,0,255,64), null)
             .and(Styles.MARKER, Markers.CIRCLE)
@@ -70,7 +68,10 @@ public class ControlBoxGesture extends MouseGestureSupport {
     private final AttributeSet selectedControlStyle = Styles.fillStroke(new Color(0,0,255,128), null)
             .and(Styles.MARKER, Markers.CIRCLE)
             .and(Styles.MARKER_RADIUS, CAPTURE_RAD);
+    //</editor-fold>
     
+    /** The graphic being controlled. */
+    protected final PrimitiveGraphicSupport graphic;
     /** Current active control */
     private ControlPoint controlPoint;
     /** If the current gesture is to move */
@@ -83,23 +84,10 @@ public class ControlBoxGesture extends MouseGestureSupport {
      * @param orchestrator the orchestrator that handles gestures
      * @param graphic the graphic with the bounding box
      */
-    public ControlBoxGesture(GestureOrchestrator orchestrator, PrimitiveGraphicSupport graphic) {
+    public ControlBoxGesture(GestureOrchestrator<JGraphicComponent> orchestrator, PrimitiveGraphicSupport graphic) {
         super(orchestrator, "Bounding box", "Move and resize shape");
-        
-        checkArgument(orchestrator.getComponent() instanceof JGraphicComponent, 
-                "Orchestrator must use a JGraphicComponent");
-        view = (JGraphicComponent) orchestrator.getComponent();
-        
+        checkNotNull(graphic);
         this.graphic = graphic;
-    }
-    
-    /**
-     * Checks whether the gesture supports the given primitive.
-     * @param primitive to check
-     * @return true if supported, false otherwise
-     */
-    public static boolean supports(Object primitive) {
-        return primitive instanceof Shape || primitive instanceof AnchoredImage;
     }
     
     private Rectangle2D controlBox() {
@@ -109,10 +97,26 @@ public class ControlBoxGesture extends MouseGestureSupport {
     private Rectangle2D controlBox(Shape shape) {
         return graphic.getRenderer().boundingBox(shape, graphic.renderStyle());
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="GESTURE LIFECYCLE">
+
+    @Override
+    public boolean activatesWith(MouseEvent evt) {
+        return super.activatesWith(evt);
+    }
+    
+    @Override
+    public void complete() {
+        controlPoint = null;
+        startShape = null;
+    }
+    
+    //</editor-fold>
 
     @Override
     public void paint(Graphics2D g) {
-        AffineTransform at = view.getTransform() == null ? new AffineTransform() : view.getTransform();
+        AffineTransform vt = view.getTransform();
+        AffineTransform at = vt == null ? new AffineTransform() : vt;
         Shape transformed = at.createTransformedShape(controlBox());
         ShapeRenderer.getInstance().render(transformed, boxStyle, g);
         Rectangle2D bds = controlBox(transformed);
@@ -122,6 +126,8 @@ public class ControlBoxGesture extends MouseGestureSupport {
             MarkerRenderer.getInstance().render(pt, sty, g);
         }
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="MOUSE HANDLING">
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -156,11 +162,25 @@ public class ControlBoxGesture extends MouseGestureSupport {
     public void mouseClicked(MouseEvent e) {
         if (graphic != null) {
             Point2D clickPt = transformedPoint(e);
+            // clicking outside the graphic de-activates the gesture
             if (!graphic.contains(clickPt) && capture(graphic.boundingBox(), clickPt) == null) {
-                orchestrator.finishGesture(this);
+                orchestrator.complete(this);
                 view.getSelectionModel().deselect(graphic);
             }
         }
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="UTILS">
+    
+    /**
+     * Checks whether the gesture supports the given primitive.
+     * @param primitive to check
+     * @return true if supported, false otherwise
+     */
+    public static boolean supports(Object primitive) {
+        return primitive instanceof Shape || primitive instanceof AnchoredImage;
     }
     
     private void applyTransformToGraphic(AffineTransform transf) {
@@ -177,20 +197,10 @@ public class ControlBoxGesture extends MouseGestureSupport {
             Logger.getLogger(ControlBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
         }
     }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        super.mouseReleased(e);
-        controlPoint = null;
-        startShape = null;
-    }
-
-    @Override
-    public void finish() {
-        controlPoint = null;
-        startShape = null;
-    }
     
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="ControlPoint HANDLING">
     //
     // ControlPoint handling
     //
@@ -340,5 +350,7 @@ public class ControlBoxGesture extends MouseGestureSupport {
          */
         abstract AffineTransform resize(Rectangle2D initial, double dx, double dy);
     }
+    
+    //</editor-fold>
     
 }

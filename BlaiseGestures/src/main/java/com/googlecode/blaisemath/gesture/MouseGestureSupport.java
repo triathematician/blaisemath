@@ -25,24 +25,34 @@ package com.googlecode.blaisemath.gesture;
  */
 
 
+import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.util.TransformedCoordinateSpace;
 import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 /**
- * Partial implementation of {@link MouseGesture} that captures mouse event
- * locations during move, press, and drag. Transforms the coordinates into local
- * space if the source of the events is a {@link TransformedCoordinateSpace}.
+ * <p>
+ *   Partial implementation of {@link MouseGesture} that captures mouse event
+ *   locations during move, press, and drag. Transforms the coordinates into local
+ *   space if the source of the events is a {@link TransformedCoordinateSpace}.
+ * </p>
+ * 
+ * @param <V> one of the super types of the view component
  * 
  * @author Elisha
  */
-public abstract class MouseGestureSupport extends MouseAdapter implements MouseGesture {
+@Beta
+public abstract class MouseGestureSupport<V extends Component> extends MouseAdapter implements MouseGesture {
     
     /** Orchestrates the gesture */
-    protected final GestureOrchestrator orchestrator;
+    protected final GestureOrchestrator<V> orchestrator;
+    /** The view being orchestrated */
+    protected final V view;
+    
     /** User-friendly name of the gesture */
     protected final String name;
     /** Description of the gesture */
@@ -57,18 +67,14 @@ public abstract class MouseGestureSupport extends MouseAdapter implements MouseG
     /** Where the mouse is following a press/drag */
     protected Point2D locPoint = null;
 
-    protected MouseGestureSupport(GestureOrchestrator orchestrator, String name, String description) {
+    protected MouseGestureSupport(GestureOrchestrator<V> orchestrator, String name, String description) {
         this.orchestrator = orchestrator;
+        this.view = orchestrator.getComponent();
         this.name = name;
         this.description = description;
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    
-    @Override
-    public GestureOrchestrator getOrchestrator() {
-        return orchestrator;
-    }
     
     @Override
     public String getName() {
@@ -91,54 +97,16 @@ public abstract class MouseGestureSupport extends MouseAdapter implements MouseG
     
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="DEFAULT MOUSE HANDLING">
+    //<editor-fold defaultstate="collapsed" desc="GESTURE LIFECYCLE (EMPTY METHODS)">
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-        movePoint = transformedPoint(e);
-        if (e.getSource() instanceof Component) {
-            ((Component) e.getSource()).repaint();
-        }
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        movePoint = null;
-        if (e.getSource() instanceof Component) {
-            ((Component) e.getSource()).repaint();
-        }
+    public boolean activatesWith(MouseEvent evt) {
+        return true;
     }
     
     @Override
-    public void mousePressed(MouseEvent e) {
-        pressPoint = transformedPoint(e);
-        locPoint = pressPoint;
-        if (e.getSource() instanceof Component) {
-            ((Component) e.getSource()).repaint();
-        }
-    }
-    
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        locPoint = transformedPoint(e);
-        if (e.getSource() instanceof Component) {
-            ((Component) e.getSource()).repaint();
-        }
-    }
-    
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        mouseDragged(e);
-        finish();
-    }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="HOOK METHODS">
-
-    @Override
-    public void initiate() {
-        // do nothing by default
+    public boolean activate() {
+        return true;
     }
     
     @Override
@@ -147,9 +115,10 @@ public abstract class MouseGestureSupport extends MouseAdapter implements MouseG
     }
     
     @Override
-    public void finish() {
+    public void complete() {
         // do nothing by default
     }
+    
 
     /**
      * Paint the gesture on the given view. Empty by default.
@@ -160,7 +129,48 @@ public abstract class MouseGestureSupport extends MouseAdapter implements MouseG
     }
     
     //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="DEFAULT MOUSE HANDLING">
 
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        movePoint = transformedPoint(e);
+        view.repaint();
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        movePoint = null;
+        view.repaint();
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent e) {
+        pressPoint = transformedPoint(e);
+        locPoint = pressPoint;
+        view.repaint();
+    }
+    
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        locPoint = transformedPoint(e);
+        view.repaint();
+    }
+    
+    /**
+     * Override default {@code mouseReleased} behavior to invoke {@link #mouseDragged(java.awt.event.MouseEvent)}
+     * and to complete the gesture.
+     * @param e mouse event
+     */
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        mouseDragged(e);
+        orchestrator.complete(this);
+    }
+    
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="UTILS">
     
     /**
      * Return a transformed mouse event location if the event's source is a 
@@ -173,5 +183,7 @@ public abstract class MouseGestureSupport extends MouseAdapter implements MouseG
                 ? ((TransformedCoordinateSpace)evt.getSource()).toGraphicCoordinate(evt.getPoint())
                 : evt.getPoint();
     }
+    
+    //</editor-fold>
     
 }
