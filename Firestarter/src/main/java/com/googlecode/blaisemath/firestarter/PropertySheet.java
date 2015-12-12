@@ -58,9 +58,15 @@ public class PropertySheet extends JPanel {
     /** This static variable determines whether the filter panel is on or off by default. */
     static boolean TOOLBAR_VISIBLE_DEFAULT = false;
     /** Minimum width of the table */
-    public static final int MIN_WIDTH = 200;
+    private static final int MIN_TABLE_WIDTH = 200;
     /** Determines minimum height of cells in the table. */
-    public static final int MIN_CELL_HEIGHT = 20;
+    private static final int MIN_CELL_HEIGHT = 20;
+    /** Minimum cell width */
+    private static final int MIN_CELL_WIDTH = 40;
+    /** Maximum width of a cell */
+    private static final int MAX_CELL_WIDTH = 400;
+    /** Preferred width for custom editor buttons. */
+    private static final int PREF_BUTTON_WIDTH = 100;
 
     /** Default width of first column */
     protected int defaultNameColWidth = 70;
@@ -76,10 +82,15 @@ public class PropertySheet extends JPanel {
     /** The underlying table model. */
     protected PropertySheetModel model;
 
+    /** Initialize sheet with an empty model. */
     public PropertySheet() {
         initComponents(new PropertyModel.Empty());
     }
     
+    /**
+     * Initialize sheet with specified model.
+     * @param pm property model for editing
+     */
     public PropertySheet(PropertyModel pm) {
         initComponents(pm);
     }
@@ -87,12 +98,21 @@ public class PropertySheet extends JPanel {
     /**
      * Create a property sheet that uses the supplied bean object for editing components.
      * @param bean a bean object
-     * @return newly forBeand property sheet for editing the bean's properties
+     * @return new property sheet for editing the bean's properties
      */
     public static PropertySheet forBean(Object bean) {
         PropertySheet res = new PropertySheet();
         res.initComponents(new BeanPropertyModel(bean));
         return res;
+    }
+    
+    /**
+     * Create a property sheet with a custom model
+     * @param model property model
+     * @return property sheet
+     */
+    public static PropertySheet forModel(PropertyModel model) {
+        return new PropertySheet(model);
     }
 
     protected final void initComponents(PropertyModel model) {
@@ -106,6 +126,10 @@ public class PropertySheet extends JPanel {
         }
     }
     
+    /**
+     * Initialize table, setting up components, column sizes, etc.
+     * @param pm property model
+     */
     protected void initTable(PropertyModel pm) {
         table = new JTable();
         table.setGridColor(new Color(192, 192, 192));
@@ -120,15 +144,28 @@ public class PropertySheet extends JPanel {
         table.getTableHeader().setReorderingAllowed(false);
         updateRowHeights();
 
-        // set up first column
-        TableColumn column = table.getColumnModel().getColumn(0);
-        column.setPreferredWidth(defaultNameColWidth);
-
-        // set up second column
-        column = table.getColumnModel().getColumn(1);
-        column.setPreferredWidth(MIN_WIDTH - defaultNameColWidth);
+        TableColumn column = table.getColumnModel().getColumn(1);
         column.setCellRenderer(new ValueColEditor());
         column.setCellEditor(new ValueColEditor());
+        
+        // set up column sizes
+        for (int col = 0; col < 2; col++) {
+            int prefWidth = MIN_CELL_WIDTH;
+            for (int row = 0; row < model.getRowCount(); row++) {
+                Object val = model.getValueAt(row, col);
+                Component comp = table.getCellRenderer(row, col)
+                        .getTableCellRendererComponent(table, val, false, false, row, col);
+                int wid = comp instanceof DefaultPropertyComponent 
+                        ? PREF_BUTTON_WIDTH
+                        : comp.getPreferredSize().width;
+                prefWidth = Math.max(prefWidth, wid);
+            }
+            prefWidth = Math.min(prefWidth, MAX_CELL_WIDTH);
+            table.getColumnModel().getColumn(col).setPreferredWidth(prefWidth);
+            if (col == 0) {
+                table.getColumnModel().getColumn(col).setMinWidth(Math.min(prefWidth, MIN_CELL_WIDTH));
+            }
+        }
     }
     
     protected void initToolbar() {

@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.Component;
+import java.awt.Dimension;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
@@ -38,6 +39,8 @@ import javax.swing.event.ChangeListener;
  * @author Elisha Peterson
  */
 public abstract class NumberEditor extends MPropertyEditorSupport {
+    
+    private static final int MAX_SPINNER_WIDTH = 100;
 
     protected final JSpinner spinner;
 
@@ -160,6 +163,9 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
             long val = ((Number)newValue).longValue();
             // cast to Number required for proper spinner setup
             spinner.setModel(new SpinnerNumberModel((Number) val, Long.MIN_VALUE, Long.MAX_VALUE, 1));
+            Dimension pref = spinner.getPreferredSize();
+            spinner.setPreferredSize(new Dimension(
+                    Math.min(MAX_SPINNER_WIDTH, pref.width), pref.height));
         }
     }
 
@@ -186,6 +192,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
             Float ival = ((Number) newValue).floatValue();
             // cast to Number required for proper spinner setup
             spinner.setModel(new SpinnerNumberModel((Number) ival, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f));
+            spinner.setPreferredSize(new Dimension(MAX_SPINNER_WIDTH, spinner.getPreferredSize().height));
         }
     }
 
@@ -204,6 +211,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         @Override
         protected void initEditorValue() {
             spinner.setModel(new SpinnerNumberModel(((Number) newValue).doubleValue(), -Double.MAX_VALUE, Double.MAX_VALUE, 0.01));
+            spinner.setPreferredSize(new Dimension(MAX_SPINNER_WIDTH, spinner.getPreferredSize().height));
         }
     }
 }

@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ import javax.swing.event.ChangeListener;
  * @author Elisha Peterson
  */
 public abstract class MultiSpinnerSupport<N extends Number> extends MPanelEditorSupport {
+    
+    private static final int MAX_SPINNER_WIDTH = 70;
 
     protected final JSpinner[] spinners;
     private final String[] tips;
@@ -89,6 +92,11 @@ public abstract class MultiSpinnerSupport<N extends Number> extends MPanelEditor
     protected void initEditorValue() {
         if (panel != null) {
             initSpinnerModels();
+            for (JSpinner spinner : spinners) {
+                Dimension spDim = spinner.getPreferredSize();
+                spinner.setPreferredSize(new Dimension(
+                        Math.min(spDim.width, MAX_SPINNER_WIDTH), spDim.height));
+            }
         }
     }
     
