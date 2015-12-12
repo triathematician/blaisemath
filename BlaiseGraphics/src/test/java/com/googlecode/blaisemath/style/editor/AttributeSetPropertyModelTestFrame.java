@@ -21,8 +21,7 @@ package com.googlecode.blaisemath.style.editor;
  */
 
 
-import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
@@ -63,11 +62,9 @@ public class AttributeSetPropertyModelTestFrame extends javax.swing.JFrame {
         
         EditorRegistration.registerEditors();
         AttributeSet as = Styles.fillStroke(Color.white, Color.red);
-        Map<String,Class<?>> asTypes = Maps.newLinkedHashMap();
-        asTypes.put(Styles.FILL, Color.class);
-        asTypes.put(Styles.STROKE, Color.class);
-        AttributeSetPropertyModel m = new AttributeSetPropertyModel(as, asTypes);
-        rollupPanel1.add("AS Test", new PropertySheet(m));
+        AttributeSetPropertyModel m = new AttributeSetPropertyModel(as, 
+                ImmutableMap.<String,Class<?>>of(Styles.FILL, Color.class, Styles.STROKE, Color.class));
+        rollupPanel1.add("AS Test", PropertySheet.forModel(m));
         
         jGraphicComponent1.addGraphic(JGraphics.point(new Point(20, 20), as));
         
