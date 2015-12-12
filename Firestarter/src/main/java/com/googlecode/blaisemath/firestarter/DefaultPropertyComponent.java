@@ -20,12 +20,15 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.IndexedPropertyDescriptor;
 import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  * <p>
@@ -68,16 +71,15 @@ final class DefaultPropertyComponent extends JButton {
     void updateProperty() {
         Object value = parent.getPropertyValue(row);
         if (value != null) {
-            JDialog dialog;
+            Window window = SwingUtilities.windowForComponent(this);
             if (parent instanceof BeanPropertyModel 
                     && ((BeanPropertyModel)parent).getPropertyDescriptor(row) instanceof IndexedPropertyDescriptor) {
-                dialog = new PropertySheetDialog(null, false, 
+                PropertySheetDialog.show(window, false, 
                         ((BeanPropertyModel)parent).getBean(), 
                         (IndexedPropertyDescriptor) ((BeanPropertyModel)parent).getPropertyDescriptor(row));
             } else {
-                dialog = new PropertySheetDialog(null, false, value);
+                PropertySheetDialog.show(window, false, value);
             }
-            dialog.setVisible(true);
         }
     }
 }
