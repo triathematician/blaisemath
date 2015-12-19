@@ -41,67 +41,6 @@ import javax.swing.JScrollPane;
  * @author ae3263
  */
 public class PropertySheetDialog extends javax.swing.JDialog {
-
-    /**
-     * Creates new form PropertySheetDialog
-     * @param parent the parent frame
-     * @param modal whether the dialog box is modal
-     * @param bean object to populate the box
-     * @deprecated use the factory method instead
-     */
-    @Deprecated
-    public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean) {
-        this(parent, modal, bean, (Predicate) null);
-    }
-    
-    /**
-     * Creates new form PropertySheetDialog
-     * @param parent the parent frame
-     * @param modal whether the dialog box is modal
-     * @param bean object to populate the box
-     * @param propertyFilter filters properties by name
-     * @deprecated use the factory method instead
-     */
-    @Deprecated
-    public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, Predicate<String> propertyFilter) {
-        super(parent, bean.toString(), modal);
-
-        PropertySheet propertySheet = PropertySheet.forBean(bean);
-        if (propertyFilter != null) {
-            PropertyModel pm = propertySheet.getPropertyModel();
-            ((BeanPropertyModel)pm).setFilter(BeanPropertyFilter.byName(propertyFilter));
-        }
-        initComponents(propertySheet);
-    }
-
-    /**
-     * Creates new form PropertySheetDialog with an indexed property.
-     * @param parent the parent frame
-     * @param modal whether the dialog box is modal
-     * @param bean object to populate the box
-     * @param ipd an indexed property descriptor
-     * @deprecated use the factory method instead
-     */
-    @Deprecated
-    public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, IndexedPropertyDescriptor ipd) {
-        super(parent, "Indexed property [" + ipd.getDisplayName() + "] of " + bean.toString(), modal);
-        
-        initComponents(IndexedPropertySheet.forIndexedProperty(bean, ipd));
-    }
-
-    /**
-     * Creates new form PropertySheetDialog with an indexed property.
-     * @param parent the parent frame
-     * @param modal whether the dialog box is modal
-     * @param bean object to populate the box
-     * @param model model for the property sheet
-     * @deprecated use the factory method instead
-     */
-    @Deprecated
-    public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, PropertyModel model) {
-        super(parent, "Editing "+bean.toString(), modal);
-        initComponents(new PropertySheet(model));
-    }
     
     private PropertySheetDialog(Window win, ModalityType modal, Object bean, Predicate<String> filter) {
         super(win, bean.toString(), modal);
@@ -137,7 +76,7 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      */
     public static void show(Window parent, boolean modal, Object bean) {
         if (parent instanceof Frame) {
-            new PropertySheetDialog((Frame) parent, modal, bean, (Predicate) null)
+            new PropertySheetDialog((Frame) parent, modality(modal), bean, (Predicate) null)
                     .setVisible(true);
         } else {
             new PropertySheetDialog((Window) parent, modality(modal), bean, (Predicate) null)
@@ -153,13 +92,8 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param propertyFilter filters properties by name
      */
     public static void show(Window parent, boolean modal, Object bean, Predicate<String> propertyFilter) {
-        if (parent instanceof Frame) {
-            new PropertySheetDialog((Frame) parent, modal, bean, propertyFilter)
-                    .setVisible(true);
-        } else {
-            new PropertySheetDialog((Window) parent, modality(modal), bean, propertyFilter)
-                    .setVisible(true);
-        }
+        new PropertySheetDialog((Window) parent, modality(modal), bean, propertyFilter)
+                .setVisible(true);
     }
 
     /**
@@ -170,13 +104,8 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param ipd an indexed property descriptor
      */
     public static void show(Window parent, boolean modal, Object bean, IndexedPropertyDescriptor ipd) {
-        if (parent instanceof Frame) {
-            new PropertySheetDialog((Frame) parent, modal, bean, ipd)
-                    .setVisible(true);
-        } else {
-            new PropertySheetDialog((Window) parent, modality(modal), bean, ipd)
-                    .setVisible(true);
-        }
+        new PropertySheetDialog((Window) parent, modality(modal), bean, ipd)
+                .setVisible(true);
     }
 
     /**
@@ -187,13 +116,8 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param model model for the property sheet
      */
     public static void show(Window parent, boolean modal, Object bean, PropertyModel model) {
-        if (parent instanceof Frame) {
-            new PropertySheetDialog((Frame) parent, modal, bean, model)
-                    .setVisible(true);
-        } else {
-            new PropertySheetDialog((Window) parent, modality(modal), bean, model)
-                    .setVisible(true);
-        }
+        new PropertySheetDialog((Window) parent, modality(modal), bean, model)
+                .setVisible(true);
     }
     
     //</editor-fold>

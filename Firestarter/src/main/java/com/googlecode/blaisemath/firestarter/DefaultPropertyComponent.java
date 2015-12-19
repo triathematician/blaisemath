@@ -26,8 +26,6 @@ import java.awt.event.ActionListener;
 import java.beans.IndexedPropertyDescriptor;
 import java.util.Arrays;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /**
@@ -74,11 +72,11 @@ final class DefaultPropertyComponent extends JButton {
             Window window = SwingUtilities.windowForComponent(this);
             if (parent instanceof BeanPropertyModel 
                     && ((BeanPropertyModel)parent).getPropertyDescriptor(row) instanceof IndexedPropertyDescriptor) {
-                PropertySheetDialog.show(window, false, 
+                PropertySheetDialog.show(window, true, 
                         ((BeanPropertyModel)parent).getBean(), 
                         (IndexedPropertyDescriptor) ((BeanPropertyModel)parent).getPropertyDescriptor(row));
             } else {
-                PropertySheetDialog.show(window, false, value);
+                PropertySheetDialog.show(window, true, value);
             }
         }
     }
