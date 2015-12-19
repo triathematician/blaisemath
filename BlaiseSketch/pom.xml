@@ -82,11 +82,6 @@
             <version>1.16</version>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.blaisemath</groupId>
-            <artifactId>firestarter</artifactId>
-            <version>1.2.13</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-gestures</artifactId>
             <version>0.2.0-SNAPSHOT</version>
@@ -100,6 +95,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-svg</artifactId>
             <version>0.2.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>firestarter</artifactId>
+            <version>1.2.14-SNAPSHOT</version>
         </dependency>
     </dependencies>
     
