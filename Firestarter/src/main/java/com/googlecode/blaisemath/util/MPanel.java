@@ -125,13 +125,6 @@ public final class MPanel extends JPanel {
         toggle.setBorderPainted(false);
         toggle.setMargin(new Insets(0,0,0,0));
         toggle.setContentAreaFilled(false);
-        
-        for (Object k : UIManager.getLookAndFeelDefaults().keySet()) {
-            if (k.toString().toLowerCase().contains("selection")
-                    || k.toString().toLowerCase().contains("basdutton")) {
-                System.out.println(k + " -> "+UIManager.getDefaults().get(k));
-            }
-        }
 
         Color fg = UIManager.getColor("Tree.selectionForeground");
         Color bg = UIManager.getColor("Tree.selectionBackground");
