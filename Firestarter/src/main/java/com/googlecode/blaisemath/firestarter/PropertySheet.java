@@ -40,6 +40,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
@@ -57,8 +58,6 @@ public class PropertySheet extends JPanel {
 
     /** This static variable determines whether the filter panel is on or off by default. */
     static boolean TOOLBAR_VISIBLE_DEFAULT = false;
-    /** Minimum width of the table */
-    private static final int MIN_TABLE_WIDTH = 200;
     /** Determines minimum height of cells in the table. */
     private static final int MIN_CELL_HEIGHT = 20;
     /** Minimum cell width */
@@ -132,7 +131,12 @@ public class PropertySheet extends JPanel {
      */
     protected void initTable(PropertyModel pm) {
         table = new JTable();
-        table.setGridColor(new Color(192, 192, 192));
+        Color fg = UIManager.getColor("Label.foreground");
+        Color bg = UIManager.getColor("Label.background");
+        table.setGridColor(new Color(
+                (fg.getRed()+5*bg.getRed())/6,
+                (fg.getGreen()+5*bg.getGreen())/6,
+                (fg.getBlue()+5*bg.getBlue())/6));
         model = new PropertySheetModel(new PropertyEditorModel(pm));
         model.addTableModelListener(new TableModelListener(){
             @Override

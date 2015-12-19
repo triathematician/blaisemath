@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -64,12 +65,12 @@ public final class MPanel extends JPanel {
     
     private static final int ICON_SIZE = UIManager.getFont("Label.font").getSize();
     
-    private static final class PlusIcon extends SquareIcon {
-        private final boolean plus;
+    private static final class ExpandIcon extends SquareIcon {
+        private final boolean min;
         private final Color color;
-        public PlusIcon(boolean plus, Color color) {
+        public ExpandIcon(boolean min, Color color) {
             super(ICON_SIZE);
-            this.plus = plus;
+            this.min = min;
             this.color = color;
         }
         @Override
@@ -77,10 +78,32 @@ public final class MPanel extends JPanel {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(color);
-            g2.draw(new Line2D.Double(x+2, y+.5*sz, x+sz-2, y+.5*sz));
-            if (plus) {
-                g2.draw(new Line2D.Double(x+.5*sz, y+2, x+.5*sz, y+sz-2));
+            g2.setStroke(new BasicStroke(1f));
+            double hsz = .5*sz;
+            if (min) {
+                g2.draw(new Line2D.Double(x+.3*sz, y+2, x+.7*sz, y+hsz));
+                g2.draw(new Line2D.Double(x+.3*sz, y+sz-2, x+.7*sz, y+hsz));
+            } else {
+                g2.draw(new Line2D.Double(x+2, y+.3*sz, x+hsz, y+.7*sz));
+                g2.draw(new Line2D.Double(x+sz-2, y+.3*sz, x+hsz, y+.7*sz));
             }
+        }
+    }
+    
+    private static final class PressIcon extends SquareIcon {
+        private final Color color;
+        public PressIcon(Color color) {
+            super(ICON_SIZE);
+            this.color = color;
+        }
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(color);
+            g2.setStroke(new BasicStroke(1f));
+            g2.draw(new Line2D.Double(x+.65*sz, y+.25*sz, x+.65*sz, y+.65*sz));
+            g2.draw(new Line2D.Double(x+.25*sz, y+.65*sz, x+.65*sz, y+.65*sz));
         }
     }
     
@@ -125,23 +148,25 @@ public final class MPanel extends JPanel {
         toggle.setBorderPainted(false);
         toggle.setMargin(new Insets(0,0,0,0));
         toggle.setContentAreaFilled(false);
+        toggle.setFocusPainted(false);
 
-        Color fg = UIManager.getColor("Tree.selectionForeground");
-        Color bg = UIManager.getColor("Tree.selectionBackground");
+        Color fg = UIManager.getColor("Label.foreground");
+        Color bg = UIManager.getColor("Label.background");
+        Color bg2 = new Color(
+                (fg.getRed()+3*bg.getRed())/4,
+                (fg.getGreen()+3*bg.getGreen())/4,
+                (fg.getBlue()+3*bg.getBlue())/4);
         Color fg2 = new Color(
-                (fg.getRed()*3+bg.getRed())/4,
-                (fg.getGreen()*3+bg.getGreen())/4,
-                (fg.getBlue()*3+bg.getBlue())/4);
-        Color fg3 = new Color(
-                (fg.getRed()*1+bg.getRed())/2,
-                (fg.getGreen()*1+bg.getGreen())/2,
-                (fg.getBlue()*1+bg.getBlue())/2);
+                (fg.getRed()*5+bg.getRed())/6,
+                (fg.getGreen()*5+bg.getGreen())/6,
+                (fg.getBlue()*5+bg.getBlue())/6);
         titleLabel.setForeground(fg);
         
-        toggle.setIcon(new PlusIcon(false, fg3));
-        toggle.setRolloverIcon(new PlusIcon(false, fg2));
-        toggle.setSelectedIcon(new PlusIcon(true, fg3));
-        toggle.setRolloverSelectedIcon(new PlusIcon(true, fg2));
+        toggle.setIcon(new ExpandIcon(false, bg));
+        toggle.setRolloverIcon(new ExpandIcon(false, fg2));
+        toggle.setSelectedIcon(new ExpandIcon(true, bg));
+        toggle.setRolloverSelectedIcon(new ExpandIcon(true, fg2));
+        toggle.setPressedIcon(new PressIcon(fg2));
         
         toggle.addItemListener(new ItemListener(){
             @Override
@@ -154,7 +179,7 @@ public final class MPanel extends JPanel {
         titleBar.setMinimumSize(new Dimension(component.getMinimumSize().width + 2, titleHt));
         titleBar.setMaximumSize(new Dimension(component.getMaximumSize().width + 2, titleHt));
         titleBar.setPreferredSize(new Dimension(component.getPreferredSize().width + 2, titleHt));
-        titleBar.setBackground(bg);
+        titleBar.setBackground(bg2);
 
         titleBar.setLayout(new BorderLayout());
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
