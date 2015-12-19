@@ -28,19 +28,25 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.geom.Line2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
 /**
  * <p>
@@ -54,71 +60,112 @@ import javax.swing.JPanel;
  */
 public final class MPanel extends JPanel {
 
+    //<editor-fold defaultstate="collapsed" desc="STATICS">
+    
+    private static final int ICON_SIZE = UIManager.getFont("Label.font").getSize();
+    
+    private static final class PlusIcon extends SquareIcon {
+        private final boolean plus;
+        private final Color color;
+        public PlusIcon(boolean plus, Color color) {
+            super(ICON_SIZE);
+            this.plus = plus;
+            this.color = color;
+        }
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(color);
+            g2.draw(new Line2D.Double(x+2, y+.5*sz, x+sz-2, y+.5*sz));
+            if (plus) {
+                g2.draw(new Line2D.Double(x+.5*sz, y+2, x+.5*sz, y+sz-2));
+            }
+        }
+    }
+    
+    //</editor-fold>
+    
     /** The title bar */
     private final JPanel titleBar;
     /** The label displaying the title */
     private final JLabel titleLabel;
+    /** The button for minimizing */
+    private final JToggleButton toggle;
 
     /** Component within the panel */
     private Component component;
     /** Listen for changes to component size */
     private final PropertyChangeListener componentSizeListener;
-
-    /** Whether panel is currently minimized */
-    private boolean minimized;
-
+    
     //
     // CONSTRUCTORS
     //
 
     public MPanel() {
-        this("Title", new JLabel("Component"), false);
+        this("Title", new JLabel("Component"));
     }
 
     public MPanel(Component component) {
-        this(component.toString(), component, false);
+        this(component.toString(), component);
     }
 
     public MPanel(String title, Component component) {
-        this(title, component, false);
+        this(new JLabel(title), component);
     }
 
     public MPanel(JLabel label, Component component) {
-        this(label, component, false);
-    }
-
-    public MPanel(Component component, boolean minimized) {
-        this(component.toString(), component, minimized);
-    }
-
-    public MPanel(String title, Component component, boolean minimized) {
-        this(new JLabel(title), component, minimized);
-    }
-
-    public MPanel(JLabel label, Component component, boolean minimized) {
         titleLabel = label;
         this.component = component;
-        this.minimized = minimized;
         
         int titleHt = titleLabel.getPreferredSize().height;
 
-        JButton rollupButton = new JButton(new ToggleHideAction());
-        rollupButton.setMargin(new Insets(0, 0, 0, 0));
-        Dimension square = new Dimension(titleHt, titleHt);
-        rollupButton.setMinimumSize(square);
-        rollupButton.setMaximumSize(square);
-        rollupButton.setPreferredSize(square);
-        rollupButton.setOpaque(false);
+        toggle = new JToggleButton();
+        toggle.setBorder(null);
+        toggle.setBorderPainted(false);
+        toggle.setMargin(new Insets(0,0,0,0));
+        toggle.setContentAreaFilled(false);
+        
+        for (Object k : UIManager.getLookAndFeelDefaults().keySet()) {
+            if (k.toString().toLowerCase().contains("selection")
+                    || k.toString().toLowerCase().contains("basdutton")) {
+                System.out.println(k + " -> "+UIManager.getDefaults().get(k));
+            }
+        }
+
+        Color fg = UIManager.getColor("Tree.selectionForeground");
+        Color bg = UIManager.getColor("Tree.selectionBackground");
+        Color fg2 = new Color(
+                (fg.getRed()*3+bg.getRed())/4,
+                (fg.getGreen()*3+bg.getGreen())/4,
+                (fg.getBlue()*3+bg.getBlue())/4);
+        Color fg3 = new Color(
+                (fg.getRed()*1+bg.getRed())/2,
+                (fg.getGreen()*1+bg.getGreen())/2,
+                (fg.getBlue()*1+bg.getBlue())/2);
+        titleLabel.setForeground(fg);
+        
+        toggle.setIcon(new PlusIcon(false, fg3));
+        toggle.setRolloverIcon(new PlusIcon(false, fg2));
+        toggle.setSelectedIcon(new PlusIcon(true, fg3));
+        toggle.setRolloverSelectedIcon(new PlusIcon(true, fg2));
+        
+        toggle.addItemListener(new ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updateSize();
+            }
+        });
 
         titleBar = new JPanel();
         titleBar.setMinimumSize(new Dimension(component.getMinimumSize().width + 2, titleHt));
         titleBar.setMaximumSize(new Dimension(component.getMaximumSize().width + 2, titleHt));
         titleBar.setPreferredSize(new Dimension(component.getPreferredSize().width + 2, titleHt));
-        titleBar.setBackground(new Color(192, 192, 216));
+        titleBar.setBackground(bg);
 
         titleBar.setLayout(new BorderLayout());
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
-        titleBar.add(rollupButton, BorderLayout.WEST);
+        titleBar.add(toggle, BorderLayout.WEST);
         titleBar.add(titleLabel, BorderLayout.CENTER);
 
         setBorder(BorderFactory.createLineBorder(titleBar.getBackground(), 2));
@@ -145,12 +192,16 @@ public final class MPanel extends JPanel {
         });
         updateSize();
     }
+    
+    private boolean isMinimized() {
+        return toggle.isSelected();
+    }
 
     private void updateSize() {
-        int height = 0;
-        int minWidth = 0;
-        int prefWidth = 0;
-        if (minimized) {
+        int height;
+        int minWidth;
+        int prefWidth;
+        if (isMinimized()) {
             if (Arrays.asList(getComponents()).contains(component)) {
                 remove(component);
             }
@@ -219,18 +270,19 @@ public final class MPanel extends JPanel {
         updateSize();
     }
 
-
-    /** Action to minimize or maximize the window. */
-    public class ToggleHideAction extends AbstractAction {
-        public ToggleHideAction() {
-            super(minimized ? " + " : " - ");
-            putValue(SHORT_DESCRIPTION, "Minimize/maximize panel");
+    private abstract static class SquareIcon implements Icon {
+        protected final int sz;
+        public SquareIcon(int iconSize) {
+            this.sz = iconSize;
         }
         @Override
-        public void actionPerformed(ActionEvent e) {
-            minimized = !minimized;
-            putValue(NAME, minimized ? " + " : " - ");
-            updateSize();
+        public int getIconWidth() {
+            return sz;
+        }
+        @Override
+        public int getIconHeight() {
+            return sz;
         }
     }
+    
 }
