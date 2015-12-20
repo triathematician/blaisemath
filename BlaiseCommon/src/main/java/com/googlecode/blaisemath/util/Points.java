@@ -109,11 +109,12 @@ public class Points {
 
     /**
      * Compute the average location of a set of points.
-     * @param locs points
+     * @param locs points (should be non-empty)
      * @return average loc
+     * @throws IllegalArgumentException if argument is empty
      */
     public static Point2D average(Iterable<? extends Point2D> locs) {
-        checkArgument(Iterables.size(locs) > 0);
+        checkArgument(locs != null && Iterables.size(locs) > 0);
         double sumx = 0;
         double sumy = 0;
         int count = 0;

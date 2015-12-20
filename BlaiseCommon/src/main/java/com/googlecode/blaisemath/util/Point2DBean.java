@@ -1,7 +1,7 @@
 package com.googlecode.blaisemath.util;
 
 /**
- * DraggablePoint2D.java
+ * Point2DBean.java
  * Created Aug 1, 2014
  */
 
@@ -44,7 +44,7 @@ public class Point2DBean extends Point2D.Double implements CoordinateBean<Point2
 
     @Override
     public String toString() {
-        return "DraggablePoint{" + getX() + ',' + getY() + '}';
+        return "Point2DBean{" + getX() + ',' + getY() + '}';
     }
     
     @Override

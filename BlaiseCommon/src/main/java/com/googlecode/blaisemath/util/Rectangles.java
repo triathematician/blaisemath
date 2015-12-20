@@ -50,11 +50,7 @@ public class Rectangles {
         }
         Rectangle2D res = null;
         for (Rectangle2D r : rects) {
-            if (res == null) {
-                res = r;
-            } else {
-                res = res.createUnion(r);
-            }
+            res = res == null ? r : res.createUnion(r);
         }
         return res;
     }
