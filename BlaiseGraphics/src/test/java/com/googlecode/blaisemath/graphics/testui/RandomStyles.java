@@ -51,30 +51,20 @@ class RandomStyles {
     }
 
     static AttributeSet point() {
-        return AttributeSet
-                .with(FILL, color())
-                .and(STROKE, color())
-                .and(STROKE_WIDTH, strokeWidth())
+        return AttributeSet.of(FILL, color(), STROKE, color(), STROKE_WIDTH, strokeWidth())
                 .and(MARKER_RADIUS, markerRadius());
     }
     
     static AttributeSet path() {
-        return AttributeSet
-                .with(STROKE, color())
-                .and(STROKE_WIDTH, strokeWidth());
+        return AttributeSet.of(STROKE, color(), STROKE_WIDTH, strokeWidth());
     }
     
     static AttributeSet shape() {
-        return AttributeSet
-                .with(FILL, color())
-                .and(STROKE, color())
-                .and(STROKE_WIDTH, strokeWidth());
+        return AttributeSet.of(FILL, color(), STROKE, color(), STROKE_WIDTH, strokeWidth());
     }
 
     static AttributeSet string() {
-        return AttributeSet
-                .with(FILL, color())
-                .and(FONT_SIZE, fontSize());
+        return AttributeSet.of(FILL, color(), FONT_SIZE, fontSize());
     }
     
 }

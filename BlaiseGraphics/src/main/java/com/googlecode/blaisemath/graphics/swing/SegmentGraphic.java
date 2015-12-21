@@ -68,9 +68,8 @@ public class SegmentGraphic extends TwoPointGraphic {
         addGraphic(lineGraphic);        
         super.initGraphics();
         
-        start.setStyle(AttributeSet.with(Styles.MARKER, Markers.CIRCLE)
-                .and(Styles.MARKER_RADIUS, 2)
-                .and(Styles.FILL, Color.black));
+        start.setStyle(AttributeSet.of(Styles.MARKER, Markers.CIRCLE,
+                Styles.MARKER_RADIUS, 2, Styles.FILL, Color.black));
         start.setStyleHint(StyleHints.HIDDEN_FUNCTIONAL_HINT, true);
         
         end.setStyle(Styles.defaultPointStyle().copy()

@@ -1,5 +1,5 @@
 /**
- * StyleAttributes.java
+ * AttributeSet.java
  * Created Jul 31, 2014
  */
 package com.googlecode.blaisemath.style;
@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.style;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.awt.Color;
@@ -46,104 +47,90 @@ import javax.swing.event.EventListenerList;
  * 
  * @author Elisha
  */
-public class AttributeSet implements Cloneable {
+public class AttributeSet {
     
     private static final Logger LOG = Logger.getLogger(AttributeSet.class.getName());
     
     /** Constant representing the empty attribute set */
-    public static final AttributeSet EMPTY = new ImmutableAttributeSet();
+    public static final AttributeSet EMPTY = ImmutableAttributeSet.copyOf(new AttributeSet());
     
     /** The parent attribute set */
-    protected Optional<AttributeSet> parent;
+    protected Optional<AttributeSet> parent = Optional.absent();
     /** The map of style key/value pairs */
     protected final Map<String,Object> attributeMap = Maps.newHashMap();
     
     private final transient ChangeEvent changeEvent = new ChangeEvent(this);
     private final transient EventListenerList listenerList = new EventListenerList();
 
-    public AttributeSet() {
-        this.parent = Optional.absent();
-    }
-    
-    public AttributeSet(@Nullable AttributeSet parent) {
-        this.parent = Optional.fromNullable(parent);
-    }
-
-    @Override
-    protected AttributeSet clone() {
-        AttributeSet res = new AttributeSet(parent.orNull());
-        res.attributeMap.putAll(attributeMap);
-        return res;
-    }
-
     @Override
     public String toString() {
         return "AttributeSet " + attributeMap;
     }
-    
-    //<editor-fold defaultstate="collapsed" desc="FACTORY & BUILDER METHODS">
-    
-    /**
-     * Generate attribute set with given key/value pair
-     * @param par the parent
-     * @return created set
-     */
-    public static AttributeSet withParent(AttributeSet par) {
-        return new AttributeSet(par);
-    }
+
+    //<editor-fold defaultstate="collapsed" desc="FACTORY METHODS">
     
     /**
-     * Generate attribute set with given key/value pair
-     * @param key the key
-     * @param val the value
-     * @return created set
+     * Create new attribute set with elements of given map.
+     * @param map key-value map
+     * @return new attribute set
      */
-    public static AttributeSet with(String key, Object val) {
+    public static AttributeSet create(Map<String, ?> map) {
         AttributeSet res = new AttributeSet();
-        res.put(key, val);
+        res.putAll(map);
         return res;
     }
     
-    /**
-     * Builder pattern for setting a key/value pair
-     * @param key the key
-     * @param val the value
-     * @return this object
+    /** 
+     * Create new attribute set with given parent.
+     * @param parent the parent
+     * @return new attribute set
      */
-    public AttributeSet and(String key, Object val) {
-        put(key, val);
-        return this;
+    public static AttributeSet createWithParent(@Nullable AttributeSet parent) {
+        AttributeSet res = new AttributeSet();
+        res.parent = Optional.fromNullable(parent);
+        return res;
     }
-
-    /**
-     * Wraps the attribute set as an unmodifiable object, which will throw errors
-     * if any of its get/put methods are accessed.
-     * @return immutable set with all the attributes of this one
-     */
-    public AttributeSet immutable() {
-        return ImmutableAttributeSet.copyOf(this);
-    }
-
-    /**
-     * Creates a copy of the attribute set.
+    
+    /** 
+     * Create copy of attribute set, with all values copies as well.
+     * @param set to copy
      * @return copy
      */
-    public AttributeSet copy() {
-        AttributeSet res = new AttributeSet(parent.orNull());
-        for (String k : attributeMap.keySet()) {
-            res.put(k, copyValue(get(k)));
+    public static AttributeSet copyOf(AttributeSet set) {
+        AttributeSet res = createWithParent(set.getParent());
+        for (String k : set.getAttributeMap().keySet()) {
+            res.put(k, copyValue(set.get(k)));
+        }
+        return res;
+    }
+    
+    /** 
+     * Create flat copy of attribute set, with all values copies as well.
+     * The resulting set has no parent attribute set.
+     * @param set to copy
+     * @return copy
+     */
+    public static AttributeSet flatCopyOf(AttributeSet set) {
+        AttributeSet res = new AttributeSet();
+        for (String k : set.getAllAttributes()) {
+            res.put(k, copyValue(set.get(k)));
         }
         return res;
     }
 
     /**
-     * Creates a copy of the attribute set, including all parent attributes
-     * @return copy
+     * Create a partial copy of the attribute set, with only those values matching
+     * the given keys.
+     * @param sty style to copy from
+     * @param keys keys to copy
+     * @return copied style
      */
-    public AttributeSet flatCopy() {
+    public static AttributeSet copy(AttributeSet sty, String... keys) {
         AttributeSet res = new AttributeSet();
-        for (String k : getAllAttributes()) {
-            res.put(k, copyValue(get(k)));
+        for (String k : keys) {
+            if (sty.contains(k)) {
+                res.put(k, sty.get(k));
+            }
         }
         return res;
     }
@@ -161,6 +148,93 @@ public class AttributeSet implements Cloneable {
         } else {
             return val;
         }
+    }
+    
+    /**
+     * Generate attribute set with given key/value pair
+     * @param k1 the key
+     * @param v1 the value
+     * @return created set
+     */
+    public static AttributeSet of(String k1, Object v1) {
+        return create(ImmutableMap.of(k1, v1));
+    }
+    
+    /**
+     * Generate attribute set with given key/value pairs.
+     * @param k1 first key
+     * @param v1 first value
+     * @param k2 second key
+     * @param v2 second value
+     * @return created set
+     */
+    public static AttributeSet of(String k1, Object v1, String k2, Object v2) {
+        return create(ImmutableMap.of(k1, v1, k2, v2));
+    }
+    
+    /**
+     * Generate attribute set with given key/value pairs.
+     * @param k1 first key
+     * @param v1 first value
+     * @param k2 second key
+     * @param v2 second value
+     * @param k3 third key
+     * @param v3 third value
+     * @return created set
+     */
+    public static AttributeSet of(String k1, Object v1, String k2, Object v2, String k3, Object v3) {
+        return create(ImmutableMap.of(k1, v1, k2, v2, k3, v3));
+    }
+    
+    //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="BUILDER METHODS">
+    
+    /**
+     * Builder pattern for setting a key/value pair
+     * @param key the key
+     * @param val the value
+     * @return this object
+     */
+    public AttributeSet and(String key, Object val) {
+        put(key, val);
+        return this;
+    }
+
+    /**
+     * Copies the attribute set as an unmodifiable object, which will throw errors
+     * if any of its get/put methods are accessed.
+     * @return immutable set with all the attributes of this one
+     */
+    public AttributeSet immutable() {
+        return ImmutableAttributeSet.immutableCopyOf(this);
+    }
+
+    /**
+     * Copies the attribute set as an unmodifiable object, which will throw errors
+     * if any of its get/put methods are accessed.
+     * @param parent parent to use for copy
+     * @return immutable set with all the attributes of this one
+     */
+    public AttributeSet immutableWithParent(AttributeSet par) {
+        return ImmutableAttributeSet.immutableCopyOf(this, par);
+    }
+
+    /**
+     * Creates a copy of the attribute set.
+     * @return copy
+     */
+    public AttributeSet copy() {
+        return copyOf(this);
+    }
+
+    /**
+     * Creates a copy of the attribute set, including all parent attributes
+     * @return copy
+     */
+    public AttributeSet flatCopy() {
+        return flatCopyOf(this);
     }
     
     //</editor-fold>

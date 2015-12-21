@@ -16,6 +16,9 @@
 
 package com.googlecode.blaisemath.style;
 
+import com.google.common.base.Optional;
+import javax.annotation.Nullable;
+
 /*
  * #%L
  * BlaiseGraphics
@@ -37,18 +40,15 @@ package com.googlecode.blaisemath.style;
  */
 
 /**
- * Provides an attribute set that cannot be changed.
+ * Provides an attribute set that cannot be changed. (It's parent and values
+ * may be able to be changed however.)
  * 
  * @author Elisha
  */
-public final class ImmutableAttributeSet extends AttributeSet {
-    
-    public ImmutableAttributeSet() {
-        super();
-    }
+final class ImmutableAttributeSet extends AttributeSet {
 
-    public ImmutableAttributeSet(AttributeSet parent) {
-        super(parent);
+    // prevent instantiation elsewhere
+    private ImmutableAttributeSet() {
     }
     
     /**
@@ -56,8 +56,9 @@ public final class ImmutableAttributeSet extends AttributeSet {
      * @param set the set to copy
      * @return an immutable copy
      */
-    public static ImmutableAttributeSet copyOf(AttributeSet set) {
-        ImmutableAttributeSet res = new ImmutableAttributeSet(set.getParent());
+    static ImmutableAttributeSet immutableCopyOf(AttributeSet set) {
+        ImmutableAttributeSet res = new ImmutableAttributeSet();
+        res.parent = Optional.fromNullable(set.getParent());
         res.attributeMap.putAll(set.attributeMap);
         return res;
     }
@@ -68,8 +69,9 @@ public final class ImmutableAttributeSet extends AttributeSet {
      * @param par the parent
      * @return an immutable copy
      */
-    public static ImmutableAttributeSet copyOfWithAlternateParent(AttributeSet set, AttributeSet par) {
-        ImmutableAttributeSet res = new ImmutableAttributeSet(par);
+    static ImmutableAttributeSet immutableCopyOf(AttributeSet set, @Nullable AttributeSet par) {
+        ImmutableAttributeSet res = new ImmutableAttributeSet();
+        res.parent = Optional.fromNullable(par);
         res.attributeMap.putAll(set.attributeMap);
         return res;
     }

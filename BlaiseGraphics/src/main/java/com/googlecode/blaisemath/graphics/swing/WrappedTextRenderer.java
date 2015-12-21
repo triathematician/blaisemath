@@ -147,7 +147,7 @@ public class WrappedTextRenderer extends TextRenderer {
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
         if (bounds.getWidth() < ell.getWidth() - 8 || ell.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
             // entire string fits in box... draw centered
-            AttributeSet centeredStyle = new AttributeSet(style).and(Styles.TEXT_ANCHOR, Anchor.CENTER);
+            AttributeSet centeredStyle = AttributeSet.createWithParent(style).and(Styles.TEXT_ANCHOR, Anchor.CENTER);
             super.render(new AnchoredText(ell.getCenterX(), ell.getCenterY(), text), centeredStyle, canvas);
         } else {
             // need to wrap string

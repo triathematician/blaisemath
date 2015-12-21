@@ -175,7 +175,6 @@ public class GraphicCompositeTest {
         System.out.println("initContextMenu");
         JPopupMenu menu = new JPopupMenu();
         gc.initContextMenu(menu, null, new Point(), null, null);
-        // todo - more
     }
 
     @Test
@@ -209,12 +208,6 @@ public class GraphicCompositeTest {
         gc.addGraphic(pt);
         assertTrue(gc.intersects(new Rectangle(0,0,10,10)));
         assertFalse(gc.intersects(new Rectangle(5,5,10,10)));
-    }
-
-    @Test
-    public void testDraw() {
-        System.out.println("draw");
-        // TODO
     }
 
     @Test

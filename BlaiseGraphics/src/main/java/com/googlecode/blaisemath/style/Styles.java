@@ -48,21 +48,21 @@ public final class Styles {
     
     public static final String ID = "id";
     
-    @SVGAttribute
+    @SvgAttribute
     public static final String OPACITY = "opacity";
     
-    @SVGAttribute
+    @SvgAttribute
     public static final String FILL = "fill";
-    @SVGAttribute
+    @SvgAttribute
     public static final String FILL_OPACITY = "fill-opacity";
     
-    @SVGAttribute
+    @SvgAttribute
     public static final String STROKE = "stroke";
-    @SVGAttribute
+    @SvgAttribute
     public static final String STROKE_WIDTH = "stroke-width";
-    @SVGAttribute
+    @SvgAttribute
     public static final String STROKE_DASHES = "stroke-dasharray";
-    @SVGAttribute
+    @SvgAttribute
     public static final String STROKE_OPACITY = "stroke-opacity";
     
     public static final String MARKER = "marker";
@@ -70,9 +70,9 @@ public final class Styles {
     
     public static final String MARKER_ORIENT = "orient";
     
-    @SVGAttribute
+    @SvgAttribute
     public static final String FONT = "font-family";
-    @SVGAttribute
+    @SvgAttribute
     public static final String FONT_SIZE = "font-size";
     
     /** Denotes anchor of text relative to a point */
@@ -88,28 +88,21 @@ public final class Styles {
     
     
     public static final AttributeSet DEFAULT_SHAPE_STYLE = AttributeSet
-            .with(FILL, Color.white)
-            .and(STROKE, Color.black)
-            .and(STROKE_WIDTH, 1f)
+            .of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f)
             .immutable();
     
     public static final AttributeSet DEFAULT_PATH_STYLE = AttributeSet
-            .with(STROKE, Color.black)
-            .and(STROKE_WIDTH, 1f)
+            .of(STROKE, Color.black, STROKE_WIDTH, 1f)
             .immutable();
     
     public static final AttributeSet DEFAULT_POINT_STYLE = AttributeSet
-            .with(FILL, Color.white)
-            .and(STROKE, Color.black)
-            .and(STROKE_WIDTH, 1f)
+            .of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f)
             .and(MARKER, Markers.CIRCLE)
             .and(MARKER_RADIUS, 4)
             .immutable();
     
     public static final AttributeSet DEFAULT_TEXT_STYLE = AttributeSet
-            .with(FILL, Color.black)
-            .and(FONT, "Dialog")
-            .and(FONT_SIZE, 12f)
+            .of(FILL, Color.black, FONT, "Dialog", FONT_SIZE, 12f)
             .and(TEXT_ANCHOR, Anchor.SOUTHWEST)
             .immutable();
 
@@ -117,23 +110,6 @@ public final class Styles {
     
     // utility class
     private Styles() {
-    }
-
-    /**
-     * Create a partial copy of the attribute set, with only those values matching
-     * the given keys.
-     * @param sty style to copy from
-     * @param keys keys to copy
-     * @return copied style
-     */
-    public static AttributeSet partialCopy(AttributeSet sty, String... keys) {
-        AttributeSet res = new AttributeSet();
-        for (String k : keys) {
-            if (sty.contains(k)) {
-                res.put(k, sty.get(k));
-            }
-        }
-        return res;
     }
     
     //<editor-fold defaultstate="collapsed" desc="UTILITY STYLE/JAVA TRANSLATORS">
@@ -231,7 +207,7 @@ public final class Styles {
      * @return shape style
      */
     public static AttributeSet fillStroke(@Nullable Color fill, @Nullable Color stroke) {
-        return AttributeSet.with(FILL, fill).and(STROKE, stroke);
+        return AttributeSet.of(FILL, fill, STROKE, stroke);
     }
    
     /**
@@ -242,7 +218,7 @@ public final class Styles {
      * @return shape style
      */
     public static AttributeSet fillStroke(@Nullable Color fill, @Nullable Color stroke, float width) {
-        return AttributeSet.with(FILL, fill).and(STROKE, stroke).and(STROKE_WIDTH, width);
+        return AttributeSet.of(FILL, fill, STROKE, stroke, STROKE_WIDTH, width);
     }
     
     /**
@@ -252,7 +228,7 @@ public final class Styles {
      * @return path style
      */
     public static AttributeSet strokeWidth(Color stroke, float width) {
-        return AttributeSet.with(STROKE, stroke).and(STROKE_WIDTH, width);
+        return AttributeSet.of(STROKE, stroke, STROKE_WIDTH, width);
     }
 
     /**
@@ -263,9 +239,7 @@ public final class Styles {
      * @return text style
      */
     public static AttributeSet text(Color col, float sz, Anchor anchor) {
-        return AttributeSet.with(FILL, col)
-                .and(FONT_SIZE, sz)
-                .and(TEXT_ANCHOR, anchor);
+        return AttributeSet.of(FILL, col, FONT_SIZE, sz, TEXT_ANCHOR, anchor);
     }
 
     /**
@@ -275,8 +249,7 @@ public final class Styles {
      * @return style
      */
     public static AttributeSet marker(Marker marker, float rad) {
-        return AttributeSet.with(MARKER, marker)
-                .and(MARKER_RADIUS, rad);
+        return AttributeSet.of(MARKER, marker, MARKER_RADIUS, rad);
     }
     
     //</editor-fold>
@@ -321,7 +294,7 @@ public final class Styles {
      */
     public static AttributeSet withHighlight(AttributeSet style) {
         return defaultStyleContext().applyModifiers(style,
-                AttributeSet.with(StyleHints.HILITE_HINT, true));
+                AttributeSet.of(StyleHints.HILITE_HINT, true));
     }
     
     //</editor-fold>
@@ -340,14 +313,14 @@ public final class Styles {
         public AttributeSet apply(AttributeSet style, AttributeSet hints) {
             AttributeSet res = style;
             if (hints.contains(StyleHints.HILITE_HINT)) {
-                res = new AttributeSet(res);
-                res.put(Styles.FILL, highlightFill);
-                res.put(Styles.STROKE, highlightStroke);
+                res = AttributeSet.createWithParent(res)
+                        .and(Styles.FILL, highlightFill)
+                        .and(Styles.STROKE, highlightStroke);
             }
             if (hints.contains(StyleHints.SELECTED_HINT)) {
-                res = new AttributeSet(res);
-                res.put(Styles.FILL, selectFill);
-                res.put(Styles.STROKE, selectStroke);
+                res = AttributeSet.createWithParent(res)
+                        .and(Styles.FILL, selectFill)
+                        .and(Styles.STROKE, selectStroke);
             }
             return res;
         }
@@ -397,7 +370,7 @@ public final class Styles {
     public static class ColorModifier implements StyleModifier {
         @Override
         public AttributeSet apply(AttributeSet style, AttributeSet hints) {
-            AttributeSet res = new AttributeSet(style);
+            AttributeSet res = AttributeSet.createWithParent(style);
             for (String key : style.getAllAttributes(Color.class)) {
                 res.put(key, StyleHints.modifyColorsDefault(style.getColor(key), hints));
             }
@@ -409,7 +382,7 @@ public final class Styles {
     public static class StrokeWidthModifier implements StyleModifier {
         @Override
         public AttributeSet apply(AttributeSet style, AttributeSet hints) {
-            return new AttributeSet(style)
+            return AttributeSet.createWithParent(style)
                     .and(STROKE_WIDTH, StyleHints.modifyStrokeWidthDefault(style.getFloat(STROKE_WIDTH), hints));
         }
     }

@@ -1,5 +1,5 @@
 /**
- * GraphicSupport.java
+ * Graphic.java
  * Created Jan 22, 2011
  */
 package com.googlecode.blaisemath.graphics.core;
@@ -27,7 +27,6 @@ package com.googlecode.blaisemath.graphics.core;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.ImmutableAttributeSet;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import java.awt.event.MouseListener;
@@ -168,11 +167,11 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
         if (parent != null) {
             AttributeSet parStyle = parent.getStyle();
             if (parStyle != null && parStyle != renderStyle.getParent()) {
-                renderStyle = ImmutableAttributeSet.copyOfWithAlternateParent(renderStyle, parStyle);
+                renderStyle = renderStyle.immutableWithParent(parStyle);
             }
             AttributeSet parStyleHints = parent.getStyleHints();
             if (parStyleHints != null && renderHints.getParent() != parStyleHints) {
-                renderHints = ImmutableAttributeSet.copyOfWithAlternateParent(renderHints, parStyleHints);
+                renderHints = renderHints.immutableWithParent(parStyleHints);
             }
             renderStyle = parent.getStyleContext().applyModifiers(renderStyle, renderHints);
         }

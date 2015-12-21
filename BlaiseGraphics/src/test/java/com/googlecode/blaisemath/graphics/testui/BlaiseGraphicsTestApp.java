@@ -247,8 +247,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             public AttributeSet apply(Integer src) {
                 Point2D pt = pts.get(src);
                 int yy = (int) Math.min(pt.getX()/3, 255);
-                return AttributeSet.with(Styles.FILL, new Color(yy, 0, 255-yy))
-                        .and(Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
+                return AttributeSet.of(Styles.FILL, new Color(yy, 0, 255-yy),
+                        Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
             }
         });
         gr.getNodeStyler().setLabelDelegate(new Function<Integer, String>() {
@@ -272,8 +272,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                 int dy = (int) (src0.getY() - src1.getY());
                 dy = Math.min(Math.abs(dy/3), 255);
                 
-                return AttributeSet.with(Styles.STROKE, new Color(dx, dy, 255-dy))
-                        .and(Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
+                return AttributeSet.of(Styles.STROKE, new Color(dx, dy, 255-dy),
+                        Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
             }
         });
         root1.addGraphic(gr);

@@ -1,5 +1,5 @@
 /*
- * ShapeLibrary.java
+ * Markers.java
  * Created Jan 8, 2011
  */
 package com.googlecode.blaisemath.style;
