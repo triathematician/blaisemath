@@ -99,7 +99,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>firestarter</artifactId>
-            <version>1.2.14-SNAPSHOT</version>
+            <version>1.3.0</version>
         </dependency>
     </dependencies>
     

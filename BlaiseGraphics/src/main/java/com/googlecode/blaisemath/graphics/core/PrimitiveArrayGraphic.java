@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graphics.core;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

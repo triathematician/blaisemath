@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.sketch;
  * #%L
  * BlaiseSketch
  * --
- * Copyright (C) 2014 - 2015 Elisha Peterson
+ * Copyright (C) 2014 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -296,8 +296,7 @@ public class SketchActions {
      * @param src graphic to edit
      */
     public static void editGraphic(@Nullable Frame frame, Graphic<Graphics2D> src) {
-        PropertySheetDialog dialog = new PropertySheetDialog(frame, true, src);
-        dialog.setVisible(true);
+        PropertySheetDialog.show(frame, true, src);
     }
 
 
@@ -319,8 +318,7 @@ public class SketchActions {
             }
         }
         AttributeSetPropertyModel pModel = new AttributeSetPropertyModel(style, styleClassMap);
-        PropertySheetDialog dialog = new PropertySheetDialog(frame, true, style, pModel);
-        dialog.setVisible(true);
+        PropertySheetDialog.show(frame, true, style, pModel);
     }
 
     /**
