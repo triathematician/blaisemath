@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,80 +25,25 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
-import java.awt.geom.Point2D;
-import java.util.Map;
-import java.util.Set;
-import javax.annotation.concurrent.ThreadSafe;
-
 /**
  * <p>
- *   Provides methods for a layout scheme that has several iterations. The layout
- *   class may have internal parameters that are used to accomplish the layout, and
- *   an internal state which changes over the course of the layout. The methods here
- *   allow the user to reset the layout scheme and to iterate the layout scheme.
+ *   Performs an iterative 2D layout on a graph, using a given set of parameters.
+ *   Implementations should use a state object to track their state and make
+ *   any changes from step to step.
  * </p>
- * <p>
- * Implementations should be thread-safe, as the API methods will be called from
- * both the layout thread and UI threads.
- * </p>
- *
- * @param <C> node type
+ * 
+ * @param <P> object describing layout parameters
+ * @param <S> object describing layout state
+ * 
  * @author Elisha Peterson
  */
-@ThreadSafe
-public interface IterativeGraphLayout<C> {
-
-    /**
-     * Get the current iteration #
-     * @return index of current iteration (should reset to 0 whenever the reset method is called)
-     */
-    int getIteration();
-
-    /**
-     * @return current "energy" or some double representing the convergence status
-     *   of the layout
-     */
-    double getEnergyStatus();
-
-    /**
-     * Returns copy of the current list of positions.
-     * @return current list of positions
-     */
-    Map<C,Point2D.Double> getPositionsCopy();
-
-    /**
-     * Retrieve current value of cooling parameter.
-     * @return current value of a "cooling parameter"
-     */
-    double getCoolingParameter();
-
-    /**
-     * Update current value of cooling parameter.
-     * @param val new value
-     */
-    void setCoolingParameter(double val);
+public interface IterativeGraphLayout<P,S extends IterativeGraphLayoutState> extends ParameterFactory<P> {
     
     /**
-     * Return the set of nodes that are currently "pinned" or "locked" in place.
-     * @return pinned nodes
+     * Create a new state object for the layout
+     * @return new state object
      */
-    Set<C> getLockedNodes();
-    
-    /**
-     * Update the collection of nodes that are currently "pinned".
-     * @param pinned the nodes to pin
-     */
-    void setLockedNodes(Set<C> pinned);
-
-    /**
-     * Request an adjustment to the current positions of the nodes in the graph during the next iteration.
-     * Intended to be invokable from threads other than the one performing the layout.
-     * @param positions map specifying new positions for certain nodes, which should take effect
-     *   during the next call to iterate()
-     * @param resetNodes if true, this should adjust the graph's set of nodes to include only those in the map
-     */
-    void requestPositions(Map<C, Point2D.Double> positions, boolean resetNodes);
+    S createState();
 
     /**
      * <p>
@@ -114,8 +59,12 @@ public interface IterativeGraphLayout<C> {
      * the positions of the requested nodes.
      * </p>
      *
-     * @param g the graph to layout (should not change while layout is being performed)
+     * @param <C> graph node type
+     * @param graph the graph
+     * @param layoutState state object for the layout
+     * @param layoutParams parameters object for the layout
+     * @return energy computation, to provide a measure of algorithm convergence 
      */
-    void iterate(Graph<C> g);
+    <C> double iterate(Graph<C> graph, S layoutState, P layoutParams);
 
 }

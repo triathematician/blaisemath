@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,6 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
-import com.googlecode.blaisemath.graph.GraphSubsetMetric;
-import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@ public class CycleGraphGeneratorTest {
     public void testGetEmptyGraphInstance() {
         System.out.println("getCycleGraphInstance");
         assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 3] 1: [0, 2] 2: [1, 3] 3: [0, 2]",
-                GraphUtils.printGraph(new CycleGraphGenerator().generate(new DefaultGeneratorParameters(false,4))));
+                GraphUtils.printGraph(new CycleGraphGenerator().apply(new DefaultGeneratorParameters(false,4))));
         assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1] 1: [2] 2: [3] 3: [0]",
-                GraphUtils.printGraph(new CycleGraphGenerator().generate(new DefaultGeneratorParameters(true,4))));
+                GraphUtils.printGraph(new CycleGraphGenerator().apply(new DefaultGeneratorParameters(true,4))));
     }
 
 }

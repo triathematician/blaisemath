@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.view;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,9 +72,8 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
         // PANELS
 
-        rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout = new SpringLayout(
-                plot.getLayoutManager().getNodeLocationCopy()
-                )));
+        energyLayout = new SpringLayout();
+        rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout.createParameters()));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
         }
@@ -250,19 +249,19 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(RandomBoxLayout.getInstance(), Collections.EMPTY_MAP, Collections.EMPTY_SET, 
+        plot.getLayoutManager().applyLayout(RandomBoxLayout.getInstance(), null, 
                 new BoxLayoutParameters(new Rectangle2D.Double(-500, -500, 1000, 1000)));
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), Collections.EMPTY_MAP, Collections.EMPTY_SET, 
+        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null, 
                 new CircleLayoutParameters(500.0));
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getLayoutManager().getNodeLocationCopy());
+            energyLayout = new SpringLayout();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().iterateLayout();
         updateEL = false;
@@ -270,7 +269,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getLayoutManager().getNodeLocationCopy());
+            energyLayout = new SpringLayout();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().setLayoutTaskActive(true);
     }//GEN-LAST:event_energyABActionPerformed

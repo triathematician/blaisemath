@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public final class CompleteGraphGenerator implements GraphGenerator<DefaultGener
     }
 
     @Override
-    public Graph<Integer> generate(DefaultGeneratorParameters parm) {
+    public Graph<Integer> apply(DefaultGeneratorParameters parm) {
         List<Integer[]> edges = new ArrayList<Integer[]>();
         for (int i = 0; i < parm.getNodeCount(); i++) {
             for (int j = i + 1; j < parm.getNodeCount(); j++) {

@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,15 +40,15 @@ public class EdgeLikelihoodGeneratorTest {
     @Test
     public void testEdgeLikelihoodGenerator() {
         System.out.println("EdgeProbabilityGenerator: MANUALLY CHECK FOR DESIRED OUTPUT");
-        Graph<Integer> result1 = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(false, 10, 0f));
+        Graph<Integer> result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 10, 0f));
         assertEquals(10, result1.nodeCount()); assertEquals(0, result1.edgeCount());
-        result1 = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(true, 10, 1f));
+        result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(true, 10, 1f));
         assertEquals(10, result1.nodeCount()); assertEquals(100, result1.edgeCount());
-        result1 = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(false, 10, 1f));
+        result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 10, 1f));
         assertEquals(10, result1.nodeCount()); assertEquals(45, result1.edgeCount());
-        result1 = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(false, 10, .25f));
+        result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 10, .25f));
         System.out.println("  UNDIRECTED (.25 probability): " + result1.edgeCount() + " edges, " + GraphUtils.printGraph(result1));
-        result1 = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(true, 10, .25f));
+        result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(true, 10, .25f));
         System.out.println("  DIRECTED (.25 probability): " + result1.edgeCount() + " edges, " + GraphUtils.printGraph(result1));
     }
 

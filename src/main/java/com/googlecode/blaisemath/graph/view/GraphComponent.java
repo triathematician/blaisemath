@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.view;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ public class GraphComponent extends JGraphicComponent {
      * @param graph the graph to initialize with
      */
     public GraphComponent(Graph graph) {
-        this(new GraphLayoutManager(graph, new SpringLayout()));
+        this(GraphLayoutManager.create(graph));
     }
 
     /**

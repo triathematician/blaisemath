@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.app;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ import com.googlecode.blaisemath.graph.GraphMetric;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.GraphGenerator;
-import com.googlecode.blaisemath.graph.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.GraphMetrics;
+import com.googlecode.blaisemath.graph.GraphServices;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeCountGenerator;
@@ -53,17 +53,17 @@ import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyEditorManager;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -88,8 +88,12 @@ public final class GraphAppFrameView extends FrameView {
     private IterativeGraphLayout selectedIterativeLayout = null;
     
     private final PropertyActionPanel generatorPanel;
+    private final JComboBox generatorBox;
     private final PropertyActionPanel staticLayoutPanel;
+    private final JComboBox staticLayoutBox;
     private final PropertyActionPanel iterativeLayoutPanel;
+    private final JComboBox iterativeLayoutBox;
+    
     private final JLabel statusLabel;
     
     public GraphAppFrameView(Application app) {
@@ -129,13 +133,43 @@ public final class GraphAppFrameView extends FrameView {
         
         generatorPanel = new PropertyActionPanel();
         generatorPanel.setUserOkAction(am.get("applyGenerator"));
+        generatorBox  = new JComboBox(GraphServices.generators().toArray());
+        generatorBox.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                e.setSource(((JComboBox)e.getSource()).getSelectedItem());
+                generateGraph(e);
+            }
+        });
+        generatorPanel.getToolBar().add(generatorBox);
+        
         staticLayoutPanel = new PropertyActionPanel();
         staticLayoutPanel.setUserOkAction(am.get("applyStaticLayout"));
+        staticLayoutBox  = new JComboBox(GraphServices.staticLayouts().toArray());
+        staticLayoutBox.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                e.setSource(((JComboBox)e.getSource()).getSelectedItem());
+                staticLayout(e);
+            }
+        });
+        staticLayoutPanel.getToolBar().add(staticLayoutBox);
+        
         iterativeLayoutPanel = new PropertyActionPanel();
-        iterativeLayoutPanel.setUserOkAction(am.get("applyIterativeLayout"));
+        iterativeLayoutBox  = new JComboBox(GraphServices.iterativeLayouts().toArray());
+        iterativeLayoutBox.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                e.setSource(((JComboBox)e.getSource()).getSelectedItem());
+                iterativeLayout(e);
+            }
+        });
+        iterativeLayoutPanel.getToolBar().add(iterativeLayoutBox);
+        iterativeLayoutPanel.getToolBar().add(am.get("startLayout"));
+        iterativeLayoutPanel.getToolBar().add(am.get("stopLayout"));
         
         RollupPanel controlPanel = new RollupPanel();
-        controlPanel.add(new MPanel("Generator", generatorPanel));
+        controlPanel.add(new MPanel("Graph Generator", generatorPanel));
         controlPanel.add(new MPanel("Static Layout", staticLayoutPanel));
         controlPanel.add(new MPanel("Iterative Layout", iterativeLayoutPanel));
         
@@ -145,9 +179,9 @@ public final class GraphAppFrameView extends FrameView {
         
         setComponent(panel);
         
-        setSelectedGenerator(new EdgeCountGenerator());
-        setSelectedLayout(new StaticSpringLayout());
-        setSelectedIterativeLayout(new SpringLayout());
+        setSelectedGenerator((GraphGenerator) generatorBox.getSelectedItem());
+        setSelectedLayout((StaticGraphLayout) staticLayoutBox.getSelectedItem());
+        setSelectedIterativeLayout((IterativeGraphLayout) iterativeLayoutBox.getSelectedItem());
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
@@ -158,9 +192,9 @@ public final class GraphAppFrameView extends FrameView {
 
     public void setSelectedGenerator(GraphGenerator selectedGenerator) {
         this.selectedGenerator = selectedGenerator;
+        generatorBox.setSelectedItem(selectedGenerator);
         generatorPanel.setBean(selectedGenerator.createParameters());
         ((MPanel)generatorPanel.getParent()).setPrimaryComponent(generatorPanel);
-        ((MPanel)generatorPanel.getParent()).setTitle(selectedGenerator.toString());
     }
     
     public Object getGeneratorParameters() {
@@ -173,9 +207,9 @@ public final class GraphAppFrameView extends FrameView {
 
     public void setSelectedLayout(StaticGraphLayout selectedLayout) {
         this.selectedLayout = selectedLayout;
+        staticLayoutBox.setSelectedItem(selectedLayout);
         staticLayoutPanel.setBean(selectedLayout.createParameters());
         ((MPanel)staticLayoutPanel.getParent()).setPrimaryComponent(staticLayoutPanel);
-        ((MPanel)staticLayoutPanel.getParent()).setTitle(selectedLayout.toString());
     }
     
     public Object getLayoutParameters() {
@@ -188,9 +222,10 @@ public final class GraphAppFrameView extends FrameView {
 
     public void setSelectedIterativeLayout(IterativeGraphLayout selectedIterativeLayout) {
         this.selectedIterativeLayout = selectedIterativeLayout;
+        iterativeLayoutBox.setSelectedItem(selectedIterativeLayout);
         iterativeLayoutPanel.setBean(selectedIterativeLayout);
         ((MPanel)iterativeLayoutPanel.getParent()).setPrimaryComponent(iterativeLayoutPanel);
-        ((MPanel)iterativeLayoutPanel.getParent()).setTitle(selectedIterativeLayout.toString());
+        graphComponent.getLayoutManager().setLayoutAlgorithm(selectedIterativeLayout);
     }
     
     public Object getIterativeLayoutParameters() {
@@ -209,7 +244,7 @@ public final class GraphAppFrameView extends FrameView {
     @Action
     public void applyGenerator(ActionEvent event) {
         Object parm = event.getSource();
-        graphComponent.setGraph(selectedGenerator.generate(parm));
+        graphComponent.setGraph((Graph) selectedGenerator.apply(parm));
         zoomAll();
     }
     
@@ -228,12 +263,7 @@ public final class GraphAppFrameView extends FrameView {
     
     @Action
     public void iterativeLayout(ActionEvent event) {
-        setSelectedIterativeLayout((IterativeGraphLayout<?>) event.getSource());
-    }
-    
-    @Action
-    public void applyIterativeLayout() {
-        graphComponent.getLayoutManager().setLayoutAlgorithm(getSelectedIterativeLayout());
+        setSelectedIterativeLayout((IterativeGraphLayout) event.getSource());
     }
     
     @Action

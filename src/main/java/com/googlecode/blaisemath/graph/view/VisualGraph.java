@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.view;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public class VisualGraph<G> {
      * @param graph the graph to display
      */
     public VisualGraph(Graph graph) {
-        this(new GraphLayoutManager(graph, new SpringLayout()), null);
+        this(GraphLayoutManager.create(graph), null);
     }
 
     /**
@@ -153,11 +153,11 @@ public class VisualGraph<G> {
     public final void setLayoutManager(GraphLayoutManager manager) {
         if (this.layoutManager != manager) {
             if (this.layoutManager != null) {
-                this.layoutManager.removePropertyChangeListener(GraphLayoutManager.GRAPH_PROP, layoutListener);
+                this.layoutManager.removePropertyChangeListener(GraphLayoutManager.P_GRAPH, layoutListener);
             }
             this.layoutManager = manager;
             initViewGraph();
-            this.layoutManager.addPropertyChangeListener(GraphLayoutManager.GRAPH_PROP, layoutListener);
+            this.layoutManager.addPropertyChangeListener(GraphLayoutManager.P_GRAPH, layoutListener);
         }
     }
 

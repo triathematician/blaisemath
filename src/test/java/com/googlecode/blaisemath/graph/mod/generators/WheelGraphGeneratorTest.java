@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@ public class WheelGraphGeneratorTest {
     public void testGetWheelGraphGeneratorInstance() {
         System.out.println("getWheelGraphGeneratorInstance");
         assertEquals("NODES: [0, 1, 2, 3, 4]  EDGES: 0: [1, 2, 3, 4] 1: [0, 2, 4] 2: [0, 1, 3] 3: [0, 2, 4] 4: [0, 1, 3]", 
-                GraphUtils.printGraph(new WheelGraphGenerator().generate(new DefaultGeneratorParameters(false,5))));
+                GraphUtils.printGraph(new WheelGraphGenerator().apply(new DefaultGeneratorParameters(false,5))));
         assertEquals("NODES: [0, 1, 2, 3, 4]  EDGES: 0: [1, 2, 3, 4] 1: [2, 4] 2: [1, 3] 3: [2, 4] 4: [1, 3]", 
-                GraphUtils.printGraph(new WheelGraphGenerator().generate(new DefaultGeneratorParameters(true,5))));
+                GraphUtils.printGraph(new WheelGraphGenerator().apply(new DefaultGeneratorParameters(true,5))));
     }
 
 }

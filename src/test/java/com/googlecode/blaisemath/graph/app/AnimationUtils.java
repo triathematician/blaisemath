@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.app;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graph.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.getLocalBounds;
 import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.setDesiredLocalBounds;
 import com.googlecode.blaisemath.util.Points;
@@ -63,8 +62,9 @@ public class AnimationUtils {
      * @param parm layout parameters
      * @param margin margin for setting boundaries of graph component
      */
-    public static <N,P> void animateCoordinateChange(GraphLayoutManager<N> glm, StaticGraphLayout<P> layout, P parm, @Nullable JGraphicComponent gc, double margin) {
-        Map<N,Point2D.Double> newLocs = layout.layout(glm.getGraph(), glm.getNodeLocationCopy(), Collections.<N>emptySet(), parm);
+    public static <N,P> void animateCoordinateChange(GraphLayoutManager<N> glm, 
+            StaticGraphLayout<P> layout, P parm, @Nullable JGraphicComponent gc, double margin) {
+        Map<N,Point2D.Double> newLocs = layout.layout(glm.getGraph(), glm.getNodeLocationCopy(), parm);
         if (gc == null) {
             animateCoordinateChange(glm.getCoordinateManager(), newLocs);
         } else {

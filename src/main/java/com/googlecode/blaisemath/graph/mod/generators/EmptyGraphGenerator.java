@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public final class EmptyGraphGenerator implements GraphGenerator<DefaultGenerato
     }
 
     @Override
-    public Graph<Integer> generate(DefaultGeneratorParameters parm) {
+    public Graph<Integer> apply(DefaultGeneratorParameters parm) {
         return DefaultGeneratorParameters.createGraphWithEdges(parm, Collections.EMPTY_SET);
     }
     

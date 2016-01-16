@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,15 +53,15 @@ public class SpringLayoutPerformanceTest {
         StaticSpringLayout sl = new StaticSpringLayout();
         
         Graph[] graphs = new Graph[] {
-            new EdgeLikelihoodGenerator(randomSeed).generate(new EdgeLikelihoodParameters(false, 100, .01f)),
-            new EdgeLikelihoodGenerator(randomSeed).generate(new EdgeLikelihoodParameters(false, 100, .05f)),
-            new EdgeLikelihoodGenerator(randomSeed).generate(new EdgeLikelihoodParameters(false, 100, .1f)),
-            new EdgeLikelihoodGenerator(randomSeed).generate(new EdgeLikelihoodParameters(false, 300, .01f)),
-            new EdgeLikelihoodGenerator(randomSeed).generate(new EdgeLikelihoodParameters(false, 1000, .002f)),
+            new EdgeLikelihoodGenerator(randomSeed).apply(new EdgeLikelihoodParameters(false, 100, .01f)),
+            new EdgeLikelihoodGenerator(randomSeed).apply(new EdgeLikelihoodParameters(false, 100, .05f)),
+            new EdgeLikelihoodGenerator(randomSeed).apply(new EdgeLikelihoodParameters(false, 100, .1f)),
+            new EdgeLikelihoodGenerator(randomSeed).apply(new EdgeLikelihoodParameters(false, 300, .01f)),
+            new EdgeLikelihoodGenerator(randomSeed).apply(new EdgeLikelihoodParameters(false, 1000, .002f)),
 //            new EdgeLikelihoodGenerator(false, 300, .05f).get(),
 //            new EdgeLikelihoodGenerator(false, 300, .1f).get(),
 //            new EdgeLikelihoodGenerator(true, 300, .05f).get(),
-            new WattsStrogatzGenerator(randomSeed).generate(new WattsStrogatzParameters(false, 100, 4, .05f))
+            new WattsStrogatzGenerator(randomSeed).apply(new WattsStrogatzParameters(false, 100, 4, .05f))
 //            new WattsStrogatzGenerator(false, 1000, 4, .01f).randomGenerator(randomSeed).get()
         };
         
@@ -71,7 +71,7 @@ public class SpringLayoutPerformanceTest {
                     GraphUtils.components(g).size(),
                     nicer(GraphUtils.degreeDistribution(g)));
             int id = GAInstrument.start("EdgePD", g+"");
-            sl.layout(g, Collections.EMPTY_MAP, Collections.EMPTY_SET, new StaticSpringLayoutParameters());
+            sl.layout(g, null, new StaticSpringLayoutParameters());
             GAInstrument.end(id);
         }
         System.out.println("\n\n");

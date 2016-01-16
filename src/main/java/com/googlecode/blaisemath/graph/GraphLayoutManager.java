@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,24 +25,15 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.google.common.base.Function;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
-import com.google.common.util.concurrent.AbstractScheduledService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.Service;
-import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.PositionalAddingLayout;
-import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
-import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -60,29 +51,35 @@ import javax.annotation.concurrent.NotThreadSafe;
  *   {@link IterativeGraphLayout} algorithm, whose results are supplied to the
  *   {@link CoordinateManager}. This class is not thread-safe, so all of its
  *   methods should be accessed from a single thread. However, coordinate locations can
- *   be accessed or updated in the {@code CoordinateManager} from any thread, since it is
- *   thread-safe.
+ *   be accessed or updated in the {@code CoordinateManager} from any thread, since
+ *   that class is thread-safe.
  * </p>
  *
- * @param <N> type of node in graph
+ * @param <C> type of node in graph
  * @author elisha
  */
 @NotThreadSafe
-public final class GraphLayoutManager<N> {
+public final class GraphLayoutManager<C> {
     
-    private static final int NODE_CACHE_SIZE = 20000;
+    private static final Logger LOG = Logger.getLogger(GraphLayoutManager.class.getName());
+    
+    //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
+    
+    static final int NODE_CACHE_SIZE = 20000;
 
     /** Graph property */
-    public static final String GRAPH_PROP = "graph";
+    public static final String P_GRAPH = "graph";
     /** Layout property */
-    public static final String LAYOUT_PROP = "layoutAlgorithm";
+    public static final String P_LAYOUT = "layoutAlgorithm";
     /** Whether layout is active */
-    public static final String LAYOUT_ACTIVE_PROP = "layoutTaskActive";
+    public static final String P_LAYOUT_ACTIVE = "layoutTaskActive";
     
-    /** Default time between layout iterations. */
-    private static final int DEFAULT_DELAY = 10;
-    /** Default # iterations per layout step */
-    private static final int DEFAULT_ITER = 2;
+    //</editor-fold>
+    
+    /** Graph */
+    private Graph<C> graph;
+    /** Locates nodes in the graph */
+    private final CoordinateManager<C, Point2D.Double> coordManager = CoordinateManager.create(NODE_CACHE_SIZE);
     
     /** The initial layout scheme */
     private final StaticGraphLayout initialLayout = CircleLayout.getInstance();
@@ -92,57 +89,36 @@ public final class GraphLayoutManager<N> {
     private final StaticGraphLayout addingLayout = new PositionalAddingLayout();
     /** The initial layout parameters */
     private final CircleLayoutParameters addingLayoutParameters = new CircleLayoutParameters(100);
-    
-    /** The cooling parameter at step 0, defined by the iterative layout */
-    private double coolingParameter0 = 1.0;
-    /** Cooling curve. Determines the cooling parameter at each step, as a product of initial cooling parameter. */
-    private final Function<Integer,Double> coolingCurve;
-    
-    /** Graph */
-    private Graph<N> graph;
-    /** Maintains locations of nodes in the graph */
-    private final CoordinateManager<N, Point2D.Double> coordManager = CoordinateManager.create(NODE_CACHE_SIZE);
-    /** Contains the algorithm for iterating graph layouts. */
-    private IterativeGraphLayout iLayout;
 
-    /** Represents the currently active layout task */
-    private IterateLayoutService layoutService = null;
+    /** Manager for iterative graph layout algorithm */
+    private final IterativeGraphLayoutManager iterativeLayoutManager = new IterativeGraphLayoutManager();
+    /** Service that manages iterative graph layout on background thread. */
+    private IterativeGraphLayoutService iterativeLayoutService;
     
     /** Handles property change events */
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-
+    
+    //<editor-fold defaultstate="collapsed" desc="CONSTRUCTORS & FACTORIES">
+    
     /** Initializes with an empty graph */
     public GraphLayoutManager() {
-        this(GraphUtils.EMPTY_GRAPH, new SpringLayout());
+        iterativeLayoutManager.setCoordinateManager(coordManager);
+        setGraph(GraphUtils.EMPTY_GRAPH);
     }
-
-    /**
-     * Constructs manager for the specified graph.
-     * @param graph the graph
-     * @param layout the layout algorithm used by the manager
+    
+    /** 
+     * Initializes with a given graph.
+     * @param graph graph for layout
+     * @return manager instance
      */
-    public GraphLayoutManager(Graph<N> graph, @Nullable IterativeGraphLayout layout) {
-        this.iLayout = layout;
-        this.coolingCurve = new Function<Integer,Double>(){
-            @Override
-            public Double apply(Integer x) {
-                return .1 + .9/Math.log10(x+10);
-            }
-        };
-        coordManager.addCoordinateListener(new CoordinateListener<N,Point2D.Double>(){
-            @InvokedFromThread("unknown")
-            @Override
-            public void coordinatesChanged(CoordinateChangeEvent<N, Point2D.Double> evt) {
-                // get the current iterative layout, ensuring it doesn't change between null check and use
-                IterativeGraphLayout layout = iLayout;
-                if (layout != null) {
-                    layout.requestPositions(coordManager.getActiveLocationCopy(), true);
-                }
-            }
-        });
-        setGraph(graph);
+    public static GraphLayoutManager create(Graph graph) {
+        GraphLayoutManager res = new GraphLayoutManager();
+        res.setGraph(graph);
+        return res;
     }
+    
+    //</editor-fold>
 
 
     // <editor-fold defaultstate="collapsed" desc="PROPERTIES">
@@ -154,7 +130,7 @@ public final class GraphLayoutManager<N> {
      * Object used to map locations of points.
      * @return point manager
      */
-    public CoordinateManager<N, Point2D.Double> getCoordinateManager() {
+    public CoordinateManager<C, Point2D.Double> getCoordinateManager() {
         return coordManager;
     }
 
@@ -162,7 +138,7 @@ public final class GraphLayoutManager<N> {
      * Returns copy of the locations of objects in the graph.
      * @return locations, as a copy of the map provided in the point manager
      */
-    public Map<N, Point2D.Double> getNodeLocationCopy() {
+    public Map<C, Point2D.Double> getNodeLocationCopy() {
         return coordManager.getActiveLocationCopy();
     }
 
@@ -170,7 +146,7 @@ public final class GraphLayoutManager<N> {
      * Return the graph
      * @return the layout manager's graph
      */
-    public Graph<N> getGraph() {
+    public Graph<C> getGraph() {
         return graph;
     }
     
@@ -181,19 +157,87 @@ public final class GraphLayoutManager<N> {
      *
      * @param g the graph
      */
-    public void setGraph(Graph<N> g) {
+    public void setGraph(Graph<C> g) {
+        checkNotNull(g);
         Graph old = this.graph;
-        if (g == null) {
-            setLayoutTaskActive(false);
-        } else if (old != g) {
+        if (old != g) {
             boolean active = isLayoutTaskActive();
             setLayoutTaskActive(false);
             this.graph = g;
+            iterativeLayoutManager.setGraph(g);
             initializeNodeLocations(old, g);
             setLayoutTaskActive(active);
-            pcs.firePropertyChange(GRAPH_PROP, old, g);
+            pcs.firePropertyChange(P_GRAPH, old, g);
         }
     }
+
+    /**
+     * Get layout algorithm
+     * @return current iterative layout algorithm
+     */
+    @Nullable
+    public IterativeGraphLayout getLayoutAlgorithm() {
+        return iterativeLayoutManager.getLayout();
+    }
+
+    /**
+     * Sets up with an iterative graph layout. Cancels any ongoing layout, and does
+     * not start a new one.
+     * @param layout the layout algorithmut getLayoutAlgorithm() {
+     */
+    public void setLayoutAlgorithm(@Nullable IterativeGraphLayout layout) {
+        Object old = iterativeLayoutManager.getLayout();
+        if (layout != old) {
+            setLayoutTaskActive(false);
+            iterativeLayoutService = new IterativeGraphLayoutService(iterativeLayoutManager);
+            iterativeLayoutManager.setLayout(layout);
+            pcs.firePropertyChange(P_LAYOUT, old, layout);
+        }
+    }
+
+    /**
+     * Return whether layout task is currently active.
+     * @return true if an iterative layout is active
+     */
+    public boolean isLayoutTaskActive() {
+        return iterativeLayoutService != null && 
+                iterativeLayoutService.isLayoutActive();
+    }
+
+    /**
+     * Use to change the status of the layout task, either starting or stopping it.
+     * @param on true to animate, false to stop animating
+     */
+    public void setLayoutTaskActive(boolean on) {
+        boolean old = isLayoutTaskActive();
+        if (on == old) {
+            return;
+        } else if (on) {
+            stopLayoutTaskNow();
+            iterativeLayoutService = new IterativeGraphLayoutService(iterativeLayoutManager);
+            iterativeLayoutService.startAsync();
+        } else {
+            stopLayoutTaskNow();
+        }
+        pcs.firePropertyChange(P_LAYOUT_ACTIVE, !on, on);
+    }
+
+    /**
+     * Stops the layout timer
+     */
+    private void stopLayoutTaskNow() {
+        if (iterativeLayoutService != null) {
+            iterativeLayoutService.stopAsync();
+            iterativeLayoutManager.reset();
+            try {
+                iterativeLayoutService.awaitTerminated(100, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException ex) {
+                LOG.log(Level.WARNING, "Layout service was not terminated", ex);
+            }
+        }
+    }
+    
+    // </editor-fold>
 
     /**
      * When the graph is changes, call this method to set up initial positions
@@ -205,21 +249,21 @@ public final class GraphLayoutManager<N> {
      *   this class's design by running the initial layout in a background thread;
      *   also, locking on the CM may be problematic if the layout takes a long time
      */
-    private void initializeNodeLocations(Graph<N> old, Graph<N> g) {
+    private void initializeNodeLocations(Graph<C> old, Graph<C> g) {
         synchronized (coordManager) {
-            Set<N> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
+            Set<C> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
             coordManager.deactivate(oldNodes);
             // defer to existing locations if possible
             if (coordManager.locatesAll(g.nodes())) {
                 coordManager.reactivate(g.nodes());
             } else {
                 // lays out new graph entirely
-                Map<N,Point2D.Double> newLoc;
+                Map<C,Point2D.Double> newLoc;
                 if (old == null) {
-                    newLoc = initialLayout.layout(g, Collections.EMPTY_MAP, Collections.EMPTY_SET, initialLayoutParameters);
+                    newLoc = initialLayout.layout(g, null, initialLayoutParameters);
                 } else {
-                    Map<N, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
-                    newLoc = addingLayout.layout(g, curLocs, Collections.EMPTY_SET, addingLayoutParameters);
+                    Map<C, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
+                    newLoc = addingLayout.layout(g, curLocs, addingLayoutParameters);
                 }
                 // remove objects that are already in coordinate manager
                 newLoc.keySet().removeAll(coordManager.getActive());
@@ -232,62 +276,12 @@ public final class GraphLayoutManager<N> {
             int sz = coordManager.getActive().size();
             boolean check = sz == g.nodeCount();
             if (!check) {
-                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING, 
+                LOG.log(Level.WARNING, 
                         "Object sizes don''t match: {0} locations, but {1} nodes!", 
                         new Object[]{sz, g.nodeCount()});
             }
         }
     }
-
-    /**
-     * Get layout algorithm
-     * @return current iterative layout algorithm
-     */
-    public IterativeGraphLayout getLayoutAlgorithm() {
-        return iLayout;
-    }
-
-    /**
-     * Sets up with an iterative graph layout. Cancels any ongoing layout, and does
-     * not start a new one.
-     * @param layout the layout algorithm
-     */
-    public void setLayoutAlgorithm(IterativeGraphLayout layout) {
-        if (layout != iLayout) {
-            setLayoutTaskActive(false);
-            IterativeGraphLayout old = iLayout;
-            iLayout = layout;
-            coolingParameter0 = iLayout.getCoolingParameter();
-            iLayout.requestPositions(coordManager.getActiveLocationCopy(), true);
-            pcs.firePropertyChange(LAYOUT_PROP, old, layout);
-        }
-    }
-
-    /**
-     * Return whether layout task is currently active.
-     * @return true if an iterative layout is active
-     */
-    public boolean isLayoutTaskActive() {
-        return layoutService != null && layoutService.isRunning();
-    }
-
-    /**
-     * Use to change the status of the layout task, either starting or stopping it.
-     * @param value true to animate, false to stop animating
-     */
-    public void setLayoutTaskActive(boolean value) {
-        boolean old = isLayoutTaskActive();
-        if (value != old) {
-            if (value) {
-                startLayoutTask(DEFAULT_DELAY, DEFAULT_ITER);
-            } else {
-                stopLayoutTaskNow();
-            }
-            pcs.firePropertyChange(LAYOUT_ACTIVE_PROP, !value, value);
-        }
-    }
-    
-    // </editor-fold>
     
 
     //<editor-fold defaultstate="collapsed" desc="MUTATORS">
@@ -303,10 +297,10 @@ public final class GraphLayoutManager<N> {
      *
      * @param nodePositions new locations for objects
      */
-    public void requestLocations(Map<N, Point2D.Double> nodePositions) {
+    public void requestLocations(Map<C, Point2D.Double> nodePositions) {
         checkNotNull(nodePositions);
         if (isLayoutTaskActive()) {
-            iLayout.requestPositions(nodePositions, false);
+            iterativeLayoutManager.requestPositions(nodePositions, false);
         } else {
             coordManager.putAll(nodePositions);
         }
@@ -317,22 +311,22 @@ public final class GraphLayoutManager<N> {
      * replace the coordinates of objects in the graph.
      * @param layout static layout algorithm
      * @param ic initial conditionsn fo rstatic layout algorithm
-     * @param fixed what nodes should be fixed in applying the layout
      * @param parameters layout parameters
      * @param <P> parameters type
      */
-    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<N,Point2D.Double> ic,
-            Set<N> fixed, P parameters){
-        requestLocations(layout.layout(graph, ic, fixed, parameters));
+    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<C,Point2D.Double> ic,
+            P parameters){
+        requestLocations(layout.layout(graph, ic, parameters));
     }
 
     /**
      * Manually iterate layout, if an iterative layout has been provided.
      */
     public void iterateLayout() {
-        if (iLayout != null && !isLayoutTaskActive()) {
-            iLayout.iterate(graph);
-            coordManager.setCoordinateMap(iLayout.getPositionsCopy());
+        try {
+            iterativeLayoutService.runOneIteration();
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error iterating layout", ex);
         }
     }
 
@@ -343,35 +337,6 @@ public final class GraphLayoutManager<N> {
     //
     // LAYOUT TASK
     //
-
-    /**
-     * Activates the layout timer, if an iterative layout has been provided.
-     * @param delay delay in ms between layout calls
-     * @param iter number of iterations per updateCoordinates
-     */
-    private void startLayoutTask(int delay, final int iter) {
-        if (iLayout != null) {
-            stopLayoutTaskNow();
-            iLayout.setCoolingParameter(coolingParameter0);
-            layoutService = new IterateLayoutService(delay, iter);
-            layoutService.startAsync();
-        }
-    }
-
-    /**
-     * Stops the layout timer
-     */
-    private void stopLayoutTaskNow() {
-        if (layoutService != null) {
-            layoutService.stopAsync();
-            try {
-                layoutService.awaitTerminated(100, TimeUnit.MILLISECONDS);
-            } catch (TimeoutException ex) {
-                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING,
-                        "Layout service was not terminated", ex);
-            }
-        }
-    }
 
     // </editor-fold>
 
@@ -398,62 +363,6 @@ public final class GraphLayoutManager<N> {
     }
 
     // </editor-fold>
-
-    
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
-    
-    private class IterateLayoutService extends AbstractScheduledService {
-        /** Delay between iterations */
-        private final int delayMillis;
-        /** # of iterations per loop */
-        private final int iter;
-        /** Total # of iterations */
-        private int iterTot = 0;
-        
-        IterateLayoutService(int delayMillis, int iter) {
-            this.delayMillis = delayMillis;
-            this.iter = iter;
-            
-            addListener(new Listener() {
-                @Override
-                public void failed(Service.State from, Throwable failure) {
-                    Logger.getLogger(IterateLayoutService.class.getName()).log(Level.SEVERE,
-                        "Layout service failed", failure);
-                }
-            }, MoreExecutors.sameThreadExecutor());
-        }
-        
-        @Override
-        protected void runOneIteration() throws Exception {
-            try {
-                for (int i = 0; i < iter; i++) {
-                    iLayout.iterate(graph);
-                    if (Thread.interrupted()) {
-                        throw new InterruptedException("Layout canceled");
-                    }
-                }
-                coordManager.setCoordinateMap(iLayout.getPositionsCopy());
-                iterTot += iter;
-                int proxyIter = Math.max(0, iterTot-100);
-                iLayout.setCoolingParameter(coolingParameter0*coolingCurve.apply(proxyIter));
-                if (Thread.interrupted()) {
-                    throw new InterruptedException("Layout canceled");
-                }
-            } catch (InterruptedException x) {
-                Logger.getLogger(IterateLayoutService.class.getName()).log(Level.FINE,
-                        "Background layout task interrupted", x);
-                // restore interrupt after bypassing update
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        @Override
-        protected Scheduler scheduler() {
-            return Scheduler.newFixedDelaySchedule(0, delayMillis, TimeUnit.MILLISECONDS);
-        }
-    }
-    
-    //</editor-fold>
     
 
 }

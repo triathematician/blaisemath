@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Position nodes in a circle.
@@ -55,7 +56,7 @@ public class CircleLayout implements StaticGraphLayout<CircleLayout.CircleLayout
     }
     
     @Override
-    public Map layout(Graph g, Map ic, Set fixed, CircleLayoutParameters parm) {
+    public Map layout(Graph g, @Nullable Map ic, CircleLayoutParameters parm) {
         double radius = parm.radius;
         Map<Object, Point2D.Double> result = Maps.newHashMap();
         int size = g.nodeCount();

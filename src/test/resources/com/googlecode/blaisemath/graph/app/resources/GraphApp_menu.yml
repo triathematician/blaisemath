@@ -39,6 +39,9 @@ Menubar:
         - zoom100
 Toolbar:
     - zoomAll
+    -
+    - startLayout
+    - stopLayout
 Canvas:
     - zoomIn
     - zoomOut

@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,7 +142,7 @@ public class SparseGraphTest {
             assertCollectionContentsSame(Arrays.asList(nbrs1[i]), DIR.neighbors(VV[i]));
         }
         
-        Graph<Integer> graph = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(false, 200, .1f));
+        Graph<Integer> graph = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 200, .1f));
         for (Integer v : graph.nodes()) {
             if (graph.neighbors(v).contains(null)) {
                 fail("Neighbors of " + v + " contains null value");

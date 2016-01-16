@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,12 +39,12 @@ public class EdgeCountGeneratorTest {
     @Test
     public void testEdgeCountBuilder() {
         System.out.println("EdgeCountBuilderTest: MANUALLY CHECK FOR DESIRED OUTPUT");
-        Graph<Integer> result1 = new EdgeCountGenerator().generate(new ExtendedGeneratorParameters(false, 10, 0));
+        Graph<Integer> result1 = new EdgeCountGenerator().apply(new ExtendedGeneratorParameters(false, 10, 0));
         assertEquals(10, result1.nodeCount()); assertEquals(0, result1.edgeCount());
-        result1 = new EdgeCountGenerator().generate(new ExtendedGeneratorParameters(false, 10, 30));
+        result1 = new EdgeCountGenerator().apply(new ExtendedGeneratorParameters(false, 10, 30));
         assertEquals(10, result1.nodeCount()); assertEquals(30, result1.edgeCount());
         System.out.println("  UNDIRECTED: " + GraphUtils.printGraph(result1));
-        result1 = new EdgeCountGenerator().generate(new ExtendedGeneratorParameters(true, 10, 30));
+        result1 = new EdgeCountGenerator().apply(new ExtendedGeneratorParameters(true, 10, 30));
         assertEquals(10, result1.nodeCount()); assertEquals(30, result1.edgeCount());
         System.out.println("  DIRECTED: " + GraphUtils.printGraph(result1));
     }

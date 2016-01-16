@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,13 +40,13 @@ public class WattsStrogatzGeneratorTest {
     public void testWattsStrogatzGenerator() {
         System.out.println("-- WattsStrogatzGeneratorTest --");
         System.out.println("getInstance: MANUALLY CHECK FOR DESIRED OUTPUT");
-        Graph<Integer> result1 = new WattsStrogatzGenerator().generate(new WattsStrogatzParameters(false, 10, 2, 0f));
+        Graph<Integer> result1 = new WattsStrogatzGenerator().apply(new WattsStrogatzParameters(false, 10, 2, 0f));
         assertEquals(10, result1.nodeCount());
         assertEquals(10, result1.edgeCount());
         for (int i = 0; i < 10; i++) {
             assertTrue(result1.adjacent(i, (i + 1) % 10));
         }
-        Graph<Integer> result2 = new WattsStrogatzGenerator().generate(new WattsStrogatzParameters(false, 50, 4, .5f));
+        Graph<Integer> result2 = new WattsStrogatzGenerator().apply(new WattsStrogatzParameters(false, 50, 4, .5f));
         System.out.println(result2);
         assertEquals(50, result2.nodeCount());
         assertEquals(100, result2.edgeCount());

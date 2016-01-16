@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.app;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 /**
  * Combines a property editor panel with OK/Cancel buttons.
@@ -41,7 +42,9 @@ import javax.swing.JPanel;
  */
 public class PropertyActionPanel extends JPanel {
     
+    private JToolBar tb;
     private PropertySheet panel;
+    
     private final JButton okButton;
     private Action userOkAction;
     private final JButton cancelButton;
@@ -49,16 +52,21 @@ public class PropertyActionPanel extends JPanel {
 
     public PropertyActionPanel() {
         super(new BorderLayout());
+        tb = new JToolBar();
+        tb.setFloatable(false);
+        add(tb, BorderLayout.NORTH);
+        
         panel = PropertySheet.forBean(new Object());
         add(panel, BorderLayout.CENTER);
         
-        okButton = new JButton(new AbstractAction("Ok"){
+        okButton = new JButton(new AbstractAction("Apply"){
             @Override
             public void actionPerformed(ActionEvent e) {
                 okAction();
             }
         });
         okButton.setEnabled(false);
+        
         cancelButton = new JButton(new AbstractAction("Cancel"){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,11 +77,15 @@ public class PropertyActionPanel extends JPanel {
         
         JPanel south = new JPanel(new FlowLayout());
         south.add(okButton);
-        south.add(cancelButton);
+//        south.add(cancelButton);
         add(south, BorderLayout.SOUTH);
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    
+    public JToolBar getToolBar() {
+        return tb;
+    }
     
     public Object getBean() {
         return ((BeanPropertyModel)panel.getPropertyModel()).getBean();

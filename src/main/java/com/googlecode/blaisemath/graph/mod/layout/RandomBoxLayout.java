@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Position nodes at random locations in a box.
@@ -59,7 +60,7 @@ public class RandomBoxLayout implements StaticGraphLayout<BoxLayoutParameters> {
     }
     
     @Override
-    public Map layout(Graph g, Map ic, Set fixed, BoxLayoutParameters parm) {
+    public Map layout(Graph g, @Nullable Map ic, BoxLayoutParameters parm) {
         Random r = new Random();
         Map<Object, Point2D.Double> result = Maps.newHashMap();
         double minx = parm.getBounds().getMinX();
@@ -73,6 +74,8 @@ public class RandomBoxLayout implements StaticGraphLayout<BoxLayoutParameters> {
         }
         return result;
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
     
     /** Parameters associated with circle layout */
     public static class BoxLayoutParameters {
@@ -93,4 +96,7 @@ public class RandomBoxLayout implements StaticGraphLayout<BoxLayoutParameters> {
             this.bounds = bounds;
         }
     }
+    
+    //</editor-fold>
+    
 }

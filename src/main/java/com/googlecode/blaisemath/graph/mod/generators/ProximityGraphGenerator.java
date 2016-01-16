@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public final class ProximityGraphGenerator implements GraphGenerator<ProximityGr
     }
 
     @Override
-    public Graph<Point2D.Double> generate(ProximityGraphParameters parm) {
+    public Graph<Point2D.Double> apply(ProximityGraphParameters parm) {
         int nodes = parm.getNodeCount();
         double x0 = parm.getBounds().getMinX();
         double x1 = parm.getBounds().getMaxX();

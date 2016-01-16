@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParam
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Positions graph nodes nearby connected nodes. The first layout parameter
@@ -52,11 +53,13 @@ public class PositionalAddingLayout implements StaticGraphLayout<CircleLayoutPar
     }
 
     @Override
-    public <C> Map<C, Point2D.Double> layout(Graph<C> g, Map<C, Point2D.Double> curLocations, Set<C> fixed, CircleLayoutParameters parm) {
+    public <C> Map<C, Point2D.Double> layout(Graph<C> g, 
+            @Nullable Map<C, Point2D.Double> curLocations, 
+            CircleLayoutParameters parm) {
         double len = parm.getRadius();
         Map<C, Point2D.Double> res = Maps.newHashMap();
         for (C node : g.nodes()) {
-            if (curLocations.containsKey(node)) {
+            if (curLocations != null && curLocations.containsKey(node)) {
                 res.put(node, curLocations.get(node));
             } else {
                 double sx = 0;

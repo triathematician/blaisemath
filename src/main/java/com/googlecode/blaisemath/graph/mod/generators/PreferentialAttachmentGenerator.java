@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
     }
 
     @Override
-    public Graph<Integer> generate(PreferentialAttachmentParameters parm) {
+    public Graph<Integer> apply(PreferentialAttachmentParameters parm) {
         if (parm.getConnectProbabilities() == null) {
             return generate(parm.generateSeedGraph(), parm.getNodeCount(), parm.getEdgesPerStep());
         } else {
@@ -234,7 +234,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
 
         public Graph<Integer> generateSeedGraph() {
             return seedGraph != null ? seedGraph
-                    : EdgeCountGenerator.getInstance().generate(seedParameters);
+                    : EdgeCountGenerator.getInstance().apply(seedParameters);
         }
         
         //<editor-fold defaultstate="collapsed" desc="PROPERTIES">

@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.view;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,11 +82,11 @@ public class WeightedEdgeStyler<E extends Edge> implements Function<E, Attribute
             Color stroke = parent.getColor(Styles.STROKE);
             Color c = positive ? positiveColor(stroke, relativeWeight)
                     : negativeColor(stroke, relativeWeight);
-            return AttributeSet.withParent(parent)
+            return AttributeSet.createWithParent(parent)
                     .and(Styles.STROKE, c)
                     .and(Styles.STROKE_WIDTH, (float)(2 * relativeWeight));
         } else if (wt instanceof Color) {
-            return AttributeSet.withParent(parent)
+            return AttributeSet.createWithParent(parent)
                     .and(Styles.STROKE, (Color) wt);
         } else {
             return parent;

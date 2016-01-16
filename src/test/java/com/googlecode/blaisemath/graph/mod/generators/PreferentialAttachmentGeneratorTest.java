@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,34 +43,34 @@ public class PreferentialAttachmentGeneratorTest {
 
         Graph<Integer> seed = null;
         while (seed == null || seed.edgeCount() == 0) {
-            seed = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(false, 4, .5f));
+            seed = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 4, .5f));
         }
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
-        Graph<Integer> pref = new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(seed, 10, 1));
+        Graph<Integer> pref = new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(seed, 10, 1));
         System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
         assertEquals(seed.edgeCount() + (pref.nodeCount() - seed.nodeCount()), pref.edgeCount());
 
-        seed = new CycleGraphGenerator().generate(new DefaultGeneratorParameters(false, 4));
-        pref = new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(seed, 10, 2));
+        seed = new CycleGraphGenerator().apply(new DefaultGeneratorParameters(false, 4));
+        pref = new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(seed, 10, 2));
         System.out.println("  SEEDED with 4 vertex cycle graph: " + GraphUtils.printGraph(seed));
         System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
         System.out.println("    expected " + (seed.edgeCount() + 2 * (pref.nodeCount() - seed.nodeCount())) + " edges or less");
 
         try {
-            new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(
-                    new CycleGraphGenerator().generate(new DefaultGeneratorParameters(false, 5)), 20, -1));
+            new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(
+                    new CycleGraphGenerator().apply(new DefaultGeneratorParameters(false, 5)), 20, -1));
             fail("Should not be able to construct preferential attachment with negative connection numbers.");
         } catch (Exception ex) {
         }
         try {
-            new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(
-                    new CycleGraphGenerator().generate(new DefaultGeneratorParameters(true, 5)), 20, 1));
+            new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(
+                    new CycleGraphGenerator().apply(new DefaultGeneratorParameters(true, 5)), 20, 1));
             fail("Should not be able to construct preferential attachment from directed graph.");
         } catch (Exception ex) {
         }
         try {
-            new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(
-                    new EmptyGraphGenerator().generate(new DefaultGeneratorParameters(false, 5)), 20, 1));
+            new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(
+                    new EmptyGraphGenerator().apply(new DefaultGeneratorParameters(false, 5)), 20, 1));
             fail("Should not be able to construct preferential attachment with empty graph.");
         } catch (Exception ex) {
         }
@@ -80,38 +80,38 @@ public class PreferentialAttachmentGeneratorTest {
     public void testGetSeededInstance_variable_add_number() {
         System.out.println("getSeededInstance (variable # edges/step): MANUALLY CHECK FOR DESIRED OUTPUT");
 
-        Graph<Integer> seed = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(false, 4, .5f));
+        Graph<Integer> seed = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 4, .5f));
         while (seed.edgeCount() == 0) {
-            seed = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(false, 4, .5f));
+            seed = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 4, .5f));
         }
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         float[] probs1 = {.5f, .5f};
-        Graph<Integer> pref = new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(seed, 10, probs1));
+        Graph<Integer> pref = new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(seed, 10, probs1));
         System.out.println("    result (probs .5, .5): " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
         System.out.println("    expected " + (seed.edgeCount() + probs1[1] * (pref.nodeCount() - seed.nodeCount())) + " edges");
 
-        seed = new CycleGraphGenerator().generate(new DefaultGeneratorParameters(false, 4));
+        seed = new CycleGraphGenerator().apply(new DefaultGeneratorParameters(false, 4));
         System.out.println("  SEEDED with 4 vertex cycle graph: " + GraphUtils.printGraph(seed));
         float[] probs2 = {0f, .5f, .25f, .25f};
-        pref = new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(seed, 10, probs2));
+        pref = new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(seed, 10, probs2));
         System.out.println("    result (probs 0, .5, .25, .25): " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
         System.out.println("    expected " + (seed.edgeCount() + (probs2[1] + 2 * probs2[2] + 3 * probs2[3]) * (pref.nodeCount() - seed.nodeCount())) + " edges");
 
         try {
-            new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(
-                    new EmptyGraphGenerator().generate(new DefaultGeneratorParameters(false, 5)), 20, new float[]{.25f, 0f, -1f}));
+            new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(
+                    new EmptyGraphGenerator().apply(new DefaultGeneratorParameters(false, 5)), 20, new float[]{.25f, 0f, -1f}));
             fail("Should not be able to construct preferential attachment with bad probability vector.");
         } catch (Exception ex) {
         }
         try {
-            new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(
-                    new CycleGraphGenerator().generate(new DefaultGeneratorParameters(true, 5)), 20, new float[]{.5f, .5f}));
+            new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(
+                    new CycleGraphGenerator().apply(new DefaultGeneratorParameters(true, 5)), 20, new float[]{.5f, .5f}));
             fail("Should not be able to construct preferential attachment from undirected graph.");
         } catch (Exception ex) {
         }
         try {
-            new PreferentialAttachmentGenerator().generate(new PreferentialAttachmentParameters(
-                    new EmptyGraphGenerator().generate(new DefaultGeneratorParameters(false, 5)), 20, new float[]{.5f, .5f}));
+            new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(
+                    new EmptyGraphGenerator().apply(new DefaultGeneratorParameters(false, 5)), 20, new float[]{.5f, .5f}));
             fail("Should not be able to construct preferential attachment with empty graph.");
         } catch (Exception ex) {
         }

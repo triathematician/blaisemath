@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.view;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,7 @@ import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout.BoxLayoutParameters;
-import com.googlecode.blaisemath.graph.view.GraphComponent;
-import com.googlecode.blaisemath.graph.view.VisualGraph;
+import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -55,7 +54,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Collections;
 import java.util.Set;
 import javax.swing.JPopupMenu;
 
@@ -77,10 +75,10 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
         // BASIC ELEMENTS
 
-        final Graph<Integer> graph = new EdgeLikelihoodGenerator().generate(new EdgeLikelihoodParameters(false, 50, .05f));
+        final Graph<Integer> graph = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 50, .05f));
         plot.setGraph(graph);
         plot.getAdapter().getViewGraph().setDragEnabled(true);
-        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), Collections.EMPTY_MAP, Collections.EMPTY_SET, new CircleLayoutParameters(100.0));
+        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null, new CircleLayoutParameters(100.0));
         PanAndZoomHandler.zoomBoxAnimated(plot, Points.boundingBox(plot.getLayoutManager().getNodeLocationCopy().values(), 5));
         plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, AttributeSet>(){
             public AttributeSet apply(Object o) {
@@ -130,9 +128,8 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
         // PANELS
 
-        rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout = new SpringLayout(
-                plot.getLayoutManager().getNodeLocationCopy()
-                )));
+        energyLayout = new SpringLayout();
+        rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout.createParameters()));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
         }
@@ -253,20 +250,20 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        double d = SpringLayout.DEFAULT_DIST_SCALE*2;
-        plot.getLayoutManager().applyLayout(RandomBoxLayout.getInstance(), Collections.EMPTY_MAP, Collections.EMPTY_SET,
+        double d = SpringLayoutParameters.DEFAULT_DIST_SCALE*2;
+        plot.getLayoutManager().applyLayout(RandomBoxLayout.getInstance(), null,
                 new BoxLayoutParameters(new Rectangle2D.Double(-d, -d, 2*d, 2*d)));
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), Collections.EMPTY_MAP, Collections.EMPTY_SET,
-                new CircleLayoutParameters(SpringLayout.DEFAULT_DIST_SCALE*2));
+        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null,
+                new CircleLayoutParameters(SpringLayoutParameters.DEFAULT_DIST_SCALE*2));
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getLayoutManager().getNodeLocationCopy());
+            energyLayout = new SpringLayout();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().iterateLayout();
         updateEL = false;
@@ -274,7 +271,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getLayoutManager().getNodeLocationCopy());
+            energyLayout = new SpringLayout();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().setLayoutTaskActive(true);
     }//GEN-LAST:event_energyABActionPerformed

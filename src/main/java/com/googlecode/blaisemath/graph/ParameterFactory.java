@@ -4,8 +4,6 @@
  */
 package com.googlecode.blaisemath.graph;
 
-import com.google.common.base.Function;
-
 /*
  * #%L
  * BlaiseGraphTheory
@@ -28,13 +26,17 @@ import com.google.common.base.Function;
 
 /**
  * <p>
- *   Generates a graph based on provided settings.
+ *   A class that generates a parameters object.
  * </p>
-
-* @param <P> parameters type
- * @param <V> graph vertex type
+ * @param <P> parameters type
  * @author elisha
  */
-public interface GraphGenerator<P,V> extends ParameterFactory<P>, Function<P,Graph<V>> {
+public interface ParameterFactory<P> {
+
+    /**
+     * Create instance of parameters object
+     * @return parameters instance
+     */
+    P createParameters();
     
 }

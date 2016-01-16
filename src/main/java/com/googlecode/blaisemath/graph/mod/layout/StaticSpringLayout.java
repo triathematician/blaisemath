@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+import com.googlecode.blaisemath.graph.IterativeGraphLayoutManager;
 import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
@@ -41,13 +42,13 @@ import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 /**
  * Positions nodes in a graph using a force-based layout technique.
@@ -70,8 +71,10 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
     }
 
     @Override
-    public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, Map<C, Point2D.Double> ic, 
-            Set<C> fixed, StaticSpringLayoutParameters parm) {
+    public <C> Map<C, Point2D.Double> layout(
+            Graph<C> originalGraph, 
+            @Nullable Map<C, Point2D.Double> ic, 
+            StaticSpringLayoutParameters parm) {
         LOG.log(Level.FINE, "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { originalGraph.nodeCount(), originalGraph.edgeCount(), 
                     GraphUtils.components(originalGraph).size(), 
@@ -99,28 +102,38 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
                     });
         
         // perform the physics-based layout
-        Map<C,Point2D.Double> initialLocs = INITIAL_LAYOUT.layout(
-                graphForLayout, Collections.EMPTY_MAP, Collections.EMPTY_SET, parm.initialLayoutParams);
-        SpringLayout sl = new SpringLayout(initialLocs);
-        sl.getParameters().setDistScale(parm.distScale);
+        Map<C,Point2D.Double> initialLocs = INITIAL_LAYOUT.layout(graphForLayout, 
+                null, parm.initialLayoutParams);
+        
+        IterativeGraphLayoutManager mgr = new IterativeGraphLayoutManager();
+        mgr.setLayout(new SpringLayout());
+        mgr.setGraph(graphForLayout);
+        SpringLayoutParameters params = (SpringLayoutParameters) mgr.getParameters();
+        SpringLayoutState state = (SpringLayoutState) mgr.getState();
+        params.setDistScale(parm.distScale);
+        state.requestPositions(initialLocs, false);
         double lastEnergy = Double.MAX_VALUE;
         double energyChange = Double.MAX_VALUE;
         int step = 0;
         while (step < parm.minSteps || (step < parm.maxSteps && Math.abs(energyChange) > parm.energyChangeThreshold)) {
             // adjust cooling parameter
             double cool01 = 1-step*step/(parm.maxSteps*parm.maxSteps);
-            sl.parameters.dampingC = parm.coolStart*cool01 + parm.coolEnd*(1-cool01);
-            sl.iterate(graphForLayout);
-            double energy = sl.getEnergyStatus();
+            params.dampingC = parm.coolStart*cool01 + parm.coolEnd*(1-cool01);
+            double energy;
+            try {
+                energy = mgr.runOneLoop();
+            } catch (InterruptedException ex) {
+                throw new IllegalStateException("Unexpected interrupt", ex);
+            }
             energyChange = energy - lastEnergy;
             lastEnergy = energy;
             step++;
         }
         
         // add positions of isolates and leaf nodes back in
-        Map<C, Point2D.Double> res = sl.getPositionsCopy();
-        addLeafNodes(graphForInfo, res, sl.getParameters().getDistScale());
-        addIsolates(graphForInfo.getIsolates(), res, sl.getParameters().getDistScale());
+        Map<C, Point2D.Double> res = state.getPositionsCopy();
+        addLeafNodes(graphForInfo, res, params.getDistScale());
+        addIsolates(graphForInfo.getIsolates(), res, params.getDistScale());
         
         // report and clean up
         LOG.log(Level.FINE, "StaticSpringLayout completed in {0} steps. The final energy "
@@ -266,7 +279,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         
         private CircleLayoutParameters initialLayoutParams = new CircleLayoutParameters();
         
-        private double distScale = SpringLayout.DEFAULT_DIST_SCALE;
+        private double distScale = SpringLayoutParameters.DEFAULT_DIST_SCALE;
         private int minSteps = 100;
         private int maxSteps = 5000;
         private double coolStart = 0.65;
