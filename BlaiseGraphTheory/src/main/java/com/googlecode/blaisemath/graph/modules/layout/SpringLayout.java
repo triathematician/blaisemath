@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graph.modules.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -401,7 +401,7 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
         for (Region r : ireg.adj) {
             for (Entry<Object, Point2D.Double> jEntry : r.pts.entrySet()) {
                 Object jo = jEntry.getKey();
-                if (io != jo && !g.adjacent(io, jo)) {
+                if (io != jo) {
                     jLoc = jEntry.getValue();
                     dist = iLoc.distance(jLoc);
                     // repulsive force from other nodes
