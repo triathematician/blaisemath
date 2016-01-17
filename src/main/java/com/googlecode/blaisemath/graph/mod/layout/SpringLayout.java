@@ -207,7 +207,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         for (LayoutRegion<C> r : ireg.adjacentRegions()) {
             for (Entry<C, Point2D.Double> jEntry : r.entries()) {
                 C jo = jEntry.getKey();
-                if (io != jo && !g.adjacent(io, jo)) {
+                if (io != jo) {
                     jLoc = jEntry.getValue();
                     dist = iLoc.distance(jLoc);
                     // repulsive force from other nodes
