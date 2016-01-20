@@ -123,12 +123,8 @@ public class GraphComponent extends JGraphicComponent {
             }
         });
     }
-
-
-    //<editor-fold defaultstate="collapsed" desc="DELEGATING PROPERTIES">
-    //
-    // DELEGATING PROPERTIES
-    //
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
 
     /**
      * Return the adapter that contains the graph manager and the graph, responsible for handling the visual appearance.
@@ -137,6 +133,14 @@ public class GraphComponent extends JGraphicComponent {
     public VisualGraph getAdapter() {
         return adapter;
     }
+    
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="DELEGATING PROPERTIES">
+    //
+    // DELEGATING PROPERTIES
+    //
 
     public ObjectStyler<Edge<Object>> getEdgeStyler() {
         return adapter.getEdgeStyler();

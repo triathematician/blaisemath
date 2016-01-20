@@ -98,9 +98,10 @@ public final class GraphAppFrameView extends FrameView {
         super(app);
         
         graphComponent = new GraphComponent();
-        graphComponent.setSelectionEnabled(true);
         PanAndZoomHandler.install(graphComponent);
-
+        graphComponent.getAdapter().getViewGraph().setDragEnabled(true);
+        graphComponent.getAdapter().getViewGraph().setPointSelectionEnabled(true);
+        
         // set up menus
         ActionMap am = app.getContext().getActionMap(this);
         try {

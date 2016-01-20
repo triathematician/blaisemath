@@ -49,6 +49,7 @@ import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.Points;
 import com.googlecode.blaisemath.util.RollupPanel;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -56,7 +57,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Set;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
 /**
@@ -69,6 +73,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
     /** Flag for when el needs points updated */
     boolean updateEL = true;
     SpringLayout energyLayout;
+    SpringLayoutParameters layoutParams;
 
     /** Creates new form TestPlaneVisometry */
     public GraphTestFrame() {
@@ -79,6 +84,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
         final Graph<Integer> graph = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 50, .05f));
         plot.setGraph(graph);
+        plot.getAdapter().getViewGraph().setPointSelectionEnabled(true);
         plot.getAdapter().getViewGraph().setDragEnabled(true);
         plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null, new CircleLayoutParameters(100.0));
         PanAndZoomHandler.zoomBoxAnimated(plot, Points.boundingBox(plot.getLayoutManager().getNodeLocationCopy().values(), 5));
@@ -131,7 +137,8 @@ public class GraphTestFrame extends javax.swing.JFrame {
         // PANELS
 
         energyLayout = new SpringLayout();
-        rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout.createParameters()));
+        layoutParams = energyLayout.createParameters();
+        rollupPanel1.add("Energy Layout", PropertySheet.forBean(layoutParams));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
         }
@@ -151,6 +158,12 @@ public class GraphTestFrame extends javax.swing.JFrame {
                 canvas.drawLine(50, 50, 150, 50);
                 canvas.drawLine(50, 40, 50, 60);
                 canvas.drawLine(150, 40, 150, 60);
+            }
+        });
+        
+        plot.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent evt) {
+                selectionL.setText(String.format("<html><b>Selection:</b> %s", evt.getNewValue()));
             }
         });
     }
@@ -175,6 +188,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         rollupPanel1 = new RollupPanel();
         plot = new GraphComponent();
+        selectionL = new JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -246,6 +260,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.EAST);
         getContentPane().add(plot, java.awt.BorderLayout.CENTER);
+        getContentPane().add(selectionL, BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -267,6 +282,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
         if (energyLayout == null)
             energyLayout = new SpringLayout();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
+        plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().iterateLayout();
         updateEL = false;
     }//GEN-LAST:event_energyIBActionPerformed
@@ -275,6 +291,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
         if (energyLayout == null)
             energyLayout = new SpringLayout();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
+        plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().setLayoutTaskActive(true);
     }//GEN-LAST:event_energyABActionPerformed
 
@@ -306,5 +323,6 @@ public class GraphTestFrame extends javax.swing.JFrame {
     private GraphComponent plot;
     private javax.swing.JButton randomLB;
     private RollupPanel rollupPanel1;
+    private JLabel selectionL;
     // End of variables declaration//GEN-END:variables
 }

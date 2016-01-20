@@ -35,16 +35,14 @@ import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParam
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout;
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout.BoxLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
+import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
-import com.googlecode.blaisemath.graph.view.GraphComponent;
-import com.googlecode.blaisemath.graph.view.VisualGraph;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
-import java.util.Collections;
 import javax.swing.SwingUtilities;
 
 
@@ -58,6 +56,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     /** Flag for when el needs points updated */
     boolean updateEL = true;
     SpringLayout energyLayout;
+    SpringLayoutParameters layoutParams;
 
     MyTestGraph graph = new MyTestGraph();
     Graph<String> graphCopy;
@@ -71,11 +70,13 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         graphCopy = GraphUtils.copyAsSparseGraph(graph);
         plot.setGraph(graphCopy);
         plot.getAdapter().getViewGraph().setDragEnabled(true);
+        plot.getAdapter().getViewGraph().setPointSelectionEnabled(true);
 
         // PANELS
 
         energyLayout = new SpringLayout();
-        rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout.createParameters()));
+        layoutParams = energyLayout.createParameters();
+        rollupPanel1.add("Energy Layout", PropertySheet.forBean(layoutParams));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
         }
@@ -265,6 +266,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         if (energyLayout == null)
             energyLayout = new SpringLayout();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
+        plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().iterateLayout();
         updateEL = false;
     }//GEN-LAST:event_energyIBActionPerformed
@@ -273,6 +275,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         if (energyLayout == null)
             energyLayout = new SpringLayout();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
+        plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().setLayoutTaskActive(true);
     }//GEN-LAST:event_energyABActionPerformed
 
