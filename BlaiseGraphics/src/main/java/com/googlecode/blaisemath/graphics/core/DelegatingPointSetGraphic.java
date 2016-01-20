@@ -145,6 +145,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     //
     
     private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
+        boolean change = false;
         List<Graphic<G>> addMe = Lists.newArrayList();
         if (added != null) {
             for (Entry<S, Point2D> en : added.entrySet()) {
@@ -163,6 +164,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
                     updatingPoint = true;
                     dpg.setPrimitive(en.getValue());
                     updatingPoint = false;
+                    change = true;
                 }
             }
         }
@@ -173,7 +175,10 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
                 points.remove(s);
             }
         }
-        replaceGraphics(removeMe, addMe);
+        change = replaceGraphics(removeMe, addMe) || change;
+        if (change) {
+            super.graphicChanged(this);
+        }
     }
 
     @Override
