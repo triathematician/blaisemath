@@ -117,8 +117,8 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         int step = 0;
         while (step < parm.minSteps || (step < parm.maxSteps && Math.abs(energyChange) > parm.energyChangeThreshold)) {
             // adjust cooling parameter
-            double cool01 = 1-step*step/(parm.maxSteps*parm.maxSteps);
-            params.dampingC = parm.coolStart*cool01 + parm.coolEnd*(1-cool01);
+            double coolingAt = 1-step*step/(parm.maxSteps*parm.maxSteps);
+            params.dampingC = parm.coolStart*coolingAt + parm.coolEnd*(1-coolingAt);
             double energy;
             try {
                 energy = mgr.runOneLoop();
@@ -127,7 +127,10 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
             }
             energyChange = energy - lastEnergy;
             lastEnergy = energy;
-            step++;
+            step += mgr.getIterationsPerLoop();
+            if (step % 500 == 0) {
+                System.out.printf("|Energy at step %s: %s %s\n", step, energy, energyChange);
+            }
         }
         
         // add positions of isolates and leaf nodes back in
@@ -136,7 +139,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         addIsolates(graphForInfo.getIsolates(), res, params.getDistScale());
         
         // report and clean up
-        LOG.log(Level.FINE, "StaticSpringLayout completed in {0} steps. The final energy "
+        LOG.log(Level.INFO, "StaticSpringLayout completed in {0} steps. The final energy "
                         + "change was {1}, and the final energy was {2}", 
                 new Object[]{step, energyChange, lastEnergy});
         return res;
@@ -282,8 +285,8 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         private double distScale = SpringLayoutParameters.DEFAULT_DIST_SCALE;
         private int minSteps = 100;
         private int maxSteps = 5000;
-        private double coolStart = 0.65;
-        private double coolEnd = 0.1;    
+        private double coolStart = 0.5;
+        private double coolEnd = 0.05;    
         private double energyChangeThreshold = distScale*distScale*1e-6;
 
         //<editor-fold defaultstate="collapsed" desc="PROPERTIES">

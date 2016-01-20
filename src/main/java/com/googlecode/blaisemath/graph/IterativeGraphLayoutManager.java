@@ -139,6 +139,10 @@ public final class IterativeGraphLayoutManager {
     public Object getParameters() {
         return params;
     }
+
+    public int getIterationsPerLoop() {
+        return iterPerLoop;
+    }
     
     //</editor-fold>
 
