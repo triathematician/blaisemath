@@ -33,7 +33,7 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import com.googlecode.blaisemath.graph.IterativeGraphLayoutManager;
+import com.googlecode.blaisemath.graph.layout.IterativeGraphLayoutManager;
 import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;

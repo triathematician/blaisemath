@@ -23,6 +23,7 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.googlecode.blaisemath.util.GAInstrument;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;

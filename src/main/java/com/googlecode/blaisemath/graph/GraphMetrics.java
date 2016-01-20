@@ -25,10 +25,12 @@ package com.googlecode.blaisemath.graph;
  */
 
 
+import com.google.common.base.Function;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,6 +40,7 @@ import java.util.Set;
  */
 public class GraphMetrics {
     
+    // utility class
     private GraphMetrics() {
     }
 
@@ -45,23 +48,45 @@ public class GraphMetrics {
     // METHODS FOR COMPILING INFORMATION ABOUT METRICS IN A GRAPH (ALL NODES)
     //
     
-    public static <N> List<N> computeValues(Graph graph, GraphNodeMetric<N> metric) {
-        List<N> result = new ArrayList<N>();
-        for (Object node : graph.nodes()) {
-            result.add((N) metric.apply(graph, node));
-        }
-        return result;
-    }
-
     /**
-     * Returns computeDistribution of the values of a particular metric
-     * @param <N> metric result type
+     * Returns function computing metric value for each node in the given graph.
+     * @param <N> node type
+     * @param <T> value type
+     * @param graph the graph
+     * @param metric metric used to generate values
+     * @return function computing values
+     */
+    public static <N,T> Function<N,T> asFunction(final Graph<N> graph, final GraphNodeMetric<T> metric) {
+        return new Function<N,T>(){
+            @Override
+            public T apply(N node) {
+                return metric.apply(graph, node);
+            }
+        };
+    }
+    
+    /**
+     * Returns metric values associated with ndoes in the graph.
+     * @param <N> node type
+     * @param <T> value type
      * @param graph the graph
      * @param metric metric used to generate values
      * @return distribution of values
      */
-    public static <N> Multiset<N> computeDistribution(Graph graph, GraphNodeMetric<N> metric) {
-        return HashMultiset.create(computeValues(graph, metric));
+    public static <N,T> Map<N,T> computeValues(Graph<N> graph, GraphNodeMetric<T> metric) {
+        return Maps.asMap(graph.nodes(), asFunction(graph, metric));
+    }
+
+    /**
+     * Returns distribution of the values of a particular metric
+     * @param <N> node type
+     * @param <T> metric result type
+     * @param graph the graph
+     * @param metric metric used to generate values
+     * @return distribution of values
+     */
+    public static <N,T> Multiset<T> computeDistribution(Graph<N> graph, GraphNodeMetric<T> metric) {
+        return HashMultiset.create(Iterables.transform(graph.nodes(), asFunction(graph, metric)));
     }
     
     //

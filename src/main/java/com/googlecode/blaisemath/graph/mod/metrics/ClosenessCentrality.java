@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import com.googlecode.blaisemath.graph.GAInstrument;
+import com.googlecode.blaisemath.util.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 

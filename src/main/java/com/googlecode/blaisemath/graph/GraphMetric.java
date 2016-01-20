@@ -30,10 +30,10 @@ import com.google.common.base.Function;
 
 /**
  * Returns a global value associated with a graph.
- * @param <N> the type of value returned
+ * @param <T> the type of value returned
  * 
  * @author Elisha Peterson
  */
-public interface GraphMetric<N> extends Function<Graph, N> {
+public interface GraphMetric<T> extends Function<Graph, T> {
     
 }

@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import java.util.Collection;
 import java.util.Map;
@@ -121,7 +122,7 @@ public class GraphStats {
      */
     public static class NodeStats {
         /** The values on nodes. */
-        private final Collection values;
+        private final Iterable values;
         /** Summary statistics of the values. */
         private final SummaryStatistics stats;
 
@@ -129,30 +130,30 @@ public class GraphStats {
          * Construct the node stats object.
          * @param values the node values
          */
-        public NodeStats(Collection<? extends Number> values) {
+        public NodeStats(Iterable<? extends Number> values) {
             this.values = values;
             this.stats = new SummaryStatistics();
             for (Object v : values) {
-                if (v instanceof Number) {
-                    stats.addValue(((Number)v).doubleValue());
-                }
+                stats.addValue(((Number)v).doubleValue());
             }
         }
         
         /** 
          * Construct the node stats object given a graph and a node metric.
+         * @param <N> graph node type
+         * @param <V> metric value type
          * @param graph the graph
          * @param metric a node metric
          */
-        public NodeStats(Graph graph, GraphNodeMetric<? extends Number> metric) {
-            this(GraphMetrics.computeValues(graph, metric));
+        public <N,V extends Number> NodeStats(Graph<N> graph, GraphNodeMetric<V> metric) {
+            this(Iterables.transform(graph.nodes(), GraphMetrics.asFunction(graph, metric)));
         }
         
         /** 
          * Values on the nodes
          * @return values
          */
-        public Collection getValues() {
+        public Iterable getValues() {
             return values;
         }
         

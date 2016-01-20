@@ -2,7 +2,7 @@
  * IterativeGraphLayoutService.java
  * Created Jan 16, 2016
  */
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.graph.layout;
 
 /*
  * #%L

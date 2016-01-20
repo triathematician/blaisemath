@@ -3,7 +3,7 @@
  * Created Jan 29, 2011
  */
 
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.graph.layout;
 
 /*
  * #%L
@@ -27,6 +27,10 @@ package com.googlecode.blaisemath.graph;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
+import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.PositionalAddingLayout;

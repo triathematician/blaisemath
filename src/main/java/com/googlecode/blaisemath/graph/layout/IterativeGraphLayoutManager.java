@@ -2,7 +2,7 @@
  * IterativeGraphLayoutManager.java
  * Created Jan 16, 2016
  */
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.graph.layout;
 
 /*
  * #%L
@@ -27,6 +27,9 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.base.Function;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;

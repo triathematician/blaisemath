@@ -37,30 +37,32 @@ import javax.annotation.concurrent.Immutable;
  * a decoupled cache and access to this info.
  *
  * @author elisha
+ * 
+ * @param <N> node type
  */
 @Immutable
-public class GraphComponents<V> {
+public final class GraphComponents<N> {
 
     /** What this class is modifying/describing. */
-    private final Graph<V> graph;
+    private final Graph<N> graph;
     /** The connected components of the graph. */
-    private final Collection<Set<V>> components;
+    private final Collection<Set<N>> components;
     /** Stored components as graphs. */
-    private final Set<Graph<V>> componentGraphs;
+    private final Set<Graph<N>> componentGraphs;
 
     /**
      * Construct components for specified graph.
      * @param graph graph
      * @param components the graph's components
      */
-    public GraphComponents(Graph<V> graph, Collection<Set<V>> components) {
+    public GraphComponents(Graph<N> graph, Collection<Set<N>> components) {
         this.graph = graph;
         this.components = components;
         if (components.size() == 1) {
             componentGraphs = Collections.singleton(graph);
         } else {
             this.componentGraphs = Sets.newHashSet();
-            for (Set<V> compt : components) {
+            for (Set<N> compt : components) {
                 componentGraphs.add(GraphUtils.copySubgraph(graph, compt));
             }
         }
@@ -70,7 +72,7 @@ public class GraphComponents<V> {
      * Return source graph
      * @return graph
      */
-    public Graph<V> getGraph() {
+    public Graph<N> getGraph() {
         return graph;
     }
 
@@ -78,7 +80,7 @@ public class GraphComponents<V> {
      * The connected components of the graph, copied into new subgraph representations.
      * @return subcomponents
      */
-    public Set<Graph<V>> getComponentGraphs() {
+    public Set<Graph<N>> getComponentGraphs() {
         return Collections.unmodifiableSet(componentGraphs);
     }
 
@@ -86,7 +88,7 @@ public class GraphComponents<V> {
      * The graph's connected components.
      * @return connected components
      */
-    public Collection<Set<V>> getComponents() {
+    public Collection<Set<N>> getComponents() {
         return Collections.unmodifiableCollection(components);
     }
 
@@ -104,8 +106,8 @@ public class GraphComponents<V> {
      * @param x a node
      * @return the component of a node
      */
-    public Set<V> getComponentOf(V x) {
-        for (Set<V> compt : components) {
+    public Set<N> getComponentOf(N x) {
+        for (Set<N> compt : components) {
             if (compt.contains(x)) {
                 return compt;
             }

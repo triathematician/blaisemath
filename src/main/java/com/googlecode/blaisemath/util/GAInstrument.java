@@ -2,7 +2,7 @@
  * GAInstrument.java
  * Created on Jun 8, 2012
  */
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L

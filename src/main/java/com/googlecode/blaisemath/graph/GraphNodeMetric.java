@@ -27,15 +27,15 @@ package com.googlecode.blaisemath.graph;
 
 /**
  * Returns a value for a single node in a graph.
- * @param <N> the type of value returned (usually a number)
+ * @param <T> the type of value returned (usually a number)
  * 
  * @author Elisha Peterson
  */
-public interface GraphNodeMetric<N> {
+public interface GraphNodeMetric<T> {
 
     /**
      * Computes the value of the metric for the given graph and node.
-     * @param <V> graph vertex type
+     * @param <N> graph vertex type
      * @param graph the graph
      * @param node a node in the graph
      * @return value of the metric
@@ -43,6 +43,6 @@ public interface GraphNodeMetric<N> {
      *      specified graph (e.g. graph is null, or graph is directed, but the
      *      metric only applies to undirected graphs)
      */
-    <V> N apply(Graph<V> graph, V node);
+    <N> T apply(Graph<N> graph, N node);
 
 }

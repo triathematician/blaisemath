@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.graph.test;
 
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
-import com.googlecode.blaisemath.graph.GAInstrument;
+import com.googlecode.blaisemath.util.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;

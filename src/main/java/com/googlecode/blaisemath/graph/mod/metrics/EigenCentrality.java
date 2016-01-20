@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.googlecode.blaisemath.graph.GAInstrument;
+import com.googlecode.blaisemath.util.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.linear.Matrices;

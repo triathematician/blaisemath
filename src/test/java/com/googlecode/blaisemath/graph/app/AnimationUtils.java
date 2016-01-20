@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.graph.app;
 
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
-import com.googlecode.blaisemath.graph.GraphLayoutManager;
+import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.getLocalBounds;

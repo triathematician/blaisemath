@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.graph.query;
 
 import com.google.common.base.Function;
 import java.util.Set;
-import com.googlecode.blaisemath.graph.GAInstrument;
+import com.googlecode.blaisemath.util.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
 
 /**

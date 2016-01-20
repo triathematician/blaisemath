@@ -32,9 +32,9 @@ import com.google.common.base.Function;
  * </p>
 
 * @param <P> parameters type
- * @param <V> graph vertex type
+ * @param <N> graph vertex type
  * @author elisha
  */
-public interface GraphGenerator<P,V> extends ParameterFactory<P>, Function<P,Graph<V>> {
+public interface GraphGenerator<P,N> extends ParameterFactory<P>, Function<P,Graph<N>> {
     
 }
