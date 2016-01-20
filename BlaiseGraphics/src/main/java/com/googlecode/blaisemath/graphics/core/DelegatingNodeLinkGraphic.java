@@ -41,6 +41,7 @@ import javax.annotation.Nullable;
  *
  * @param <S> source object type
  * @param <E> edge type
+ * @param <G> graphics canvas type
  * 
  * @author Elisha Peterson
  */
@@ -102,6 +103,10 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
     public DelegatingEdgeSetGraphic<S,E,G> getEdgeGraphic() {
         return edgeGraphics;
     }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="DELEGATE PROPERTIES - POINT GRAPHICS">
 
     public CoordinateManager<S, Point2D> getCoordinateManager() {
         return pointGraphics.getCoordinateManager();
@@ -119,6 +124,7 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
     public Map<S, Point2D> getNodeLocations() {
         return pointGraphics.getCoordinateManager().getActiveLocationCopy();
     }
+    
 
     public void setNodeLocations(Map<S, Point2D> pts) {
         pointGraphics.getCoordinateManager().putAll(pts);
@@ -155,6 +161,18 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
     public void setDragEnabled(boolean val) {
         pointGraphics.setDragEnabled(val);
     }
+
+    public boolean isPointSelectionEnabled() {
+        return pointGraphics.isPointSelectionEnabled();
+    }
+
+    public void setPointSelectionEnabled(boolean val) {
+        pointGraphics.setPointSelectionEnabled(val);
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="DELEGATE PROPERTIES - EDGE GRAPHICS">
 
     public Set<E> getEdgeSet() {
         return edgeGraphics.getEdges();
