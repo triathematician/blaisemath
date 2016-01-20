@@ -139,7 +139,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
     @Override
     public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, Map<C, Point2D.Double> ic, 
             Set<C> fixed, Double irad) {
-        Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
+        Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.FINE, 
                 "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { originalGraph.nodeCount(), originalGraph.edgeCount(), 
                     GraphUtils.components(originalGraph).size(), 
@@ -160,7 +160,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
             });
 
         OptimizedGraph<C> graphForLayout = new OptimizedGraph<C>(false, keepNodes, keepEdges);
-        Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
+        Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.FINE, 
                 "graphForLayout, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { graphForLayout.nodeCount(), graphForLayout.edgeCount(), 
                     GraphUtils.components(graphForLayout).size(), 
@@ -184,6 +184,9 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
             energyChange = energy - lastEnergy;
             lastEnergy = energy;
             step++;
+            if (step % 500 == 0) {
+                System.out.printf("|Energy at step %s: %s %s\n", step, energy, energyChange);
+            }
         }
         
         // add positions of isolates and leaf nodes back in
