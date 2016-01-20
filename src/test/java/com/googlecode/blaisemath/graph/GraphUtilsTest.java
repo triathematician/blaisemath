@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import static com.googlecode.blaisemath.graph.AssertUtils.assertCollectionContentsSame;
+import static com.googlecode.blaisemath.test.AssertUtils.assertCollectionContentsSame;
 import java.util.Collection;
 import java.util.Collections;
 import static org.junit.Assert.assertEquals;

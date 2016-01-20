@@ -2,7 +2,7 @@
  * PropertyActionPanel.java
  * Created Mar 28, 2015
  */
-package com.googlecode.blaisemath.graph.app;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L

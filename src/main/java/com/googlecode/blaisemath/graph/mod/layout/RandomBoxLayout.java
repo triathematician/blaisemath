@@ -33,7 +33,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import javax.annotation.Nullable;
 
 /**
@@ -79,7 +78,7 @@ public class RandomBoxLayout implements StaticGraphLayout<BoxLayoutParameters> {
     
     /** Parameters associated with circle layout */
     public static class BoxLayoutParameters {
-        private Rectangle2D.Double bounds = new Rectangle2D.Double(-10, -10, 20, 20);
+        private Rectangle2D.Double bounds = new Rectangle2D.Double(-100, -100, 200, 200);
 
         public BoxLayoutParameters() {
         }

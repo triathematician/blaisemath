@@ -30,7 +30,6 @@ import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import java.awt.geom.Point2D;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Nullable;
 
 /**
@@ -72,7 +71,7 @@ public class CircleLayout implements StaticGraphLayout<CircleLayout.CircleLayout
     
     /** Parameters associated with circle layout */
     public static class CircleLayoutParameters {
-        private double radius = 10.0;
+        private double radius = 100.0;
 
         public CircleLayoutParameters() {
         }

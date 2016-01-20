@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graph.app;
  */
 
 
+import com.googlecode.blaisemath.util.PropertyActionPanel;
 import com.google.common.collect.Multisets;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.EnumEditor;
@@ -37,9 +38,6 @@ import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphServices;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
-import com.googlecode.blaisemath.graph.mod.generators.EdgeCountGenerator;
-import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
-import com.googlecode.blaisemath.graph.mod.layout.StaticSpringLayout;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
@@ -156,6 +154,7 @@ public final class GraphAppFrameView extends FrameView {
         staticLayoutPanel.getToolBar().add(staticLayoutBox);
         
         iterativeLayoutPanel = new PropertyActionPanel();
+//        iterativeLayoutPanel.setUserOkAction(am.get("applyIterativeLayout"));
         iterativeLayoutBox  = new JComboBox(GraphServices.iterativeLayouts().toArray());
         iterativeLayoutBox.addActionListener(new ActionListener(){
             @Override
@@ -223,9 +222,11 @@ public final class GraphAppFrameView extends FrameView {
     public void setSelectedIterativeLayout(IterativeGraphLayout selectedIterativeLayout) {
         this.selectedIterativeLayout = selectedIterativeLayout;
         iterativeLayoutBox.setSelectedItem(selectedIterativeLayout);
-        iterativeLayoutPanel.setBean(selectedIterativeLayout);
+        Object parm = selectedIterativeLayout.createParameters();
+        iterativeLayoutPanel.setBean(parm);
         ((MPanel)iterativeLayoutPanel.getParent()).setPrimaryComponent(iterativeLayoutPanel);
         graphComponent.getLayoutManager().setLayoutAlgorithm(selectedIterativeLayout);
+        graphComponent.getLayoutManager().setLayoutParameters(parm);
     }
     
     public Object getIterativeLayoutParameters() {
@@ -245,7 +246,7 @@ public final class GraphAppFrameView extends FrameView {
     public void applyGenerator(ActionEvent event) {
         Object parm = event.getSource();
         graphComponent.setGraph((Graph) selectedGenerator.apply(parm));
-        zoomAll();
+        applyStaticLayout(new ActionEvent(staticLayoutPanel.getBean(), 0, null));
     }
     
     // LAYOUT ACTIONS
@@ -265,6 +266,12 @@ public final class GraphAppFrameView extends FrameView {
     public void iterativeLayout(ActionEvent event) {
         setSelectedIterativeLayout((IterativeGraphLayout) event.getSource());
     }
+    
+//    @Action
+//    public void applyIterativeLayout(ActionEvent event) {
+//        Object parm = event.getSource();
+//        graphComponent.getLayoutManager().setLayoutParameters(parm);
+//    }
     
     @Action
     public void startLayout() {

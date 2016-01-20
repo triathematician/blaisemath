@@ -194,6 +194,22 @@ public final class GraphLayoutManager<C> {
             pcs.firePropertyChange(P_LAYOUT, old, layout);
         }
     }
+    
+    /**
+     * Get parameters associated with the current layout.
+     * @return parameters
+     */
+    public Object getLayoutParameters() {
+        return iterativeLayoutManager.getParameters();
+    }
+
+    /**
+     * Set parameters for the current layout
+     * @param params new parameters
+     */
+    public void setLayoutParameters(Object parm) {
+        iterativeLayoutManager.setParameters(parm);
+    }
 
     /**
      * Return whether layout task is currently active.

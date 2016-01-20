@@ -28,7 +28,7 @@ package com.googlecode.blaisemath.graph;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import static com.googlecode.blaisemath.graph.AssertUtils.assertCollectionContentsSame;
+import static com.googlecode.blaisemath.test.AssertUtils.assertCollectionContentsSame;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -1,3 +1,5 @@
+package com.googlecode.blaisemath.graph.test;
+
 /*
  * #%L
  * BlaiseGraphTheory (v3)

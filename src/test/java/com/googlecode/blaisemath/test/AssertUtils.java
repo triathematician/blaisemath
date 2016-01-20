@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.test;
 
 /*
  * #%L

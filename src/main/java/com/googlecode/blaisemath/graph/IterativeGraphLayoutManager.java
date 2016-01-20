@@ -136,17 +136,36 @@ public final class IterativeGraphLayoutManager {
         return state;
     }
 
+    /**
+     * Get parameters associated with the current layout.
+     * @return parameters
+     */
     public Object getParameters() {
         return params;
     }
+    
+    /**
+     * Set parameters for the current layout
+     * @param params new parameters
+     */
+    public void setParameters(Object params) {
+        this.params = params;
+    }
 
+    /**
+     * Get the # of algorithm iterations per update loop
+     * @return iterations
+     */
     public int getIterationsPerLoop() {
         return iterPerLoop;
     }
     
     //</editor-fold>
 
-    /** Re-initialize the graph layout, resetting iteration, state, and params. */
+    /** 
+     * Re-initialize the graph layout, resetting iteration, state, and params.
+     * If the type of params is still valid for the new layout, it is not changed.
+     */
     void reset() {
         if (layout == null) {
             state = null;
@@ -154,7 +173,12 @@ public final class IterativeGraphLayoutManager {
         } else {
             state = layout.createState();
             state.requestPositions(coordManager.getActiveLocationCopy(), true);
-            params = layout.createParameters();
+            Object newParams = layout.createParameters();
+            Class oldParamsType = params == null ? null : params.getClass();
+            Class newParamsType = newParams == null ? null : newParams.getClass();
+            if (newParamsType != oldParamsType) {
+                params = newParams;
+            }
         }
         iteration = 0;        
     }
