@@ -105,8 +105,8 @@ public final class GraphAppFrameView extends FrameView {
         // set up menus
         ActionMap am = app.getContext().getActionMap(this);
         try {
-            setMenuBar(MenuConfig.readMenuBar(GraphApp.class, am));
-            setToolBar(MenuConfig.readToolBar(GraphApp.class, am));
+            setMenuBar(MenuConfig.readMenuBar(GraphApp.class, this));
+            setToolBar(MenuConfig.readToolBar(GraphApp.class, this));
             List<String> cnvCm = (List<String>) MenuConfig.readConfig(GraphApp.class).get(CANVAS_CM_KEY); 
             graphComponent.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
                     null, am, cnvCm.toArray(new String[0])));
