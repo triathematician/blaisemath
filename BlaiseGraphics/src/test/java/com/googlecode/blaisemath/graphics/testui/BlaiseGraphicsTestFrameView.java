@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.graphics.testui;
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import com.googlecode.blaisemath.util.MenuConfig;
+import com.googlecode.blaisemath.app.MenuConfig;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
