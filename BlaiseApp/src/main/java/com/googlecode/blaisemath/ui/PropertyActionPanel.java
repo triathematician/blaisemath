@@ -46,9 +46,9 @@ public class PropertyActionPanel extends JPanel {
     private PropertySheet panel;
     
     private final JButton okButton;
-    private Action userOkAction;
+    private transient Action userOkAction;
     private final JButton cancelButton;
-    private Action userCancelAction;
+    private transient Action userCancelAction;
 
     public PropertyActionPanel() {
         super(new BorderLayout());
@@ -77,7 +77,9 @@ public class PropertyActionPanel extends JPanel {
         
         JPanel south = new JPanel(new FlowLayout());
         south.add(okButton);
-//        south.add(cancelButton);
+        okButton.setVisible(false);
+        south.add(cancelButton);
+        cancelButton.setVisible(false);
         add(south, BorderLayout.SOUTH);
     }
     
@@ -117,6 +119,7 @@ public class PropertyActionPanel extends JPanel {
     public void setUserCancelAction(Action userCancelAction) {
         this.userCancelAction = userCancelAction;
         cancelButton.setEnabled(userCancelAction != null);        
+        cancelButton.setVisible(userCancelAction != null);        
     }
     
     //</editor-fold>

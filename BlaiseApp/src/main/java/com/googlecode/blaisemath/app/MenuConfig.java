@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,6 +73,10 @@ public class MenuConfig {
     public static final String OPTIONS_KEY = "options";
     
     private static final String INVALID_METHOD_ERROR = "Invalid method used for configurable options menu";
+    
+    // utility class
+    private MenuConfig() {
+    }
     
     /**
      * Create toolbar component from file
@@ -150,8 +155,7 @@ public class MenuConfig {
         URL rsc = cls.getResource(path);
         checkNotNull(rsc, "Failed to locate "+path);
         Yaml yaml = new Yaml();
-        Map res = yaml.loadAs(rsc.openStream(), Map.class);
-        return res;
+        return yaml.loadAs(rsc.openStream(), Map.class);
     }
 
     /**
@@ -217,31 +221,23 @@ public class MenuConfig {
         List options = invokeListMethod((String)methodName);
         if (action == null) {
             LOG.log(Level.SEVERE, "Action not found: {0}", actionName);
-        }
-        if (options == null) {
-            LOG.log(Level.SEVERE, "Method not found or invalid: {0}", methodName);
-        }
-        if (action == null || options == null) {
             return;
+        }
+        if (options.isEmpty()) {
+            LOG.log(Level.SEVERE, "Method did not return any valid options: {0}", methodName);
         }
         for (Object o : options) {
             menu.add(sourceAction(action, o));
         }
     }
 
-    /**
-     * Attempt to invoke static method defined by given string, returning result as a list.
-     */
+    /** Attempt to invoke static method defined by given string, returning result as a list. */
     private static List invokeListMethod(String string) {
         try {
-            String[] spl = string.split("#");
-            if (spl.length != 2) {
-                return null;
+            Method method = findMethod(string);
+            if (method == null) {
+                return Collections.emptyList();
             }
-            String className = spl[0];
-            String methodName = spl[1];
-            Class clazz = Class.forName(className);
-            Method method = clazz.getMethod(methodName);
             Object res = method.invoke(null);
             if (!(res instanceof Iterable)) {
                 LOG.log(Level.SEVERE, "Did not return iterable: {0}", res);
@@ -260,7 +256,20 @@ public class MenuConfig {
         } catch (InvocationTargetException ex) {
             LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
         }
-        return null;
+        return Collections.emptyList();
+    }
+    
+    /** Looks up method based on given string name */
+    @Nullable
+    private static Method findMethod(String name) throws NoSuchMethodException, ClassNotFoundException {
+        String[] spl = name.split("#");
+        if (spl.length != 2) {
+            return null;
+        }
+        String className = spl[0];
+        String methodName = spl[1];
+        Class clazz = Class.forName(className);
+        return clazz.getMethod(methodName);
     }
 
     /**
@@ -289,7 +298,7 @@ public class MenuConfig {
             ActionMap am = appContext.getActionMap(o);
             for (Object k : am.allKeys()) {
                 if (!res.containsKey((String) k)) {
-                    res.put(((String) k), am.get(k));
+                    res.put((String) k, am.get(k));
                 }
             }
         }
