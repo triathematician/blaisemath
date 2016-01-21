@@ -25,8 +25,9 @@ package com.googlecode.blaisemath.graph.app;
  */
 
 
-import com.googlecode.blaisemath.util.PropertyActionPanel;
+import com.googlecode.blaisemath.ui.PropertyActionPanel;
 import com.google.common.collect.Multisets;
+import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.EnumEditor;
 import com.googlecode.blaisemath.graph.Graph;
@@ -45,7 +46,6 @@ import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.MarkerEditor;
 import com.googlecode.blaisemath.util.MPanel;
-import com.googlecode.blaisemath.util.MenuConfig;
 import com.googlecode.blaisemath.util.RollupPanel;
 import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.BorderLayout;
