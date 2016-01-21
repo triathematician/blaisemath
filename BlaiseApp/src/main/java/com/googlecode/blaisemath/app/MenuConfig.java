@@ -30,6 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -47,15 +48,19 @@ import javax.swing.ActionMap;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
 import org.yaml.snakeyaml.Yaml;
 
 /**
  * Utility for reading a .yaml configuration file and generating menus and toolbars.
  * 
  * @author elisha
- * @version 1.1
+ * @version 2.0
  */
 public class MenuConfig {
+
+    private static final Logger LOG = Logger.getLogger(MenuConfig.class.getName());
 
     public static final String MENU_SUFFIX = "_menu";
     public static final String DEFAULT_TOOLBAR_KEY = "Toolbar";
@@ -68,18 +73,43 @@ public class MenuConfig {
     
     private static final String INVALID_METHOD_ERROR = "Invalid method used for configurable options menu";
     
-    /** 
-     * Reads menu components from file.
-     * @param cls class with associated resource
-     * @return map, where values are either nested maps, or lists of strings representing actions
-     * @throws IOException if there's an error reading from the resource file
+    /**
+     * Create toolbar component from file
+     * @param appClass application type
+     * @param actionParents potential parents for actions
+     * @return toolbar
+     * @throws IOException if there's an error reading from the config file 
      */
-    public static Map<String, Object> readConfig(Class cls) throws IOException {
-        String path = "resources/"+cls.getSimpleName() + MENU_SUFFIX + ".yml";
-        URL rsc = cls.getResource(path);
-        checkNotNull(rsc, "Failed to locate "+path);
-        Yaml yaml = new Yaml();
-        Map res = yaml.loadAs(rsc.openStream(), Map.class);
+    public static JToolBar readToolBar(Class<? extends Application> appClass, Object... actionParents) throws IOException {
+        ApplicationContext appContext = Application.getInstance(appClass).getContext();
+        Map<String,javax.swing.Action> actionMap = actionMap(appContext, actionParents);
+        List<String> config = readToolBarConfig(appClass, DEFAULT_TOOLBAR_KEY);
+        JToolBar res = new JToolBar();
+        for (String k : config) {
+            if (Strings.isNullOrEmpty(k)) {
+                res.addSeparator();
+            } else {
+                res.add(actionMap.get(k));
+            }
+        }
+        return res;
+    }
+    
+    /**
+     * Create menubar from file
+     * @param appClass application type
+     * @param actionParents potential parents for actions
+     * @return menu bar
+     * @throws IOException if there's an error reading from the config file 
+     */
+    public static JMenuBar readMenuBar(Class<? extends Application> appClass, Object... actionParents) throws IOException {
+        ApplicationContext appContext = Application.getInstance(appClass).getContext();
+        Map<String,javax.swing.Action> actionMap = actionMap(appContext, actionParents);
+        Map<String, ?> config = readMenuBarConfig(appClass, DEFAULT_MENUBAR_KEY);
+        JMenuBar res = new JMenuBar();
+        for (Entry<String, ?> en : config.entrySet()) {
+            res.add(readMenu(en, actionMap));
+        }
         return res;
     }
     
@@ -88,7 +118,7 @@ public class MenuConfig {
      * @param cls class with associated resource
      * @param key key for toolbar component in config file
      * @return list of actions for the toolbar
-     * @throws IOException if there's an error reading from the resource file
+     * @throws IOException if there's an error reading from the config file
      */
     public static List<String> readToolBarConfig(Class cls, String key) throws IOException {
         Object res = readConfig(cls).get(key);
@@ -101,7 +131,7 @@ public class MenuConfig {
      * @param cls class with associated resource
      * @param key key for menubar component in config file
      * @return menus to comprise menubar, where values are lists with either strings or nested menus
-     * @throws IOException if there's an error reading from the resource file
+     * @throws IOException if there's an error reading from the config file
      */
     public static Map<String, List> readMenuBarConfig(Class cls, String key) throws IOException {
         Object res = readConfig(cls).get(key);
@@ -109,39 +139,18 @@ public class MenuConfig {
         return (Map<String, List>) res;
     }
     
-    /**
-     * Create toolbar component from file
-     * @param cls class determining where to look for the config file.
-     * @param am string/action mapping
-     * @return toolbar
-     * @throws java.io.IOException 
+    /** 
+     * Reads menu components from file.
+     * @param cls class with associated resource
+     * @return map, where values are either nested maps, or lists of strings representing actions
+     * @throws IOException if there's an error reading from the config file
      */
-    public static JToolBar readToolBar(Class cls, ActionMap am) throws IOException {
-        List<String> config = readToolBarConfig(cls, DEFAULT_TOOLBAR_KEY);
-        JToolBar res = new JToolBar();
-        for (String k : config) {
-            if (Strings.isNullOrEmpty(k)) {
-                res.addSeparator();
-            } else {
-                res.add(am.get(k));
-            }
-        }
-        return res;
-    }
-    
-    /**
-     * Create menubar from file
-     * @param cls class determining where to look for the config file.
-     * @param am string/action mapping
-     * @return menu bar
-     * @throws java.io.IOException 
-     */
-    public static JMenuBar readMenuBar(Class cls, ActionMap am) throws IOException {
-        Map<String, ?> config = readMenuBarConfig(cls, DEFAULT_MENUBAR_KEY);
-        JMenuBar res = new JMenuBar();
-        for (Entry<String, ?> en : config.entrySet()) {
-            res.add(readMenu(en, am));
-        }
+    public static Map<String, Object> readConfig(Class cls) throws IOException {
+        String path = "resources/"+cls.getSimpleName() + MENU_SUFFIX + ".yml";
+        URL rsc = cls.getResource(path);
+        checkNotNull(rsc, "Failed to locate "+path);
+        Yaml yaml = new Yaml();
+        Map res = yaml.loadAs(rsc.openStream(), Map.class);
         return res;
     }
 
@@ -152,7 +161,7 @@ public class MenuConfig {
      * @param am string/action mapping
      * @return menu
      */
-    private static JMenu readMenu(Entry<String, ?> en, ActionMap am) {
+    private static JMenu readMenu(Entry<String, ?> en, Map<String,javax.swing.Action> am) {
         JMenu menu = new JMenu(en.getKey());
         if (en.getValue() instanceof List) {
             // add each element to submenu
@@ -170,7 +179,7 @@ public class MenuConfig {
      * @param items the values to add
      * @param am string/action mapping
      */
-    private static void addMenuBarItems(JMenu menu, @Nullable List items, ActionMap am) {
+    private static void addMenuBarItems(JMenu menu, @Nullable List items, Map<String,javax.swing.Action> am) {
         if (items == null) {
             return;
         }
@@ -188,8 +197,7 @@ public class MenuConfig {
                     menu.add(readMenu(en, am));
                 }
             } else {
-                Logger.getLogger(MenuConfig.class.getName()).log(Level.WARNING,
-                        "Invalid menu item:{0}", it);
+                LOG.log(Level.WARNING, "Invalid menu item:{0}", it);
             }
         }
     }
@@ -200,18 +208,18 @@ public class MenuConfig {
      * @param props configuration options for the menu
      * @param am string/action mapping
      */
-    private static void addConfigurableMenuItems(JMenu menu, Map props, ActionMap am) {
+    private static void addConfigurableMenuItems(JMenu menu, Map props, Map<String,javax.swing.Action> am) {
         Object actionName = props.get(ACTION_KEY);
         Object methodName = props.get(OPTIONS_KEY);
         checkArgument(actionName instanceof String && methodName instanceof String,
                 "Custom configuration options requires use of "+ACTION_KEY+" and "+OPTIONS_KEY+" properties.");
-        Action action = am.get(actionName);
+        Action action = am.get((String) actionName);
         List options = invokeListMethod((String)methodName);
         if (action == null) {
-            Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, "Action not found: {0}", actionName);
+            LOG.log(Level.SEVERE, "Action not found: {0}", actionName);
         }
         if (options == null) {
-            Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, "Method not found or invalid: {0}", methodName);
+            LOG.log(Level.SEVERE, "Method not found or invalid: {0}", methodName);
         }
         if (action == null || options == null) {
             return;
@@ -236,21 +244,21 @@ public class MenuConfig {
             Method method = clazz.getMethod(methodName);
             Object res = method.invoke(null);
             if (!(res instanceof Iterable)) {
-                Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, "Did not return iterable: {0}", res);
+                LOG.log(Level.SEVERE, "Did not return iterable: {0}", res);
             }
             return Lists.newArrayList((Iterable) res);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
+            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
         } catch (NoSuchMethodException ex) {
-            Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
+            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
         } catch (SecurityException ex) {
-            Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
+            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
+            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
+            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
         } catch (InvocationTargetException ex) {
-            Logger.getLogger(MenuConfig.class.getName()).log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
+            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
         }
         return null;
     }
@@ -266,6 +274,26 @@ public class MenuConfig {
                 action.actionPerformed(evt);
             }
         };
+    }
+
+    /**
+     * Uses a variable number of parent objects as potential action owners, creating a common lookup table for actions.
+     * If more than one object has the same action, the result table will use the first it finds.
+     * @param appContext context of application
+     * @param actionParents parent objects for actions
+     * @return table of actions available within the app context
+     */
+    private static Map<String, javax.swing.Action> actionMap(ApplicationContext appContext, Object... actionParents) {
+        Map<String, javax.swing.Action> res = Maps.newHashMap();
+        for (Object o : actionParents) {
+            ActionMap am = appContext.getActionMap(o);
+            for (Object k : am.allKeys()) {
+                if (!res.containsKey((String) k)) {
+                    res.put(((String) k), am.get(k));
+                }
+            }
+        }
+        return res;
     }
     
 }

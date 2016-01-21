@@ -56,7 +56,6 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         mainPanel.setLayout(new java.awt.GridLayout(1, 2));
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(BlaiseGraphicsTestApp.class).getContext().getResourceMap(BlaiseGraphicsTestFrameView.class);
-        ActionMap am = Application.getInstance(BlaiseGraphicsTestApp.class).getContext().getActionMap(BlaiseGraphicsTestFrameView.class, this);
         
         canvas1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("canvas1.border.title"))); // NOI18N
         canvas1.setName("canvas1"); // NOI18N
@@ -65,8 +64,8 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         setComponent(mainPanel);
         
         try {
-            setMenuBar(MenuConfig.readMenuBar(BlaiseGraphicsTestApp.class, am));
-            setToolBar(MenuConfig.readToolBar(BlaiseGraphicsTestApp.class, am));
+            setMenuBar(MenuConfig.readMenuBar(BlaiseGraphicsTestApp.class, this));
+            setToolBar(MenuConfig.readToolBar(BlaiseGraphicsTestApp.class, this));
         } catch (IOException ex) {
             Logger.getLogger(BlaiseGraphicsTestFrameView.class.getName()).log(Level.SEVERE, 
                     "Menu config failure.", ex);

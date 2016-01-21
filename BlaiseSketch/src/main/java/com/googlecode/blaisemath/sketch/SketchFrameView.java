@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.sketch;
 
 
 import com.google.common.collect.Iterables;
+import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.firestarter.PropertySheetDialog;
@@ -38,7 +39,6 @@ import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.MarkerEditor;
 import com.googlecode.blaisemath.svg.SVGRoot;
 import com.googlecode.blaisemath.util.MPanel;
-import com.googlecode.blaisemath.util.MenuConfig;
 import com.googlecode.blaisemath.util.RollupPanel;
 import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.Graphics2D;

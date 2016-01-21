@@ -101,6 +101,11 @@
             <artifactId>firestarter</artifactId>
             <version>1.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>blaise-app</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     
     <build>      

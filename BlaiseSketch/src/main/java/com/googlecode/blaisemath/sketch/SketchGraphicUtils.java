@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.sketch;
 
 
 import static com.google.common.base.Preconditions.checkArgument;
+import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
@@ -36,7 +37,6 @@ import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Configurer;
-import com.googlecode.blaisemath.util.MenuConfig;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
 import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.Color;
