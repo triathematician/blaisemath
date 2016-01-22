@@ -273,6 +273,7 @@ public final class GraphAppFrameView extends FrameView {
     public void nodeMetric(ActionEvent event) {
         GraphNodeMetric<?> gs = (GraphNodeMetric<?>) event.getSource();
         Graph g = graphComponent.getGraph();
+        graphComponent.setMetric(gs);
         statusLabel.setText(gs+" = "+Multisets.copyHighestCountFirst(GraphMetrics.computeDistribution(g, gs)));
     }
     

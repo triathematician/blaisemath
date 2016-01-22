@@ -25,8 +25,16 @@ package com.googlecode.blaisemath.graph.app;
  */
 
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
+import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Styles;
+import java.awt.geom.Point2D;
 import org.jdesktop.application.Action;
 
 /**
@@ -35,13 +43,50 @@ import org.jdesktop.application.Action;
  * @author elisha
  */
 public class GraphAppCanvas extends GraphComponent {
+    
+    private final DelegatingNodeLinkGraphic graph;
+    private final MetricScaler scaler = new MetricScaler();
 
     public GraphAppCanvas() {
         PanAndZoomHandler.install(this);
-        adapter.getViewGraph().setDragEnabled(true);
-        adapter.getViewGraph().setPointSelectionEnabled(true);
+        
+        graph = adapter.getViewGraph();
+        graph.setDragEnabled(true);
+        graph.setPointSelectionEnabled(true);
+        
+        graph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
+        graph.getNodeStyler().setLabelStyleDelegate(new Function<Object,AttributeSet>(){
+            @Override
+            public AttributeSet apply(Object input) {
+                double rad = ((Number) scaler.apply(input).get(Styles.MARKER_RADIUS)).doubleValue();
+                Point2D offset = new Point2D.Double(rad, rad);
+                return AttributeSet.createWithParent(Styles.defaultTextStyle())
+                        .and(Styles.FONT_SIZE, 8f)
+                        .and(Styles.OFFSET, offset);
+            }
+        });
+        graph.getNodeStyler().setStyleDelegate(scaler);
     }
     
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+
+    @Override
+    public void setGraph(Graph graph) {
+        super.setGraph(graph);
+        scaler.setGraph(graph);
+    }
+
+    public GraphNodeMetric getMetric() {
+        return scaler.getMetric();
+    }
+
+    public void setMetric(GraphNodeMetric metric) {
+        scaler.setMetric(metric);
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="ACTIONS">    
     
     @Action
     public void startLayout() {
@@ -81,5 +126,7 @@ public class GraphAppCanvas extends GraphComponent {
     public void zoomOut() {
         super.zoomOut();
     }
+    
+    //</editor-fold>
     
 }
