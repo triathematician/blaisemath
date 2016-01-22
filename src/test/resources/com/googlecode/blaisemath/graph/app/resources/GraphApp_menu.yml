@@ -34,18 +34,18 @@ Menubar:
     View:
         - zoomIn
         - zoomOut
-        - zoomSelected
-        - zoomAll
+        - zoomToSelected
+        - zoomToAll
         - zoom100
 Toolbar:
-    - zoomAll
+    - zoomToAll
     -
     - startLayout
     - stopLayout
 Canvas:
     - zoomIn
     - zoomOut
-    - zoomSelected
-    - zoomAll
+    - zoomToSelected
+    - zoomToAll
     - zoom100
     

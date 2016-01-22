@@ -40,21 +40,16 @@ import com.googlecode.blaisemath.graph.GraphServices;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.MarkerEditor;
 import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.RollupPanel;
-import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.BorderLayout;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyEditorManager;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ActionMap;
@@ -79,7 +74,7 @@ public final class GraphAppFrameView extends FrameView {
     
     private static final String CANVAS_CM_KEY = "Canvas";
 
-    private final GraphComponent graphComponent;
+    private final GraphAppCanvas graphComponent;
     
     private GraphGenerator selectedGenerator = null;
     private StaticGraphLayout selectedLayout = null;
@@ -97,19 +92,15 @@ public final class GraphAppFrameView extends FrameView {
     public GraphAppFrameView(Application app) {
         super(app);
         
-        graphComponent = new GraphComponent();
-        PanAndZoomHandler.install(graphComponent);
-        graphComponent.getAdapter().getViewGraph().setDragEnabled(true);
-        graphComponent.getAdapter().getViewGraph().setPointSelectionEnabled(true);
+        graphComponent = new GraphAppCanvas();
         
         // set up menus
         ActionMap am = app.getContext().getActionMap(this);
         try {
-            setMenuBar(MenuConfig.readMenuBar(GraphApp.class, this));
-            setToolBar(MenuConfig.readToolBar(GraphApp.class, this));
-            List<String> cnvCm = (List<String>) MenuConfig.readConfig(GraphApp.class).get(CANVAS_CM_KEY); 
-            graphComponent.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
-                    null, am, cnvCm.toArray(new String[0])));
+            setMenuBar(MenuConfig.readMenuBar(GraphApp.class, this, graphComponent));
+            setToolBar(MenuConfig.readToolBar(GraphApp.class, this, graphComponent));
+            graphComponent.addContextMenuInitializer(GraphComponent.MENU_KEY_GRAPH,
+                    MenuConfig.readMenuInitializer(CANVAS_CM_KEY, GraphApp.class, this, graphComponent));    
         } catch (IOException ex) {
             Logger.getLogger(GraphAppFrameView.class.getName()).log(Level.SEVERE, 
                     "Menu config failure.", ex);
@@ -260,28 +251,13 @@ public final class GraphAppFrameView extends FrameView {
     @Action
     public void applyStaticLayout(ActionEvent event) {
         Object parm = event.getSource();
-        AnimationUtils.animateCoordinateChange(graphComponent.getLayoutManager(), selectedLayout, parm, graphComponent, 10.0);
+        AnimationUtils.animateCoordinateChange(graphComponent.getLayoutManager(), 
+                selectedLayout, parm, graphComponent, 10.0);
     }
     
     @Action
     public void iterativeLayout(ActionEvent event) {
         setSelectedIterativeLayout((IterativeGraphLayout) event.getSource());
-    }
-    
-//    @Action
-//    public void applyIterativeLayout(ActionEvent event) {
-//        Object parm = event.getSource();
-//        graphComponent.getLayoutManager().setLayoutParameters(parm);
-//    }
-    
-    @Action
-    public void startLayout() {
-        graphComponent.getLayoutManager().setLayoutTaskActive(true);
-    }
-    
-    @Action
-    public void stopLayout() {
-        graphComponent.getLayoutManager().setLayoutTaskActive(false);
     }
     
     // METRIC ACTIONS
@@ -304,33 +280,6 @@ public final class GraphAppFrameView extends FrameView {
     public void subsetMetric(ActionEvent event) {
         GraphSubsetMetric<?> gs = (GraphSubsetMetric<?>) event.getSource();
         statusLabel.setText(gs+" = ...");
-    }
-    
-    // CANVAS ACTIONS
-    
-    @Action
-    public void zoomAll() {
-        graphComponent.zoomToAll();
-    }
-    
-    @Action
-    public void zoomSelected() {
-        graphComponent.zoomToSelected();
-    }
-    
-    @Action
-    public void zoom100() {
-        graphComponent.resetTransform();
-    }
-    
-    @Action
-    public void zoomIn() {
-        graphComponent.zoomIn();
-    }
-    
-    @Action
-    public void zoomOut() {
-        graphComponent.zoomOut();
     }
     
 }
