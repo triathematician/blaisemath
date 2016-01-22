@@ -167,11 +167,11 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
         if (parent != null) {
             AttributeSet parStyle = parent.getStyle();
             if (parStyle != null && parStyle != renderStyle.getParent()) {
-                renderStyle = renderStyle.immutableWithParent(parStyle);
+                renderStyle = renderStyle.flatCopy().immutableWithParent(parStyle);
             }
             AttributeSet parStyleHints = parent.getStyleHints();
             if (parStyleHints != null && renderHints.getParent() != parStyleHints) {
-                renderHints = renderHints.immutableWithParent(parStyleHints);
+                renderHints = renderHints.flatCopy().immutableWithParent(parStyleHints);
             }
             renderStyle = parent.getStyleContext().applyModifiers(renderStyle, renderHints);
         }
