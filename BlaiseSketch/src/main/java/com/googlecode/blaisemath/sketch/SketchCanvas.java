@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.sketch;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.app.ActionMenuInitializer;
 import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGesture;
@@ -51,7 +52,6 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import static com.googlecode.blaisemath.sketch.SketchFrameView.SELECTION_EMPTY_PROP;
 import com.googlecode.blaisemath.util.SetSelectionModel;
-import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -116,10 +116,10 @@ public final class SketchCanvas {
         // set up menus
         try {
             List<String> selCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(SELECTION_CM_KEY);
-            canvas.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
+            canvas.getGraphicRoot().addContextMenuInitializer(new ActionMenuInitializer<Graphic<Graphics2D>>(
                     "Selection", actions, selCm.toArray(new String[0])));
             List<String> cnvCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(CANVAS_CM_KEY); 
-            canvas.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
+            canvas.getGraphicRoot().addContextMenuInitializer(new ActionMenuInitializer<Graphic<Graphics2D>>(
                     null, actions, cnvCm.toArray(new String[0])));
         } catch (IOException ex) {
             Logger.getLogger(SketchFrameView.class.getName()).log(Level.SEVERE, 

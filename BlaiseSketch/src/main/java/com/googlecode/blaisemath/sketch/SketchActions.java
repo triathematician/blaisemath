@@ -42,7 +42,6 @@ import com.googlecode.blaisemath.graphics.core.GraphicUtils;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.ImmutableAttributeSet;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import com.googlecode.blaisemath.util.Points;
@@ -233,9 +232,9 @@ public class SketchActions {
         if (pasteStyle != null) {
             for (Graphic<Graphics2D> gfc : gfcs) {
                 AttributeSet as = gfc.getStyle();
-                if (!(as instanceof ImmutableAttributeSet)) {
+//                if (!(as instanceof ImmutableAttributeSet)) {
                     as.putAll(pasteStyle.getAttributeMap());
-                }
+//                }
                 gfc.getParent().graphicChanged(gfc);
             }
         }

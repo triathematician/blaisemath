@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.prvis;
  * #%L
  * BlaiseWidgets
  * --
- * Copyright (C) 2012 - 2015 Elisha Peterson
+ * Copyright (C) 2012 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,13 +179,13 @@ public class PrVis extends JGraphicComponent {
             double y = x0+xwid*(d-xmin)/(xmax-xmin);
             addGraphic(JGraphics.shape(new Line2D.Double(43, y, 50, y)));
             addGraphic(JGraphics.text(new AnchoredText(new Point2D.Double(42, y), ((int)d)+"yd"),
-                    AttributeSet.with(Styles.TEXT_ANCHOR, Anchor.EAST)));
+                    AttributeSet.of(Styles.TEXT_ANCHOR, Anchor.EAST)));
         }
         for (double s = ymin; s >= ymax; s--) {
             double x = y0+yht*(s-ymin)/(ymax-ymin);
             addGraphic(JGraphics.shape(new Line2D.Double(x, 43, x, 50)));
             addGraphic(JGraphics.text(new AnchoredText(new Point2D.Double(x, 42), ((int)s)+"s"),
-                    AttributeSet.with(Styles.TEXT_ANCHOR, Anchor.SOUTH)));
+                    AttributeSet.of(Styles.TEXT_ANCHOR, Anchor.SOUTH)));
         }
         
         // shape gfx
@@ -218,7 +218,7 @@ public class PrVis extends JGraphicComponent {
                 addGraphic(prGr);
             } else {
                 PrimitiveGraphic bpg = JGraphics.point(pt,
-                        AttributeSet.with(Styles.STROKE, cMap.apply(en.getDate()).darker())
+                        AttributeSet.of(Styles.STROKE, cMap.apply(en.getDate()).darker())
                                 .and(Styles.MARKER, Markers.CROSS));
                 bpg.setDefaultTooltip(en+"");
                 addGraphic(bpg);

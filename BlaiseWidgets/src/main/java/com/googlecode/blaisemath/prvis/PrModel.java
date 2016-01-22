@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.prvis;
  * #%L
  * BlaiseWidgets
  * --
- * Copyright (C) 2012 - 2015 Elisha Peterson
+ * Copyright (C) 2012 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.visometry.testui;
  * #%L
  * BlaiseVisometry
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -253,7 +253,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             public AttributeSet apply(Integer src) {
                 Point2D pt = pts.get(src);
                 int yy = (int) Math.min(pt.getX()/3, 255);
-                return AttributeSet.with(Styles.FILL, new Color(yy, 0, 255-yy))
+                return AttributeSet.of(Styles.FILL, new Color(yy, 0, 255-yy))
                         .and(Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
             }
         });
@@ -278,7 +278,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
                 int dy = (int) (src0.getY() - src1.getY());
                 dy = Math.min(Math.abs(dy/3), 255);
                 
-                return AttributeSet.with(Styles.STROKE, new Color(dx, dy, 255-dy))
+                return AttributeSet.of(Styles.STROKE, new Color(dx, dy, 255-dy))
                         .and(Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
             }
         });
@@ -306,7 +306,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             arr[i] = new Point2D.Double(-Math.random(), -Math.random());
         VBasicPointSet<Point2D.Double,Graphics2D> vps = new VBasicPointSet<Point2D.Double,Graphics2D>(arr);
         vps.getWindowGraphic().setRenderer(MarkerRenderer.getInstance());
-        vps.setPointStyle(AttributeSet.with(Styles.FILL,Color.blue).and(Styles.MARKER_RADIUS,3f));
+        vps.setPointStyle(AttributeSet.of(Styles.FILL,Color.blue).and(Styles.MARKER_RADIUS,3f));
         root2.addGraphic(vps);
     }
 
@@ -380,7 +380,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         gr.getPointStyler().setStyleDelegate(new Function<Point2D, AttributeSet>(){
             public AttributeSet apply(Point2D src) { 
                 int yy = (int) Math.min(src.getX()/3, 255);
-                return AttributeSet.with(Styles.FILL, new Color(yy,0,255-yy))
+                return AttributeSet.of(Styles.FILL, new Color(yy,0,255-yy))
                         .and(Styles.MARKER_RADIUS, (float) (5*Math.abs(src.getY())));
             }
         });

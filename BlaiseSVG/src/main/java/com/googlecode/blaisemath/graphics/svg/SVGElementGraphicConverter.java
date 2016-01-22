@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2015 Elisha Peterson
+ * Copyright (C) 2014 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSets;
-import com.googlecode.blaisemath.style.ImmutableAttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.svg.SVGCircle;
 import com.googlecode.blaisemath.svg.SVGElement;
@@ -136,10 +135,11 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
             throw new IllegalStateException("Unexpected SVG element: "+sh);
         }
         if (sh.getOtherAttributes() != null || sh.getId() != null) {
-            if (prim.getStyle() instanceof ImmutableAttributeSet) {
-                Logger.getLogger(SVGElementGraphicConverter.class.getName()).log(Level.WARNING, 
-                        "Attempt to set id of graphic w/ immutable style: {0}", prim.getStyle());
-            } else if (prim.getStyle() == null) {
+//            if (prim.getStyle() instanceof ImmutableAttributeSet) {
+//                Logger.getLogger(SVGElementGraphicConverter.class.getName()).log(Level.WARNING, 
+//                        "Attempt to set id of graphic w/ immutable style: {0}", prim.getStyle());
+//            } else 
+                if (prim.getStyle() == null) {
                 Logger.getLogger(SVGElementGraphicConverter.class.getName()).log(Level.WARNING, 
                         "Attempt to set id of graphic w/ null style: {0}", prim.getStyle());
             } else {

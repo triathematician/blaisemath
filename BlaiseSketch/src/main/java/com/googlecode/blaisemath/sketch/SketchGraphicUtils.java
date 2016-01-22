@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.sketch;
 
 
 import static com.google.common.base.Preconditions.checkArgument;
+import com.googlecode.blaisemath.app.ActionMenuInitializer;
 import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
@@ -38,7 +39,6 @@ import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Configurer;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
-import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
@@ -243,7 +243,7 @@ public class SketchGraphicUtils {
         try {
             ActionMap am = SketchFrameView.getActionMap();
             List<String> list = (List<String>) MenuConfig.readConfig(SketchApp.class).get(GRAPHIC_CM_KEY);
-            gfc.addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
+            gfc.addContextMenuInitializer(new ActionMenuInitializer<Graphic<Graphics2D>>(
                     friendlyName(gfc), am, list.toArray(new String[0])));
         } catch (IOException x) {
             Logger.getLogger(SketchGraphicUtils.class.getName()).log(Level.SEVERE,

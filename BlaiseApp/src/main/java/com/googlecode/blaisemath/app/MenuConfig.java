@@ -48,6 +48,7 @@ import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationContext;
@@ -76,6 +77,21 @@ public class MenuConfig {
     
     // utility class
     private MenuConfig() {
+    }
+
+    /**
+     * Create context menu initializer from file
+     * @param key config key
+     * @param appClass application type
+     * @param actionParents potential parents for actions
+     * @return toolbar
+     * @throws IOException if there's an error reading from the config file 
+     */
+    public static PresetMenuInitializer readMenuInitializer(String key, Class<? extends Application> appClass, Object... actionParents) throws IOException {
+        ApplicationContext appContext = Application.getInstance(appClass).getContext();
+        Map<String,javax.swing.Action> actionMap = actionMap(appContext, actionParents);
+        Object config = MenuConfig.readConfig(appClass).get(key);
+        return new PresetMenuInitializer(readMenu(config, actionMap));
     }
     
     /**
@@ -165,16 +181,34 @@ public class MenuConfig {
      * @param am string/action mapping
      * @return menu
      */
-    private static JMenu readMenu(Entry<String, ?> en, Map<String,javax.swing.Action> am) {
+    private static JMenu readMenu(Entry<String, ?> en, Map<String,Action> am) {
         JMenu menu = new JMenu(en.getKey());
-        if (en.getValue() instanceof List) {
-            // add each element to submenu
-            addMenuBarItems(menu, (List) en.getValue(), am);
-        } else if (en.getValue() instanceof Map) {
-            // configurable menu
-            addConfigurableMenuItems(menu, (Map) en.getValue(), am);
+        for (JMenuItem el : readMenu(en.getValue(), am)) {
+            if (el == null) {
+                menu.addSeparator();
+            } else {
+                menu.add(el);
+            }
         }
         return menu;
+    }
+    
+
+    /**
+     * Build a list of menu elmeents from a given map entry with key the menu name, and value a list
+     * or map that determines the menu items.
+     * @param en entry
+     * @param am string/action mapping
+     * @return menu
+     */
+    private static List<JMenuItem> readMenu(Object val, Map<String,Action> am) {
+        List<JMenuItem> res = Lists.newArrayList();
+        if (val instanceof List) {
+            res.addAll(menuBarItems((List) val, am));
+        } else if (val instanceof Map) {
+            res.addAll(configurableMenuItems((Map) val, am));
+        }
+        return res;
     }
 
     /**
@@ -182,28 +216,28 @@ public class MenuConfig {
      * @param menu the menu to add to
      * @param items the values to add
      * @param am string/action mapping
+     * @return menu bar items
      */
-    private static void addMenuBarItems(JMenu menu, @Nullable List items, Map<String,javax.swing.Action> am) {
+    private static List<JMenuItem> menuBarItems(@Nullable List items, Map<String,javax.swing.Action> am) {
         if (items == null) {
-            return;
+            Collections.emptyList();
         }
+        List<JMenuItem> res = Lists.newArrayList();
         for (Object it : items) {
             if (it == null) {
-                // add separator
-                menu.addSeparator();
+                res.add(null);
             } else if (it instanceof String) {
-                // add action
-                menu.add(am.get((String)it));
+                res.add(new JMenuItem(am.get((String)it)));
             } else if (it instanceof Map) {
-                // add submenu
                 Map<String, ?> config = (Map<String, ?>) it;
                 for (Entry<String, ?> en : config.entrySet()) {
-                    menu.add(readMenu(en, am));
+                    res.add(readMenu(en, am));
                 }
             } else {
                 LOG.log(Level.WARNING, "Invalid menu item:{0}", it);
             }
         }
+        return res;
     }
 
     /**
@@ -211,8 +245,9 @@ public class MenuConfig {
      * @param menu the menu to add to
      * @param props configuration options for the menu
      * @param am string/action mapping
+     * @return menu items
      */
-    private static void addConfigurableMenuItems(JMenu menu, Map props, Map<String,javax.swing.Action> am) {
+    private static List<JMenuItem> configurableMenuItems(Map props, Map<String,javax.swing.Action> am) {
         Object actionName = props.get(ACTION_KEY);
         Object methodName = props.get(OPTIONS_KEY);
         checkArgument(actionName instanceof String && methodName instanceof String,
@@ -221,14 +256,16 @@ public class MenuConfig {
         List options = invokeListMethod((String)methodName);
         if (action == null) {
             LOG.log(Level.SEVERE, "Action not found: {0}", actionName);
-            return;
+            return Collections.emptyList();
         }
         if (options.isEmpty()) {
             LOG.log(Level.SEVERE, "Method did not return any valid options: {0}", methodName);
         }
+        List<JMenuItem> res = Lists.newArrayList();
         for (Object o : options) {
-            menu.add(sourceAction(action, o));
+            res.add(new JMenuItem(sourceAction(action, o)));
         }
+        return res;
     }
 
     /** Attempt to invoke static method defined by given string, returning result as a list. */

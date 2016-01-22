@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2015 Elisha Peterson
+ * Copyright (C) 2014 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -265,7 +265,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             public AttributeSet apply(Integer src) {
                 Point2D pt = pts.get(src);
                 int yy = (int) Math.min(pt.getX()/3, 255);
-                return AttributeSet.with(Styles.FILL, new Color(yy, 0, 255-yy))
+                return AttributeSet.of(Styles.FILL, new Color(yy, 0, 255-yy))
                         .and(Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
             }
         });
@@ -290,7 +290,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                 int dy = (int) (src0.getY() - src1.getY());
                 dy = Math.min(Math.abs(dy/3), 255);
                 
-                return AttributeSet.with(Styles.STROKE, new Color(dx, dy, 255-dy))
+                return AttributeSet.of(Styles.STROKE, new Color(dx, dy, 255-dy))
                         .and(Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
             }
         });

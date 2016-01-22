@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.widgets;
  * #%L
  * BlaiseWidgets
  * --
- * Copyright (C) 2012 - 2015 Elisha Peterson
+ * Copyright (C) 2012 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ public class BlaiseSlider extends JGraphicComponent {
         addGraphic(trackGr = JGraphics.shape(null, tStyle));
         addGraphic(posGr = JGraphics.shape(null, hStyle));
         addGraphic(strGr = JGraphics.text(new AnchoredText(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+"")));
-        strGr.setStyle(AttributeSet.with(Styles.FILL,Color.white)
+        strGr.setStyle(AttributeSet.of(Styles.FILL,Color.white)
                 .and(Styles.FONT_SIZE, hRnd/2)
                 .and(Styles.TEXT_ANCHOR, Anchor.SOUTH));
         trackGr.setMouseEnabled(false);

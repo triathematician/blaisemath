@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2015 Elisha Peterson
+ * Copyright (C) 2014 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class RandomStyles {
 
     static AttributeSet point() {
         return AttributeSet
-                .with(FILL, color())
+                .of(FILL, color())
                 .and(STROKE, color())
                 .and(STROKE_WIDTH, strokeWidth())
                 .and(MARKER_RADIUS, markerRadius());
@@ -60,20 +60,20 @@ class RandomStyles {
     
     static AttributeSet path() {
         return AttributeSet
-                .with(STROKE, color())
+                .of(STROKE, color())
                 .and(STROKE_WIDTH, strokeWidth());
     }
     
     static AttributeSet shape() {
         return AttributeSet
-                .with(FILL, color())
+                .of(FILL, color())
                 .and(STROKE, color())
                 .and(STROKE_WIDTH, strokeWidth());
     }
 
     static AttributeSet string() {
         return AttributeSet
-                .with(FILL, color())
+                .of(FILL, color())
                 .and(FONT_SIZE, fontSize());
     }
     
