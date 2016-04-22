@@ -37,6 +37,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -69,6 +70,8 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
     private transient Point pressPt;
     private transient Point dragPt;
     private transient Rectangle2D.Double selectionBox = null;
+    
+    private static boolean MAC;
 
     /** 
      * Initialize for specified component
@@ -91,6 +94,8 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
                 }
             }
         });
+        
+        detectMac();
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
@@ -157,7 +162,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         if (!enabled || !(e.getButton()==MouseEvent.BUTTON1) || e.isConsumed()) {
             return;
         }
-        if (!e.isControlDown()) {
+        if (!isSelectionEvent(e)) {
             selection.setSelection(Collections.<Graphic<Graphics2D>>emptySet());
             return;
         }
@@ -175,7 +180,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!enabled || e.isConsumed() || !(e.getButton()==MouseEvent.BUTTON1) || !e.isControlDown()) {
+        if (!enabled || e.isConsumed() || !(e.getButton()==MouseEvent.BUTTON1) || !isSelectionEvent(e)) {
             return;
         }
         pressPt = e.getPoint();
@@ -232,4 +237,13 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
     
     //</editor-fold>
 
+    
+    private static void detectMac() {
+        String vers = System.getProperty("os.name").toLowerCase();
+        MAC = vers.contains("mac");
+    }
+    
+    private static boolean isSelectionEvent(InputEvent e) {
+        return MAC ? e.isMetaDown() : e.isControlDown();
+    }
 }
