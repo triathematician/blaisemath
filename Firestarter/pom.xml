@@ -6,7 +6,7 @@
     <version>1.3.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     
-    <name>Firestarter</name>
+    <name>firestarter</name>
     <description>
         Provides editors for various Java bean object types, and a generic, customizable
         PropertySheet.
