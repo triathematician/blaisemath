@@ -1,11 +1,1 @@
-/blaise-common/target/
-/blaise-gestures/target/
-/blaise-sketch/target/
-/blaise-visometry/target/
-/blaise-svg/target/
-/blaise-widgets/target/
-/blaise-app/target/
-/blaise-graphtheory/target/
-/blaise-math/target/
-/blaise-parser/target/
-/blaise-graphics/target/
+*/target/**
