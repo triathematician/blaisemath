@@ -52,8 +52,6 @@ import java.util.logging.Logger;
  *   associated location of the text's bounding box.
  * </p>
  * 
- * @todo enable center and right alignment
- * 
  * @author petereb1
  */
 public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D> {

@@ -214,7 +214,7 @@ public class AttributeSet {
     /**
      * Copies the attribute set as an unmodifiable object, which will throw errors
      * if any of its get/put methods are accessed.
-     * @param parent parent to use for copy
+     * @param par parent to use for copy
      * @return immutable set with all the attributes of this one
      */
     public AttributeSet immutableWithParent(AttributeSet par) {
