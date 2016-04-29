@@ -76,7 +76,18 @@ public final class Styles {
     public static final String FONT_SIZE = "font-size";
     
     /** Denotes anchor of text relative to a point */
+    @SvgAttribute
     public static final String TEXT_ANCHOR = "text-anchor";
+    public static final String TEXT_ANCHOR_START = "start";
+    public static final String TEXT_ANCHOR_MIDDLE = "middle";
+    public static final String TEXT_ANCHOR_END = "end";
+    
+    @SvgAttribute
+    public static final String ALIGN_BASELINE = "alignment-baseline";
+    public static final String ALIGN_BASELINE_BASELINE = "baseline";
+    public static final String ALIGN_BASELINE_MIDDLE = "middle";
+    public static final String ALIGN_BASELINE_HANGING = "hanging";
+            
     /** Denotes offset from a point */
     public static final String OFFSET = "offset";
     

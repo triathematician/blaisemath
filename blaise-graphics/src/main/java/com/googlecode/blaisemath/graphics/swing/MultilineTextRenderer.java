@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import static com.googlecode.blaisemath.graphics.swing.TextRenderer.anchorFromStyle;
 import static com.googlecode.blaisemath.graphics.swing.TextRenderer.anchorShift;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -42,7 +43,6 @@ import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -55,6 +55,7 @@ import java.util.logging.Logger;
  * @author petereb1
  */
 public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D> {
+    private static final Logger LOG = Logger.getLogger(MultilineTextRenderer.class.getName());
 
     private static final MultilineTextRenderer INST = new MultilineTextRenderer();
     
@@ -76,23 +77,30 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
     public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
         return boundingBox(primitive, style).intersects(rect);
     }
+    
+    private static String[] lines(AnchoredText text) {
+        return text.getText().split("\n|\r\n");
+    }
 
     @Override
     public void render(AnchoredText text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return;
         }
-        Font f = Styles.getFont(style);       
-        canvas.setFont(f);
+        Font font = Styles.getFont(style);       
+        canvas.setFont(font);
         canvas.setColor(style.getColor(Styles.FILL));
+
+        FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
+        Anchor textAnchor = anchorFromStyle(style);   
         
         double lineHeight = canvas.getFontMetrics().getHeight();
         Rectangle2D bounds = boundingBox(text, style);
-        String[] lns = text.getText().split("\n|\r\n");
         double y0 = bounds.getMaxY();
-        double x0 = bounds.getMinX();
-        for (String s : Lists.reverse(Arrays.asList(lns))) {
-            canvas.drawString(s, (float)x0, (float) y0);
+        for (String line : Lists.reverse(Arrays.asList(lines(text)))) {
+            double wid = font.getStringBounds(line, frc).getWidth();
+            double dx = anchorShift(textAnchor, wid, 0).x;
+            canvas.drawString(line, (float)(text.getX()+dx), (float) y0);
             y0 -= lineHeight;
         }
     }
@@ -102,12 +110,6 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         if (Strings.isNullOrEmpty(text.getText())) {
             return null;
         }
-        
-        Object anchor = style.get(Styles.TEXT_ANCHOR);
-        if (!(anchor == null || anchor instanceof String || anchor instanceof Anchor)) {
-            Logger.getLogger(TextRenderer.class.getName()).log(Level.WARNING,
-                    "Invalid text anchor: {0}", anchor);
-        }
 
         Font font = Styles.getFont(style);
         FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
@@ -115,18 +117,15 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         double width = 0;
         double height = 0;
         double leading = 0;
-        for (String l : text.getText().split("\n|\r\n")) {
+        for (String line : lines(text)) {
             TextLayout tl = new TextLayout(text.getText(), font, frc);
-            width = Math.max(width, font.getStringBounds(l, frc).getWidth());
+            width = Math.max(width, font.getStringBounds(line, frc).getWidth());
             height += tl.getAscent()+tl.getDescent()+tl.getLeading();
             leading = tl.getLeading();
         }
         height -= leading;
         
-        Anchor textAnchor = anchor == null ? Anchor.SOUTHWEST 
-                : anchor instanceof Anchor ? (Anchor) anchor
-                : anchor instanceof String ? Anchor.valueOf((String) anchor)
-                : null;
+        Anchor textAnchor = anchorFromStyle(style);        
         Point2D offset = style.getPoint(Styles.OFFSET, new Point());
         assert offset != null;
         if (textAnchor == Anchor.SOUTHWEST) {

@@ -61,14 +61,14 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
     }
     
     private static Color strokeColor(AttributeSet style) {
-        Color fill = style.getColor(Styles.STROKE);
+        Color stroke = style.getColor(Styles.STROKE);
         if (style.contains(Styles.OPACITY)) {
-            fill = Colors.alpha(fill, (int) (255*style.getFloat(Styles.OPACITY, 1f)));
+            stroke = Colors.alpha(stroke, (int) (255*style.getFloat(Styles.OPACITY, 1f)));
         }
         if (style.contains(Styles.STROKE_OPACITY)) {
-            fill = Colors.alpha(fill, (int) (255*style.getFloat(Styles.STROKE_OPACITY, 1f)));
+            stroke = Colors.alpha(stroke, (int) (255*style.getFloat(Styles.STROKE_OPACITY, 1f)));
         }
-        return fill;
+        return stroke;
     }
     
     @Override

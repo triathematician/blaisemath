@@ -29,18 +29,14 @@ package com.googlecode.blaisemath.graphics.swing;
 
 
 import com.google.common.base.Strings;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.googlecode.blaisemath.style.Anchor;
-import static com.googlecode.blaisemath.style.Anchor.CENTER;
-import static com.googlecode.blaisemath.style.Anchor.EAST;
-import static com.googlecode.blaisemath.style.Anchor.NORTH;
-import static com.googlecode.blaisemath.style.Anchor.NORTHEAST;
-import static com.googlecode.blaisemath.style.Anchor.NORTHWEST;
-import static com.googlecode.blaisemath.style.Anchor.SOUTH;
-import static com.googlecode.blaisemath.style.Anchor.SOUTHEAST;
-import static com.googlecode.blaisemath.style.Anchor.WEST;
+import static com.googlecode.blaisemath.style.Anchor.*;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
+import static com.googlecode.blaisemath.style.Styles.*;
 import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Color;
 import java.awt.Font;
@@ -59,8 +55,22 @@ import java.util.logging.Logger;
  * @author Elisha
  */
 public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
-
+    
+    private static final Logger LOG = Logger.getLogger(TextRenderer.class.getName());
     private static final TextRenderer INST = new TextRenderer();
+    
+    private static final Table<String, String, Anchor> ANCHOR_BASELINE_LOOKUP = HashBasedTable.create();
+    static {
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_START, ALIGN_BASELINE_BASELINE, SOUTHWEST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_START, ALIGN_BASELINE_MIDDLE, WEST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_START, ALIGN_BASELINE_HANGING, NORTHWEST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_MIDDLE, ALIGN_BASELINE_BASELINE, SOUTH);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_MIDDLE, ALIGN_BASELINE_MIDDLE, CENTER);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_MIDDLE, ALIGN_BASELINE_HANGING, NORTH);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_END, ALIGN_BASELINE_BASELINE, SOUTHEAST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_END, ALIGN_BASELINE_MIDDLE, EAST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_END, ALIGN_BASELINE_HANGING, NORTHEAST);
+    }
     
     public static Renderer<AnchoredText, Graphics2D> getInstance() {
         return INST;
@@ -90,17 +100,42 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         Rectangle2D bounds = boundingBox(primitive, style);
         return bounds != null && bounds.intersects(rect);
     }
+    
+    protected static Anchor anchorFromStyle(AttributeSet style) {
+        Object anchor = style.get(Styles.TEXT_ANCHOR);
+        Object baseline = style.get(Styles.ALIGN_BASELINE);
+        if (!(anchor == null || anchor instanceof String || anchor instanceof Anchor)) {
+            LOG.log(Level.WARNING, "Invalid text anchor: {0}", anchor);
+        }
+        if (!(baseline == null || baseline instanceof String)) {
+            LOG.log(Level.WARNING, "Invalid baseline: {0}", anchor);
+        }
+        if (anchor == null) {
+            anchor = TEXT_ANCHOR_START;
+        }
+        if (baseline == null) {
+            baseline = ALIGN_BASELINE_BASELINE;
+        }
+        
+        if (anchor instanceof Anchor) {
+            return (Anchor) anchor;
+        } else if (ANCHOR_BASELINE_LOOKUP.contains(anchor, baseline)) {
+            return ANCHOR_BASELINE_LOOKUP.get(anchor, baseline);
+        } else {
+            LOG.log(Level.WARNING, "Invalid anchor/baseline: {0}/{1}", new Object[]{anchor, baseline});
+            return Anchor.SOUTHWEST;
+        }
+    }
+    
+    protected static Anchor anchorFromAttributes(String anchor, String baseline) {
+        return ANCHOR_BASELINE_LOOKUP.contains(anchor, baseline) ? ANCHOR_BASELINE_LOOKUP.get(anchor, baseline)
+                : Anchor.SOUTHWEST;
+    }
 
     @Override
     public Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
-        }
-        
-        Object anchor = style.get(Styles.TEXT_ANCHOR);
-        if (!(anchor == null || anchor instanceof String || anchor instanceof Anchor)) {
-            Logger.getLogger(TextRenderer.class.getName()).log(Level.WARNING,
-                    "Invalid text anchor: {0}", anchor);
         }
         
         Font font = Styles.getFont(style);
@@ -109,10 +144,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         double width = font.getStringBounds(primitive.getText(), frc).getWidth();
         double height = tl.getBounds().getHeight();
         
-        Anchor textAnchor = anchor == null ? Anchor.SOUTHWEST 
-                : anchor instanceof Anchor ? (Anchor) anchor
-                : anchor instanceof String ? Anchor.valueOf((String) anchor)
-                : null;
+        Anchor textAnchor = anchorFromStyle(style);
         Point2D offset = style.getPoint(Styles.OFFSET, new Point());
         if (textAnchor == Anchor.SOUTHWEST) {
             return new Rectangle2D.Double(

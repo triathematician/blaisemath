@@ -32,6 +32,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -43,7 +44,7 @@ import javax.swing.event.EventListenerList;
 
 /**
  * Provides a map of key-value pairs providing style elements, similar to what
- * one finds in CSS style attributes.
+ * one finds in CSS style attributes. Values are allowed to be null.
  * 
  * @author Elisha
  */
@@ -156,8 +157,8 @@ public class AttributeSet {
      * @param v1 the value
      * @return created set
      */
-    public static AttributeSet of(String k1, Object v1) {
-        return create(ImmutableMap.of(k1, v1));
+    public static AttributeSet of(String k1, @Nullable Object v1) {
+        return create(Collections.singletonMap(k1, v1));
     }
     
     /**
@@ -168,8 +169,8 @@ public class AttributeSet {
      * @param v2 second value
      * @return created set
      */
-    public static AttributeSet of(String k1, Object v1, String k2, Object v2) {
-        return create(ImmutableMap.of(k1, v1, k2, v2));
+    public static AttributeSet of(String k1, @Nullable Object v1, String k2, @Nullable Object v2) {
+        return of(k1, v1).and(k2, v2);
     }
     
     /**
@@ -182,8 +183,8 @@ public class AttributeSet {
      * @param v3 third value
      * @return created set
      */
-    public static AttributeSet of(String k1, Object v1, String k2, Object v2, String k3, Object v3) {
-        return create(ImmutableMap.of(k1, v1, k2, v2, k3, v3));
+    public static AttributeSet of(String k1, @Nullable Object v1, String k2, @Nullable Object v2, String k3, @Nullable Object v3) {
+        return of(k1, v1).and(k2, v2).and(k3, v3);
     }
     
     //</editor-fold>
@@ -197,7 +198,7 @@ public class AttributeSet {
      * @param val the value
      * @return this object
      */
-    public AttributeSet and(String key, Object val) {
+    public AttributeSet and(String key, @Nullable Object val) {
         put(key, val);
         return this;
     }
