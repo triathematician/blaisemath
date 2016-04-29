@@ -30,8 +30,6 @@ package com.googlecode.blaisemath.dev.palette;
  * should be easily distinguishable from one another, and do not indicate a scale.
  * 
  * @author Elisha
- * 
- * @todo write class
  */
 public final class CategoricalPalette {
     

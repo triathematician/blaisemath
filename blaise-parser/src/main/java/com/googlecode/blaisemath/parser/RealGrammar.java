@@ -175,8 +175,6 @@ public class RealGrammar implements Grammar {
             put("negative", RealGrammar.class.getMethod("negative", double.class));
             put("randbetween", RealGrammar.class.getMethod("randbetween", double.class, double.class));
             put("subtract", RealGrammar.class.getMethod("subtract", double.class, double.class));
-
-            // TODO - add "sum", "prod", and "if"
         } catch (Exception ex) {
             Logger.getLogger(RealGrammar.class.getName()).log(Level.SEVERE, null, ex);
         }

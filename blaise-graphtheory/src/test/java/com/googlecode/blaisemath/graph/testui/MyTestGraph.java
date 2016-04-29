@@ -168,7 +168,6 @@ public final class MyTestGraph implements Graph<String> {
     
     //<editor-fold defaultstate="collapsed" desc="add/remove Edge helpers">
 
-    // TODO - what is the proper object to lock?
     protected final synchronized void addEdge(String x, String y) {
         Edge<String> edge = directed ? addDirectedEdge(x, y) : addUndirectedEdge(x, y);
         edges.add(edge);

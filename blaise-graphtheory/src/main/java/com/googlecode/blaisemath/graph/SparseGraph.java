@@ -50,8 +50,6 @@ import javax.annotation.concurrent.Immutable;
  * </p>
  *
  * @param <V> the type of the nodes
- * 
- * TODO - add more defensive copying
  *
  * @author Elisha Peterson
  */

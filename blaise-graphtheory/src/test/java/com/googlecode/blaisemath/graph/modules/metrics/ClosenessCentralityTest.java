@@ -63,7 +63,7 @@ public class ClosenessCentralityTest {
         // |
         // 7
         INST1 = new ClosenessCentrality();
-        INST2 = new GraphCentrality(); // TODO - use max set to true here ??
+        INST2 = new GraphCentrality();
     }
 
     @Test

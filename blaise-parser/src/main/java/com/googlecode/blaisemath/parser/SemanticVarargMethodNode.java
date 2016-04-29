@@ -50,15 +50,11 @@ class SemanticVarargMethodNode extends SemanticMethodNode {
 
     @Override
     boolean compatibleArguments(Class[] types1, Class[] types2) {
-//        System.out.println("Checking vararg compatibility of " + Arrays.toString(types1) + " and " + Arrays.toString(types2));
         if (super.compatibleArguments(types1, types2)) {
             return true;
+        } else {
+            return types1.length == 1 && types1[0].isArray();
         }
-        if (types1.length == 1 && types1[0].isArray()) {
-            // TODO - also check the compatibility
-            return true;
-        }
-        return false;
     }
 
     @Override

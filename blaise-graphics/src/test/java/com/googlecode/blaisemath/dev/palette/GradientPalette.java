@@ -29,8 +29,6 @@ package com.googlecode.blaisemath.dev.palette;
  * Describes a gradient scale, a linear interpolation of two or more colors.
  * 
  * @author Elisha
- * 
- * @todo write class
  */
 public final class GradientPalette {
     

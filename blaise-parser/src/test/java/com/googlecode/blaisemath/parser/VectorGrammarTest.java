@@ -85,8 +85,6 @@ public class VectorGrammarTest {
         assertEqualTree(new double[]{}, "vec()");
         assertEqualTree(new double[]{1}, "vec(1)");
         assertEquals(1.0, (Double) gp.parseTree("[1]").getValue(), 1e-9);
-        // TODO - fix this test case!
-//        assertEqualTree(new double[]{}, "[]");
     }
 
 }

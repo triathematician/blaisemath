@@ -49,23 +49,23 @@ class SemanticTreeBuilder {
 
         switch (type) {
 
-            case PARENTHETICAL_OPEN:    // there is no need to do anything here, as a parenthetical is encoded within the tree's structure
+            case PARENTHETICAL_OPEN:
                 if (tokenNode.getChildCount() > 0) {
                     return buildTree((TokenNode) tokenNode.firstChild());
                 } else {
                     throw new ParseException("Empty expression", ParseException.ParseErrorCode.EMPTY_EXPRESSION);
                 }
 
-            case PARENTHETICAL_CLOSE:    // this should never happen
+            case PARENTHETICAL_CLOSE:
                 throw new ParseException("Unexpected node type: " + type, ParseException.ParseErrorCode.PARENTHETICAL_ERROR);
 
             case NUMBER:
                 return new SemanticConstantNode(Double.valueOf(name));
 
-            case IDENTIFIER:    // this will become a constant or a variable
+            case IDENTIFIER:
                 if (grammar.constants().containsKey(name)) {
                     return new SemanticConstantNode(name, grammar.constants().get(name));
-                } else { // TODO - consider making the variable node type more specific
+                } else {
                     return new SemanticVariableNode(name, Object.class);
                 }
 

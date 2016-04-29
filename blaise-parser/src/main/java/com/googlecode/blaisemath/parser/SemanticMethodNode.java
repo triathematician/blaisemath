@@ -59,27 +59,18 @@ class SemanticMethodNode extends SemanticArgumentNodeSupport {
 
     @Override
     boolean compatibleArguments(Class[] types1, Class[] types2) {
-//        System.out.println("SemanticMethodNode.compatibleArguments: checking equivalence of types " + Arrays.toString(types1) + " and " + Arrays.toString(types2));
         boolean result = false;
         if (Arrays.equals(types1, types2))
             result = true;
         else if (types1.length == types2.length) {
-            // TODO - also check the compatibility
             result = true;
         } else if (types1.length == 1 && types1[0].isArray() && types2.length == 0) {
-            // if first argument accepts arrays, OK for length 0
             result = true;
         }
-//        System.out.println(result);
         return result;
     }
 
     public Object getValue() throws SemanticTreeEvaluationException {
-//        if (method.isVarArgs() && args.length < 2) {
-//            System.out.println("var-args method: " + Arrays.toString(method.getParameterTypes()));
-//            System.out.println(Arrays.toString(args));
-//            System.out.println(args.getClass());
-//        }
         if (method.isVarArgs()) {
             Class vaType = method.getParameterTypes()[method.getParameterTypes().length-1].getComponentType();
             Object vargs = Array.newInstance(vaType, parameters.length);
