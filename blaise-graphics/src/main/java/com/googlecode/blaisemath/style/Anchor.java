@@ -33,25 +33,29 @@ import java.awt.geom.Point2D;
  */
 public enum Anchor {
     
-    CENTER(0) {
+    CENTER(0, -.5, .5) {
         @Override
         public Point2D getOffset(double r) {
             return new Point2D.Double();
         }
     }, 
-    WEST(0),
-    NORTHWEST(0.25 * Math.PI),
-    NORTH(0.5 * Math.PI),
-    NORTHEAST(0.75 * Math.PI),
-    EAST(Math.PI),
-    SOUTHEAST(1.25 * Math.PI),
-    SOUTH(1.5 * Math.PI),
-    SOUTHWEST(1.75 * Math.PI);
+    WEST(0, 0, .5),
+    NORTHWEST(0.25 * Math.PI, 0, 1),
+    NORTH(0.5 * Math.PI, -.5, 1),
+    NORTHEAST(0.75 * Math.PI, -1, 1),
+    EAST(Math.PI, -1, .5),
+    SOUTHEAST(1.25 * Math.PI, -1, 0),
+    SOUTH(1.5 * Math.PI, -.5, 0),
+    SOUTHWEST(1.75 * Math.PI, 0, 0);
 
     private final double angle;
+    private final double xOff;
+    private final double yOff;
     
-    Anchor(double angle) {
+    Anchor(double angle, double xOff, double yOff) {
         this.angle = angle; 
+        this.xOff = xOff;
+        this.yOff = yOff;
     }
 
     /** 
@@ -69,6 +73,17 @@ public enum Anchor {
      */
     public Point2D getOffset(double r) {
         return new Point2D.Double(r*Math.cos(angle), r*Math.sin(angle));
+    }
+    
+    /**
+     * Returns an offset that allows a rectangle to be drawn from a given
+     * anchor point rather than from the bottom left.
+     * @param wid width of rectangle
+     * @param ht height of rectangle
+     * @return offset position
+     */
+    public Point2D getRectOffset(double wid, double ht) {
+        return new Point2D.Double(xOff*wid, yOff*ht);
     }
     
 }

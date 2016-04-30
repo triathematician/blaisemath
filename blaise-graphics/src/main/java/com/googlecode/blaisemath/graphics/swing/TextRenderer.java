@@ -42,8 +42,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.logging.Level;
@@ -82,11 +83,14 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         if (Strings.isNullOrEmpty(text)) {
             return;
         }
-        
+
+        canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         canvas.setColor(style.getColor(Styles.FILL, Color.black));
         canvas.setFont(Styles.getFont(style));
-        Rectangle2D bounds = boundingBox(primitive, style);
+        Rectangle2D bounds = boundingBox(primitive, style, canvas);
         canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getMaxY()));
+        canvas.setColor(new Color(128, 255, 128, 64));
+        canvas.fill(bounds);
     }
 
     @Override
@@ -134,77 +138,28 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
 
     @Override
     public Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style) {
+        return boundingBox(primitive, style, null);
+    }
+    
+    public Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
         }
         
         Font font = Styles.getFont(style);
-        FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
-        TextLayout tl = new TextLayout(primitive.getText(), font, frc);
+        FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
+                : canvas.getFontRenderContext();
         double width = font.getStringBounds(primitive.getText(), frc).getWidth();
-        double height = tl.getBounds().getHeight();
+        double height = font.getSize()*72/Toolkit.getDefaultToolkit().getScreenResolution();
         
         Anchor textAnchor = anchorFromStyle(style);
         Point2D offset = style.getPoint(Styles.OFFSET, new Point());
-        if (textAnchor == Anchor.SOUTHWEST) {
-            return new Rectangle2D.Double(
-                    primitive.getX() + offset.getX(), 
-                    primitive.getY() + offset.getY()-height, 
-                    width, height);
-        }
-
-        Point2D.Double shift = anchorShift(textAnchor, width, height);
-
+        assert offset != null;
+        Point2D shift = textAnchor.getRectOffset(width, height);
         return new Rectangle2D.Double(
-                primitive.getX() + offset.getX() + shift.x, 
-                primitive.getY() + offset.getY() + shift.y-height, 
+                primitive.getX() + offset.getX() + shift.getX(), 
+                primitive.getY() + offset.getY() + shift.getY()-height, 
                 width, height);
-    }
-    
-
-    /** 
-     * Generates a shift coordinate based on a given width and height, relative to the
-     * provided anchor location.
-     * @param textAnchor anchor location
-     * @param width width
-     * @param height height
-     * @return shifted coordinate
-     */
-    public static Point2D.Double anchorShift(Anchor textAnchor, double width, double height) {
-        Point2D.Double shift = new Point2D.Double();
-        switch (textAnchor) {
-            case NORTHEAST:
-            case EAST:
-            case SOUTHEAST:
-                shift.x = -width;
-                break;
-            case NORTH:
-            case CENTER:
-            case SOUTH:
-                shift.x = -width / 2;
-                break;
-            default:
-                // all other cases don't need shift
-                break;
-        }
-
-        switch (textAnchor) {
-            case NORTHWEST:
-            case NORTH:
-            case NORTHEAST:
-                shift.y = height;
-                break;
-            case WEST:
-            case CENTER:
-            case EAST:
-                shift.y = height / 2;
-                break;
-            default:
-                // all other cases don't need shift
-                break;
-        }
-        
-        return shift;
     }
     
 }

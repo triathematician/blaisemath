@@ -15,11 +15,17 @@
  */
 package com.googlecode.blaisemath.graphics.swing;
 
+import com.google.common.collect.ImmutableMap;
+import com.googlecode.blaisemath.editor.EditorRegistration;
+import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
+import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
@@ -58,19 +64,33 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
     public MultilineTextRendererTestFrame() {
         initComponents();
         PanAndZoomHandler.install(canvas);
-        canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 100), Styles.fillStroke(new Color(255, 128, 128, 64), null)));
-        canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 100, 200, 100), Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
-        canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 200, 200, 200), Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
-        canvas.addGraphic(JGraphics.path(new Line2D.Double(100, 0, 100, 300), Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
+        canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 100), 
+                Styles.fillStroke(new Color(255, 128, 128, 64), null).and(Styles.MARKER_RADIUS, 12)));
+        canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 100, 200, 100),
+                Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
+        canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 200, 200, 200), 
+                Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
+        canvas.addGraphic(JGraphics.path(new Line2D.Double(100, 0, 100, 300),
+                Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
         canvas.addGraphic(new PrimitiveGraphic<AnchoredText,Graphics2D>(
-                new AnchoredText(100, 100, "here is some sample text that is a single line"),
+                new AnchoredText(100, 100, "Here is some sample text that is a single line"),
                 textStyle,
                 TextRenderer.getInstance()));
-        canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 200), Styles.fillStroke(new Color(255, 128, 128, 64), null)));
+        canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 200), 
+                Styles.fillStroke(new Color(255, 128, 128, 64), null)));
         canvas.addGraphic(new PrimitiveGraphic<AnchoredText,Graphics2D>(
-                new AnchoredText(100, 200, "here is some\nsample text\nthat is wrapped\nonto multiple\nlines"),
+                new AnchoredText(100, 200, "Here is some\nsample text\nthat is wrapped\nonto multiple\nlines"),
                 textStyle,
                 mlRend));
+        
+        EditorRegistration.registerEditors();
+        
+        RollupPanel rp = new RollupPanel();
+        AttributeSetPropertyModel apm = new AttributeSetPropertyModel(textStyle,
+                ImmutableMap.<String,Class<?>>of(Styles.FONT, String.class, Styles.FONT_SIZE, Float.class));
+        rp.add(new MPanel("Font", PropertySheet.forModel(apm)));
+        jScrollPane1.setViewportView(rp);
+        revalidate();
     }
 
     /**
@@ -94,6 +114,7 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         canvas = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
+        jScrollPane1 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -176,6 +197,10 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
         getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
         getContentPane().add(canvas, java.awt.BorderLayout.CENTER);
 
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(200, 22));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(200, 22));
+        getContentPane().add(jScrollPane1, java.awt.BorderLayout.WEST);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -254,6 +279,7 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
     private com.googlecode.blaisemath.graphics.swing.MultilineTextRenderer mlRend;

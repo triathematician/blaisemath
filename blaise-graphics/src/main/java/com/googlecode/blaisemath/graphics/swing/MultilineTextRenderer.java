@@ -28,16 +28,17 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import static com.googlecode.blaisemath.graphics.swing.TextRenderer.anchorFromStyle;
-import static com.googlecode.blaisemath.graphics.swing.TextRenderer.anchorShift;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredText;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
@@ -90,56 +91,54 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         Font font = Styles.getFont(style);       
         canvas.setFont(font);
         canvas.setColor(style.getColor(Styles.FILL));
+        canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
-        FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
-        Anchor textAnchor = anchorFromStyle(style);   
+        FontRenderContext frc = canvas.getFontRenderContext();
+        Anchor textAnchor = TextRenderer.anchorFromStyle(style);   
         
-        double lineHeight = canvas.getFontMetrics().getHeight();
+        double lineHeight = font.getLineMetrics("", frc).getHeight();
         Rectangle2D bounds = boundingBox(text, style);
         double y0 = bounds.getMaxY();
         for (String line : Lists.reverse(Arrays.asList(lines(text)))) {
             double wid = font.getStringBounds(line, frc).getWidth();
-            double dx = anchorShift(textAnchor, wid, 0).x;
+            double dx = textAnchor.getRectOffset(wid, 0).getX();
             canvas.drawString(line, (float)(text.getX()+dx), (float) y0);
             y0 -= lineHeight;
         }
+        canvas.setColor(new Color(128, 255, 128, 64));
+        canvas.fill(bounds);
     }
 
     @Override
     public Rectangle2D boundingBox(AnchoredText text, AttributeSet style) {
+        return boundingBox(text, style, null);
+    }
+    
+    public Rectangle2D boundingBox(AnchoredText text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return null;
         }
 
         Font font = Styles.getFont(style);
-        FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
+        FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
+                : canvas.getFontRenderContext();
         
         double width = 0;
-        double height = 0;
-        double leading = 0;
-        for (String line : lines(text)) {
-            TextLayout tl = new TextLayout(text.getText(), font, frc);
+        String[] lines = lines(text);
+        for (String line : lines) {
             width = Math.max(width, font.getStringBounds(line, frc).getWidth());
-            height += tl.getAscent()+tl.getDescent()+tl.getLeading();
-            leading = tl.getLeading();
         }
-        height -= leading;
+        double lineHeight = font.getLineMetrics("", frc).getHeight();
+        double height = lineHeight*lines.length;
+        height -= (lineHeight - font.getSize()*72/Toolkit.getDefaultToolkit().getScreenResolution());
         
-        Anchor textAnchor = anchorFromStyle(style);        
+        Anchor textAnchor = TextRenderer.anchorFromStyle(style);        
         Point2D offset = style.getPoint(Styles.OFFSET, new Point());
         assert offset != null;
-        if (textAnchor == Anchor.SOUTHWEST) {
-            return new Rectangle2D.Double(
-                    text.getX() + offset.getX(), 
-                    text.getY() + offset.getY()-height, 
-                    width, height);
-        }
-
-        Point2D.Double shift = anchorShift(textAnchor, width, height);
-
+        Point2D shift = textAnchor.getRectOffset(width, height);
         return new Rectangle2D.Double(
-                text.getX() + offset.getX() + shift.x, 
-                text.getY() + offset.getY() + shift.y-height, 
+                text.getX() + offset.getX() + shift.getX(), 
+                text.getY() + offset.getY() + shift.getY()-height, 
                 width, height);
     }
     
