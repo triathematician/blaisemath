@@ -259,7 +259,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle2D rect) {
         setDesiredLocalBounds(comp, comp.getBounds(), rect);
     }
-
+    
     /**
      * Updates component transform so given rectangle is included within. Updates
      * to the component are made on the EDT. Allows setting custom bounds for the
@@ -273,18 +273,28 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
             @Override
             public void run() {
-                double scalex = rect.getWidth() / compBounds.getWidth();
-                double scaley = rect.getHeight() / compBounds.getHeight();
-                double scale = Math.max(scalex, scaley);
-                AffineTransform res = new AffineTransform();
-                res.translate(compBounds.getWidth()/2, compBounds.getHeight()/2);
-                res.scale(1 / scale, 1 / scale);
-                res.translate(-rect.getCenterX(), -rect.getCenterY());
-                comp.setTransform(res);
+                comp.setTransform(scaleRectTransform(compBounds, rect));
             }
         });
     }
     
+    /**
+     * Create a transform that maps the "scaleFrom" rectangle into the "scaleTo" region.
+     * @param scaleTo region to scale to
+     * @param scaleFrom region to scale from
+     * @return transform
+     */
+    public static AffineTransform scaleRectTransform(Rectangle2D scaleTo, final Rectangle2D scaleFrom) {
+        double scalex = scaleFrom.getWidth() / scaleTo.getWidth();
+        double scaley = scaleFrom.getHeight() / scaleTo.getHeight();
+        double scale = Math.max(scalex, scaley);
+        AffineTransform res = new AffineTransform();
+        res.translate(scaleTo.getWidth()/2, scaleTo.getHeight()/2);
+        res.scale(1 / scale, 1 / scale);
+        res.translate(-scaleFrom.getCenterX(), -scaleFrom.getCenterY());
+        return res;
+    }
+
     /**
      * Sets visometry bounds based on the zoom about a given point.
      * The effective zoom point is between current center and mouse position...
