@@ -89,8 +89,6 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         canvas.setFont(Styles.getFont(style));
         Rectangle2D bounds = boundingBox(primitive, style, canvas);
         canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getMaxY()));
-        canvas.setColor(new Color(128, 255, 128, 64));
-        canvas.fill(bounds);
     }
 
     @Override

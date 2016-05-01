@@ -40,7 +40,6 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
@@ -56,7 +55,6 @@ import java.util.logging.Logger;
  * @author petereb1
  */
 public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D> {
-    private static final Logger LOG = Logger.getLogger(MultilineTextRenderer.class.getName());
 
     private static final MultilineTextRenderer INST = new MultilineTextRenderer();
     
@@ -105,8 +103,6 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
             canvas.drawString(line, (float)(text.getX()+dx), (float) y0);
             y0 -= lineHeight;
         }
-        canvas.setColor(new Color(128, 255, 128, 64));
-        canvas.fill(bounds);
     }
 
     @Override
