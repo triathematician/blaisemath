@@ -26,10 +26,13 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 import com.google.common.base.Predicate;
+import com.sun.istack.internal.Nullable;
 import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.IndexedPropertyDescriptor;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -75,13 +78,7 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param bean object to populate the box
      */
     public static void show(Window parent, boolean modal, Object bean) {
-        if (parent instanceof Frame) {
-            new PropertySheetDialog((Frame) parent, modality(modal), bean, (Predicate) null)
-                    .setVisible(true);
-        } else {
-            new PropertySheetDialog((Window) parent, modality(modal), bean, (Predicate) null)
-                    .setVisible(true);
-        }
+        show(parent, modal, bean, (Runnable) null);
     }
     
     /**
@@ -92,8 +89,7 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param propertyFilter filters properties by name
      */
     public static void show(Window parent, boolean modal, Object bean, Predicate<String> propertyFilter) {
-        new PropertySheetDialog((Window) parent, modality(modal), bean, propertyFilter)
-                .setVisible(true);
+        show(parent, modal, bean, propertyFilter, null);
     }
 
     /**
@@ -104,8 +100,7 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param ipd an indexed property descriptor
      */
     public static void show(Window parent, boolean modal, Object bean, IndexedPropertyDescriptor ipd) {
-        new PropertySheetDialog((Window) parent, modality(modal), bean, ipd)
-                .setVisible(true);
+        show(parent, modal, bean, ipd, null);
     }
 
     /**
@@ -116,8 +111,76 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param model model for the property sheet
      */
     public static void show(Window parent, boolean modal, Object bean, PropertyModel model) {
-        new PropertySheetDialog((Window) parent, modality(modal), bean, model)
-                .setVisible(true);
+        show(parent, modal, bean, model, null);
+    }
+
+    /**
+     * Creates new form PropertySheetDialog
+     * @param parent the parent frame
+     * @param modal whether the dialog box is modal
+     * @param bean object to populate the box
+     * @param onClose function to call when the dialog is closed
+     */
+    public static void show(Window parent, boolean modal, Object bean, @Nullable Runnable onClose) {
+        if (parent instanceof Frame) {
+            PropertySheetDialog dialog = new PropertySheetDialog((Frame) parent, modality(modal), bean, (Predicate) null);
+            configureAndShow(dialog, onClose);
+        } else {
+            PropertySheetDialog dialog = new PropertySheetDialog((Window) parent, modality(modal), bean, (Predicate) null);
+            configureAndShow(dialog, onClose);
+        }
+    }
+    
+    /**
+     * Creates new form PropertySheetDialog
+     * @param parent the parent frame
+     * @param modal whether the dialog box is modal
+     * @param bean object to populate the box
+     * @param propertyFilter filters properties by name
+     * @param onClose function to call when the dialog is closed
+     */
+    public static void show(Window parent, boolean modal, Object bean, Predicate<String> propertyFilter, @Nullable Runnable onClose) {
+        PropertySheetDialog dialog = new PropertySheetDialog((Window) parent, modality(modal), bean, propertyFilter);
+        configureAndShow(dialog, onClose);
+    }
+
+    /**
+     * Creates new form PropertySheetDialog with an indexed property.
+     * @param parent the parent frame
+     * @param modal whether the dialog box is modal
+     * @param bean object to populate the box
+     * @param ipd an indexed property descriptor
+     * @param onClose function to call when the dialog is closed
+     */
+    public static void show(Window parent, boolean modal, Object bean, IndexedPropertyDescriptor ipd, @Nullable Runnable onClose) {
+        PropertySheetDialog dialog = new PropertySheetDialog((Window) parent, modality(modal), bean, ipd);
+        configureAndShow(dialog, onClose);
+    }
+
+    /**
+     * Creates new form PropertySheetDialog with an indexed property.
+     * @param parent the parent frame
+     * @param modal whether the dialog box is modal
+     * @param bean object to populate the box
+     * @param model model for the property sheet
+     * @param onClose function to call when the dialog is closed
+     */
+    public static void show(Window parent, boolean modal, Object bean, PropertyModel model, @Nullable Runnable onClose) {
+        PropertySheetDialog dialog = new PropertySheetDialog((Window) parent, modality(modal), bean, model);
+        configureAndShow(dialog, onClose);
+    }
+    
+    private static void configureAndShow(PropertySheetDialog dialog, @Nullable final Runnable onClose) {
+        if (onClose != null) {
+            dialog.addWindowListener(new WindowAdapter(){
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    assert onClose != null;
+                    onClose.run();
+                }
+            });
+        }
+        dialog.setVisible(true);
     }
     
     //</editor-fold>
