@@ -28,6 +28,8 @@ package com.googlecode.blaisemath.util.event;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 /**
  * Utilities for handling {@link MouseEvent}s.
@@ -80,6 +82,22 @@ public class MouseEvents {
                 break;
             case MouseEvent.MOUSE_MOVED:
                 l.mouseMoved(e);
+                break;
+            default:
+                // do nothing
+                break;
+        }
+    }
+    
+    /**
+     * Delegate a mouse wheel event by type to the provided listener.
+     * @param e mouse event
+     * @param l listener to delegate to
+     */
+    public static void delegateWheelEvent(MouseWheelEvent e, MouseWheelListener l) {
+        switch(e.getID()) {
+            case MouseEvent.MOUSE_WHEEL:
+                l.mouseWheelMoved(e);
                 break;
             default:
                 // do nothing
