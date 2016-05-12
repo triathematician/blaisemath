@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 import com.google.common.base.Predicate;
-import com.sun.istack.internal.Nullable;
 import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -119,9 +118,9 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param modal whether the dialog box is modal
      * @param bean object to populate the box
-     * @param onClose function to call when the dialog is closed
+     * @param onClose function to call when the dialog is closed (null ok)
      */
-    public static void show(Window parent, boolean modal, Object bean, @Nullable Runnable onClose) {
+    public static void show(Window parent, boolean modal, Object bean, Runnable onClose) {
         if (parent instanceof Frame) {
             PropertySheetDialog dialog = new PropertySheetDialog((Frame) parent, modality(modal), bean, (Predicate) null);
             configureAndShow(dialog, onClose);
@@ -137,9 +136,9 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param modal whether the dialog box is modal
      * @param bean object to populate the box
      * @param propertyFilter filters properties by name
-     * @param onClose function to call when the dialog is closed
+     * @param onClose function to call when the dialog is closed (null ok)
      */
-    public static void show(Window parent, boolean modal, Object bean, Predicate<String> propertyFilter, @Nullable Runnable onClose) {
+    public static void show(Window parent, boolean modal, Object bean, Predicate<String> propertyFilter, Runnable onClose) {
         PropertySheetDialog dialog = new PropertySheetDialog((Window) parent, modality(modal), bean, propertyFilter);
         configureAndShow(dialog, onClose);
     }
@@ -150,9 +149,9 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param modal whether the dialog box is modal
      * @param bean object to populate the box
      * @param ipd an indexed property descriptor
-     * @param onClose function to call when the dialog is closed
+     * @param onClose function to call when the dialog is closed (null ok)
      */
-    public static void show(Window parent, boolean modal, Object bean, IndexedPropertyDescriptor ipd, @Nullable Runnable onClose) {
+    public static void show(Window parent, boolean modal, Object bean, IndexedPropertyDescriptor ipd, Runnable onClose) {
         PropertySheetDialog dialog = new PropertySheetDialog((Window) parent, modality(modal), bean, ipd);
         configureAndShow(dialog, onClose);
     }
@@ -163,14 +162,14 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param modal whether the dialog box is modal
      * @param bean object to populate the box
      * @param model model for the property sheet
-     * @param onClose function to call when the dialog is closed
+     * @param onClose function to call when the dialog is closed (null ok)
      */
-    public static void show(Window parent, boolean modal, Object bean, PropertyModel model, @Nullable Runnable onClose) {
+    public static void show(Window parent, boolean modal, Object bean, PropertyModel model, Runnable onClose) {
         PropertySheetDialog dialog = new PropertySheetDialog((Window) parent, modality(modal), bean, model);
         configureAndShow(dialog, onClose);
     }
     
-    private static void configureAndShow(PropertySheetDialog dialog, @Nullable final Runnable onClose) {
+    private static void configureAndShow(PropertySheetDialog dialog, final Runnable onClose) {
         if (onClose != null) {
             dialog.addWindowListener(new WindowAdapter(){
                 @Override
