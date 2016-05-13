@@ -3,6 +3,7 @@
 
 - **firestarter** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/firestarter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/firestarter)
 - **blaise-common** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-common/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-common)
+- **blaise-gestures** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-gestures/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-gestures)
 - **blaise-graphics** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-graphics/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-graphics)
 - **blaise-graphtheory** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-graphtheory/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-graphtheory)
 - **blaise-math** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-math/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-math)
