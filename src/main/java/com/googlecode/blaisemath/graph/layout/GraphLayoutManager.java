@@ -211,8 +211,8 @@ public final class GraphLayoutManager<C> {
      * Set parameters for the current layout
      * @param params new parameters
      */
-    public void setLayoutParameters(Object parm) {
-        iterativeLayoutManager.setParameters(parm);
+    public void setLayoutParameters(Object params) {
+        iterativeLayoutManager.setParameters(params);
     }
 
     /**

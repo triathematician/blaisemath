@@ -190,7 +190,7 @@ public final class IterativeGraphLayoutManager {
      * Perform a single layout loop. Depending on the manager's settings, this
      * may invoke the background graph layout 1 or more times.
      * @return energy of last loop
-     * @throws InterruptedException 
+     * @throws InterruptedException if layout interrupted after an intermediate iteration
      */
     public double runOneLoop() throws InterruptedException {
         double energy = 0;
