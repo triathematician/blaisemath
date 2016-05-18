@@ -210,12 +210,11 @@ public class GraphComponent extends JGraphicComponent {
         }
     }
 
-    public Set<String> getSelectedNodes() {
-        Set<String> selectedNodes = Sets.newLinkedHashSet();
-        for (DelegatingPrimitiveGraphic dpg : Iterables.filter(getSelectionModel().getSelection(), DelegatingPrimitiveGraphic.class)) {
-            if (dpg.getSourceObject() instanceof String) {
-                selectedNodes.add((String) dpg.getSourceObject());
-            }
+    public Set getSelectedNodes() {
+        Set selectedNodes = Sets.newLinkedHashSet();
+        for (DelegatingPrimitiveGraphic dpg : Iterables.filter(getSelectionModel().getSelection(), 
+                DelegatingPrimitiveGraphic.class)) {
+            selectedNodes.add(dpg.getSourceObject());
         }
         return selectedNodes;
     }

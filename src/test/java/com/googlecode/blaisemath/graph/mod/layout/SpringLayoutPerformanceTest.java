@@ -37,7 +37,6 @@ import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
 import com.googlecode.blaisemath.graph.mod.generators.WattsStrogatzGenerator;
 import com.googlecode.blaisemath.graph.mod.generators.WattsStrogatzGenerator.WattsStrogatzParameters;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 

@@ -24,12 +24,8 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #L%
  */
 
-import com.google.common.collect.Maps;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.logging.Level;
+import static com.google.common.base.Preconditions.checkNotNull;
+import com.googlecode.blaisemath.graph.GraphLayoutConstraints;
 import java.util.logging.Logger;
 
 /** 
@@ -71,10 +67,14 @@ public class SpringLayoutParameters {
     /** Max distance to apply repulsive force */
     double maxRepelDist = 2 * distScale;
     
+    /** Layout constraints */
+    GraphLayoutConstraints constraints = new GraphLayoutConstraints();
+    
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
+    
     public double getDistScale() {
         return distScale;
     }
@@ -144,6 +144,14 @@ public class SpringLayoutParameters {
 
     public void setStepTime(double stepT) {
         this.stepT = stepT;
+    }
+
+    public GraphLayoutConstraints getConstraints() {
+        return constraints;
+    }
+
+    public void setConstraints(GraphLayoutConstraints constraints) {
+        this.constraints = checkNotNull(constraints);
     }
     
     //</editor-fold>

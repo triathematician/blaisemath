@@ -78,7 +78,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     public synchronized final <C> double iterate(Graph<C> og, SpringLayoutState state, SpringLayoutParameters params) {
         Graph<C> g = og.isDirected() ? GraphUtils.copyAsUndirectedSparseGraph(og) : og;
         Set<C> nodes = g.nodes();
-        Set<C> pinned = Collections.emptySet(); //Sets.newHashSet(fixed);
+        Set<C> pinned = params.getConstraints().getPinnedNodes();
         Set<C> unpinned = Sets.difference(nodes, pinned).immutableCopy();
         double energy;
 

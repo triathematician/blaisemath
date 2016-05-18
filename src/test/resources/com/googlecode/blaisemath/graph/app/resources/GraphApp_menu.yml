@@ -42,6 +42,8 @@ Toolbar:
     -
     - startLayout
     - stopLayout
+    -
+    - pinSelected
 Canvas:
     - zoomIn
     - zoomOut

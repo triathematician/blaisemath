@@ -15,6 +15,10 @@
  */
 package com.googlecode.blaisemath.graph;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Collections;
+import java.util.Set;
+
 /*
  * #%L
  * BlaiseGraphTheory (v3)
@@ -39,10 +43,21 @@ package com.googlecode.blaisemath.graph;
 /**
  * <p>
  *   A set of constraints for use in graph layouts. Allows nodes to be "pinned"
- *   during layout.
+ *   during layout, constrained into boxes, etc.
  * </p>
+ * @param <C> node type
  * @author elisha
  */
 public class GraphLayoutConstraints<C> {
+    
+    private Set<C> pinnedNodes = Collections.emptySet();
+
+    public Set<C> getPinnedNodes() {
+        return pinnedNodes;
+    }
+
+    public void setPinnedNodes(Set<C> pinnedNodes) {
+        this.pinnedNodes = checkNotNull(pinnedNodes);
+    }
     
 }

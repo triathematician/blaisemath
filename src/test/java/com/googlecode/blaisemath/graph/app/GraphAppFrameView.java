@@ -25,8 +25,12 @@ package com.googlecode.blaisemath.graph.app;
  */
 
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.googlecode.blaisemath.ui.PropertyActionPanel;
 import com.google.common.collect.Multisets;
+import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.EnumEditor;
@@ -39,17 +43,23 @@ import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphServices;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
+import com.googlecode.blaisemath.graphics.core.LabeledPointGraphic;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.MarkerEditor;
 import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.RollupPanel;
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditorManager;
 import java.io.IOException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ActionMap;
@@ -74,11 +84,12 @@ public final class GraphAppFrameView extends FrameView {
     
     private static final String CANVAS_CM_KEY = "Canvas";
 
-    private final GraphAppCanvas graphComponent;
+    private final GraphAppCanvas graphCanvas;
     
     private GraphGenerator selectedGenerator = null;
     private StaticGraphLayout selectedLayout = null;
     private IterativeGraphLayout selectedIterativeLayout = null;
+    private boolean pinSelected = false;
     
     private final PropertyActionPanel generatorPanel;
     private final JComboBox generatorBox;
@@ -92,15 +103,15 @@ public final class GraphAppFrameView extends FrameView {
     public GraphAppFrameView(Application app) {
         super(app);
         
-        graphComponent = new GraphAppCanvas();
+        graphCanvas = new GraphAppCanvas();
         
         // set up menus
         ActionMap am = app.getContext().getActionMap(this);
         try {
-            setMenuBar(MenuConfig.readMenuBar(GraphApp.class, this, graphComponent));
-            setToolBar(MenuConfig.readToolBar(GraphApp.class, this, graphComponent));
-            graphComponent.addContextMenuInitializer(GraphComponent.MENU_KEY_GRAPH,
-                    MenuConfig.readMenuInitializer(CANVAS_CM_KEY, GraphApp.class, this, graphComponent));    
+            setMenuBar(MenuConfig.readMenuBar(GraphApp.class, this, graphCanvas));
+            setToolBar(MenuConfig.readToolBar(GraphApp.class, this, graphCanvas));
+            graphCanvas.addContextMenuInitializer(GraphComponent.MENU_KEY_GRAPH,
+                    MenuConfig.readMenuInitializer(CANVAS_CM_KEY, GraphApp.class, this, graphCanvas));    
         } catch (IOException ex) {
             Logger.getLogger(GraphAppFrameView.class.getName()).log(Level.SEVERE, 
                     "Menu config failure.", ex);
@@ -165,7 +176,7 @@ public final class GraphAppFrameView extends FrameView {
         controlPanel.add(new MPanel("Iterative Layout", iterativeLayoutPanel));
         
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(graphComponent, BorderLayout.CENTER);
+        panel.add(graphCanvas, BorderLayout.CENTER);
         panel.add(new JScrollPane(controlPanel), BorderLayout.WEST);
         
         setComponent(panel);
@@ -173,6 +184,24 @@ public final class GraphAppFrameView extends FrameView {
         setSelectedGenerator((GraphGenerator) generatorBox.getSelectedItem());
         setSelectedLayout((StaticGraphLayout) staticLayoutBox.getSelectedItem());
         setSelectedIterativeLayout((IterativeGraphLayout) iterativeLayoutBox.getSelectedItem());
+        
+        graphCanvas.getSelectionModel().addPropertyChangeListener(SetSelectionModel.SELECTION_PROPERTY, 
+            new PropertyChangeListener(){
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    selectionChanged(graphCanvas.getSelectedNodes());
+                }
+            });
+    }
+    
+    private void selectionChanged(Set<String> nodes) {
+        if (!pinSelected) {
+            return;
+        }
+        Object parms = graphCanvas.getLayoutManager().getLayoutParameters();
+        if (parms instanceof SpringLayoutParameters) {
+            ((SpringLayoutParameters)parms).getConstraints().setPinnedNodes(nodes);
+        }
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
@@ -217,8 +246,8 @@ public final class GraphAppFrameView extends FrameView {
         Object parm = selectedIterativeLayout.createParameters();
         iterativeLayoutPanel.setBean(parm);
         ((MPanel)iterativeLayoutPanel.getParent()).setPrimaryComponent(iterativeLayoutPanel);
-        graphComponent.getLayoutManager().setLayoutAlgorithm(selectedIterativeLayout);
-        graphComponent.getLayoutManager().setLayoutParameters(parm);
+        graphCanvas.getLayoutManager().setLayoutAlgorithm(selectedIterativeLayout);
+        graphCanvas.getLayoutManager().setLayoutParameters(parm);
     }
     
     public Object getIterativeLayoutParameters() {
@@ -237,11 +266,17 @@ public final class GraphAppFrameView extends FrameView {
     @Action
     public void applyGenerator(ActionEvent event) {
         Object parm = event.getSource();
-        graphComponent.setGraph((Graph) selectedGenerator.apply(parm));
+        graphCanvas.setGraph((Graph) selectedGenerator.apply(parm));
         applyStaticLayout(new ActionEvent(staticLayoutPanel.getBean(), 0, null));
     }
     
     // LAYOUT ACTIONS
+    
+    @Action
+    public void pinSelected() {
+        pinSelected = !pinSelected;
+        selectionChanged(graphCanvas.getSelectedNodes());
+    }
     
     @Action
     public void staticLayout(ActionEvent event) {
@@ -251,8 +286,8 @@ public final class GraphAppFrameView extends FrameView {
     @Action
     public void applyStaticLayout(ActionEvent event) {
         Object parm = event.getSource();
-        AnimationUtils.animateCoordinateChange(graphComponent.getLayoutManager(), 
-                selectedLayout, parm, graphComponent, 10.0);
+        AnimationUtils.animateCoordinateChange(graphCanvas.getLayoutManager(), 
+                selectedLayout, parm, graphCanvas, 10.0);
     }
     
     @Action
@@ -265,15 +300,15 @@ public final class GraphAppFrameView extends FrameView {
     @Action
     public void globalMetric(ActionEvent event) {
         GraphMetric<?> gs = (GraphMetric<?>) event.getSource();
-        Object res = gs.apply(graphComponent.getGraph());
+        Object res = gs.apply(graphCanvas.getGraph());
         statusLabel.setText(gs+" = "+res);
     }
     
     @Action
     public void nodeMetric(ActionEvent event) {
         GraphNodeMetric<?> gs = (GraphNodeMetric<?>) event.getSource();
-        Graph g = graphComponent.getGraph();
-        graphComponent.setMetric(gs);
+        Graph g = graphCanvas.getGraph();
+        graphCanvas.setMetric(gs);
         statusLabel.setText(gs+" = "+Multisets.copyHighestCountFirst(GraphMetrics.computeDistribution(g, gs)));
     }
     
