@@ -282,7 +282,8 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
             Point2D.Double sum, C io, Point2D.Double iLoc, C jo, Point2D.Double jLoc, double dist, 
             SpringLayoutState<C> state, SpringLayoutParameters params) {
         if (dist == 0) {
-            LOG.log(Level.WARNING, "Distance 0 between {0} and {1}: {2}, {3}", new Object[]{io, jo, iLoc, jLoc});
+            LOG.log(Level.WARNING, "Distance 0 between {0} and {1}: {2}, {3}", 
+                    new Object[]{io, jo, iLoc, jLoc});
             sum.x += params.springC / (params.minDist * params.minDist);
             sum.y += 0;
         } else {

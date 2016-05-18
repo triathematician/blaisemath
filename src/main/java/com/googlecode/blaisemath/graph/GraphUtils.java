@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.graph;
 import com.googlecode.blaisemath.util.GAInstrument;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
@@ -33,25 +34,24 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
+import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.googlecode.blaisemath.linear.Matrices;
 import com.googlecode.blaisemath.util.Edge;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Stack;
 import java.util.TreeSet;
 
 /**
@@ -60,9 +60,6 @@ import java.util.TreeSet;
  * @author Elisha Peterson
  */
 public class GraphUtils {
-
-    /** A completely empty graph */
-    public static final Graph EMPTY_GRAPH = SparseGraph.createFromEdges(false, Collections.EMPTY_SET, Collections.EMPTY_SET);
     
     /** Used to sort graphs in descending order by size */
     public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = new Comparator<Graph>() {
@@ -78,6 +75,16 @@ public class GraphUtils {
 
     // utility class
     private GraphUtils() {
+    }
+    
+    /**
+     * Create an empty graph for vertices of appropriate type.
+     * @param <V> vertex type
+     * @return new empty graph
+     */
+    public static <V> SparseGraph<V> emptyGraph() {
+        return SparseGraph.createFromEdges(false, 
+                Collections.<V>emptySet(), Collections.<Edge<V>>emptySet());
     }
 
     //<editor-fold defaultstate="collapsed" desc="GENERIC PRINT METHODS">
@@ -104,16 +111,10 @@ public class GraphUtils {
     public static <V> String printGraph(Graph<V> graph, boolean printNodes, boolean printEdges) {
         if (!printEdges && !printNodes) {
             return "GRAPH";
-        } else if (printNodes && !printEdges) {
-            Set<V> nodes = graph.nodes();
-            if (nodes.size() > 0 && nodes.iterator().next() instanceof Comparable) {
-                nodes = new TreeSet<V>(nodes);
-            }
-            return "NODES: " + nodes;
         }
-
+        
         Set<V> nodes = graph.nodes();
-        boolean sortable = nodes.size() > 0 && nodes.iterator().next() instanceof Comparable;
+        boolean sortable = Iterables.all(nodes, Predicates.instanceOf(Comparable.class));
         if (sortable) {
             nodes = new TreeSet<V>(nodes);
         }
@@ -121,12 +122,15 @@ public class GraphUtils {
         if (printNodes) {
             result.append("NODES: ").append(nodes).append("  ");
         }
-        result.append("EDGES:");
-        for (V v : nodes) {
-            result.append(" ").append(v).append(": ")
-                    .append(sortable ? new TreeSet(graph.outNeighbors(v)) : graph.outNeighbors(v));
+        
+        if (printEdges) {
+            result.append("EDGES:");
+            for (V v : nodes) {
+                result.append(" ").append(v).append(": ")
+                        .append(sortable ? new TreeSet(graph.outNeighbors(v)) : graph.outNeighbors(v));
+            }
         }
-        return result.toString();
+        return result.toString().trim();
     }
 
     //</editor-fold>
@@ -361,10 +365,14 @@ public class GraphUtils {
         List<Set<V>> added = Lists.newArrayList();
         // stores size of remaining vertices
         int sRemaining = -1;
+        
+        if (max == Integer.MAX_VALUE) {
+            max--;
+        }
 
         remaining.remove(vertex);
         added.add(new HashSet<V>(Arrays.asList(vertex)));
-        while (sRemaining != remaining.size() && added.size() < (max == Integer.MAX_VALUE ? max : max + 1)) {
+        while (sRemaining != remaining.size() && added.size() < max+1) {
             sRemaining = remaining.size();
             added.add(new HashSet<V>());
             for (V v1 : added.get(added.size() - 2)) {
@@ -408,32 +416,29 @@ public class GraphUtils {
             return -1;
         }
 
-        // vertices left to add
-        ArrayList<V> remaining = Lists.newArrayList(graph.nodes());
-        // vertices added already, by distance
-        ArrayList<HashSet<V>> added = Lists.newArrayList();
-        // stores size of remaining vertices
-        int sRemaining;
+        List<V> verticesToAdd = Lists.newArrayList(graph.nodes());
+        List<Set<V>> verticesAdded = Lists.newArrayList();
+        int verticesToAddCount;
 
-        remaining.remove(start);
-        added.add(Sets.newHashSet(start));
+        verticesToAdd.remove(start);
+        verticesAdded.add(Sets.newHashSet(start));
         do {
-            sRemaining = remaining.size();
-            added.add(new HashSet<V>());
-            for (V v1 : added.get(added.size() - 2)) {
-                HashSet<V> toRemove = new HashSet<V>();
-                for (V v2 : remaining) {
+            verticesToAddCount = verticesToAdd.size();
+            verticesAdded.add(new HashSet<V>());
+            for (V v1 : verticesAdded.get(verticesAdded.size() - 2)) {
+                Set<V> toRemove = new HashSet<V>();
+                for (V v2 : verticesToAdd) {
                     if (graph.adjacent(v1, v2)) {
                         if (v2.equals(end)) {
-                            return added.size() - 1;
+                            return verticesAdded.size() - 1;
                         }
                         toRemove.add(v2);
-                        added.get(added.size() - 1).add(v2);
+                        verticesAdded.get(verticesAdded.size() - 1).add(v2);
                     }
                 }
-                remaining.removeAll(toRemove);
+                verticesToAdd.removeAll(toRemove);
             }
-        } while (sRemaining != remaining.size());
+        } while (verticesToAddCount != verticesToAdd.size());
 
         return -1;
     }
@@ -594,14 +599,14 @@ public class GraphUtils {
      *  shortest paths
      * @param lengths a map that will be filled with info on the lengths of
      *  shortest paths
-     * @param stack a stack that will be filled with elements in non-increasing
+     * @param deque a stack (LIFO) that will be filled with elements in non-increasing
      *  order of distance
      * @param pred a map that will be filled with adjacency information for the
      *  shortest paths
      */
     public static <V> void breadthFirstSearch(Graph<V> graph, V start,
             Multiset<V> numShortest, Map<V, Integer> lengths,
-            Stack<V> stack, Multimap<V,V> pred) {
+            Deque<V> deque, Multimap<V,V> pred) {
 
         Set<V> nodes = graph.nodes();
         numShortest.add(start);
@@ -611,12 +616,11 @@ public class GraphUtils {
         lengths.put(start, 0);
 
         // breadth-first search algorithm
-        LinkedList<V> queue = new LinkedList<V>(); // tracks elements for search algorithm
-
+        Deque<V> queue = Queues.newArrayDeque();
         queue.add(start);
         while (!queue.isEmpty()) {
             V v = queue.remove();
-            stack.addElement(v);
+            deque.add(v);
             for (V w : graph.neighbors(v)) {
                 // if w is found for the first time in the tree, add it to the queue, and adjust the length
                 if (lengths.get(w) == -1) {
@@ -686,7 +690,7 @@ public class GraphUtils {
      * @return contracted components
      */
     public static <V> Set<Set<V>> contractedComponents(Collection<Set<V>> components, Collection<V> subset, V vertex) {
-        HashSet<Set<V>> result =Sets.newHashSet();
+        Set<Set<V>> result = Sets.newHashSet();
         Set<V> contracted = Sets.newHashSet();
         contracted.add(vertex);
         result.add(contracted);

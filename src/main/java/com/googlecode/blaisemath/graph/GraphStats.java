@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-import java.util.Collection;
 import java.util.Map;
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 

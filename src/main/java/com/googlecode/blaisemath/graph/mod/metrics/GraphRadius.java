@@ -25,9 +25,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * Global metric describes the radius of the graph, or the largest diameter of
@@ -56,7 +56,7 @@ public class GraphRadius extends GraphMetricSupport<Integer> {
             int maxLength = 0;
             GraphUtils.breadthFirstSearch(graph, node,
                     HashMultiset.<V>create(), lengths,
-                    new Stack<V>(), HashMultimap.<V,V>create());
+                    new ArrayDeque<V>(), HashMultimap.<V,V>create());
             for (Integer i : lengths.values()) {
                 if (i > maxLength) {
                     maxLength = i;

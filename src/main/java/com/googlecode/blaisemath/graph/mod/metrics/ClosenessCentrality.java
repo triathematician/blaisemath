@@ -31,10 +31,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import com.googlecode.blaisemath.util.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+import java.util.ArrayDeque;
 
 /**
  * <p> Implements closeness centrality (Sabidussi 1966), the inverse sum of
@@ -56,7 +56,8 @@ public class ClosenessCentrality implements GraphNodeMetric<Double> {
     public <V> Double apply(Graph<V> graph, V node) {
         int n = graph.nodeCount();
         Map<V, Integer> lengths = new HashMap<V, Integer>();
-        GraphUtils.breadthFirstSearch(graph, node, HashMultiset.<V>create(), lengths, new Stack<V>(), HashMultimap.<V,V>create());
+        GraphUtils.breadthFirstSearch(graph, node, HashMultiset.<V>create(), lengths, 
+                new ArrayDeque<V>(), HashMultimap.<V,V>create());
         double cptSize = lengths.size();
         double sum = 0.0;
         for (Integer i : lengths.values()) {
@@ -104,7 +105,8 @@ public class ClosenessCentrality implements GraphNodeMetric<Double> {
 
         for (V start : nodes) {
             Map<V, Integer> lengths = new HashMap<V, Integer>();
-            GraphUtils.breadthFirstSearch(graph, start, HashMultiset.<V>create(), lengths, new Stack<V>(), HashMultimap.<V,V>create());
+            GraphUtils.breadthFirstSearch(graph, start, HashMultiset.<V>create(), 
+                    lengths, new ArrayDeque<V>(), HashMultimap.<V,V>create());
             double sum1 = 0.0;
             for (Integer j : lengths.values()) {
                 sum1 += j;

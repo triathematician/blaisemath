@@ -28,14 +28,15 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
+import com.google.common.collect.Queues;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import com.googlecode.blaisemath.util.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+import java.util.Deque;
 
 /**
  * <p> Provides a metric describing the betweenness centrality of a vertex in a
@@ -59,7 +60,7 @@ public class BetweenCentrality implements GraphNodeMetric<Double> {
 
     public <V> Map<V,Double> allValues(Graph<V> graph) {
         int id = GAInstrument.start("BetweenCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
-        HashMap<V, Double> between = new HashMap<V, Double>();
+        Map<V, Double> between = new HashMap<V, Double>();
         for (V v : graph.nodes()) {
             between.put(v, 0.0);
         }
@@ -92,19 +93,19 @@ public class BetweenCentrality implements GraphNodeMetric<Double> {
         // length of shortest paths to each vertex
         Map<V, Integer> lengths = new HashMap<V, Integer>(); 
         // tracks elements in non-increasing order for later use
-        Stack<V> stack = new Stack<V>(); 
+        Deque<V> deque = Queues.newArrayDeque();
         // tracks vertex predecessors in resulting tree
         Multimap<V,V> pred = HashMultimap.create();
 
-        GraphUtils.breadthFirstSearch(graph, start, numShortest, lengths, stack, pred);
+        GraphUtils.breadthFirstSearch(graph, start, numShortest, lengths, deque, pred);
 
         // compute betweenness
         Map<V, Double> dependencies = new HashMap<V, Double>();
         for (V v : nodes) {
             dependencies.put(v, 0.0);
         }
-        while (!stack.isEmpty()) {
-            V w = stack.pop();
+        while (!deque.isEmpty()) {
+            V w = deque.pollLast();
             for (V v : pred.get(w)) {
                 dependencies.put(v, dependencies.get(v)
                         + (double) numShortest.count(v) / numShortest.count(w) * (1 + dependencies.get(w)));

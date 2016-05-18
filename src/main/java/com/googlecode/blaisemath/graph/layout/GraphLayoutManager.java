@@ -59,11 +59,11 @@ import javax.annotation.concurrent.NotThreadSafe;
  *   that class is thread-safe.
  * </p>
  *
- * @param <C> type of node in graph
+ * @param <V> type of node in graph
  * @author elisha
  */
 @NotThreadSafe
-public final class GraphLayoutManager<C> {
+public final class GraphLayoutManager<V> {
     
     private static final Logger LOG = Logger.getLogger(GraphLayoutManager.class.getName());
     
@@ -81,9 +81,9 @@ public final class GraphLayoutManager<C> {
     //</editor-fold>
     
     /** Graph */
-    private Graph<C> graph;
+    private Graph<V> graph;
     /** Locates nodes in the graph */
-    private final CoordinateManager<C, Point2D.Double> coordManager = CoordinateManager.create(NODE_CACHE_SIZE);
+    private final CoordinateManager<V, Point2D.Double> coordManager = CoordinateManager.create(NODE_CACHE_SIZE);
     
     /** The initial layout scheme */
     private final StaticGraphLayout initialLayout = CircleLayout.getInstance();
@@ -108,7 +108,7 @@ public final class GraphLayoutManager<C> {
     /** Initializes with an empty graph */
     public GraphLayoutManager() {
         iterativeLayoutManager.setCoordinateManager(coordManager);
-        setGraph(GraphUtils.EMPTY_GRAPH);
+        setGraph(GraphUtils.<V>emptyGraph());
     }
     
     /** 
@@ -134,7 +134,7 @@ public final class GraphLayoutManager<C> {
      * Object used to map locations of points.
      * @return point manager
      */
-    public CoordinateManager<C, Point2D.Double> getCoordinateManager() {
+    public CoordinateManager<V, Point2D.Double> getCoordinateManager() {
         return coordManager;
     }
 
@@ -142,7 +142,7 @@ public final class GraphLayoutManager<C> {
      * Returns copy of the locations of objects in the graph.
      * @return locations, as a copy of the map provided in the point manager
      */
-    public Map<C, Point2D.Double> getNodeLocationCopy() {
+    public Map<V, Point2D.Double> getNodeLocationCopy() {
         return coordManager.getActiveLocationCopy();
     }
 
@@ -150,7 +150,7 @@ public final class GraphLayoutManager<C> {
      * Return the graph
      * @return the layout manager's graph
      */
-    public Graph<C> getGraph() {
+    public Graph<V> getGraph() {
         return graph;
     }
     
@@ -161,7 +161,7 @@ public final class GraphLayoutManager<C> {
      *
      * @param g the graph
      */
-    public void setGraph(Graph<C> g) {
+    public void setGraph(Graph<V> g) {
         checkNotNull(g);
         Graph old = this.graph;
         if (old != g) {
@@ -269,20 +269,20 @@ public final class GraphLayoutManager<C> {
      *   this class's design by running the initial layout in a background thread;
      *   also, locking on the CM may be problematic if the layout takes a long time
      */
-    private void initializeNodeLocations(Graph<C> old, Graph<C> g) {
+    private void initializeNodeLocations(Graph<V> old, Graph<V> g) {
         synchronized (coordManager) {
-            Set<C> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
+            Set<V> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
             coordManager.deactivate(oldNodes);
             // defer to existing locations if possible
             if (coordManager.locatesAll(g.nodes())) {
                 coordManager.reactivate(g.nodes());
             } else {
                 // lays out new graph entirely
-                Map<C,Point2D.Double> newLoc;
+                Map<V,Point2D.Double> newLoc;
                 if (old == null) {
                     newLoc = initialLayout.layout(g, null, initialLayoutParameters);
                 } else {
-                    Map<C, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
+                    Map<V, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
                     newLoc = addingLayout.layout(g, curLocs, addingLayoutParameters);
                 }
                 // remove objects that are already in coordinate manager
@@ -317,7 +317,7 @@ public final class GraphLayoutManager<C> {
      *
      * @param nodePositions new locations for objects
      */
-    public void requestLocations(Map<C, Point2D.Double> nodePositions) {
+    public void requestLocations(Map<V, Point2D.Double> nodePositions) {
         checkNotNull(nodePositions);
         if (isLayoutTaskActive()) {
             iterativeLayoutManager.requestPositions(nodePositions, false);
@@ -334,7 +334,7 @@ public final class GraphLayoutManager<C> {
      * @param parameters layout parameters
      * @param <P> parameters type
      */
-    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<C,Point2D.Double> ic,
+    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<V,Point2D.Double> ic,
             P parameters){
         requestLocations(layout.layout(graph, ic, parameters));
     }

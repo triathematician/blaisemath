@@ -28,6 +28,8 @@ package com.googlecode.blaisemath.graph.mod.metrics;
 import java.util.Arrays;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.SparseGraph;
+import java.util.Map;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,6 +40,7 @@ import org.junit.Test;
 public class BetweenCentralityTest {
 
     static Graph<Integer> TEST2;
+    static BetweenCentrality INST1;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -56,6 +59,26 @@ public class BetweenCentralityTest {
         // 3--4--5--6
         // |
         // 7
+        INST1 = new BetweenCentrality();
+    }
+
+    @Test
+    public void testValue() {
+        System.out.println("value");
+        assertEquals(9.0, INST1.apply(TEST2, 4), 1e-10);
+    }
+
+    @Test
+    public void testAllValues() {
+        System.out.println("allValues");
+        Map<Integer,Double> vals = INST1.allValues(TEST2);
+        assertEquals(1.0, vals.get(1), 1e-6);
+        assertEquals(1.5, vals.get(2), 1e-6);
+        assertEquals(6.5, vals.get(3), 1e-6);
+        assertEquals(9.0, vals.get(4), 1e-6);
+        assertEquals(5.0, vals.get(5), 1e-6);
+        assertEquals(0.0, vals.get(6), 1e-6);
+        assertEquals(0.0, vals.get(7), 1e-6);
     }
 
 }

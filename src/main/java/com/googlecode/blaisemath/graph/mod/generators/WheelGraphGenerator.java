@@ -52,7 +52,7 @@ public final class WheelGraphGenerator implements GraphGenerator<DefaultGenerato
     public Graph<Integer> apply(DefaultGeneratorParameters parm) {
         final int nodes = parm.getNodeCount();
         if (nodes == 0) {
-            return GraphUtils.EMPTY_GRAPH;
+            return GraphUtils.emptyGraph();
         }
         ArrayList<Integer[]> edges = Lists.newArrayList();
         for (int i = 1; i < nodes; i++) {

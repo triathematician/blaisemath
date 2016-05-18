@@ -49,7 +49,7 @@ public final class StarGraphGenerator implements GraphGenerator<DefaultGenerator
     public Graph<Integer> apply(DefaultGeneratorParameters parm) {
         final int nodes = parm.getNodeCount();
         if (nodes == 0) {
-            return GraphUtils.EMPTY_GRAPH;
+            return GraphUtils.emptyGraph();
         }
         return DefaultGeneratorParameters.createGraphWithEdges(parm, new AbstractList<Integer[]>() {
             @Override

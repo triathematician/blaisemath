@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
 import java.util.Arrays;
 import java.util.Map;
@@ -34,7 +35,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphGenerator;
-import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.SparseGraph;
 import com.googlecode.blaisemath.graph.mod.generators.DegreeDistributionGenerator.DegreeDistributionParameters;
 import java.util.Random;
@@ -99,9 +99,7 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
      * sums to an odd total degree, or the maximum degree is too large)
      */
     public static Graph<Integer> generateUndirected(int[] deg) {
-        if (deg == null) {
-            return GraphUtils.EMPTY_GRAPH;
-        }
+        checkNotNull(deg);
         int n = sum(deg);
         if (deg.length > n) {
             throw new IllegalArgumentException("Maximum degree of sequence " + Arrays.toString(deg) + " is too large!");

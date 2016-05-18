@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.graph.mod.layout;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.googlecode.blaisemath.graph.GraphLayoutConstraints;
+import com.googlecode.blaisemath.graph.layout.GraphLayoutConstraints;
 import java.util.logging.Logger;
 
 /** 
