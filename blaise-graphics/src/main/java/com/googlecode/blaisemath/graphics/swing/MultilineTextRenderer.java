@@ -33,7 +33,6 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredText;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -43,7 +42,6 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 /**
  * <p>
@@ -95,12 +93,15 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         Anchor textAnchor = TextRenderer.anchorFromStyle(style);   
         
         double lineHeight = font.getLineMetrics("", frc).getHeight();
-        Rectangle2D bounds = boundingBox(text, style);
+        Rectangle2D bounds = boundingBox(text, style);  
+        Point2D offset = style.getPoint(Styles.OFFSET, new Point());
+        assert offset != null;
+        double x0 = text.getX() + offset.getX();
         double y0 = bounds.getMaxY();
         for (String line : Lists.reverse(Arrays.asList(lines(text)))) {
             double wid = font.getStringBounds(line, frc).getWidth();
             double dx = textAnchor.getRectOffset(wid, 0).getX();
-            canvas.drawString(line, (float)(text.getX()+dx), (float) y0);
+            canvas.drawString(line, (float)(x0+dx), (float) y0);
             y0 -= lineHeight;
         }
     }

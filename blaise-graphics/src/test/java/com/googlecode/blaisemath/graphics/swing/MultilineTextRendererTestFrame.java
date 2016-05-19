@@ -28,6 +28,7 @@ import com.googlecode.blaisemath.util.OrientedPoint2D;
 import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Line2D;
 
 /*
@@ -56,7 +57,8 @@ import java.awt.geom.Line2D;
  */
 public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
 
-    private AttributeSet textStyle = Styles.defaultTextStyle().copy();
+    private AttributeSet textStyle = Styles.defaultTextStyle().copy()
+            .and(Styles.OFFSET, new Point());
     
     /**
      * Creates new form MultilineTextRendererTestFrame
@@ -64,18 +66,20 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
     public MultilineTextRendererTestFrame() {
         initComponents();
         PanAndZoomHandler.install(canvas);
-        canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 100), 
-                Styles.fillStroke(new Color(255, 128, 128, 64), null).and(Styles.MARKER_RADIUS, 12)));
         canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 100, 200, 100),
                 Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
         canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 200, 200, 200), 
                 Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
         canvas.addGraphic(JGraphics.path(new Line2D.Double(100, 0, 100, 300),
                 Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
+        
+        canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 100), 
+                Styles.fillStroke(new Color(255, 128, 128, 64), null).and(Styles.MARKER_RADIUS, 12)));
         canvas.addGraphic(new PrimitiveGraphic<AnchoredText,Graphics2D>(
                 new AnchoredText(100, 100, "Here is some sample text that is a single line"),
                 textStyle,
                 TextRenderer.getInstance()));
+        
         canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 200), 
                 Styles.fillStroke(new Color(255, 128, 128, 64), null)));
         canvas.addGraphic(new PrimitiveGraphic<AnchoredText,Graphics2D>(
@@ -87,7 +91,8 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
         
         RollupPanel rp = new RollupPanel();
         AttributeSetPropertyModel apm = new AttributeSetPropertyModel(textStyle,
-                ImmutableMap.<String,Class<?>>of(Styles.FONT, String.class, Styles.FONT_SIZE, Float.class));
+                ImmutableMap.<String,Class<?>>of(Styles.FONT, String.class, Styles.FONT_SIZE, Float.class,
+                        Styles.OFFSET, Point.class));
         rp.add(new MPanel("Font", PropertySheet.forModel(apm)));
         jScrollPane1.setViewportView(rp);
         revalidate();
