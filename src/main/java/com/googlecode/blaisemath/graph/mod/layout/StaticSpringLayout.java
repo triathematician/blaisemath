@@ -42,7 +42,6 @@ import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -117,7 +116,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         int step = 0;
         while (step < parm.minSteps || (step < parm.maxSteps && Math.abs(energyChange) > parm.energyChangeThreshold)) {
             // adjust cooling parameter
-            double coolingAt = 1-step*step/(parm.maxSteps*parm.maxSteps);
+            double coolingAt = 1.0-step*step/(parm.maxSteps*parm.maxSteps);
             params.dampingC = parm.coolStart*coolingAt + parm.coolEnd*(1-coolingAt);
             double energy;
             try {
@@ -129,7 +128,8 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
             lastEnergy = energy;
             step += mgr.getIterationsPerLoop();
             if (step % 500 == 0) {
-                System.out.printf("|Energy at step %s: %s %s\n", step, energy, energyChange);
+                LOG.log(Level.INFO, "|Energy at step {0}: {1} {2}", 
+                        new Object[]{step, energy, energyChange});
             }
         }
         
@@ -162,7 +162,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
                 // no points exist, so must be all pairs
                 double sqSide = nomSz * Math.sqrt(n);
                 Rectangle2D pairRegion = new Rectangle2D.Double(-sqSide, -sqSide, 2*sqSide, 2*sqSide);
-                LinkedHashSet orderedLeafs = orderByAdjacency(leafs, og);
+                Set orderedLeafs = orderByAdjacency(leafs, og);
                 addPointsToBox(orderedLeafs, pairRegion, pos, nomSz, true);
             } else {
                 // add close to their neighboring point
@@ -202,15 +202,15 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
                 Rectangle2D pairRegion = new Rectangle2D.Double(
                         bounds.getMaxX() + .1*bounds.getWidth(), bounds.getCenterY()-ht/2,
                         wid, ht);
-                LinkedHashSet orderedPairs = orderByAdjacency(pairs, og);
+                Set orderedPairs = orderByAdjacency(pairs, og);
                 addPointsToBox(orderedPairs, pairRegion, pos, nomSz, true);
             }
         }
     }
 
-    private static LinkedHashSet orderByAdjacency(Set leafs, OptimizedGraph og) {
-        LinkedHashSet res = Sets.newLinkedHashSet();
-        for (Object o : leafs) {
+    private static <V> Set<V> orderByAdjacency(Set<V> leafs, OptimizedGraph<V> og) {
+        Set<V> res = Sets.newLinkedHashSet();
+        for (V o : leafs) {
             if (!res.contains(o)) {
                 res.add(o);
                 res.add(og.getNeighborOfLeaf(o));

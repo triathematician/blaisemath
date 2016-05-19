@@ -100,19 +100,4 @@ public final class GraphComponents<N> {
         return components.size();
     }
 
-
-    /**
-     * The component of a particular node.
-     * @param x a node
-     * @return the component of a node
-     */
-    public Set<N> getComponentOf(N x) {
-        for (Set<N> compt : components) {
-            if (compt.contains(x)) {
-                return compt;
-            }
-        }
-        return null;
-    }
-
 }

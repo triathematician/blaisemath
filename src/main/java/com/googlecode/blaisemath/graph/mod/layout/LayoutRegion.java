@@ -28,7 +28,6 @@ package com.googlecode.blaisemath.graph.mod.layout;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,14 +36,9 @@ import java.util.Set;
  * @author elisha
  */
 class LayoutRegion<C> {
-    private final Rectangle2D.Double bounds;
     private final Map<C,Point2D.Double> pts = Maps.newHashMap();
     private final Set<LayoutRegion<C>> adj = Sets.newLinkedHashSet();
     
-    LayoutRegion(Rectangle2D.Double bounds) { 
-        this.bounds = bounds; 
-    }
-
     //<editor-fold defaultstate="collapsed" desc="POINTS ACCESS">
     
     Set<C> points() {

@@ -44,6 +44,8 @@ import com.googlecode.blaisemath.linear.Matrices;
  * @author Elisha Peterson
  */
 public class EigenCentrality implements GraphNodeMetric<Double> {
+
+    private static final Logger LOG = Logger.getLogger(EigenCentrality.class.getName());
     
     @Override
     public String toString() {
@@ -83,7 +85,8 @@ public class EigenCentrality implements GraphNodeMetric<Double> {
         }
 
         // compute 256 and 257th power vecs
-        double[] vec0 = new double[n]; Arrays.fill(vec0, 1.0/n);
+        double[] vec0 = new double[n];
+        Arrays.fill(vec0, 1.0 / n);
         double[] vecf1 = Matrices.matrixProduct(dmx, vec0);
         double[] vecf2 = Matrices.matrixProduct(mx2, vecf1);
 
@@ -98,8 +101,7 @@ public class EigenCentrality implements GraphNodeMetric<Double> {
         for (int i = 0; i < n-1; i++) {
             if (!(vecf2[i]*vecf2[i]>0)) {
                 // should not happen
-                Logger.getLogger(EigenCentrality.class.getName()).log(Level.SEVERE, 
-                        "WARNING -- eigenvector has inconsistent signs");
+                LOG.log(Level.SEVERE, "WARNING -- eigenvector has inconsistent signs");
                 break;
             }
         }

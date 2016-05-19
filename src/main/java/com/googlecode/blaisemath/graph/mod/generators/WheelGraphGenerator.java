@@ -28,7 +28,7 @@ import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphGenerator;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Constructs wheel graph with n vertices.
@@ -54,7 +54,7 @@ public final class WheelGraphGenerator implements GraphGenerator<DefaultGenerato
         if (nodes == 0) {
             return GraphUtils.emptyGraph();
         }
-        ArrayList<Integer[]> edges = Lists.newArrayList();
+        List<Integer[]> edges = Lists.newArrayList();
         for (int i = 1; i < nodes; i++) {
             edges.add(new Integer[]{0, i});
         }

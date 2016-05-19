@@ -46,7 +46,8 @@ public final class EmptyGraphGenerator implements GraphGenerator<DefaultGenerato
 
     @Override
     public Graph<Integer> apply(DefaultGeneratorParameters parm) {
-        return DefaultGeneratorParameters.createGraphWithEdges(parm, Collections.EMPTY_SET);
+        return DefaultGeneratorParameters.createGraphWithEdges(parm, 
+                Collections.<Integer[]>emptySet());
     }
     
 }

@@ -46,7 +46,6 @@ public class CliqueCount implements GraphNodeMetric<Integer> {
     
     @Override
     public <V> Integer apply(Graph<V> graph, V node) { 
-        // TODO - this is inefficient
         return GraphUtils.copySubgraph(graph, graph.neighbors(node)).edgeCount();
     }
     

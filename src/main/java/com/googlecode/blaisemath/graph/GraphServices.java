@@ -42,6 +42,10 @@ public final class GraphServices {
     private static ServiceLoader<GraphGenerator> generators;
     private static ServiceLoader<IterativeGraphLayout> iterativeLayout;
     private static ServiceLoader<StaticGraphLayout> staticLayout;
+
+    /** Utility class cannot be instantiated */
+    private GraphServices() {
+    }
     
     /**
      * Locate, initialize, and return the list of registered {@link GraphGenerator}

@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
+import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
 import java.util.Arrays;
@@ -48,7 +49,9 @@ import java.util.Random;
  * @author Elisha Peterson
  */
 public final class DegreeDistributionGenerator implements GraphGenerator<DegreeDistributionParameters,Integer> {
-
+    
+    private static final Logger LOG = Logger.getLogger(DegreeDistributionGenerator.class.getName());
+    
     @Override
     public String toString() {
         return "Random Graph (fixed Degree Distribution)";
@@ -176,9 +179,8 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
                 }
             }
         }
-        if (vxLeft.size() > 0) {
-            Logger.getLogger(DegreeDistributionGenerator.class.getName()).log(Level.WARNING,
-                    "Unable to find edges for all vertices. Remaining list={0}", vxLeft);
+        if (!vxLeft.isEmpty()) {
+            LOG.log(Level.WARNING, "Unable to find edges for all vertices. Remaining list={0}", vxLeft);
         }
         return SparseGraph.createFromArrayEdges(false, ExtendedGeneratorParameters.intList(n), edges);
     }
@@ -206,8 +208,10 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
      * sequence)
      */
     private static int[] randomSubset(int n, int k, int omit) {
-        if (k < 0 || k > n || (k == n && omit >= 0 && omit <= n - 1)) {
-            throw new IllegalArgumentException("Cannot construct subset of size " + k + " from " + n + " values omitting " + omit);
+        checkElementIndex(k, n+1);
+        if (k == n && omit >= 0 && omit <= n - 1) {
+            throw new IllegalArgumentException("Cannot construct subset of size " 
+                    + k + " from " + n + " values omitting " + omit);
         }
         int[] result = new int[k];
         Set<Integer> left = new TreeSet<Integer>();

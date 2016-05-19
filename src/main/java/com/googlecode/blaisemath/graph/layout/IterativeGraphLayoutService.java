@@ -37,22 +37,22 @@ import java.util.logging.Logger;
  */
 class IterativeGraphLayoutService extends AbstractScheduledService {
 
-    //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
-    
     private static final Logger LOG = Logger.getLogger(IterativeGraphLayoutService.class.getName());
-    
     /** Default time between layout iterations. */
     private static final int DEFAULT_ITER_DELAY = 10;        
     
-    //</editor-fold>
-    
     /** Delay between loops */
-    private final int loopDelay = DEFAULT_ITER_DELAY;
-    
+    private final int loopDelay;
+    /** Manages the layout */
     private final IterativeGraphLayoutManager manager;
 
     IterativeGraphLayoutService(IterativeGraphLayoutManager mgr) {
+        this(mgr, DEFAULT_ITER_DELAY);
+    }
+    
+    IterativeGraphLayoutService(IterativeGraphLayoutManager mgr, int loopDelay) {
         this.manager = mgr;
+        this.loopDelay = loopDelay;
         addListener(new Listener() {
             @Override
             public void failed(Service.State from, Throwable failure) {

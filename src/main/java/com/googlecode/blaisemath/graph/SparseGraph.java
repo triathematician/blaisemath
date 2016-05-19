@@ -51,8 +51,6 @@ import javax.annotation.concurrent.Immutable;
  *
  * @param <V> the type of the nodes
  * 
- * TODO - add more defensive copying
- *
  * @author Elisha Peterson
  */
 @Immutable
@@ -202,10 +200,7 @@ public final class SparseGraph<V> extends GraphSupport<V> {
         if (edgeTable.contains(x, y) && !edgeTable.get(x, y).isEmpty()) {
             return true;
         }
-        if (directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty()) {
-            return true;
-        }
-        return false;
+        return directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty();
     }
     
 

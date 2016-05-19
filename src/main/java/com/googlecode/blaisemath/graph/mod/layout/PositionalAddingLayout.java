@@ -30,7 +30,6 @@ import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import java.awt.geom.Point2D;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Nullable;
 
 /**

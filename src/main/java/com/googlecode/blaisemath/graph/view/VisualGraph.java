@@ -74,7 +74,7 @@ public class VisualGraph<G> {
     /** Manages graph and node locations */
     private GraphLayoutManager layoutManager;
     /** Listens for changes from the layout */
-    public final PropertyChangeListener layoutListener;
+    protected final PropertyChangeListener layoutListener;
 
     /**
      * Construct adapter with the specified graph.

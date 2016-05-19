@@ -26,21 +26,14 @@ package com.googlecode.blaisemath.graph.mod.layout;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutConstraints;
-import java.util.logging.Logger;
 
 /** 
  * Parameters of the SpringLayout algorithm
  */
 public class SpringLayoutParameters {
     
-    //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
-    
-    private static final Logger LOG = Logger.getLogger(SpringLayoutParameters.class.getName());
-    
     /** Default distance scale */
     public static final int DEFAULT_DIST_SCALE = 50;
-    
-    //</editor-fold>
     
     /** Desired distance between nodes */
     double distScale = DEFAULT_DIST_SCALE;

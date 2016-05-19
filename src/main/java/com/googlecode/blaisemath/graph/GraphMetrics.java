@@ -135,7 +135,7 @@ public class GraphMetrics {
             Double result = 0.0;
             Number val = null;
             for (V v : vertices) {
-                val = (Number) baseMetric.apply(graph, v);
+                val = baseMetric.apply(graph, v);
                 result += val.doubleValue();
             }
             if (val instanceof Integer) {
@@ -167,7 +167,10 @@ public class GraphMetrics {
         @Override
         public <V> N getValue(Graph<V> graph, Set<V> nodes) {
             V starNode = null;
-            for (V v : nodes) { starNode = v; break; }
+            for (V v : nodes) {
+                starNode = v;
+                break;
+            }
             Graph<V> contracted = GraphUtils.contractedGraph(graph, nodes, starNode);
             return baseMetric.apply(contracted, starNode);
         }

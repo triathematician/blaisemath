@@ -80,7 +80,7 @@ public class GAInstrument {
      * @param info additional information
      */
     public static synchronized void middle(int id, String event, String... info) {
-        log(id, event);
+        log(id, event, info);
     }
 
     /**

@@ -366,13 +366,11 @@ public class GraphUtils {
         // stores size of remaining vertices
         int sRemaining = -1;
         
-        if (max == Integer.MAX_VALUE) {
-            max--;
-        }
+        int cmax = max == Integer.MAX_VALUE ? max-1 : max;
 
         remaining.remove(vertex);
         added.add(new HashSet<V>(Arrays.asList(vertex)));
-        while (sRemaining != remaining.size() && added.size() < max+1) {
+        while (sRemaining != remaining.size() && added.size() < cmax+1) {
             sRemaining = remaining.size();
             added.add(new HashSet<V>());
             for (V v1 : added.get(added.size() - 2)) {

@@ -98,10 +98,10 @@ public class ClosenessCentrality implements GraphNodeMetric<Double> {
     /**
      * Computes values for a connected portion of a graph
      */
-    private <V> void computeAllValuesConnected(Graph<V> graph, Map<V, Double> values) {
+    private static <V> void computeAllValuesConnected(Graph<V> graph, Map<V, Double> values) {
         Set<V> nodes = graph.nodes();
         int n = nodes.size();
-        double max = (n - 1.0);
+        double max = n - 1.0;
 
         for (V start : nodes) {
             Map<V, Integer> lengths = new HashMap<V, Integer>();

@@ -28,7 +28,6 @@ package com.googlecode.blaisemath.graph.mod.layout;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -95,7 +94,7 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
     /** Updates the alignment of points to region */
     void updateRegions(double regionSz) {
         if (regions == null) {
-            initRegions(regionSz);
+            initRegions();
         }
         for (LayoutRegion<C> r : allRegions) {
             r.clear();
@@ -121,14 +120,12 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
     }
     
     /** Initializes regions */
-    private void initRegions(double maxRepelDist) {
+    private void initRegions() {
         regions = new LayoutRegion[2 * REGION_N + 1][2 * REGION_N + 1];
         allRegions = Lists.newArrayList();
         for (int ix = -REGION_N; ix <= REGION_N; ix++) {
             for (int iy = -REGION_N; iy <= REGION_N; iy++) {
-                Rectangle2D.Double rect = new Rectangle2D.Double(ix * maxRepelDist,
-                        iy * maxRepelDist, maxRepelDist, maxRepelDist);
-                LayoutRegion region = new LayoutRegion(rect);
+                LayoutRegion region = new LayoutRegion();
                 regions[ix + REGION_N][iy + REGION_N] = region;
                 allRegions.add(region);
             }
@@ -144,7 +141,7 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
             }
         }
         // set up adjacencies with outer region
-        oRegion = new LayoutRegion<C>(null);
+        oRegion = new LayoutRegion<C>();
         allRegions.add(oRegion);
         oRegion.addAdjacentRegion(oRegion);
         for (int ix = -REGION_N; ix <= REGION_N; ix++) {

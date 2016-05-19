@@ -55,7 +55,7 @@ public abstract class GraphMetricSupport<T> implements GraphMetric<T> {
     }
 
     public boolean supportsGraph(boolean directed) {
-        return supportsDirected;
+        return !directed || supportsDirected;
     }
 
 }

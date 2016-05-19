@@ -34,6 +34,10 @@ import java.util.Arrays;
  */
 public class Matrices {
 
+    /** Utility class */
+    private Matrices() {
+    }
+    
     /**
      * Compute magnitude of vector
      * @param vec vector

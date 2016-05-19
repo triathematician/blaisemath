@@ -84,7 +84,7 @@ public class GraphComponent extends JGraphicComponent {
     };
 
     /** Manages the visual elements of the underlying graph */
-    protected final VisualGraph<Graphics2D> adapter;
+    protected final transient VisualGraph<Graphics2D> adapter;
 
     /**
      * Construct without a graph
@@ -238,7 +238,7 @@ public class GraphComponent extends JGraphicComponent {
      * @param init used to initialize the context menu
      */
     public void addContextMenuInitializer(String key, ContextMenuInitializer init) {
-        DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph();
+        DelegatingNodeLinkGraphic win = adapter.getViewGraph();
         if (MENU_KEY_GRAPH.equalsIgnoreCase(key)) {
             getGraphicRoot().addContextMenuInitializer(init);
         } else if (MENU_KEY_NODE.equalsIgnoreCase(key)) {
@@ -257,7 +257,7 @@ public class GraphComponent extends JGraphicComponent {
      * @param init used to initialize the context menu
      */
     public void removeContextMenuInitializer(String key, ContextMenuInitializer init) {
-        DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph();
+        DelegatingNodeLinkGraphic win = adapter.getViewGraph();
         if (MENU_KEY_GRAPH.equals(key)) {
             getGraphicRoot().removeContextMenuInitializer(init);
         } else if (MENU_KEY_NODE.equals(key)) {

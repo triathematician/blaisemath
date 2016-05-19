@@ -35,7 +35,6 @@ import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import java.awt.geom.Point2D;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * <p>
@@ -46,22 +45,15 @@ import java.util.logging.Logger;
  */
 public final class IterativeGraphLayoutManager {
     
-    //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
-
-    private static final Logger LOG = Logger.getLogger(IterativeGraphLayoutManager.class.getName());
-    
     /** Default # iterations per layout step */
     private static final int DEFAULT_ITER_PER_LOOP = 2;
-    
     /** Cooling curve. Determines the cooling parameter at each step, as a product of initial cooling parameter. */
     private static final Function<Integer,Double> COOLING_CURVE = new Function<Integer,Double>(){
         @Override
         public Double apply(Integer x) {
-            return .1 + .9/Math.log10(x+10);
+            return .1 + .9/Math.log10(x+10.0);
         }
     };
-    
-    //</editor-fold>
         
     /** The graph for layouts */
     private Graph graph;
@@ -81,7 +73,7 @@ public final class IterativeGraphLayoutManager {
     private int iteration = 0;
     
     /** # of iterations per loop */
-    private final int iterPerLoop = DEFAULT_ITER_PER_LOOP;
+    private int iterPerLoop = DEFAULT_ITER_PER_LOOP;
     
     //<editor-fold defaultstate="collapsed" desc="CONSTRUCTORS">
 
@@ -161,6 +153,14 @@ public final class IterativeGraphLayoutManager {
      */
     public int getIterationsPerLoop() {
         return iterPerLoop;
+    }
+
+    /**
+     * Set the # of algorithm iterations per update loop
+     * @param iter # of iterations
+     */
+    public void setIterationsPerLoop(int iter) {
+        this.iterPerLoop = iter;
     }
     
     //</editor-fold>
