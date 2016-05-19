@@ -28,7 +28,7 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  * Number of components in the graph.
  * @author elisha
  */
-public class GraphComponentCount extends GraphMetricSupport<Integer> {
+public class GraphComponentCount extends AbstractGraphMetric<Integer> {
 
     public GraphComponentCount() {
         super("Component count", "Number of connected components in the graph.", true);

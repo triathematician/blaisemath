@@ -29,7 +29,6 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Queues;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -46,19 +45,19 @@ import java.util.Deque;
  *
  * @author Elisha Peterson
  */
-public class BetweenCentrality implements GraphNodeMetric<Double> {
+public class BetweenCentrality extends AbstractGraphNodeMetric<Double> {
     
-    @Override
-    public String toString() {
-        return "Betweenness centrality";
+    public BetweenCentrality() {
+        super("Betweenness centrality");
     }
 
     @Override
     public <V> Double apply(Graph<V> graph, V node) {
-        return allValues(graph).get(node);
+        return apply(graph).get(node);
     }
 
-    public <V> Map<V,Double> allValues(Graph<V> graph) {
+    @Override
+    public <V> Map<V,Double> apply(Graph<V> graph) {
         int id = GAInstrument.start("BetweenCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
         Map<V, Double> between = new HashMap<V, Double>();
         for (V v : graph.nodes()) {

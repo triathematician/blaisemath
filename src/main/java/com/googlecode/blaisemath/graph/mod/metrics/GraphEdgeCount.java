@@ -27,7 +27,7 @@ import com.googlecode.blaisemath.graph.Graph;
  * Global metric describing the # edges in a graph
  * @author elisha
  */
-public class GraphEdgeCount extends GraphMetricSupport<Integer> {
+public class GraphEdgeCount extends AbstractGraphMetric<Integer> {
 
     public GraphEdgeCount() {
         super("Edge count", "Number of edges in the graph.", true);

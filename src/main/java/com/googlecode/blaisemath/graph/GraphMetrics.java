@@ -30,6 +30,8 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,6 +77,40 @@ public class GraphMetrics {
      */
     public static <N,T> Map<N,T> computeValues(Graph<N> graph, GraphNodeMetric<T> metric) {
         return Maps.asMap(graph.nodes(), asFunction(graph, metric));
+    }
+
+    /**
+     * Applies a metric that operates on connected graphs only to graphs with multiple
+     * components, by weighting the result based on the component size.
+     * @param <V> graph vertex type
+     * @param graph graph
+     * @param connectedGraphMetric a function that computes values for connected graphs
+     * @return result
+     */
+    public static <V> Map<V, Double> applyToComponents(Graph<V> graph, Function<Graph<V>, Map<V, Double>> connectedGraphMetric) {
+        if (graph.nodeCount() == 0) {
+            return Collections.emptyMap();
+        } else if (graph.nodeCount() == 1) {
+            return Collections.singletonMap((V) graph.nodes().toArray()[0], 0.0);
+        }
+
+        int n = graph.nodeCount();
+        Set<Graph<V>> components = GraphUtils.componentGraphs(graph);
+        Map<V, Double> values = new HashMap<V, Double>();
+        for (Graph<V> compt : components) {
+            if (compt.nodeCount() == 1) {
+                values.put(compt.nodes().iterator().next(), 0.0);
+            } else {
+                values.putAll(connectedGraphMetric.apply(compt));
+            }
+        }
+        for (Graph<V> compt : components) {
+            double multiplier = compt.nodeCount() / (double) n;
+            for (V v : compt.nodes()) {
+                values.put(v, multiplier * values.get(v));
+            }
+        }
+        return values;
     }
 
     /**

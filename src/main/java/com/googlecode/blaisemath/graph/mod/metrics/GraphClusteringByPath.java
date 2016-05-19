@@ -30,7 +30,7 @@ import com.googlecode.blaisemath.graph.Graph;
  *
  * @author elisha
  */
-public class GraphClusteringByPath extends GraphMetricSupport<Double> {
+public class GraphClusteringByPath extends AbstractGraphMetric<Double> {
 
     public GraphClusteringByPath() {
         super("Clustering coefficient (by path)", "Computes the clustering coefficient:"

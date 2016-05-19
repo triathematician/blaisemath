@@ -63,15 +63,15 @@ public class BetweenCentralityTest {
     }
 
     @Test
-    public void testValue() {
+    public void testApply() {
         System.out.println("value");
         assertEquals(9.0, INST1.apply(TEST2, 4), 1e-10);
     }
 
     @Test
-    public void testAllValues() {
-        System.out.println("allValues");
-        Map<Integer,Double> vals = INST1.allValues(TEST2);
+    public void testApply_All() {
+        System.out.println("testApply_All");
+        Map<Integer,Double> vals = INST1.apply(TEST2);
         assertEquals(1.0, vals.get(1), 1e-6);
         assertEquals(1.5, vals.get(2), 1e-6);
         assertEquals(6.5, vals.get(3), 1e-6);

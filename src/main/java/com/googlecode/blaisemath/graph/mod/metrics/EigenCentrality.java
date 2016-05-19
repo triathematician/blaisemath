@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,21 +42,21 @@ import com.googlecode.blaisemath.linear.Matrices;
  *
  * @author Elisha Peterson
  */
-public class EigenCentrality implements GraphNodeMetric<Double> {
+public class EigenCentrality extends AbstractGraphNodeMetric<Double> {
 
     private static final Logger LOG = Logger.getLogger(EigenCentrality.class.getName());
     
-    @Override
-    public String toString() {
-        return "Eigenvalue centrality (estimated)";
+    public EigenCentrality() {
+        super("Eigenvalue centrality (estimated)");
     }
 
     @Override
     public <V> Double apply(Graph<V> graph, V node) {
-        return allValues(graph).get(node);
+        return apply(graph).get(node);
     }
 
-    public <V> Map<V,Double> allValues(Graph<V> graph) {
+    @Override
+    public <V> Map<V,Double> apply(Graph<V> graph) {
         int id = GAInstrument.start("EigenCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
 
         // computes eigenvalue centrality via repeated powers of the adjacency matrix

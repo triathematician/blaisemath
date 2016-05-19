@@ -63,15 +63,15 @@ public class GraphCentralityTest {
     }
 
     @Test
-    public void testValue() {
+    public void testApply() {
         System.out.println("value");
         assertEquals(1.0/2, INST1.apply(TEST2, 4), 1e-10);
     }
 
     @Test
-    public void testAllValues() {
+    public void testApply_All() {
         System.out.println("allValues");
-        Map<Integer,Double> vals = INST1.allValues(TEST2);
+        Map<Integer,Double> vals = INST1.apply(TEST2);
         assertEquals(7, vals.size());
         for (int i = 0; i < 7; i++) {
             assertEquals(INST1.apply(TEST2, i+1), vals.get(i+1), 1e-10);

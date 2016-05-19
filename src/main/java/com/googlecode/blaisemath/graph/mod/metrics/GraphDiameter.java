@@ -35,7 +35,7 @@ import java.util.Map;
  *
  * @author elisha
  */
-public class GraphDiameter extends GraphMetricSupport<Integer> {
+public class GraphDiameter extends AbstractGraphMetric<Integer> {
 
     public GraphDiameter() {
         super("Graph diameter", "Diameter of the graph (longest path between two vertices).", true);

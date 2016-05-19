@@ -24,16 +24,18 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
+import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import com.googlecode.blaisemath.util.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.ArrayDeque;
 
@@ -64,47 +66,29 @@ public class GraphCentrality implements GraphNodeMetric<Double> {
         return cptSize / (n * (double) max);
     }
 
-    public <V> Map<V,Double> allValues(Graph<V> graph) {
-        int id = GAInstrument.start("ClosenessCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
-        
-        if (graph.nodeCount() == 0) {
-            return Collections.emptyMap();
-        } else if (graph.nodeCount() == 1) {
-            return Collections.singletonMap((V) graph.nodes().toArray()[0], 0.0);
-        }
-
-        int n = graph.nodeCount();
-        Set<Graph<V>> components = GraphUtils.componentGraphs(graph);
-        Map<V, Double> values = new HashMap<V, Double>();
-        for (Graph<V> cg : components) {
-            if (cg.nodeCount() == 1) {
-                values.put(cg.nodes().iterator().next(), 0.0);
-            } else {
-                computeAllValuesConnected(cg, values);
-            }
-        }
-        for (Graph<V> cg : components) {
-            double multiplier = cg.nodeCount() / (double) n;
-            for (V v : cg.nodes()) {
-                values.put(v, multiplier * values.get(v));
-            }
-        }
+    @Override
+    public <V> Map<V,Double> apply(Graph<V> graph) {
+        int id = GAInstrument.start("GraphCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
+        Map<V,Double> res = GraphMetrics.applyToComponents(graph, new ApplyConnected<V>());
         GAInstrument.end(id);
-        return values;
+        return res;
     }
 
-    /**
-     * Computes values for a connected portion of a graph
-     */
-    private <V> void computeAllValuesConnected(Graph<V> graph, Map<V, Double> values) {
-        Set<V> nodes = graph.nodes();
+    /** Computes values for a connected portion of a graph */
+    private static class ApplyConnected<V> implements Function<Graph<V>, Map<V, Double>> {
+        @Override
+        public Map<V,Double> apply(Graph<V> graph) {
+            Map<V, Double> res = Maps.newHashMap();
+            Set<V> nodes = graph.nodes();
 
-        for (V start : nodes) {
-            Map<V, Integer> lengths = new HashMap<V, Integer>();
-            GraphUtils.breadthFirstSearch(graph, start, HashMultiset.<V>create(), lengths, 
-                    new ArrayDeque<V>(), HashMultimap.<V,V>create());
-            double max = Ordering.natural().max(lengths.values());
-            values.put(start, 1.0 / max);
+            for (V start : nodes) {
+                Map<V, Integer> lengths = new HashMap<V, Integer>();
+                GraphUtils.breadthFirstSearch(graph, start, HashMultiset.<V>create(), lengths, 
+                        new ArrayDeque<V>(), HashMultimap.<V,V>create());
+                double max = Ordering.natural().max(lengths.values());
+                res.put(start, 1.0 / max);
+            }
+            return res;
         }
     }
 }

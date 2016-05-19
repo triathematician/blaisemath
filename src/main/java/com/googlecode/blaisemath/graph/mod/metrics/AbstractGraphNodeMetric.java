@@ -1,8 +1,12 @@
+/**
+ * AbstractGraphNodeMetric.java
+ * Created May 19, 2016
+ */
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
  * #%L
- * BlaiseGraphTheory
+ * blaise-graphtheory3
  * --
  * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
@@ -21,41 +25,35 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 
-import com.googlecode.blaisemath.graph.GraphMetric;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphMetrics;
+import com.googlecode.blaisemath.graph.GraphNodeMetric;
+import java.util.Map;
 
 /**
- * Partial implementation of global metric.
- *
- * @param <T> computed value type
+ * Gives a name to the metric and provides a default implementation for mapping
+ * all values.
+ * 
+ * @param <T> metric result type
+ * 
  * @author elisha
  */
-public abstract class GraphMetricSupport<T> implements GraphMetric<T> {
+public abstract class AbstractGraphNodeMetric<T> implements GraphNodeMetric<T> {
+   
+    protected final String name;
 
-    private final String name;
-    private final String description;
-    private final boolean supportsDirected;
-
-    public GraphMetricSupport(String name, String description, boolean supportsDirected) {
+    public AbstractGraphNodeMetric(String name) {
         this.name = name;
-        this.description = description;
-        this.supportsDirected = supportsDirected;
     }
-
+    
     @Override
     public String toString() {
         return name;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public <N> Map<N, T> apply(Graph<N> graph) {
+        return GraphMetrics.computeValues(graph, this);
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public boolean supportsGraph(boolean directed) {
-        return !directed || supportsDirected;
-    }
-
+    
 }

@@ -27,7 +27,7 @@ import com.googlecode.blaisemath.graph.Graph;
  * Global metric describing the density of the graph (# edges divided by #
  * @author elisha
  */
-public class GraphDensity extends GraphMetricSupport<Double> {
+public class GraphDensity extends AbstractGraphMetric<Double> {
 
     public GraphDensity() {
         super("Link density", "Number of edges in the graph divided by the total number possible.", true);

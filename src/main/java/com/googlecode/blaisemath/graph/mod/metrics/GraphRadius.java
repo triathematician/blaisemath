@@ -35,7 +35,7 @@ import java.util.Map;
  *
  * @author elisha
  */
-public class GraphRadius extends GraphMetricSupport<Integer> {
+public class GraphRadius extends AbstractGraphMetric<Integer> {
 
     public GraphRadius() {
         super("Graph radius", "Radius of the graph (minimum number r such that all vertices are within r links of a particular vertex).", true);

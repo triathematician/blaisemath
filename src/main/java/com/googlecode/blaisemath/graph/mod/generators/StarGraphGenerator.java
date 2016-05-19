@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.graph.mod.generators;
  */
 
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphGenerator;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.AbstractList;
 
@@ -33,16 +32,10 @@ import java.util.AbstractList;
  * Constructs star graph with n vertices; all vertices are connected to a central hub.
  * @author Elisha Peterson
  */
-public final class StarGraphGenerator implements GraphGenerator<DefaultGeneratorParameters,Integer> {
+public final class StarGraphGenerator extends AbstractDefaultGraphGenerator {
 
-    @Override
-    public String toString() {
-        return "Star Graph";
-    }
-
-    @Override
-    public DefaultGeneratorParameters createParameters() {
-        return new DefaultGeneratorParameters();
+    public StarGraphGenerator() {
+        super("Star Graph");
     }
 
     @Override

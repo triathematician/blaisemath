@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 import static com.google.common.base.Preconditions.checkArgument;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.Map;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
@@ -42,7 +41,7 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  *
  * @author Elisha Peterson
  */
-public class DecayCentrality implements GraphNodeMetric<Double> {
+public class DecayCentrality extends AbstractGraphNodeMetric<Double> {
 
     /** Decay parameter */
     protected double parameter = 0.5;
@@ -58,15 +57,17 @@ public class DecayCentrality implements GraphNodeMetric<Double> {
      * @throws IllegalArgumentException if value is outside of the range [0,1]
      */
     public DecayCentrality(double parameter) {
+        super("Decay centrality");
         setParameter(parameter);
     }
 
     @Override
     public String toString() {
-        return "Decay centrality (" + parameter + ")";
+        return "DecayCentrality (" + parameter + ")";
     }
 
     /**
+     * Get decay parameter
      * @return value of decay parameter
      */
     public double getParameter() {
@@ -74,11 +75,12 @@ public class DecayCentrality implements GraphNodeMetric<Double> {
     }
 
     /**
-     * Set new parameter.
+     * Set new decay parameter.
      * @param newValue new value of decay parameter
      */
     public final void setParameter(double newValue) {
-        checkArgument(newValue >= 0 && newValue <= 1, "Parameter for DecayCentrality must be between 0 and 1: " + newValue);
+        checkArgument(newValue >= 0 && newValue <= 1, 
+                "Parameter for DecayCentrality must be between 0 and 1: " + newValue);
         parameter = newValue;
     }
 
@@ -91,4 +93,5 @@ public class DecayCentrality implements GraphNodeMetric<Double> {
         }
         return total;
     }
+    
 }

@@ -1,12 +1,12 @@
 /**
- * EmptyGraphSupplier.java
- * Created 2012
+ * AbstractDefaultGraphGenerator.java
+ * Created May 19, 2016
  */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
  * #%L
- * BlaiseGraphTheory
+ * blaise-graphtheory3
  * --
  * Copyright (C) 2009 - 2016 Elisha Peterson
  * --
@@ -24,23 +24,30 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
-import java.util.Collections;
 
-/** 
- * Constructs graph with n vertices.
- * @author Elisha Peterson
+import com.googlecode.blaisemath.graph.GraphGenerator;
+
+/**
+ * Graph generator that uses {@link DefaultGeneratorParameters}.
+ * 
+ * @author elisha
  */
-public final class EmptyGraphGenerator extends AbstractDefaultGraphGenerator {
+public abstract class AbstractDefaultGraphGenerator implements GraphGenerator<DefaultGeneratorParameters,Integer> {
+
+    protected final String name;
+
+    public AbstractDefaultGraphGenerator(String name) {
+        this.name = name;
+    }
     
-    public EmptyGraphGenerator() {
-        super("Empty Graph");
+    @Override
+    public String toString() {
+        return name;
     }
 
     @Override
-    public Graph<Integer> apply(DefaultGeneratorParameters parm) {
-        return DefaultGeneratorParameters.createGraphWithEdges(parm, 
-                Collections.<Integer[]>emptySet());
+    public DefaultGeneratorParameters createParameters() {
+        return new DefaultGeneratorParameters();
     }
     
 }

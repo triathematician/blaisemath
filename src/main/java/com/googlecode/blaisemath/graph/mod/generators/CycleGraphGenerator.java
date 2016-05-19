@@ -25,23 +25,16 @@ package com.googlecode.blaisemath.graph.mod.generators;
  */
 
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphGenerator;
 import java.util.AbstractList;
 
 /** 
  * Constructs cycle graph with n vertices 
  * @author Elisha Peterson
  */
-public final class CycleGraphGenerator implements GraphGenerator<DefaultGeneratorParameters,Integer> {
-
-    @Override
-    public String toString() {
-        return "Cycle Graph";
-    }
-
-    @Override
-    public DefaultGeneratorParameters createParameters() {
-        return new DefaultGeneratorParameters();
+public final class CycleGraphGenerator extends AbstractDefaultGraphGenerator {
+    
+    public CycleGraphGenerator() {
+        super("Cycle Graph");
     }
     
     @Override

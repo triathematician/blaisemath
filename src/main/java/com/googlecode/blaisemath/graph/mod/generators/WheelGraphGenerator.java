@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.graph.mod.generators;
 
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphGenerator;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.List;
 
@@ -36,16 +35,10 @@ import java.util.List;
  * vertices connected in a cyclic fashion.
  * @author Elisha Peterson
  */
-public final class WheelGraphGenerator implements GraphGenerator<DefaultGeneratorParameters,Integer> {
+public final class WheelGraphGenerator extends AbstractDefaultGraphGenerator {
 
-    @Override
-    public String toString() {
-        return "Wheel Graph";
-    }
-
-    @Override
-    public DefaultGeneratorParameters createParameters() {
-        return new DefaultGeneratorParameters();
+    public WheelGraphGenerator() {
+        super("Wheel Graph");
     }
 
     @Override

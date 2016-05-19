@@ -5,6 +5,8 @@
 
 package com.googlecode.blaisemath.graph;
 
+import java.util.Map;
+
 /*
  * #%L
  * BlaiseGraphTheory
@@ -44,5 +46,16 @@ public interface GraphNodeMetric<T> {
      *      metric only applies to undirected graphs)
      */
     <N> T apply(Graph<N> graph, N node);
+
+    /**
+     * Computes the value of the metric for the given graph and all nodes in the graph.
+     * @param <N> graph vertex type
+     * @param graph the graph
+     * @return value of the metric for each node
+     * @throws IllegalArgumentException if the value cannot be computed for
+     *      specified graph (e.g. graph is null, or graph is directed, but the
+     *      metric only applies to undirected graphs)
+     */
+    <N> Map<N,T> apply(Graph<N> graph);
 
 }

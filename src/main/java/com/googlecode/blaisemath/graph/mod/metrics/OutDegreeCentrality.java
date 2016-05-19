@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.Graph;
 
 
@@ -33,11 +32,10 @@ import com.googlecode.blaisemath.graph.Graph;
  * 
  * @author elisha
  */
-public class OutDegreeCentrality implements GraphNodeMetric<Integer> {
+public class OutDegreeCentrality extends AbstractGraphNodeMetric<Integer> {
     
-    @Override
-    public String toString() {
-        return "Out-degree";
+    public OutDegreeCentrality() {
+        super("Out-degree");
     }
 
     @Override

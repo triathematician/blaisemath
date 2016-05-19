@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.graph.mod.generators;
  */
 
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +32,10 @@ import java.util.List;
  * Constructs complete graph with n vertices.
  * @author Elisha Peterson
  */
-public final class CompleteGraphGenerator implements GraphGenerator<DefaultGeneratorParameters,Integer> {
-
-    @Override
-    public String toString() {
-        return "Complete Graph";
-    }
-
-    @Override
-    public DefaultGeneratorParameters createParameters() {
-        return new DefaultGeneratorParameters();
+public final class CompleteGraphGenerator extends AbstractDefaultGraphGenerator {
+    
+    public CompleteGraphGenerator() {
+        super("Complete Graph");
     }
 
     @Override

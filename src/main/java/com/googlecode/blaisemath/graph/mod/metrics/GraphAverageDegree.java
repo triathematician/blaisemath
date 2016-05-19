@@ -27,7 +27,7 @@ import com.googlecode.blaisemath.graph.Graph;
  * Global metric describing the average degree of the graph.
  * @author elisha
  */
-public class GraphAverageDegree extends GraphMetricSupport<Double> {
+public class GraphAverageDegree extends AbstractGraphMetric<Double> {
 
     public GraphAverageDegree() {
         super("Average degree", "Average degree of vertices in the graph. Uses average indegree or outdegree for a directed graph.", true);

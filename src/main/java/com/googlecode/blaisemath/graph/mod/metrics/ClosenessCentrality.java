@@ -24,15 +24,16 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
+import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
-import java.util.Collections;
+import com.google.common.collect.Maps;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import com.googlecode.blaisemath.util.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.ArrayDeque;
 
@@ -45,11 +46,10 @@ import java.util.ArrayDeque;
  *
  * @author elisha
  */
-public class ClosenessCentrality implements GraphNodeMetric<Double> {
+public class ClosenessCentrality extends AbstractGraphNodeMetric<Double> {
     
-    @Override
-    public String toString() {
-        return "Closeness centrality";
+    public ClosenessCentrality() {
+        super("Closeness centrality");
     }
 
     @Override
@@ -66,52 +66,34 @@ public class ClosenessCentrality implements GraphNodeMetric<Double> {
         return cptSize / n * (n - 1.0) / sum;
     }
 
-    public <V> Map<V,Double> allValues(Graph<V> graph) {
+    @Override
+    public <V> Map<V,Double> apply(Graph<V> graph) {
         int id = GAInstrument.start("ClosenessCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
-        
-        if (graph.nodeCount() == 0) {
-            return Collections.emptyMap();
-        } else if (graph.nodeCount() == 1) {
-            return Collections.singletonMap((V) graph.nodes().toArray()[0], 0.0);
-        }
-
-        int n = graph.nodeCount();
-        Set<Graph<V>> components = GraphUtils.componentGraphs(graph);
-        Map<V, Double> values = new HashMap<V, Double>();
-        for (Graph<V> cg : components) {
-            if (cg.nodeCount() == 1) {
-                values.put(cg.nodes().iterator().next(), 0.0);
-            } else {
-                computeAllValuesConnected(cg, values);
-            }
-        }
-        for (Graph<V> cg : components) {
-            double multiplier = cg.nodeCount() / (double) n;
-            for (V v : cg.nodes()) {
-                values.put(v, multiplier * values.get(v));
-            }
-        }
+        Map<V,Double> res = GraphMetrics.applyToComponents(graph, new ApplyConnected<V>());
         GAInstrument.end(id);
-        return values;
+        return res;
     }
 
-    /**
-     * Computes values for a connected portion of a graph
-     */
-    private static <V> void computeAllValuesConnected(Graph<V> graph, Map<V, Double> values) {
-        Set<V> nodes = graph.nodes();
-        int n = nodes.size();
-        double max = n - 1.0;
+    /** Computes values for a connected portion of a graph */
+    private static class ApplyConnected<V> implements Function<Graph<V>, Map<V, Double>> {
+        @Override
+        public Map<V,Double> apply(Graph<V> graph) {
+            Map<V, Double> res = Maps.newHashMap();
+            Set<V> nodes = graph.nodes();
+            int n = nodes.size();
+            double max = n - 1.0;
 
-        for (V start : nodes) {
-            Map<V, Integer> lengths = new HashMap<V, Integer>();
-            GraphUtils.breadthFirstSearch(graph, start, HashMultiset.<V>create(), 
-                    lengths, new ArrayDeque<V>(), HashMultimap.<V,V>create());
-            double sum1 = 0.0;
-            for (Integer j : lengths.values()) {
-                sum1 += j;
+            for (V start : nodes) {
+                Map<V, Integer> lengths = new HashMap<V, Integer>();
+                GraphUtils.breadthFirstSearch(graph, start, HashMultiset.<V>create(), 
+                        lengths, new ArrayDeque<V>(), HashMultimap.<V,V>create());
+                double sum1 = 0.0;
+                for (Integer j : lengths.values()) {
+                    sum1 += j;
+                }
+                res.put(start, max / sum1);
             }
-            values.put(start, max / sum1);
+            return res;
         }
     }
 }

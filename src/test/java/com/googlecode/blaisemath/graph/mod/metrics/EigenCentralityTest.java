@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.mod.metrics.EigenCentrality;
 import java.util.Arrays;
 import java.util.Map;
 import com.googlecode.blaisemath.graph.Graph;
@@ -64,17 +63,17 @@ public class EigenCentralityTest {
     }
 
     @Test
-    public void testValue() {
-        System.out.println("value");
+    public void testApply() {
+        System.out.println("testApply");
         assertEquals(.475349771, INST.apply(TEST2, 1), 1e-8);
         assertEquals(.564129165, INST.apply(TEST2, 3), 1e-8);
         assertEquals(.296008301, INST.apply(TEST2, 4), 1e-8);
     }
     
     @Test
-    public void testAllValues() {
-        System.out.println("allValues");
-        Map<Integer,Double> vals = INST.allValues(TEST2);
+    public void testApply_All() {
+        System.out.println("testApply_All");
+        Map<Integer,Double> vals = INST.apply(TEST2);
         assertEquals(6, vals.size());
         for (int i = 0; i < 6; i++)
             assertEquals(INST.apply(TEST2, i+1), vals.get(i+1));

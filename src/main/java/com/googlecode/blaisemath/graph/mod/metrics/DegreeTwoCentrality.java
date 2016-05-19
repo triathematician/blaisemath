@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 
@@ -35,11 +34,10 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  * 
  * @author elisha
  */
-public class DegreeTwoCentrality implements GraphNodeMetric<Integer> {
+public class DegreeTwoCentrality extends AbstractGraphNodeMetric<Integer> {
     
-    @Override
-    public String toString() {
-        return "Neighborhood size (radius 2)";
+    public DegreeTwoCentrality() {
+        super("Neighborhood size (radius 2)");
     }
     
     @Override

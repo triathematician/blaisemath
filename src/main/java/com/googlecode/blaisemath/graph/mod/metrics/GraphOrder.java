@@ -27,7 +27,7 @@ import com.googlecode.blaisemath.graph.Graph;
  * Global metric describing the order of the graph.
  * @author elisha
  */
-public class GraphOrder extends GraphMetricSupport<Integer> {
+public class GraphOrder extends AbstractGraphMetric<Integer> {
 
     public GraphOrder() {
         super("Node count", "Number of vertices in the graph.", true);

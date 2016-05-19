@@ -32,7 +32,7 @@ import java.util.Set;
  *
  * @author elisha
  */
-public class GraphClustering extends GraphMetricSupport<Double> {
+public class GraphClustering extends AbstractGraphMetric<Double> {
 
     public GraphClustering() {
         super("Clustering coefficient", "Computes the clustering coefficient:"

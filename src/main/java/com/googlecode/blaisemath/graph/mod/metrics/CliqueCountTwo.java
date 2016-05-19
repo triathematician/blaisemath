@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.Set;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
@@ -38,11 +37,10 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  * 
  * @author elisha
  */
-public class CliqueCountTwo implements GraphNodeMetric<Integer> {
-    
-    @Override
-    public String toString() {
-        return "Clique count (radius 2)";
+public class CliqueCountTwo extends AbstractGraphNodeMetric<Integer> {
+
+    public CliqueCountTwo() {
+        super("Clique count (radius 2)");
     }
     
     @Override
