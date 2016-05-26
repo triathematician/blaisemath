@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-app</artifactId>
-    <version>0.1.2-beta-SNAPSHOT</version>
+    <version>0.2.0-beta-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>blaise-app</name>
@@ -79,12 +79,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>[1.16,2.0)</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>com.googlecode.blaisemath</groupId>
             <artifactId>firestarter</artifactId>
             <version>[1.3.0,1.4.0)</version>
@@ -100,6 +94,18 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>[2.5.0,3.0.0)</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>[2.5.0,3.0.0)</version>
             <type>jar</type>
         </dependency>
     </dependencies>

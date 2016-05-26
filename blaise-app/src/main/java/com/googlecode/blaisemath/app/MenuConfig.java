@@ -25,37 +25,100 @@ package com.googlecode.blaisemath.app;
  */
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import com.google.common.base.Strings;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.ActionMap;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.ApplicationContext;
-import org.yaml.snakeyaml.Yaml;
 
 /**
- * Utility for reading a .yaml configuration file and generating menus and toolbars.
+ * <p>
+ *   Provides utility methods for loading menus and toolbars from configuration
+ *   files, merging them with action maps for functionality.
+ * </p>
+ * <p>
+ *   The menu configuration files include one or more nested menus/toolbars.
+ *   Menu content is a list of content items, where a content item may be either:
+ * </p>
+ * <ul>
+ *   <li>An empty value corresponding to a separator</li>
+ *   <li>A string corresponding to an action</li>
+ *   <li>A customized action, encoded as a key-value pair where the key is the
+ *     action and the value is a map of key-value pairs configuring the action's
+ *     appearance (e.g. regular menu item vs. checkbox menu item)</li>
+ *   <li>A submenu, encoded as a key-value pair where the key is the submenu name
+ *     and the value is a list of content items</li>
+ *   <li>A customized submenu, encoded as a key-value pair where the key is
+ *     an action and the value is a map including a {@code name} key for the
+ *     sub-menus display name and an {@code options} key referencing a static
+ *     method that returns a list of options to use for the menu.</li>
+ * </ul>
+ * <p>
+ *   Toolbars may not have embedded sub-menus.
+ * </p>
+ * <p>
+ *   Here is an example:
+ * </p>
+ * <pre>{@code# YAML menu config
+ * ---
+ * MENUBAR:
+ *   File:
+ *     - load
+ *     - save
+ *     -
+ *     - quit
+ *   Edit:
+ *     - Edit Something: {
+ *       action: editThis,
+ *       options: org.yours.package.Utils#editThisOptions
+ *     }
+ *     - SubMenu 2:
+ *        - subOption1
+ *        - subOption2
+ *     -
+ *     - toggle: { type: CHECKBOX }
+ * TOOLBAR:
+ *   - load
+ *   - save
+ *   -
+ *   - toggle: { type: TOGGLE }
+ *   -
+ *   - toolbar1
+ *   - toolbar2
+ * Other Menu:
+ *   - action1
+ *   - action2
+ * }</pre>
+ * <p>
+ *   The following configuration options for actions are supported:
+ * </p>
+ * <ul>
+ *   <li>{@code type: CHECKBOX} to display the action with a checkbox in the menu or toolbar</li>
+ *   <li>{@code type: TOGGLE} to display the action with a toggle button in the toolbar</li>
+ * </ul>
  * 
  * @author elisha
  * @version 2.0
@@ -65,73 +128,28 @@ public class MenuConfig {
     private static final Logger LOG = Logger.getLogger(MenuConfig.class.getName());
 
     public static final String MENU_SUFFIX = "_menu";
-    public static final String DEFAULT_TOOLBAR_KEY = "Toolbar";
-    public static final String DEFAULT_MENUBAR_KEY = "Menubar";
-    
-    /** String key used in configurable menus for the action being referenced. */
-    public static final String ACTION_KEY = "action";
-    /** String key used in configurable menus pointing to the method being referenced for a list of items. */
-    public static final String OPTIONS_KEY = "options";
-    
-    private static final String INVALID_METHOD_ERROR = "Invalid method used for configurable options menu";
+    public static final String DEFAULT_TOOLBAR_KEY = "TOOLBAR";
+    public static final String DEFAULT_MENUBAR_KEY = "MENUBAR";
     
     // utility class
     private MenuConfig() {
     }
-
-    /**
-     * Create context menu initializer from file
-     * @param key config key
-     * @param appClass application type
-     * @param actionParents potential parents for actions
-     * @return toolbar
-     * @throws IOException if there's an error reading from the config file 
-     */
-    public static PresetMenuInitializer readMenuInitializer(String key, Class<? extends Application> appClass, Object... actionParents) throws IOException {
-        ApplicationContext appContext = Application.getInstance(appClass).getContext();
-        Map<String,javax.swing.Action> actionMap = actionMap(appContext, actionParents);
-        Object config = MenuConfig.readConfig(appClass).get(key);
-        return new PresetMenuInitializer(readMenu(config, actionMap));
-    }
+    
+    //<editor-fold defaultstate="collapsed" desc="READING FROM CONFIGURATION FILE">
     
     /**
-     * Create toolbar component from file
-     * @param appClass application type
-     * @param actionParents potential parents for actions
-     * @return toolbar
-     * @throws IOException if there's an error reading from the config file 
+     * Gets the menubar configuration from file.
+     * @param cls class with associated resource
+     * @param key key for menubar component in config file
+     * @return menus to comprise menubar, where values are lists with either strings or nested menus
+     * @throws IOException if there's an error reading from the config file
      */
-    public static JToolBar readToolBar(Class<? extends Application> appClass, Object... actionParents) throws IOException {
-        ApplicationContext appContext = Application.getInstance(appClass).getContext();
-        Map<String,javax.swing.Action> actionMap = actionMap(appContext, actionParents);
-        List<String> config = readToolBarConfig(appClass, DEFAULT_TOOLBAR_KEY);
-        JToolBar res = new JToolBar();
-        for (String k : config) {
-            if (Strings.isNullOrEmpty(k)) {
-                res.addSeparator();
-            } else {
-                res.add(actionMap.get(k));
-            }
-        }
-        return res;
-    }
-    
-    /**
-     * Create menubar from file
-     * @param appClass application type
-     * @param actionParents potential parents for actions
-     * @return menu bar
-     * @throws IOException if there's an error reading from the config file 
-     */
-    public static JMenuBar readMenuBar(Class<? extends Application> appClass, Object... actionParents) throws IOException {
-        ApplicationContext appContext = Application.getInstance(appClass).getContext();
-        Map<String,javax.swing.Action> actionMap = actionMap(appContext, actionParents);
-        Map<String, ?> config = readMenuBarConfig(appClass, DEFAULT_MENUBAR_KEY);
-        JMenuBar res = new JMenuBar();
-        for (Entry<String, ?> en : config.entrySet()) {
-            res.add(readMenu(en, actionMap));
-        }
-        return res;
+    public static List<Map> readMenuBarConfig(Class cls, String key) throws IOException {
+        Object res = readConfig(cls).get(key);
+        checkState(res instanceof List, "Expected menubar to be a list of maps but was "+res);
+        checkState(Iterables.all((List) res, Predicates.instanceOf(Map.class)),
+            "Expected list elements of menubar to be maps");
+        return (List<Map>) res;
     }
     
     /**
@@ -143,21 +161,21 @@ public class MenuConfig {
      */
     public static List<String> readToolBarConfig(Class cls, String key) throws IOException {
         Object res = readConfig(cls).get(key);
-        checkState(res instanceof List);
+        checkState(res instanceof List, "Expected toolbar to be a list of strings");
         return (List<String>) res;
     }
     
     /**
-     * Gets the menubar configuration from file.
+     * Gets the menu configuration from file.
      * @param cls class with associated resource
-     * @param key key for menubar component in config file
-     * @return menus to comprise menubar, where values are lists with either strings or nested menus
+     * @param key key for menu component in config file
+     * @return list of actions for the toolbar
      * @throws IOException if there's an error reading from the config file
      */
-    public static Map<String, List> readMenuBarConfig(Class cls, String key) throws IOException {
+    public static List readMenuConfig(Class cls, String key) throws IOException {
         Object res = readConfig(cls).get(key);
-        checkState(res instanceof Map);
-        return (Map<String, List>) res;
+        checkState(res instanceof List, "Expected menu to be a list");
+        return (List) res;
     }
     
     /** 
@@ -170,20 +188,51 @@ public class MenuConfig {
         String path = "resources/"+cls.getSimpleName() + MENU_SUFFIX + ".yml";
         URL rsc = cls.getResource(path);
         checkNotNull(rsc, "Failed to locate "+path);
-        Yaml yaml = new Yaml();
-        return yaml.loadAs(rsc.openStream(), Map.class);
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        return mapper.readValue(rsc, Map.class);
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="CONVERTING CONFIGURATION CONTENT TO MENUS/ITEMS">
+
+    /**
+     * Build a menu from a given map entry with key the menu name, and value a list
+     * or map that determines the menu items.
+     * @param name menu name
+     * @param items content of menu
+     * @param am string/action mapping
+     * @return menu
+     */
+    static JToolBar createToolBar(String name, List items, Map<String,Action> am) {
+        JToolBar tb = new JToolBar(name);
+        for (Object it : items) {
+            boolean used = false;
+            for (MenuConfigElement el : MenuConfigElement.values()) {
+                if (el.appliesTo(it)) {
+                    el.addToolbarItem(tb, it, am);
+                    used = true;
+                    break;
+                }
+            }
+            if (!used) {
+                LOG.log(Level.WARNING, "Invalid toolbar item:{0}", it);
+            }
+        }
+        return tb;
     }
 
     /**
      * Build a menu from a given map entry with key the menu name, and value a list
      * or map that determines the menu items.
-     * @param en entry
+     * @param name menu name
+     * @param menuContent content of menu
      * @param am string/action mapping
      * @return menu
      */
-    private static JMenu readMenu(Entry<String, ?> en, Map<String,Action> am) {
-        JMenu menu = new JMenu(en.getKey());
-        for (JMenuItem el : readMenu(en.getValue(), am)) {
+    static JMenu createMenu(String name, List menuContent, Map<String,Action> am) {
+        JMenu menu = new JMenu(name);
+        for (JMenuItem el : createMenuItemList(menuContent, am)) {
             if (el == null) {
                 menu.addSeparator();
             } else {
@@ -192,154 +241,189 @@ public class MenuConfig {
         }
         return menu;
     }
-    
 
     /**
-     * Build a list of menu elmeents from a given map entry with key the menu name, and value a list
-     * or map that determines the menu items.
-     * @param en entry
-     * @param am string/action mapping
-     * @return menu
+     * Builds a menu based on a list of items provided as actions or submenus.
+     * @param items configuration of menu items
+     * @param actionMap string/action mapping to lookup actions
+     * @return menu items, with null values for separators
      */
-    private static List<JMenuItem> readMenu(Object val, Map<String,Action> am) {
-        List<JMenuItem> res = Lists.newArrayList();
-        if (val instanceof List) {
-            res.addAll(menuBarItems((List) val, am));
-        } else if (val instanceof Map) {
-            res.addAll(configurableMenuItems((Map) val, am));
-        }
-        return res;
-    }
-
-    /**
-     * Adds collection of actions to menu
-     * @param menu the menu to add to
-     * @param items the values to add
-     * @param am string/action mapping
-     * @return menu bar items
-     */
-    private static List<JMenuItem> menuBarItems(@Nullable List items, Map<String,javax.swing.Action> am) {
-        if (items == null) {
-            Collections.emptyList();
-        }
+    static List<JMenuItem> createMenuItemList(List items, Map<String,javax.swing.Action> actionMap) {
+        checkNotNull(items);
+        checkNotNull(actionMap);
         List<JMenuItem> res = Lists.newArrayList();
         for (Object it : items) {
-            if (it == null) {
-                res.add(null);
-            } else if (it instanceof String) {
-                res.add(new JMenuItem(am.get((String)it)));
-            } else if (it instanceof Map) {
-                Map<String, ?> config = (Map<String, ?>) it;
-                for (Entry<String, ?> en : config.entrySet()) {
-                    res.add(readMenu(en, am));
+            boolean used = false;
+            for (MenuConfigElement el : MenuConfigElement.values()) {
+                if (el.appliesTo(it)) {
+                    res.add(el.menuItem(it, actionMap));
+                    used = true;
+                    break;
                 }
-            } else {
+            }
+            if (!used) {
                 LOG.log(Level.WARNING, "Invalid menu item:{0}", it);
             }
         }
         return res;
     }
 
-    /**
-     * Adds a configurable collection of menu items to the menu.
-     * @param menu the menu to add to
-     * @param props configuration options for the menu
-     * @param am string/action mapping
-     * @return menu items
-     */
-    private static List<JMenuItem> configurableMenuItems(Map props, Map<String,javax.swing.Action> am) {
-        Object actionName = props.get(ACTION_KEY);
-        Object methodName = props.get(OPTIONS_KEY);
-        checkArgument(actionName instanceof String && methodName instanceof String,
-                "Custom configuration options requires use of "+ACTION_KEY+" and "+OPTIONS_KEY+" properties.");
-        Action action = am.get((String) actionName);
-        List options = invokeListMethod((String)methodName);
-        if (action == null) {
-            LOG.log(Level.SEVERE, "Action not found: {0}", actionName);
-            return Collections.emptyList();
-        }
-        if (options.isEmpty()) {
-            LOG.log(Level.SEVERE, "Method did not return any valid options: {0}", methodName);
-        }
-        List<JMenuItem> res = Lists.newArrayList();
-        for (Object o : options) {
-            res.add(new JMenuItem(sourceAction(action, o)));
-        }
-        return res;
-    }
-
-    /** Attempt to invoke static method defined by given string, returning result as a list. */
-    private static List invokeListMethod(String string) {
-        try {
-            Method method = findMethod(string);
-            if (method == null) {
-                return Collections.emptyList();
+    private static JButton popupButton(String name, final JPopupMenu popup) {
+        final JButton button = new JButton(name);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                popup.show(e.getComponent(), e.getX(), e.getY());
             }
-            Object res = method.invoke(null);
-            if (!(res instanceof Iterable)) {
-                LOG.log(Level.SEVERE, "Did not return iterable: {0}", res);
-            }
-            return Lists.newArrayList((Iterable) res);
-        } catch (ClassNotFoundException ex) {
-            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
-        } catch (NoSuchMethodException ex) {
-            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
-        } catch (SecurityException ex) {
-            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
-        } catch (IllegalAccessException ex) {
-            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
-        } catch (IllegalArgumentException ex) {
-            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
-        } catch (InvocationTargetException ex) {
-            LOG.log(Level.SEVERE, INVALID_METHOD_ERROR, ex);
-        }
-        return Collections.emptyList();
+        });
+        return button;
     }
     
-    /** Looks up method based on given string name */
-    @Nullable
-    private static Method findMethod(String name) throws NoSuchMethodException, ClassNotFoundException {
-        String[] spl = name.split("#");
-        if (spl.length != 2) {
-            return null;
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="GETTING STUFF OUT OF MAPS">
+    
+    /** Tests whether map is a singleton */
+    static boolean isSingletonMap(Map<String, ?> map) {
+        return map != null && map.size() == 1;
+    }
+
+    /** Convert a map with a single entry to the entry */
+    static <X> Entry<String, X> singletonMapEntry(Map<String, X> map) {
+        checkArgument(map != null);
+        checkArgument(map.size() == 1);
+        return map.entrySet().iterator().next();
+    }
+    
+    /** Tests whether key exists as a key in a singleton map's value map */
+    static boolean existsKeyNestedInSingletonMap(String key, Map<String, ?> map) {
+        if (!isSingletonMap(map)) {
+            return false;
         }
-        String className = spl[0];
-        String methodName = spl[1];
-        Class clazz = Class.forName(className);
-        return clazz.getMethod(methodName);
+        Entry<String, ?> en = singletonMapEntry(map);
+        if (!(en.getValue() instanceof Map)) {
+            return false;
+        }
+        return ((Map) en.getValue()).containsKey(key);
     }
-
-    /**
-     * Override the default action behavior to always use the provided object as source.
-     */
-    private static Action sourceAction(final Action action, final Object src) {
-        return new AbstractAction(src+"") {
+    
+    //</editor-fold>
+    
+    
+    /** Decode options supported for the menu config */
+    private static enum MenuConfigElement {
+        SEPARATOR(){
             @Override
-            public void actionPerformed(ActionEvent e) {
-                ActionEvent evt = new ActionEvent(src, e.getID(), e.getActionCommand(), e.getWhen(), e.getModifiers());
-                action.actionPerformed(evt);
+            boolean appliesTo(Object item) {
+                return item == null || (item instanceof String && ((String)item).isEmpty());
             }
-        };
-    }
-
-    /**
-     * Uses a variable number of parent objects as potential action owners, creating a common lookup table for actions.
-     * If more than one object has the same action, the result table will use the first it finds.
-     * @param appContext context of application
-     * @param actionParents parent objects for actions
-     * @return table of actions available within the app context
-     */
-    private static Map<String, javax.swing.Action> actionMap(ApplicationContext appContext, Object... actionParents) {
-        Map<String, javax.swing.Action> res = Maps.newHashMap();
-        for (Object o : actionParents) {
-            ActionMap am = appContext.getActionMap(o);
-            for (Object k : am.allKeys()) {
-                if (!res.containsKey((String) k)) {
-                    res.put((String) k, am.get(k));
+            @Override
+            JMenuItem menuItem(Object item, Map<String, Action> actionMap) {
+                return null;
+            }
+            @Override
+            void addToolbarItem(JToolBar tb, Object item, Map<String, Action> actionMap) {
+                tb.addSeparator();
+            }
+        },
+        ACTION(){
+            @Override
+            boolean appliesTo(Object item) {
+                return item instanceof String;
+            }
+            @Override
+            JMenuItem menuItem(Object item, Map<String, Action> actionMap) {
+                return new JMenuItem(actionMap.get((String) item));
+            }
+            @Override
+            void addToolbarItem(JToolBar tb, Object item, Map<String, Action> actionMap) {
+                tb.add(actionMap.get((String) item));
+            }
+        },
+        SPECIAL_ACTION(){
+            @Override
+            boolean appliesTo(Object item) {
+                return item instanceof Map
+                        && existsKeyNestedInSingletonMap("type", (Map) item);
+            }
+            @Override
+            JMenuItem menuItem(Object item, Map<String, Action> actionMap) {
+                Entry<String,Object> en = singletonMapEntry((Map) item);
+                Action action = actionMap.get(en.getKey());
+                Map submap = (Map) en.getValue();
+                Object type = submap.get("type");
+                if ("CHECKBOX".equals(type)) {
+                    return new JCheckBoxMenuItem(action);
+                } else if ("RADIO".equals(type)) {
+                    return new JRadioButtonMenuItem(action);
+                } else {
+                    LOG.log(Level.SEVERE, "Unsupported item type: {0}", type);
+                    return null;
                 }
             }
-        }
-        return res;
+            @Override
+            void addToolbarItem(JToolBar tb, Object item, Map<String, Action> actionMap) {
+                Entry<String,Object> en = singletonMapEntry((Map) item);
+                Action action = actionMap.get(en.getKey());
+                Map submap = (Map) en.getValue();
+                Object type = submap.get("type");
+                if ("CHECKBOX".equals(type)) {
+                    tb.add(new JCheckBox(action));
+                } else if ("RADIO".equals(type)) {
+                    tb.add(new JRadioButton(action));
+                } else if ("TOGGLE".equals(type)) {
+                    tb.add(new JToggleButton(action));
+                } else {
+                    LOG.log(Level.SEVERE, "Unsupported item type: {0}", type);
+                }
+            }
+        },
+        OPTION_MENU(){
+            @Override
+            boolean appliesTo(Object item) {
+                return item instanceof Map
+                        && existsKeyNestedInSingletonMap("options", (Map) item);
+            }
+            @Override
+            JMenuItem menuItem(Object item, Map<String, Action> actionMap) {
+                Entry<String,Object> en = singletonMapEntry((Map) item);
+                OptionMenuConfig config = new ObjectMapper().convertValue(en.getValue(), OptionMenuConfig.class);
+                config.setAction(en.getKey());
+                return config.createMenu(actionMap);
+            }
+            @Override
+            void addToolbarItem(JToolBar tb, Object item, Map<String, Action> actionMap) {
+                Entry<String,Object> en = singletonMapEntry((Map) item);
+                OptionMenuConfig config = new ObjectMapper().convertValue(en.getValue(), OptionMenuConfig.class);
+                config.setAction(en.getKey());
+                tb.add(popupButton(config.getName(), config.createPopupMenu(actionMap)));
+            }
+        },
+        SUB_MENU(){
+            @Override
+            boolean appliesTo(Object item) {
+                return item instanceof Map
+                        && singletonMapEntry((Map) item).getValue() instanceof List;
+            }
+            @Override
+            JMenuItem menuItem(Object item, Map<String, Action> actionMap) {
+                Entry<String,Object> en = singletonMapEntry((Map) item);
+                return createMenu(en.getKey(), (List) en.getValue(), actionMap);
+            }
+            @Override
+            void addToolbarItem(JToolBar tb, Object item, Map<String, Action> actionMap) {
+                Entry<String,Object> en = singletonMapEntry((Map) item);
+                JPopupMenu popup = new JPopupMenu(en.getKey());
+                for (JMenuItem mi : createMenuItemList((List) en.getValue(), actionMap)) {
+                    popup.add(mi);
+                }
+                tb.add(popupButton(en.getKey(), popup));
+            }
+        };
+        
+        abstract boolean appliesTo(Object item);
+        abstract JMenuItem menuItem(Object item, Map<String,javax.swing.Action> actionMap);
+        abstract void addToolbarItem(JToolBar tb, Object item, Map<String, javax.swing.Action> actionMap);
     }
     
 }
