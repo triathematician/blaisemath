@@ -48,6 +48,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.swing.JPopupMenu;
 
 /**
@@ -88,6 +89,9 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     protected boolean updatingPoint = false;
     /** Responds to coordinate update events */
     private final CoordinateListener coordListener;
+    /** Cached update */
+    @GuardedBy("this")
+    private CoordinateChangeEvent lastUpdate;
     
     
     /**
@@ -126,12 +130,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             @Override
             @InvokedFromThread("unknown")
             public void coordinatesChanged(final CoordinateChangeEvent evt) {
-                BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
-                    @Override
-                    public void run() {
-                        updatePointGraphics(evt.getAdded(), evt.getRemoved());
-                    }
-                });
+                applyUpdate(evt);
             }
         };
         
@@ -143,6 +142,19 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     //
     // EVENT HANDLERS
     //
+    
+    /** Cancel any pending update and move this one to the top of the queue. */
+    private void applyUpdate(final CoordinateChangeEvent evt) {
+        synchronized (this) {
+            lastUpdate = evt;
+            BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+                @Override
+                public void run() {
+                    updatePointGraphics(lastUpdate.getAdded(), lastUpdate.getRemoved());
+                }
+            });
+        }
+    }
     
     private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
         boolean change = false;
@@ -240,7 +252,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             this.manager = mgr;
             this.manager.addCoordinateListener(coordListener);
             toRemove.removeAll(mgr.getActive());
-            updatePointGraphics(mgr.getActiveLocationCopy(), toRemove);
+            applyUpdate(CoordinateChangeEvent.createAddRemoveEvent(this, mgr.getActiveLocationCopy(), toRemove));
         }
     }
 
