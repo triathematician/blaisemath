@@ -235,9 +235,12 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             if (this.manager != null) {
                 this.manager.removeCoordinateListener(coordListener);
             }
+            Set<S> toRemove = this.manager == null ? Collections.<S>emptySet()
+                    : Sets.newHashSet(this.manager.getActive());
             this.manager = mgr;
             this.manager.addCoordinateListener(coordListener);
-            updatePointGraphics(mgr.getActiveLocationCopy(), Collections.<S>emptySet());
+            toRemove.removeAll(mgr.getActive());
+            updatePointGraphics(mgr.getActiveLocationCopy(), toRemove);
         }
     }
 
