@@ -25,12 +25,9 @@ package com.googlecode.blaisemath.graph.app;
  */
 
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.googlecode.blaisemath.ui.PropertyActionPanel;
 import com.google.common.collect.Multisets;
-import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.app.ApplicationMenuConfig;
 import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.EnumEditor;
@@ -45,7 +42,6 @@ import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
-import com.googlecode.blaisemath.graphics.core.LabeledPointGraphic;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.MarkerEditor;
@@ -81,6 +77,8 @@ import org.jdesktop.application.FrameView;
  * @author elisha
  */
 public final class GraphAppFrameView extends FrameView {
+
+    private static final Logger LOG = Logger.getLogger(GraphAppFrameView.class.getName());
     
     private static final String CANVAS_CM_KEY = "Canvas";
 
@@ -108,13 +106,12 @@ public final class GraphAppFrameView extends FrameView {
         // set up menus
         ActionMap am = app.getContext().getActionMap(this);
         try {
-            setMenuBar(MenuConfig.readMenuBar(GraphApp.class, this, graphCanvas));
-            setToolBar(MenuConfig.readToolBar(GraphApp.class, this, graphCanvas));
+            setMenuBar(ApplicationMenuConfig.readMenuBar(GraphApp.class, this, graphCanvas));
+            setToolBar(ApplicationMenuConfig.readToolBar(GraphApp.class, this, graphCanvas));
             graphCanvas.addContextMenuInitializer(GraphComponent.MENU_KEY_GRAPH,
-                    MenuConfig.readMenuInitializer(CANVAS_CM_KEY, GraphApp.class, this, graphCanvas));    
+                    ApplicationMenuConfig.readMenuInitializer(CANVAS_CM_KEY, GraphApp.class, this, graphCanvas));    
         } catch (IOException ex) {
-            Logger.getLogger(GraphAppFrameView.class.getName()).log(Level.SEVERE, 
-                    "Menu config failure.", ex);
+            LOG.log(Level.SEVERE, "Menu config failure.", ex);
         }
         
         statusLabel = new JLabel("no status to report");

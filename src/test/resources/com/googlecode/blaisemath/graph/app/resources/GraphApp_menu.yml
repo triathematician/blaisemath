@@ -1,53 +1,53 @@
 ## YAML Template.
 ---
-Menubar:
-    File:
-        - quit
-    Generator: {
-          action: generateGraph,
-          options: com.googlecode.blaisemath.graph.GraphServices#generators
-        }
-    Layout:
-        - Static Layouts: {
-          action: staticLayout,
-          options: com.googlecode.blaisemath.graph.GraphServices#staticLayouts
-        }
-        - Iterative Layouts: {
-          action: iterativeLayout,
-          options: com.googlecode.blaisemath.graph.GraphServices#iterativeLayouts
-        }
-        - startLayout
-        - stopLayout
-    Calculate:
-        - Global Metrics: {
-          action: globalMetric,
-          options: com.googlecode.blaisemath.graph.GraphServices#globalMetrics
-        }
-        - Node Metrics: {
-          action: nodeMetric,
-          options: com.googlecode.blaisemath.graph.GraphServices#nodeMetrics
-        }
-        - Subset Metrics: {
-          action: subsetMetric,
-          options: com.googlecode.blaisemath.graph.GraphServices#subsetMetrics
-        }
-    View:
-        - zoomIn
-        - zoomOut
-        - zoomToSelected
-        - zoomToAll
-        - zoom100
-Toolbar:
-    - zoomToAll
-    -
+MENUBAR:
+  - File:
+    - quit
+  - generateGraph: {
+      name: Generator,
+      options: com.googlecode.blaisemath.graph.GraphServices#generators
+    }
+  - Layout:
+    - staticLayout: {
+      name: Static Layout,
+      options: com.googlecode.blaisemath.graph.GraphServices#staticLayouts
+    }
+    - iterativeLayout: {
+      name: Iterative layout,
+      options: com.googlecode.blaisemath.graph.GraphServices#iterativeLayouts
+    }
     - startLayout
     - stopLayout
-    -
-    - pinSelected
-Canvas:
+  - Calculate:
+    - globalMetric: {
+      name: Global Metric,
+      options: com.googlecode.blaisemath.graph.GraphServices#globalMetrics
+    }
+    - nodeMetric: {
+      name: Node Metric,
+      options: com.googlecode.blaisemath.graph.GraphServices#nodeMetrics
+    }
+    - subsetMetric: {
+      name: Subset Metric,
+      options: com.googlecode.blaisemath.graph.GraphServices#subsetMetrics
+    }
+  - View:
     - zoomIn
     - zoomOut
     - zoomToSelected
     - zoomToAll
     - zoom100
+TOOLBAR:
+  - zoomToAll
+  -
+  - startLayout
+  - stopLayout
+  -
+  - pinSelected
+Canvas:
+  - zoomIn
+  - zoomOut
+  - zoomToSelected
+  - zoomToAll
+  - zoom100
     
