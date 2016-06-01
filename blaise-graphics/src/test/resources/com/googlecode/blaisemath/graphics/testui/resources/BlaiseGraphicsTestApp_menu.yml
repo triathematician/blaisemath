@@ -1,27 +1,27 @@
 ## YAML Template.
 ---
-Menubar:
-    File:
+MENUBAR:
+    - File:
         - clear1
         - 
         - quit
-    Basic Graphics:
+    - Basic Graphics:
         - addPoint
         - addSegment
         - addRectangle
         - addString
-    Graphic Sets:
+    - Graphic Sets:
         - addPointSet
         - editPointSetStyle
         - addDelegatingPointSet
         - addDelegatingPointSet2
         - addDelegatingGraph
-    Compound Graphics:
+    - Compound Graphics:
         - addLabeledPoint
         - addArrow
         - add2Point
         - addDraggableSegment
         - addRay
         - addLine
-Toolbar:
+TOOLBAR:
     - clear1

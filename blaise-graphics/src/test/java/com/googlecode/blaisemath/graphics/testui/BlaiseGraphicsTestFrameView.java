@@ -24,14 +24,12 @@ package com.googlecode.blaisemath.graphics.testui;
  * #L%
  */
 
+import com.googlecode.blaisemath.app.ApplicationMenuConfig;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import com.googlecode.blaisemath.app.MenuConfig;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ActionMap;
-import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 
@@ -64,8 +62,8 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         setComponent(mainPanel);
         
         try {
-            setMenuBar(MenuConfig.readMenuBar(BlaiseGraphicsTestApp.class, this));
-            setToolBar(MenuConfig.readToolBar(BlaiseGraphicsTestApp.class, this));
+            setMenuBar(ApplicationMenuConfig.readMenuBar(BlaiseGraphicsTestApp.class, this));
+            setToolBar(ApplicationMenuConfig.readToolBar(BlaiseGraphicsTestApp.class, this));
         } catch (IOException ex) {
             Logger.getLogger(BlaiseGraphicsTestFrameView.class.getName()).log(Level.SEVERE, 
                     "Menu config failure.", ex);
