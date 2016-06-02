@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-graphics</artifactId>
-    <version>2.2.3-beta</version>
+    <version>2.2.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>blaise-graphics</name>
@@ -32,7 +32,7 @@
         <url>https://github.com/triathematician/blaisemath</url>
         <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
         <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
-        <tag>blaise-graphics-2.2.3-beta</tag>
+        <tag>HEAD</tag>
     </scm>    
     <issueManagement>
         <system>GitHub Issues</system>
