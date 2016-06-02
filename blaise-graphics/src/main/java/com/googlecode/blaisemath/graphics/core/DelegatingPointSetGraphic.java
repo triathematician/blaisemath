@@ -52,9 +52,11 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.swing.JPopupMenu;
 
 /**
- * Manages a collection of points that are maintained as separate {@link Graphic}s,
- * and therefore fully customizable. Point locations are handled by a {@link CoordinateManager},
- * which allows their locations to be safely modified from other threads.
+ * <p>
+ *   Manages a collection of points that are maintained as separate {@link Graphic}s,
+ *   and therefore fully customizable. Points and their locations are handled by a {@link CoordinateManager},
+ *   which allows their locations to be safely modified from other threads.
+ * </p>
  *
  * @param <S> the type of object being displayed
  * @param <G> type of canvas to render to
@@ -65,7 +67,7 @@ import javax.swing.JPopupMenu;
  */
 public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     
-    private static final int NODE_CACHE_SIZE = 20000;
+    private static final int DEFAULT_NODE_CACHE_SIZE = 20000;
     
     /** Key for flag allowing individual points to be selected */
     public static final String POINT_SELECTION_ENABLED = "point-selection-enabled";
@@ -77,6 +79,14 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
 
     /** Manages locations of points */
     protected CoordinateManager<S,Point2D> manager;
+    /** Responds to coordinate update events. Also used as a lock object for updates. */
+    private final CoordinateListener coordListener;
+    /** Flag that indicates points are being updated */
+    protected boolean updatingPoint = false;
+    /** Cached update */
+    @GuardedBy("this")
+    private CoordinateChangeEvent lastUpdate;
+    
     /** Selects styles for graphics */
     @Nonnull 
     protected ObjectStyler<S> styler = ObjectStyler.create();
@@ -84,15 +94,6 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     protected Renderer<Point2D,G> renderer;
     /** Renderer for point labels */
     protected Renderer<AnchoredText,G> textRenderer;
-
-    /** Indicates points are being updated */
-    protected boolean updatingPoint = false;
-    /** Responds to coordinate update events */
-    private final CoordinateListener coordListener;
-    /** Cached update */
-    @GuardedBy("this")
-    private CoordinateChangeEvent lastUpdate;
-    
     
     /**
      * Construct with no points
@@ -108,7 +109,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      */
     public DelegatingPointSetGraphic(@Nullable Renderer<Point2D, G> renderer,
             @Nullable Renderer<AnchoredText, G> labelRenderer) {
-        this(CoordinateManager.<S, Point2D>create(NODE_CACHE_SIZE), renderer, labelRenderer);
+        this(CoordinateManager.<S, Point2D>create(DEFAULT_NODE_CACHE_SIZE), renderer, labelRenderer);
     }
 
     /**
@@ -144,6 +145,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     //
     
     /** Cancel any pending update and move this one to the top of the queue. */
+    @InvokedFromThread("unknown")
     private void applyUpdate(final CoordinateChangeEvent evt) {
         synchronized (this) {
             lastUpdate = evt;
@@ -250,9 +252,9 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             Set<S> toRemove = this.manager == null ? Collections.<S>emptySet()
                     : Sets.newHashSet(this.manager.getActive());
             this.manager = mgr;
-            this.manager.addCoordinateListener(coordListener);
             toRemove.removeAll(mgr.getActive());
             applyUpdate(CoordinateChangeEvent.createAddRemoveEvent(this, mgr.getActiveLocationCopy(), toRemove));
+            this.manager.addCoordinateListener(coordListener);
         }
     }
 
