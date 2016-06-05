@@ -42,7 +42,7 @@ import java.util.List;
  * 
  * @author Elisha
  */
-public class CreatePathGesture extends JGraphicCreatorGesture {
+public class CreatePathGesture extends CreateGraphicGesture {
     
     private List<Point2D> pathPoints;
     

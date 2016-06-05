@@ -44,7 +44,7 @@ import javax.swing.JOptionPane;
  * 
  * @author Elisha
  */
-public class CreateImageGesture extends JGraphicCreatorGesture {
+public class CreateImageGesture extends CreateGraphicGesture {
 
     private static final JFileChooser CHOOSER = new JFileChooser();
     

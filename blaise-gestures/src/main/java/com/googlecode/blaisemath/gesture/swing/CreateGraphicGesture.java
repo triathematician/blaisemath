@@ -4,7 +4,6 @@
  */
 package com.googlecode.blaisemath.gesture.swing;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGestureSupport;
 import com.googlecode.blaisemath.graphics.core.Graphic;
@@ -40,13 +39,13 @@ import javax.annotation.Nullable;
 
 /**
  * Gesture for adding a graphic to the canvas. A preview of the graphic is rendered
- * on the canvas.
+ * on the canvas. When a create gesture is active, it supercedes all other gestures.
  * 
  * @author Elisha
  */
-public abstract class JGraphicCreatorGesture extends MouseGestureSupport<JGraphicComponent> {
+public abstract class CreateGraphicGesture extends MouseGestureSupport<JGraphicComponent> {
     
-    public JGraphicCreatorGesture(GestureOrchestrator<JGraphicComponent> orchestrator, String name, String description) {
+    public CreateGraphicGesture(GestureOrchestrator<JGraphicComponent> orchestrator, String name, String description) {
         super(orchestrator, name, description);
     }
     
@@ -102,7 +101,7 @@ public abstract class JGraphicCreatorGesture extends MouseGestureSupport<JGraphi
     private final class Painter extends TransformedCanvasPainter {
         @Override
         public void paintTransformed(Component comp, Graphics2D gd) {
-            JGraphicCreatorGesture.this.paintTransformed(gd);
+            CreateGraphicGesture.this.paintTransformed(gd);
         }
     }
     

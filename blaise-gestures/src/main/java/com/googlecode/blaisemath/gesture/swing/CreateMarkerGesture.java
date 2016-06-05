@@ -37,7 +37,7 @@ import java.awt.geom.Point2D;
  * 
  * @author Elisha
  */
-public class CreateMarkerGesture extends JGraphicCreatorGesture {
+public class CreateMarkerGesture extends CreateGraphicGesture {
     
     public CreateMarkerGesture(GestureOrchestrator orchestrator) {
         super(orchestrator, "Place point", "Click where you want to create a point.");

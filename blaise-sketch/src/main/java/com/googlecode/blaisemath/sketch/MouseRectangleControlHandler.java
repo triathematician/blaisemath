@@ -2,13 +2,13 @@
  * BoundingBoxGesture.java
  * Created Dec 13, 2014
  */
-package com.googlecode.blaisemath.gesture.swing;
+package com.googlecode.blaisemath.sketch;
 
 /*
  * #%L
  * BlaiseSketch
  * --
- * Copyright (C) 2015 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ import com.googlecode.blaisemath.util.AffineTransformBuilder;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -56,7 +55,7 @@ import java.util.logging.Logger;
  * 
  * @author elisha
  */
-public class ControlBoxGesture extends MouseGestureSupport<JGraphicComponent> {
+public class MouseRectangleControlHandler extends MouseGestureSupport<JGraphicComponent> {
     
     private static final int CAPTURE_RAD = 5;
     
@@ -84,7 +83,8 @@ public class ControlBoxGesture extends MouseGestureSupport<JGraphicComponent> {
      * @param orchestrator the orchestrator that handles gestures
      * @param graphic the graphic with the bounding box
      */
-    public ControlBoxGesture(GestureOrchestrator<JGraphicComponent> orchestrator, PrimitiveGraphicSupport graphic) {
+    public MouseRectangleControlHandler(GestureOrchestrator<JGraphicComponent> orchestrator,
+            PrimitiveGraphicSupport graphic) {
         super(orchestrator, "Bounding box", "Move and resize shape");
         checkNotNull(graphic);
         this.graphic = graphic;
@@ -99,16 +99,27 @@ public class ControlBoxGesture extends MouseGestureSupport<JGraphicComponent> {
     }
     
     //<editor-fold defaultstate="collapsed" desc="GESTURE LIFECYCLE">
-
+    
+    public boolean cancelsWith(MouseEvent evt) {
+        if (graphic != null && evt.getID() == MouseEvent.MOUSE_CLICKED) {
+            Point2D clickPt = transformedPoint(evt);
+            if (!graphic.contains(clickPt) && capture(graphic.boundingBox(), clickPt) == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @Override
-    public boolean activatesWith(MouseEvent evt) {
-        return super.activatesWith(evt);
+    public void cancel() {
+        view.getSelectionModel().deselect(graphic);
+        controlPoint = null;
+        startShape = null;
     }
     
     @Override
     public void complete() {
-        controlPoint = null;
-        startShape = null;
+        cancel();
     }
     
     //</editor-fold>
@@ -138,11 +149,12 @@ public class ControlBoxGesture extends MouseGestureSupport<JGraphicComponent> {
         } else if (prim instanceof AnchoredImage) {
             startShape = ((AnchoredImage) prim).getBounds(null);
         } else {
-            Logger.getLogger(ControlBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
+            Logger.getLogger(MouseRectangleControlHandler.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
             return;
         }
         controlPoint = capture(controlBox(startShape), pressPoint);
         move = controlPoint == null && startShape.contains(pressPoint);
+        e.consume();
     }
 
     @Override
@@ -156,18 +168,7 @@ public class ControlBoxGesture extends MouseGestureSupport<JGraphicComponent> {
         } else if (move) {
             applyTransformToGraphic(new AffineTransformBuilder().translate(dx, dy).build());
         }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (graphic != null) {
-            Point2D clickPt = transformedPoint(e);
-            // clicking outside the graphic de-activates the gesture
-            if (!graphic.contains(clickPt) && capture(graphic.boundingBox(), clickPt) == null) {
-                orchestrator.complete(this);
-                view.getSelectionModel().deselect(graphic);
-            }
-        }
+        e.consume();
     }
     
     //</editor-fold>
@@ -194,7 +195,7 @@ public class ControlBoxGesture extends MouseGestureSupport<JGraphicComponent> {
             graphic.setPrimitive(new AnchoredImage(newBounds.getX(), newBounds.getY(), newBounds.getWidth(), newBounds.getHeight(),
                     img.getOriginalImage(), img.getReference()));
         } else {
-            Logger.getLogger(ControlBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
+            Logger.getLogger(MouseRectangleControlHandler.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
         }
     }
     

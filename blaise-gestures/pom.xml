@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-gestures</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0-beta-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>blaise-gestures</name>

@@ -35,7 +35,7 @@ import java.awt.geom.Ellipse2D;
  * 
  * @author Elisha
  */
-public final class CreateCircleGesture extends JGraphicCreatorGesture {
+public final class CreateCircleGesture extends CreateGraphicGesture {
     
     public CreateCircleGesture(GestureOrchestrator orchestrator) {
         super(orchestrator, "Draw circle", "Drag from center of circle to its boundary.");

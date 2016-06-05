@@ -36,7 +36,7 @@ import java.awt.geom.Ellipse2D;
  * 
  * @author Elisha
  */
-public class CreateEllipseGesture extends JGraphicCreatorGesture {
+public class CreateEllipseGesture extends CreateGraphicGesture {
     
     public CreateEllipseGesture(GestureOrchestrator orchestrator) {
         super(orchestrator, "Draw ellipse", "Drag from one corner of the ellipse's frame to the other.");

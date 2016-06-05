@@ -125,17 +125,26 @@ public final class SketchCanvasModel {
             @Override
             public void paint(Component component, Graphics2D canvas) {
                 JGraphicComponent gc = (JGraphicComponent) component;
-                Shape r = getBoundingBox();
                 AffineTransform at = gc.getTransform();
-                if (at != null) {
-                    r = at.createTransformedShape(r);
-                }
-                Area area = new Area(canvas.getClip());
-                area.subtract(new Area(r));
-                ShapeRenderer.getInstance().render(area, Styles.fillStroke(getBackground(), null), canvas);
-                PathRenderer.getInstance().render(r, style, canvas);
+                paintCanvas(canvas, at);
             }
         };
+    }
+    
+    /**
+     * Paints the canvas on the given graphics, using the specified transform.
+     * @param canvas what to paint on
+     * @param at the transform for the canvas
+     */
+    public void paintCanvas(Graphics2D canvas, AffineTransform at) {
+        Shape r = getBoundingBox();
+        if (at != null) {
+            r = at.createTransformedShape(r);
+        }
+        Area area = new Area(canvas.getClip());
+        area.subtract(new Area(r));
+        ShapeRenderer.getInstance().render(area, Styles.fillStroke(getBackground(), null), canvas);
+        PathRenderer.getInstance().render(r, style, canvas);
     }
     
 

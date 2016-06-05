@@ -25,16 +25,13 @@ package com.googlecode.blaisemath.sketch;
  */
 
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.app.ActionMenuInitializer;
 import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGesture;
-import com.googlecode.blaisemath.gesture.swing.CanvasHandlerGesture;
-import com.googlecode.blaisemath.gesture.swing.ControlBoxGesture;
-import com.googlecode.blaisemath.gesture.swing.ControlLineGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateCircleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateEllipseGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateImageGesture;
@@ -44,7 +41,6 @@ import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
 import com.googlecode.blaisemath.gesture.GestureLayerUI;
-import com.googlecode.blaisemath.gesture.swing.SelectGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
@@ -64,7 +60,6 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -82,9 +77,36 @@ import org.jdesktop.application.Action;
  * @author elisha
  */
 public final class SketchCanvas {
-        
+    
+    //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
+    
     private static final String SELECTION_CM_KEY = "Selection";
     private static final String CANVAS_CM_KEY = "Canvas";
+    
+    private static final String P_SELECT_TOOL_ACTIVE = "selectToolActive";
+    private static final String P_HAND_TOOL_ACTIVE = "handToolActive";
+    private static final String P_MARKER_TOOL_ACTIVE = "markerToolActive";
+    private static final String P_LINE_TOOL_ACTIVE = "lineToolActive";
+    private static final String P_PATH_TOOL_ACTIVE = "pathToolActive";
+    private static final String P_RECTANGLE_TOOL_ACTIVE = "rectangleToolActive";
+    private static final String P_CIRCLE_TOOL_ACTIVE = "circleToolActive";
+    private static final String P_ELLIPSE_TOOL_ACTIVE = "ellipseToolActive";
+    private static final String P_TEXT_TOOL_ACTIVE = "textToolActive";
+    private static final String P_IMAGE_TOOL_ACTIVE = "imageToolActive";
+    
+    private static final ImmutableMap<Class<? extends MouseGesture>,String> TOOL_MAP 
+            = ImmutableMap.<Class<? extends MouseGesture>,String>builder()
+            .put(CreateMarkerGesture.class, P_MARKER_TOOL_ACTIVE)
+            .put(CreateLineGesture.class, P_LINE_TOOL_ACTIVE)
+            .put(CreatePathGesture.class, P_PATH_TOOL_ACTIVE)
+            .put(CreateRectangleGesture.class, P_RECTANGLE_TOOL_ACTIVE)
+            .put(CreateCircleGesture.class, P_CIRCLE_TOOL_ACTIVE)
+            .put(CreateEllipseGesture.class, P_ELLIPSE_TOOL_ACTIVE)
+            .put(CreateTextGesture.class, P_TEXT_TOOL_ACTIVE)
+            .put(CreateImageGesture.class, P_IMAGE_TOOL_ACTIVE)
+            .build();
+    
+    //</editor-fold>
 
     /** The layer component wrapping the graphic canvas. */
     private final JLayer<JGraphicComponent> layer;
@@ -95,8 +117,6 @@ public final class SketchCanvas {
     
     /** The gesture orchestrator for the canvas. */
     private final GestureOrchestrator<JGraphicComponent> orchestrator;
-    /** The select gesture (default gesture). */
-    private final MouseGesture selectGesture;
     
     /** Handles property listening */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -110,7 +130,6 @@ public final class SketchCanvas {
         
         canvas = new JGraphicComponent();
         canvas.setSelectionEnabled(true);
-        PanAndZoomHandler.install(canvas);
         canvas.getUnderlays().add(canvasModel.underlay());
 
         // set up menus
@@ -128,22 +147,30 @@ public final class SketchCanvas {
 
         //<editor-fold defaultstate="collapsed" desc="create gesture controller with overlay for intercepting events and rendering gesture hints">
         GestureLayerUI gestureUI = new GestureLayerUI();
-        layer = new JLayer<JGraphicComponent>(canvas, gestureUI);
+        layer = new JLayer<>(canvas, gestureUI);
         orchestrator = gestureUI.getGestureOrchestrator();
         assert orchestrator != null;
         orchestrator.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
             new PropertyChangeListener(){
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    pcs.firePropertyChange(evt);
+                    orchestratorPropertyChange(evt);
                 }
             });
         orchestrator.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
-        selectGesture = new SelectGesture(orchestrator);
-        orchestrator.addGesture(selectGesture);
+        new MouseSelectionHandler(orchestrator);
+        new MousePanAndZoomHandler(orchestrator);
         //</editor-fold>
         
         initSelectionHandling();
+    }
+
+    private void orchestratorPropertyChange(PropertyChangeEvent evt) {
+        MouseGesture old = (MouseGesture) evt.getOldValue();
+        MouseGesture nue = (MouseGesture) evt.getNewValue();
+        pcs.firePropertyChange(old == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(old.getClass()), true, false);
+        pcs.firePropertyChange(nue == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(nue.getClass()), false, true);
+        pcs.firePropertyChange(evt);
     }
     
     /** Initialize selection handling */
@@ -167,15 +194,16 @@ public final class SketchCanvas {
     }
     
     /** Initializes selection gesture for the given selection. */
-    private void initSelectionGesture(Set<Graphic> sel) {
+    private void initSelectionGesture(Set<Graphic> sel) 
+    {
         if (sel.size() == 1) {
             Graphic gfc = Iterables.getFirst(sel, null);
             if (gfc instanceof PrimitiveGraphicSupport) {
                 PrimitiveGraphicSupport pgfc = (PrimitiveGraphicSupport) gfc;
                 if (pgfc.getPrimitive() instanceof Line2D) {
-                    orchestrator.addGesture(new ControlLineGesture(orchestrator, pgfc));
-                } else if (ControlBoxGesture.supports(pgfc.getPrimitive())) {
-                    orchestrator.addGesture(new ControlBoxGesture(orchestrator, pgfc));
+//                    orchestrator.addGesture(new ControlLineGesture(orchestrator, pgfc));
+                } else if (MouseRectangleControlHandler.supports(pgfc.getPrimitive())) {
+//                    orchestrator.addGesture(new MouseRectangleControlHandler(orchestrator, pgfc));
                 } else {
                     // controls not available
                 }
@@ -312,75 +340,155 @@ public final class SketchCanvas {
 
     //<editor-fold defaultstate="collapsed" desc="TOOL/GESTURE ACTIONS">
     
-    @Action
-    public void canvasTool() {
-        setFocalGesture(CanvasHandlerGesture.class);
+    public boolean isSelectToolActive() {
+        return isFocalGesture(null);
     }
     
-    @Action
-    public void selectionTool() {
-        setFocalGesture(SelectGesture.class);
+    public void setSelectToolActive(boolean val) {
+        setFocalGesture(null, val);
     }
     
-    @Action
-    public void createMarker() {
-        setFocalGesture(CreateMarkerGesture.class);
+    @Action(selectedProperty = P_SELECT_TOOL_ACTIVE)
+    public void selectTool() {
     }
     
-    @Action
-    public void createLine() {
-        setFocalGesture(CreateLineGesture.class);
+    public boolean isHandToolActive() {
+        return false;
     }
     
-    @Action
-    public void createPath() {
-        setFocalGesture(CreatePathGesture.class);
+    public void setHandToolActive(boolean val) {
     }
     
-    @Action
-    public void createRect() {
-        setFocalGesture(CreateRectangleGesture.class);
+    @Action(selectedProperty = P_HAND_TOOL_ACTIVE)
+    public void handTool() {
     }
     
-    @Action
-    public void createCircle() {
-        setFocalGesture(CreateCircleGesture.class);
+    public boolean isMarkerToolActive() {
+        return isFocalGesture(CreateMarkerGesture.class);
     }
     
-    @Action
-    public void createEllipse() {
-        setFocalGesture(CreateEllipseGesture.class);
+    public void setMarkerToolActive(boolean val) {
+        setFocalGesture(CreateMarkerGesture.class, val);
     }
     
-    @Action
-    public void createText() {
-        setFocalGesture(CreateTextGesture.class);
+    @Action(selectedProperty = P_MARKER_TOOL_ACTIVE)
+    public void markerTool() {
     }
     
-    @Action
-    public void createImage() {
-        setFocalGesture(CreateImageGesture.class);
+    public boolean isLineToolActive() {
+        return isFocalGesture(CreateLineGesture.class);
     }
     
-    //</editor-fold>
+    public void setLineToolActive(boolean val) {
+        setFocalGesture(CreateLineGesture.class, val);
+    }
     
-    //<editor-fold defaultstate="collapsed" desc="GESTURE HANDLING">
+    @Action(selectedProperty = P_LINE_TOOL_ACTIVE)
+    public void lineTool() {
+    }
     
-    /** 
-     * Places the given gesture at the top of the gesture stack of the orchestrator.
-     */
-    <G extends MouseGesture> void setFocalGesture(Class<G> gType) {
-        checkNotNull(gType);
-        try {
-            Constructor<G> con = gType.getConstructor(GestureOrchestrator.class);
-            G gesture = con.newInstance(orchestrator);
-            orchestrator.setGestureStack(Arrays.asList(gesture, selectGesture));
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException 
-                | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
-            throw new IllegalArgumentException(ex);
+    public boolean isPathToolActive() {
+        return isFocalGesture(CreatePathGesture.class);
+    }
+    
+    public void setPathToolActive(boolean val) {
+        setFocalGesture(CreatePathGesture.class, val);
+    }
+    
+    @Action(selectedProperty = P_PATH_TOOL_ACTIVE)
+    public void pathTool() {
+    }
+    
+    public boolean isRectangleToolActive() {
+        return isFocalGesture(CreateRectangleGesture.class);
+    }
+    
+    public void setRectangleToolActive(boolean val) {
+        setFocalGesture(CreateRectangleGesture.class, val);
+    }
+    
+    @Action(selectedProperty = P_RECTANGLE_TOOL_ACTIVE)
+    public void rectangleTool() {
+    }
+    
+    public boolean isCircleToolActive() {
+        return isFocalGesture(CreateCircleGesture.class);
+    }
+    
+    public void setCircleToolActive(boolean val) {
+        setFocalGesture(CreateCircleGesture.class, val);
+    }
+    
+    @Action(selectedProperty = P_CIRCLE_TOOL_ACTIVE)
+    public void circleTool() {
+    }
+    
+    public boolean isEllipseToolActive() {
+        return isFocalGesture(CreateEllipseGesture.class);
+    }
+    
+    public void setEllipseToolActive(boolean val) {
+        setFocalGesture(CreateEllipseGesture.class, val);
+    }
+    
+    @Action(selectedProperty = P_ELLIPSE_TOOL_ACTIVE)
+    public void ellipseTool() {
+    }
+    
+    public boolean isTextToolActive() {
+        return isFocalGesture(CreateTextGesture.class);
+    }
+    
+    public void setTextToolActive(boolean val) {
+        setFocalGesture(CreateTextGesture.class, val);
+    }
+    
+    @Action(selectedProperty = P_TEXT_TOOL_ACTIVE)
+    public void textTool() {
+    }
+    
+    public boolean isImageToolActive() {
+        return isFocalGesture(CreateImageGesture.class);
+    }
+    
+    public void setImageToolActive(boolean val) {
+        setFocalGesture(CreateImageGesture.class, val);
+    }
+    
+    @Action(selectedProperty = P_IMAGE_TOOL_ACTIVE)
+    public void imageTool() {
+    }
+    
+    /** Checks to see if focal gesture has given type */
+    private <G extends MouseGesture> boolean isFocalGesture(Class<G> type) {
+        return type == null ? orchestrator.getActiveGesture() == null
+                : type.isInstance(orchestrator.getActiveGesture());
+    }
+    
+    /** Turns focal gesture of given type on or off */
+    private <G extends MouseGesture> void setFocalGesture(Class<G> type, boolean val) {
+        if (!val) {
+            setFocalGesture(null, true);
+            return;
+        }
+        assert val == true;
+        if (isFocalGesture(type)) {
+            return;
+        }
+        if (type == null) {
+            orchestrator.cancelActiveGesture();
+        } else {
+            try {
+                Constructor<G> con = type.getConstructor(GestureOrchestrator.class);
+                G gesture = con.newInstance(orchestrator);
+                orchestrator.setActiveGesture(gesture);
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException 
+                    | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
+                throw new IllegalArgumentException(ex);
+            }
         }
     }
-
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="COPY/PASTE UTILITIES">

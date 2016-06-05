@@ -35,7 +35,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * @author Elisha
  */
-public class CreateRectangleGesture extends JGraphicCreatorGesture {
+public class CreateRectangleGesture extends CreateGraphicGesture {
     
     public CreateRectangleGesture(GestureOrchestrator orchestrator) {
         super(orchestrator, "Draw rectangle", "Drag from one corner of the rectangle to the other.");

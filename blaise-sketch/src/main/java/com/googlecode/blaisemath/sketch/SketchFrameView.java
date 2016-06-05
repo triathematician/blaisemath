@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.sketch;
 
 
 import com.google.common.collect.Iterables;
-import com.googlecode.blaisemath.app.MenuConfig;
+import com.googlecode.blaisemath.app.ApplicationMenuConfig;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.firestarter.PropertySheetDialog;
@@ -76,6 +76,8 @@ import org.jdesktop.application.FrameView;
  * @author Elisha
  */
 public final class SketchFrameView extends FrameView {
+
+    private static final Logger LOG = Logger.getLogger(SketchFrameView.class.getName());
     
     public static final String SELECTION_EMPTY_PROP = "selectionEmpty";
     public static final String MORE_THAN_ONE_SELECTED_PROP = "moreThanOneSelected";
@@ -94,6 +96,7 @@ public final class SketchFrameView extends FrameView {
     private final MPanel selectionPanel;
     private final JLabel noSelectionLabel = new JLabel("nothing selected");
     private final MPanel overviewPanel;
+    private final SketchCanvasThumbnail thumbnail;
     
     private final JLabel statusLabel;
 
@@ -113,17 +116,17 @@ public final class SketchFrameView extends FrameView {
         
         detailsPanel = new RollupPanel();
         selectionPanel = new MPanel("Selection", noSelectionLabel);
-        overviewPanel = new MPanel("Overview", new JLabel("overview of what's on the canvas..."));
+        thumbnail = new SketchCanvasThumbnail(canvas);
+        overviewPanel = new MPanel("Overview", thumbnail);
         detailsPanel.add(selectionPanel);
         detailsPanel.add(overviewPanel);
 
         // set up menus
         try {
-            setMenuBar(MenuConfig.readMenuBar(SketchApp.class, this, canvas));
-            setToolBar(MenuConfig.readToolBar(SketchApp.class, this, canvas));
+            setMenuBar(ApplicationMenuConfig.readMenuBar(SketchApp.class, this, canvas));
+            setToolBar(ApplicationMenuConfig.readToolBar(SketchApp.class, this, canvas));
         } catch (IOException ex) {
-            Logger.getLogger(SketchFrameView.class.getName()).log(Level.SEVERE, 
-                    "Menu config failure.", ex);
+            LOG.log(Level.SEVERE, "Menu config failure.", ex);
         }
         
         statusLabel = new JLabel("no status to report");
@@ -201,7 +204,7 @@ public final class SketchFrameView extends FrameView {
             Set gfx = (Set) gfc;
             selectionPanel.setTitle(gfx.size()+" graphics selected.");
             selectionPanel.setPrimaryComponent(new JLabel("No options."));
-            canvas.selectionTool();
+            canvas.selectTool();
         } else if (gfc instanceof GraphicComposite) {
             // activate controls gesture
             GraphicComposite gc = (GraphicComposite) gfc;

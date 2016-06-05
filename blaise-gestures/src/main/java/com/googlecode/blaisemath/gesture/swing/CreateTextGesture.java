@@ -42,7 +42,7 @@ import javax.swing.JTextArea;
  * 
  * @author Elisha
  */
-public class CreateTextGesture extends JGraphicCreatorGesture {
+public class CreateTextGesture extends CreateGraphicGesture {
     
     private String text;
     

@@ -2,13 +2,13 @@
  * BoundingBoxGesture.java
  * Created Dec 13, 2014
  */
-package com.googlecode.blaisemath.gesture.swing;
+package com.googlecode.blaisemath.sketch;
 
 /*
  * #%L
  * BlaiseSketch
  * --
- * Copyright (C) 2015 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2016 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -47,7 +46,7 @@ import java.awt.geom.Point2D;
  * 
  * @author elisha
  */
-public class ControlLineGesture extends MouseGestureSupport<JGraphicComponent> {
+public class MouseLineControlHandler extends MouseGestureSupport<JGraphicComponent> {
     
     private static final int CAPTURE_RAD = 5;
     
@@ -67,7 +66,8 @@ public class ControlLineGesture extends MouseGestureSupport<JGraphicComponent> {
     /** Line at start of drag */
     private Line2D startShape;
     
-    public ControlLineGesture(GestureOrchestrator<JGraphicComponent> orchestrator, PrimitiveGraphicSupport graphic) {
+    public MouseLineControlHandler(GestureOrchestrator<JGraphicComponent> orchestrator,
+            PrimitiveGraphicSupport graphic) {
         super(orchestrator, "Line editor", "Edit line control points");
         checkArgument(graphic != null && graphic.getPrimitive() instanceof Line2D);
         this.graphic = graphic;
@@ -89,16 +89,28 @@ public class ControlLineGesture extends MouseGestureSupport<JGraphicComponent> {
     }
     
     //<editor-fold defaultstate="collapsed" desc="GESTURE LIFECYCLE">
-
+    
+    public boolean cancelsWith(MouseEvent e) {
+        if (graphic != null && e.getID() == MouseEvent.MOUSE_CLICKED) {
+            Point2D clickPt = transformedPoint(e);
+            // clicking outside the graphic de-activates the gesture
+            if (!graphic.contains(clickPt) && capture((Line2D) graphic.getPrimitive(), clickPt) == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @Override
-    public boolean activatesWith(MouseEvent evt) {
-        return super.activatesWith(evt);
+    public void cancel() {
+        view.getSelectionModel().deselect(graphic);
+        controlPoint = null;
+        startShape = null;
     }
     
     @Override
     public void complete() {
-        controlPoint = null;
-        startShape = null;
+        cancel();
     }
     
     //</editor-fold>
@@ -110,6 +122,7 @@ public class ControlLineGesture extends MouseGestureSupport<JGraphicComponent> {
         super.mousePressed(e);
         startShape = (Line2D) graphic.getPrimitive();
         controlPoint = capture(startShape, pressPoint);
+        e.consume();
     }
 
     @Override
@@ -121,18 +134,7 @@ public class ControlLineGesture extends MouseGestureSupport<JGraphicComponent> {
             Line2D transf = controlPoint.resize(startShape, dx, dy);
             graphic.setPrimitive(transf);
         }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (graphic != null) {
-            Point2D clickPt = transformedPoint(e);
-            // clicking outside the graphic de-activates the gesture
-            if (!graphic.contains(clickPt) && capture((Line2D) graphic.getPrimitive(), clickPt) == null) {
-                orchestrator.complete(this);
-                view.getSelectionModel().deselect(graphic);
-            }
-        }
+        e.consume();
     }
     
     //</editor-fold>

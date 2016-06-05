@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.gesture;
  */
 
 
-import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.util.event.MouseEvents;
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -33,8 +32,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
 import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JLayer;
@@ -49,7 +47,6 @@ import javax.swing.plaf.LayerUI;
  * 
  * @author Elisha
  */
-@Beta
 public final class GestureLayerUI<V extends Component> extends LayerUI<V> {
 
     /** Layer component */
@@ -86,7 +83,7 @@ public final class GestureLayerUI<V extends Component> extends LayerUI<V> {
     @Override
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
-        orchestrator.cancel(orchestrator.getActiveGesture());
+        orchestrator.cancelActiveGesture();
         orchestrator = null;
         layer.setLayerEventMask(0);
         layer = null;
@@ -112,38 +109,32 @@ public final class GestureLayerUI<V extends Component> extends LayerUI<V> {
 
     @Override
     protected void processMouseEvent(MouseEvent e, JLayer<? extends V> l) {
-        // propagate to active gesture if there is one
-        MouseGesture gesture = orchestrator.getActiveGesture();
+        MouseGesture gesture = orchestrator.delegateFor(e);
         if (gesture != null) {
             delegateMouseEvent(e, gesture, l);
-        } else {
-            // we're in discovery mode, give all gestures a chance to claim the event
-            for (MouseGesture mg : orchestrator.getGestureStack()) {
-                if (mg.activatesWith(e) && orchestrator.activate(mg)) {
-                    delegateMouseEvent(e, mg, l);
-                    break;
-                }
-            }
         }
     }
 
     @Override
     protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends V> l) {
-        MouseGesture gesture = orchestrator.getActiveGesture();
+        MouseGesture gesture = orchestrator.delegateFor(e);
         if (gesture != null) {
             delegateMouseMotionEvent(e, gesture, l);
-        } else {
-            // we're in discovery mode, give all gestures a chance to claim the event
-            for (MouseGesture mg : orchestrator.getGestureStack()) {
-                if (mg.activatesWith(e) && orchestrator.activate(mg)) {
-                    delegateMouseMotionEvent(e, mg, l);
-                    break;
-                }
-            }
+        }
+    }
+
+    @Override
+    protected void processMouseWheelEvent(MouseWheelEvent e, JLayer<? extends V> l) {
+        MouseGesture gesture = orchestrator.delegateFor(e);
+        if (gesture != null) {
+            delegateMouseWheelEvent(e, gesture, l);
         }
     }
     
-    /** Delegates the mouse event to the given gesture, updating the mouse loc in the process. */
+    /**
+     * Delegates the mouse event to the given gesture, updating the mouse loc in
+     * the process.
+     */
     private void delegateMouseEvent(MouseEvent e, MouseGesture gesture, JLayer<? extends V> l) {
         MouseEvents.delegateEvent(e, gesture);
         if (e.getID() == MouseEvent.MOUSE_ENTERED) {
@@ -153,20 +144,31 @@ public final class GestureLayerUI<V extends Component> extends LayerUI<V> {
             mouseLoc = null;
             l.repaint();
         }
-        if (gesture.isConsuming()) {
-            e.consume();
-        }
     }
     
-    /** Delegates the mouse motion event to the given gesture, updating the mouse loc in the process. */
-    private void delegateMouseMotionEvent(MouseEvent e, MouseGesture gesture, JLayer<? extends V> l) {
+    /**
+     * Delegates the mouse motion event to the given gesture, updating the mouse
+     * loc in the process.
+     */
+    private void delegateMouseMotionEvent(MouseEvent e, MouseGesture gesture,
+            JLayer<? extends V> l) {
         MouseEvents.delegateMotionEvent(e, gesture);
         if (e.getID() == MouseEvent.MOUSE_MOVED || e.getID() == MouseEvent.MOUSE_DRAGGED) {
             mouseLoc = e.getPoint();
             l.repaint();
         }
-        if (gesture.isConsuming()) {
-            e.consume();
+    }
+    
+    /**
+     * Delegates the mouse wheel event to the given gesture, updating the mouse
+     * loc in the process.
+     */
+    private void delegateMouseWheelEvent(MouseWheelEvent e, MouseGesture gesture, 
+            JLayer<? extends V> l) {
+        MouseEvents.delegateWheelEvent(e, gesture);
+        if (e.getID() == MouseEvent.MOUSE_MOVED || e.getID() == MouseEvent.MOUSE_DRAGGED) {
+            mouseLoc = e.getPoint();
+            l.repaint();
         }
     }
     

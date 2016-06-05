@@ -35,7 +35,7 @@ import java.awt.geom.Line2D;
  * 
  * @author Elisha
  */
-public class CreateLineGesture extends JGraphicCreatorGesture {
+public class CreateLineGesture extends CreateGraphicGesture {
     
     public CreateLineGesture(GestureOrchestrator orchestrator) {
         super(orchestrator, "Draw line", "Drag from one end of the line to the other.");

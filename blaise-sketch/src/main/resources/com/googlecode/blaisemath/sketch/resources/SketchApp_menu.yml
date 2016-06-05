@@ -1,7 +1,7 @@
 ## YAML Template.
 ---
-Menubar:
-    File:
+MENUBAR:
+    - File:
         - load
         - save
         - 
@@ -9,7 +9,7 @@ Menubar:
         - clearCanvas
         - 
         - quit
-    Edit:
+    - Edit:
         - selectAll
         - clearSelection
         -
@@ -33,7 +33,7 @@ Menubar:
         - 
         - lockSelected
         - unlockSelected
-    Arrange:
+    - Arrange:
         - moveForward
         - moveBackward
         - 
@@ -45,21 +45,21 @@ Menubar:
         - 
         - distributeHorizontal
         - distributeVertical
-    Tool:
-        - selectionTool
-#        - canvasTool
+    - Tool:
+        - selectTool: { type: RADIO }
+        - handTool: { type: RADIO }
         - 
-        - createMarker
-        - createLine
-        - createPath
+        - markerTool: { type: RADIO }
+        - lineTool: { type: RADIO }
+        - pathTool: { type: RADIO }
         - 
-        - createRect
-        - createCircle
-        - createEllipse
+        - rectangleTool: { type: RADIO }
+        - circleTool: { type: RADIO }
+        - ellipseTool: { type: RADIO }
         - 
-        - createText
-        - createImage
-    Zoom:
+        - textTool: { type: RADIO }
+        - imageTool: { type: RADIO }
+    - Zoom:
         - zoomIn
         - zoomOut
         -
@@ -67,21 +67,21 @@ Menubar:
         - zoomToAll
         - zoomToCanvas
         - resetTransform
-Toolbar:
+TOOLBAR:
     - load
     - save
     - 
-    - selectionTool
-#    - canvasTool
+    - selectTool: { type: TOGGLE }
+    - handTool: { type: TOGGLE }
     - 
-    - createMarker
-    - createLine
-    - createPath
-    - createRect
-    - createCircle
-    - createEllipse
-    - createText
-    - createImage
+    - markerTool: { type: TOGGLE }
+    - lineTool: { type: TOGGLE }
+    - pathTool: { type: TOGGLE }
+    - rectangleTool: { type: TOGGLE }
+    - circleTool: { type: TOGGLE }
+    - ellipseTool: { type: TOGGLE }
+    - textTool: { type: TOGGLE }
+    - imageTool: { type: TOGGLE }
     - 
     - groupSelected
     - ungroupSelected

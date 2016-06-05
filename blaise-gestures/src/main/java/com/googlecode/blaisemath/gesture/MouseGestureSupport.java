@@ -25,11 +25,9 @@ package com.googlecode.blaisemath.gesture;
  */
 
 
-import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.util.TransformedCoordinateSpace;
 import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -40,12 +38,14 @@ import java.awt.geom.Point2D;
  *   locations during move, press, and drag. Transforms the coordinates into local
  *   space if the source of the events is a {@link TransformedCoordinateSpace}.
  * </p>
+ * <p>
+ *   By default, a mouse release event triggers a call to {@link #complete()}.
+ * </p>
  * 
  * @param <V> one of the super types of the view component
  * 
  * @author Elisha
  */
-@Beta
 public abstract class MouseGestureSupport<V extends Component> extends MouseAdapter implements MouseGesture {
     
     /** Orchestrates the gesture */
@@ -57,9 +57,9 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
     protected final String name;
     /** Description of the gesture */
     protected final String description;
-    /** Consuming flag */
-    private boolean consuming = true;
 
+    /** Whether gesture is currently active */
+    protected boolean active = false;
     /** Where the mouse cursor currently is */
     protected Point2D movePoint = null;
     /** Where the mouse was pressed */
@@ -74,6 +74,12 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }    
+    
+
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     
     @Override
@@ -86,37 +92,28 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
         return description;
     }
 
-    @Override
-    public boolean isConsuming() {
-        return consuming;
-    }
-
-    public void setConsuming(boolean consuming) {
-        this.consuming = consuming;
+    public boolean isActive() {
+        return active;
     }
     
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="GESTURE LIFECYCLE (EMPTY METHODS)">
-
-    @Override
-    public boolean activatesWith(MouseEvent evt) {
-        return true;
-    }
     
     @Override
     public boolean activate() {
-        return true;
-    }
-    
-    @Override
-    public void cancel() {
-        // do nothing by default
+        active = true;
+        return active;
     }
     
     @Override
     public void complete() {
-        // do nothing by default
+        active = false;
+    }
+    
+    @Override
+    public void cancel() {
+        active = false;
     }
     
 
@@ -149,12 +146,14 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
         pressPoint = transformedPoint(e);
         locPoint = pressPoint;
         view.repaint();
+        e.consume();
     }
     
     @Override
     public void mouseDragged(MouseEvent e) {
         locPoint = transformedPoint(e);
         view.repaint();
+        e.consume();
     }
     
     /**
@@ -165,7 +164,7 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseDragged(e);
-        orchestrator.complete(this);
+        orchestrator.completeActiveGesture();
     }
     
     //</editor-fold>
