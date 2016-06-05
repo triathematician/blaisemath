@@ -39,7 +39,6 @@ import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +49,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 /**
  * <p>
@@ -81,8 +81,8 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     protected CoordinateManager<S,Point2D> manager;
     /** Responds to coordinate update events. Also used as a lock object for updates. */
     private final CoordinateListener coordListener;
-    /** Flag that indicates points are being updated */
-    protected boolean updatingPoint = false;
+    /** Flag that indicates points are being updated, and no notification events should be sent. */
+    protected boolean updating = false;
     /** Cached update */
     @GuardedBy("this")
     private CoordinateChangeEvent lastUpdate;
@@ -131,7 +131,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             @Override
             @InvokedFromThread("unknown")
             public void coordinatesChanged(final CoordinateChangeEvent evt) {
-                applyUpdate(evt);
+                handleCoordinateChange(evt);
             }
         };
         
@@ -144,21 +144,25 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     // EVENT HANDLERS
     //
     
-    /** Cancel any pending update and move this one to the top of the queue. */
+    /** Apply updates in the order they are received from the CM by queuing them on the EDT. */
     @InvokedFromThread("unknown")
-    private void applyUpdate(final CoordinateChangeEvent evt) {
-        synchronized (this) {
-            lastUpdate = evt;
-            BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
-                @Override
-                public void run() {
-                    updatePointGraphics(lastUpdate.getAdded(), lastUpdate.getRemoved());
-                }
-            });
-        }
+    private void handleCoordinateChange(final CoordinateChangeEvent evt) {
+        // TODO - add these updates to a local queue
+        SwingUtilities.invokeLater(new Runnable(){
+            @Override
+            public void run() {
+                updatePointGraphics(evt.getAdded(), evt.getRemoved(), true);
+            }
+        });
+    }
+
+    /** Discard any pending update events before proceeding. */
+    private void clearPendingUpdates() {
+        // TODO
     }
     
-    private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
+    private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed, boolean notify) {
+        updating = true;
         boolean change = false;
         List<Graphic<G>> addMe = Lists.newArrayList();
         if (added != null) {
@@ -174,10 +178,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
                     points.put(src, lpg);
                     addMe.add(lpg);
                 } else {
-                    // this should not result in manager changing
-                    updatingPoint = true;
                     dpg.setPrimitive(en.getValue());
-                    updatingPoint = false;
                     change = true;
                 }
             }
@@ -190,19 +191,27 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             }
         }
         change = replaceGraphics(removeMe, addMe) || change;
-        if (change) {
-            super.graphicChanged(this);
+        updating = false;
+        if (change && notify) {
+            fireGraphicChanged();
+        }
+    }
+    
+    @Override
+    protected void fireGraphicChanged() {
+        if (!updating) {
+            super.fireGraphicChanged();
         }
     }
 
     @Override
     public void graphicChanged(Graphic<G> source) {
-        if (!updatingPoint && source instanceof LabeledPointGraphic) {
+        if (!updating && source instanceof LabeledPointGraphic) {
             LabeledPointGraphic<S,G> dpg = (LabeledPointGraphic<S,G>) source;
             manager.put(dpg.getSourceObject(), dpg.getPrimitive());
         }
         // do not propagate events unless flag is false
-        if (!updatingPoint) {
+        if (!updating) {
             super.graphicChanged(source);
         }
     }
@@ -249,12 +258,18 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             if (this.manager != null) {
                 this.manager.removeCoordinateListener(coordListener);
             }
-            Set<S> toRemove = this.manager == null ? Collections.<S>emptySet()
-                    : Sets.newHashSet(this.manager.getActive());
-            this.manager = mgr;
-            toRemove.removeAll(mgr.getActive());
-            applyUpdate(CoordinateChangeEvent.createAddRemoveEvent(this, mgr.getActiveLocationCopy(), toRemove));
-            this.manager.addCoordinateListener(coordListener);
+            this.manager = null;
+            clearPendingUpdates();
+            Set<S> oldPoints = points.keySet();
+            Set<S> toRemove = Sets.newHashSet(oldPoints);
+            synchronized (mgr) {
+                this.manager = mgr;
+                Map<S,Point2D> activePoints = manager.getActiveLocationCopy();
+                toRemove.removeAll(activePoints.keySet());
+                updatePointGraphics(activePoints, toRemove, false);
+                this.manager.addCoordinateListener(coordListener);
+            }
+            super.graphicChanged(this);
         }
     }
 
@@ -286,11 +301,11 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
         if (this.renderer != renderer) {
             Object old = this.renderer;
             this.renderer = renderer;
-            updatingPoint = true;
+            updating = true;
             for (DelegatingPrimitiveGraphic<S,Point2D,G> dpg : points.values()) {
                 dpg.setRenderer(renderer);
             }
-            updatingPoint = false;
+            updating = false;
             fireGraphicChanged();
             pcs.firePropertyChange(RENDERER_PROP, old, renderer);
         }
