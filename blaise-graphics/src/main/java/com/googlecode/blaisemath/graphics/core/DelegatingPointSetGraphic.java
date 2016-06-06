@@ -28,6 +28,7 @@ import com.google.common.base.Functions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import static com.googlecode.blaisemath.graphics.core.LabeledPointGraphic.LABEL_RENDERER_PROP;
@@ -39,15 +40,17 @@ import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.geom.Point2D;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
@@ -66,6 +69,8 @@ import javax.swing.SwingUtilities;
  * @author Elisha Peterson
  */
 public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
+
+    private static final Logger LOG = Logger.getLogger(DelegatingPointSetGraphic.class.getName());
     
     private static final int DEFAULT_NODE_CACHE_SIZE = 20000;
     
@@ -83,9 +88,8 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     private final CoordinateListener coordListener;
     /** Flag that indicates points are being updated, and no notification events should be sent. */
     protected boolean updating = false;
-    /** Cached update */
-    @GuardedBy("this")
-    private CoordinateChangeEvent lastUpdate;
+    /** Queue of updates to be processed */
+    private final Queue<CoordinateChangeEvent> updateQueue = Queues.newConcurrentLinkedQueue();
     
     /** Selects styles for graphics */
     @Nonnull 
@@ -144,23 +148,37 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     // EVENT HANDLERS
     //
     
-    /** Apply updates in the order they are received from the CM by queuing them on the EDT. */
     @InvokedFromThread("unknown")
     private void handleCoordinateChange(final CoordinateChangeEvent evt) {
-        // TODO - add these updates to a local queue
-        SwingUtilities.invokeLater(new Runnable(){
+        updateQueue.add(evt);
+        BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
             @Override
             public void run() {
-                updatePointGraphics(evt.getAdded(), evt.getRemoved(), true);
+                processNextCoordinateChangeEvent();
             }
         });
     }
-
-    /** Discard any pending update events before proceeding. */
-    private void clearPendingUpdates() {
-        // TODO
+    
+    @InvokedFromThread("EDT")
+    private void processNextCoordinateChangeEvent() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            LOG.log(Level.WARNING, "processNextCoordinateChangeEvent() called from non-EDT");
+        }
+        CoordinateChangeEvent evt = updateQueue.poll();
+        if (evt != null && evt.getSource() == manager) {
+            updatePointGraphics(evt.getAdded(), evt.getRemoved(), true);
+        }
     }
     
+    @InvokedFromThread("EDT")
+    private void clearPendingUpdates() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            LOG.log(Level.WARNING, "clearPendingUpdates() called from non-EDT");
+        }
+        updateQueue.clear();
+    }
+    
+    @InvokedFromThread("EDT")
     private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed, boolean notify) {
         updating = true;
         boolean change = false;
@@ -260,8 +278,11 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             }
             this.manager = null;
             clearPendingUpdates();
+            
             Set<S> oldPoints = points.keySet();
             Set<S> toRemove = Sets.newHashSet(oldPoints);
+            // lock to ensure that no changes are made until after the listener
+            // has been setup
             synchronized (mgr) {
                 this.manager = mgr;
                 Map<S,Point2D> activePoints = manager.getActiveLocationCopy();

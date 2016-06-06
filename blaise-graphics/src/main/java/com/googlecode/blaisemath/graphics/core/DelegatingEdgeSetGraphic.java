@@ -26,7 +26,9 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.ObjectStyler;
@@ -40,13 +42,18 @@ import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 /**
  * A collection of edges backed by a common set of points.
@@ -58,7 +65,8 @@ import javax.swing.JPopupMenu;
  * @author elisha
  */
 public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComposite<G> {
-    
+
+    private static final Logger LOG = Logger.getLogger(DelegatingEdgeSetGraphic.class.getName());
     public static final String EDGE_RENDERER_PROP = "edgeRenderer";
 
     /** The edges in the graphic. */
@@ -72,6 +80,10 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     protected CoordinateManager<S, Point2D> pointManager;
     /** Listener for changes to coordinates */
     private final CoordinateListener<S, Point2D> coordListener;
+    /** Flag that indicates points are being updated, and no notification events should be sent. */
+    protected boolean updating = false;
+    /** Queue of updates to be processed */
+    private final Queue<CoordinateChangeEvent> updateQueue = Queues.newConcurrentLinkedQueue();
     
     /**
      * Initialize with default coordinate manager.
@@ -91,12 +103,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             @Override
             @InvokedFromThread("unknown")
             public void coordinatesChanged(CoordinateChangeEvent<S,Point2D> evt) {
-                BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
-                    @Override
-                    public void run() {
-                        updateEdgeGraphics(pointManager.getActiveLocationCopy(), new ArrayList<Graphic<G>>());
-                    }
-                });
+                handleCoordinateChange(evt);
             }
         };
         
@@ -105,10 +112,46 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     }
     
     
-    //<editor-fold defaultstate="collapsed" desc="coordinate updates">
-
-    private void updateEdgeGraphics(Map<S,Point2D> locs, List<Graphic<G>> removeMe) {
-        List<Graphic<G>> addMe = new ArrayList<Graphic<G>>();
+    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
+    
+    @InvokedFromThread("unknown")
+    private void handleCoordinateChange(final CoordinateChangeEvent<S,Point2D> evt) {
+        updateQueue.add(evt);
+        BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+            @Override
+            public void run() {
+                processNextCoordinateChangeEvent();
+            }
+        });
+    }
+    
+    @InvokedFromThread("EDT")
+    private void processNextCoordinateChangeEvent() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            LOG.log(Level.WARNING, "processNextCoordinateChangeEvent() called from non-EDT");
+        }
+        CoordinateChangeEvent evt = updateQueue.poll();
+        if (evt != null && evt.getSource() == pointManager) {
+            updateEdgeGraphics(pointManager.getActiveLocationCopy(), Lists.<Graphic<G>>newArrayList(), true);
+        }
+    }
+    
+    @InvokedFromThread("EDT")
+    private void clearPendingUpdates() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            LOG.log(Level.WARNING, "clearPendingUpdates() called from non-EDT");
+        }
+        updateQueue.clear();
+    }
+                
+    @InvokedFromThread("EDT")
+    private void updateEdgeGraphics(Map<S,Point2D> locs, List<Graphic<G>> removeMe, boolean notify) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            LOG.log(Level.WARNING, "updateEdgeGraphics() called from non-EDT");
+        }
+        updating = true;
+        boolean change = false;
+        List<Graphic<G>> addMe = Lists.newArrayList();
         for (E edge : Sets.newLinkedHashSet(edges.keySet())) {
             DelegatingPrimitiveGraphic<E,Shape,G> dsg = edges.get(edge);
             Point2D p1 = locs.get(edge.getNode1());
@@ -128,10 +171,15 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
                     addMe.add(dsg);
                 } else {
                     dsg.setPrimitive(line);
+                    change = true;
                 }
             }
         }
-        replaceGraphics(removeMe, addMe);
+        change = replaceGraphics(removeMe, addMe) || change;
+        updating = false;
+        if (change && notify) {
+            fireGraphicChanged();
+        }
     }
 
     //</editor-fold>
@@ -146,14 +194,26 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
         return pointManager;
     }
 
-    public final void setCoordinateManager(CoordinateManager<S, Point2D> pointManager) {
-        if (this.pointManager != checkNotNull(pointManager)) {
+    /**
+     * Set manager responsible for tracking point locations
+     * @param mgr manager
+     */
+    public final void setCoordinateManager(CoordinateManager<S, Point2D> mgr) {
+        if (this.pointManager != checkNotNull(mgr)) {
             if (this.pointManager != null) {
                 this.pointManager.removeCoordinateListener(coordListener);
             }
-            this.pointManager = pointManager;
-            this.pointManager.addCoordinateListener(coordListener);
-            updateEdgeGraphics(pointManager.getActiveLocationCopy(), new ArrayList<Graphic<G>>());
+            this.pointManager = null;
+            clearPendingUpdates();
+            
+            // lock to ensure that no changes are made until after the listener
+            // has been setup
+            synchronized (mgr) {
+                this.pointManager = mgr;
+                updateEdgeGraphics(mgr.getActiveLocationCopy(), Lists.<Graphic<G>>newArrayList(), false);
+                this.pointManager.addCoordinateListener(coordListener);
+            }
+            super.graphicChanged(this);
         }
     }
 
@@ -166,32 +226,32 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     }
 
     /**
-     * Sets map describing graphs edges.
-     * Also updates the set of objects to be the nodes within the edges
-     * @param ee new edges to put
+     * Sets map describing graphs edges. Also updates the set of objects to be
+     * the nodes within the edges. Should be called from the EDT.
+     * @param newEdges new edges to put
      */
-    public final void setEdges(Set<? extends E> ee) {
-        Set<E> addMe = new LinkedHashSet<E>();
-        Set<E> removeMe = new HashSet<E>();
-        for (E e : ee) {
+    public final void setEdges(Set<? extends E> newEdges) {
+        Set<E> addMe = Sets.newLinkedHashSet();
+        Set<E> removeMe = Sets.newHashSet();
+        for (E e : newEdges) {
             if (!edges.containsKey(e)) {
                 addMe.add(e);
             }
         }
         for (E e : edges.keySet()) {
-            if (!ee.contains(e)) {
+            if (!newEdges.contains(e)) {
                 removeMe.add(e);
             }
         }
         if (!removeMe.isEmpty() || !addMe.isEmpty()) {
-            List<Graphic<G>> remove = new ArrayList<Graphic<G>>();
+            List<Graphic<G>> remove = Lists.newArrayList();
             for (E e : removeMe) {
                 remove.add(edges.remove(e));
             }
             for (E e : addMe) {
                 edges.put(e, null);
             }
-            updateEdgeGraphics(pointManager.getActiveLocationCopy(), remove);
+            updateEdgeGraphics(pointManager.getActiveLocationCopy(), remove, true);
         }
     }
 
