@@ -84,7 +84,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         if (Strings.isNullOrEmpty(text.getText())) {
             return;
         }
-        Font font = Styles.getFont(style);       
+        Font font = Styles.fontOf(style);       
         canvas.setFont(font);
         canvas.setColor(style.getColor(Styles.FILL));
         canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
@@ -116,7 +116,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
             return null;
         }
 
-        Font font = Styles.getFont(style);
+        Font font = Styles.fontOf(style);
         FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
                 : canvas.getFontRenderContext();
         

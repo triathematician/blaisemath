@@ -29,6 +29,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Floats;
+import com.googlecode.blaisemath.util.Colors;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -126,22 +127,107 @@ public final class Styles {
     //<editor-fold defaultstate="collapsed" desc="UTILITY STYLE/JAVA TRANSLATORS">
     
     /**
+     * Test whether given style has fill parameters: a fill color.
+     * @param style style object
+     * @return true if fill
+     */
+    public static boolean hasFill(AttributeSet style) {
+        return style.get(Styles.FILL) != null;
+    }
+    
+    /**
+     * Test whether given style has stroke parameters: a stroke color and a
+     * positive stroke width.
+     * @param style style object
+     * @return true if stroke
+     */
+    public static boolean hasStroke(AttributeSet style) {
+        Color stroke = style.getColor(Styles.STROKE);
+        Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
+        return stroke != null && strokeWidth != null && strokeWidth > 0;
+    }
+    
+    /**
+     * Get fill color from provided style.
+     * @param style style object
+     * @return fill color
+     */
+    public static Color fillColorOf(AttributeSet style) {
+        Color fill = style.getColor(Styles.FILL);
+        if (style.contains(Styles.OPACITY)) {
+            fill = Colors.alpha(fill, (int) (255*style.getFloat(Styles.OPACITY, 1f)));
+        }
+        if (style.contains(Styles.FILL_OPACITY)) {
+            fill = Colors.alpha(fill, (int) (255*style.getFloat(Styles.FILL_OPACITY, 1f)));
+        }
+        return fill;
+    }
+    
+    /**
+     * Get stroke color from provided style.
+     * @param style style object
+     * @return stroke color
+     */
+    public static Color strokeColorOf(AttributeSet style) {
+        Color stroke = style.getColor(Styles.STROKE);
+        if (style.contains(Styles.OPACITY)) {
+            stroke = Colors.alpha(stroke, (int) (255*style.getFloat(Styles.OPACITY, 1f)));
+        }
+        if (style.contains(Styles.STROKE_OPACITY)) {
+            stroke = Colors.alpha(stroke, (int) (255*style.getFloat(Styles.STROKE_OPACITY, 1f)));
+        }
+        return stroke;
+    }
+    
+    /**
+     * Get font from the provided style.
+     * @param style style object
+     * @return font
+     * @deprecated use {@link #fontOf(com.googlecode.blaisemath.style.AttributeSet)}
+     */
+    @Deprecated
+    public static Font getFont(AttributeSet style) {
+        return fontOf(style);
+    }
+    
+    /**
      * Get font from the provided style.
      * @param style style object
      * @return font
      */
-    public static Font getFont(AttributeSet style) {
+    public static Font fontOf(AttributeSet style) {
         String fontFace = style.getString(Styles.FONT, "Dialog");
         Integer pointSize = style.getInteger(Styles.FONT_SIZE, 12);
         return new Font(fontFace, Font.PLAIN, pointSize);
     }
     
+    /**
+     * Set font parameters in style to given font.
+     * @param style style to set
+     * @param font font
+     */
     public static void setFont(AttributeSet style, Font font) {
         style.put(Styles.FONT, font.getFontName());
         style.put(Styles.FONT_SIZE, font.getSize());
     }
     
+    /**
+     * Get stroke from the provided style.
+     * @param style style object
+     * @return stroke
+     * @deprecated use {@link #strokeOf(com.googlecode.blaisemath.style.AttributeSet)}
+     */
+    @Deprecated
     public static Stroke getStroke(AttributeSet style) {
+        return strokeOf(style);
+    }
+    
+    /**
+     * Get stroke from the provided style.
+     * @param style style object
+     * @return stroke
+     */
+    public static Stroke strokeOf(AttributeSet style) {
         float strokeWidth = style.getFloat(Styles.STROKE_WIDTH, 1f);
         String dashes = style.getString(Styles.STROKE_DASHES, null);
         if (!Strings.isNullOrEmpty(dashes)) {
@@ -170,8 +256,21 @@ public final class Styles {
      * @param style the style to get anchor from
      * @param def default anchor if there is none set
      * @return anchor
+     * @deprecated use {@link #anchorOf(com.googlecode.blaisemath.style.AttributeSet, com.googlecode.blaisemath.style.Anchor)}
      */
+    @Deprecated
     public static Anchor getAnchor(AttributeSet style, Anchor def) {
+        return anchorOf(style, def);
+    }
+    
+    /**
+     * Retrieve text anchor from style. Permits the anchor to be either a string
+     * or an instance of {@link Anchor}.
+     * @param style the style to get anchor from
+     * @param def default anchor if there is none set
+     * @return anchor
+     */
+    public static Anchor anchorOf(AttributeSet style, Anchor def) {
         Object styleAnchor = style.get(Styles.TEXT_ANCHOR);
         if (styleAnchor == null) {
             return def;

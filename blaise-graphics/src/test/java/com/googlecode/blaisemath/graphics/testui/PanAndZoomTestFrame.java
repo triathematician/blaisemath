@@ -56,6 +56,7 @@ public class PanAndZoomTestFrame extends javax.swing.JFrame {
         // all it takes to add selection capability!
         gc.setSelectionEnabled(true);
         gc.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 System.out.println(evt.getPropertyName()+" : "+evt.getNewValue());
             }
@@ -115,6 +116,7 @@ public class PanAndZoomTestFrame extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new PanAndZoomTestFrame().setVisible(true);
             }

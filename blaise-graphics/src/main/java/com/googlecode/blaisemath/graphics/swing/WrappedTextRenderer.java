@@ -127,7 +127,7 @@ public class WrappedTextRenderer extends TextRenderer {
             return;
         }
         
-        canvas.setFont(Styles.getFont(style));
+        canvas.setFont(Styles.fontOf(style));
         canvas.setColor(style.getColor(Styles.FILL));
         Rectangle2D clip = clipPath.getBounds2D();
         if (clipPath instanceof Ellipse2D) {
@@ -162,7 +162,7 @@ public class WrappedTextRenderer extends TextRenderer {
 
     private void drawInRectangle(String string, AttributeSet style, Rectangle2D rect, Graphics2D canvas) {
         // make font smaller if lots of words
-        Font font = Styles.getFont(style);
+        Font font = Styles.fontOf(style);
         if (rect.getWidth() * rect.getHeight() < (font.getSize() * font.getSize() / 1.5) * string.length()
                 || rect.getWidth() < font.getSize() * 5) {
             font = font.deriveFont(font.getSize2D()-2);
@@ -172,7 +172,7 @@ public class WrappedTextRenderer extends TextRenderer {
         List<String> lines = computeLineBreaks(string, font, rect.getWidth(), rect.getHeight());
         double y0;
         
-        Anchor textAnchor = Styles.getAnchor(style, Anchor.CENTER);
+        Anchor textAnchor = Styles.anchorOf(style, Anchor.CENTER);
         switch (textAnchor) {
             case NORTH: 
                 // fall through

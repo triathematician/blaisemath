@@ -29,7 +29,6 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
@@ -55,23 +54,17 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
     
     @Override
     public void render(Shape primitive, AttributeSet style, Graphics2D canvas) {
-        Color stroke = style.getColor(Styles.STROKE);
-        Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
-        if (stroke != null && strokeWidth != null && strokeWidth > 0) {
-            canvas.setColor(stroke);
-            canvas.setStroke(Styles.getStroke(style));
+        if (Styles.hasStroke(style)) {
+            canvas.setColor(Styles.strokeColorOf(style));
+            canvas.setStroke(Styles.strokeOf(style));
             canvas.draw(primitive);
         }
     }
     
     public static Shape strokedShape(Shape primitive, AttributeSet style) {
-        Color stroke = style.getColor(Styles.STROKE);
-        Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
-        if (stroke != null && strokeWidth != null && strokeWidth > 0) {
-            return new BasicStroke(strokeWidth).createStrokedShape(primitive);
-        } else {
-            return null;
-        }
+        return Styles.hasStroke(style)
+                ? new BasicStroke(style.getFloat(Styles.STROKE_WIDTH)).createStrokedShape(primitive)
+                : null;
     }
 
     @Override

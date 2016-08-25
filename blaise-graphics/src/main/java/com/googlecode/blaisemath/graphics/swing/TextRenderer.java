@@ -86,7 +86,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
 
         canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         canvas.setColor(style.getColor(Styles.FILL, Color.black));
-        canvas.setFont(Styles.getFont(style));
+        canvas.setFont(Styles.fontOf(style));
         Rectangle2D bounds = boundingBox(primitive, style, canvas);
         canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getMaxY()));
     }
@@ -144,7 +144,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
             return null;
         }
         
-        Font font = Styles.getFont(style);
+        Font font = Styles.fontOf(style);
         FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
                 : canvas.getFontRenderContext();
         double width = font.getStringBounds(primitive.getText(), frc).getWidth();

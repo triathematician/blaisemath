@@ -151,7 +151,7 @@ public class TextPathRenderer extends PathRenderer {
 
     @Override
     public void render(Shape primitive, AttributeSet style, Graphics2D canvas) {
-        Font f = Styles.getFont(textStyle);
+        Font f = Styles.fontOf(textStyle);
         canvas.setFont(f);
         canvas.setStroke(new TextStroke(pathText, f, stretch, false));
         canvas.setColor(textStyle.getColor(Styles.FILL));

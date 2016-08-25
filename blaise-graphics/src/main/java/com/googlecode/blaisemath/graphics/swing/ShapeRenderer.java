@@ -28,9 +28,6 @@ package com.googlecode.blaisemath.graphics.swing;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.Colors;
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
@@ -49,48 +46,28 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         return INST;
     }
     
-    private static Color fillColor(AttributeSet style) {
-        Color fill = style.getColor(Styles.FILL);
-        if (style.contains(Styles.OPACITY)) {
-            fill = Colors.alpha(fill, (int) (255*style.getFloat(Styles.OPACITY, 1f)));
-        }
-        if (style.contains(Styles.FILL_OPACITY)) {
-            fill = Colors.alpha(fill, (int) (255*style.getFloat(Styles.FILL_OPACITY, 1f)));
-        }
-        return fill;
-    }
-    
-    private static Color strokeColor(AttributeSet style) {
-        Color stroke = style.getColor(Styles.STROKE);
-        if (style.contains(Styles.OPACITY)) {
-            stroke = Colors.alpha(stroke, (int) (255*style.getFloat(Styles.OPACITY, 1f)));
-        }
-        if (style.contains(Styles.STROKE_OPACITY)) {
-            stroke = Colors.alpha(stroke, (int) (255*style.getFloat(Styles.STROKE_OPACITY, 1f)));
-        }
-        return stroke;
+    @Override
+    public String toString() {
+        return "ShapeRenderer";
     }
     
     @Override
     public void render(Shape primitive, AttributeSet style, Graphics2D canvas) {
-        boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
-        if (filled) {
-            canvas.setColor(fillColor(style));
+        if (Styles.hasFill(style)) {
+            canvas.setColor(Styles.fillColorOf(style));
             canvas.fill(primitive);
         }
         
-        Color stroke = strokeColor(style);
-        Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
-        if (stroke != null && strokeWidth != null && strokeWidth > 0) {
-            canvas.setColor(stroke);
-            canvas.setStroke(new BasicStroke(strokeWidth));
+        if (Styles.hasStroke(style)) {
+            canvas.setColor(Styles.strokeColorOf(style));
+            canvas.setStroke(Styles.strokeOf(style));
             canvas.draw(primitive);
         }
     }
 
     @Override
     public Rectangle2D boundingBox(Shape primitive, AttributeSet style) {
-        boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
+        boolean filled = Styles.hasFill(style);
         Shape sh = PathRenderer.strokedShape(primitive, style);
         if (filled && sh != null) {
             return primitive.getBounds2D().createUnion(sh.getBounds2D());
@@ -105,8 +82,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
 
     @Override
     public boolean contains(Shape primitive, AttributeSet style, Point2D point) {
-        boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
-        if (filled && primitive.contains(point)) {
+        if (Styles.hasFill(style) && primitive.contains(point)) {
             return true;
         } else {
             Shape sh = PathRenderer.strokedShape(primitive, style);
@@ -116,8 +92,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
 
     @Override
     public boolean intersects(Shape primitive, AttributeSet style, Rectangle2D rect) {
-        boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
-        if (filled && primitive.intersects(rect)) {
+        if (Styles.hasFill(style) && primitive.intersects(rect)) {
             return true;            
         } else {
             Shape sh = PathRenderer.strokedShape(primitive, style);
