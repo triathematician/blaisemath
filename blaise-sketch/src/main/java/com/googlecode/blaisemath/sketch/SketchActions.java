@@ -42,6 +42,7 @@ import com.googlecode.blaisemath.graphics.core.GraphicUtils;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.AttributeSets;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import com.googlecode.blaisemath.util.Points;
@@ -345,7 +346,7 @@ public class SketchActions {
             return;
         }
         for (Graphic<Graphics2D> g : gr) {
-            g.getStyle().put(name, value);
+            g.getStyle().put(name, AttributeSets.valueFromString(value));
         }
     }
     
