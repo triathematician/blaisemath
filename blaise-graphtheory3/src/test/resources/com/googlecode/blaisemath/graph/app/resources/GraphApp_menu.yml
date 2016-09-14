@@ -1,0 +1,53 @@
+## YAML Template.
+---
+MENUBAR:
+  - File:
+    - quit
+  - generateGraph: {
+      name: Generator,
+      options: com.googlecode.blaisemath.graph.GraphServices#generators
+    }
+  - Layout:
+    - staticLayout: {
+      name: Static Layout,
+      options: com.googlecode.blaisemath.graph.GraphServices#staticLayouts
+    }
+    - iterativeLayout: {
+      name: Iterative layout,
+      options: com.googlecode.blaisemath.graph.GraphServices#iterativeLayouts
+    }
+    - startLayout
+    - stopLayout
+  - Calculate:
+    - globalMetric: {
+      name: Global Metric,
+      options: com.googlecode.blaisemath.graph.GraphServices#globalMetrics
+    }
+    - nodeMetric: {
+      name: Node Metric,
+      options: com.googlecode.blaisemath.graph.GraphServices#nodeMetrics
+    }
+    - subsetMetric: {
+      name: Subset Metric,
+      options: com.googlecode.blaisemath.graph.GraphServices#subsetMetrics
+    }
+  - View:
+    - zoomIn
+    - zoomOut
+    - zoomToSelected
+    - zoomToAll
+    - zoom100
+TOOLBAR:
+  - zoomToAll
+  -
+  - startLayout
+  - stopLayout
+  -
+  - pinSelected
+Canvas:
+  - zoomIn
+  - zoomOut
+  - zoomToSelected
+  - zoomToAll
+  - zoom100
+    
