@@ -153,7 +153,7 @@ public final class SketchFrameView extends FrameView {
     
     //<editor-fold defaultstate="collapsed" desc="INITIALIZERS">
     private void initGestureListening() {
-        canvas.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
+        canvas.addPropertyChangeListener(GestureOrchestrator.P_ACTIVE_GESTURE,
             new PropertyChangeListener(){
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {

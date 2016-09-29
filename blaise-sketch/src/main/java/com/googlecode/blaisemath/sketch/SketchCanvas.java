@@ -133,6 +133,7 @@ public final class SketchCanvas {
      */
     public SketchCanvas(ActionMap actions) {
         canvas = new JGraphicComponent();
+        canvas.setSelectionEnabled(false);
         canvas.getOverlays().add((component, canvas) -> pcs.firePropertyChange(P_REPAINT, false, true));
         
         canvasModel = new SketchCanvasModel();
@@ -163,7 +164,7 @@ public final class SketchCanvas {
     }
     
     private void initGestureOrchestrator() {
-        orchestrator.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP, evt -> {
+        orchestrator.addPropertyChangeListener(GestureOrchestrator.P_ACTIVE_GESTURE, evt -> {
             orchestratorPropertyChange(evt);
         });
         orchestrator.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
@@ -177,6 +178,7 @@ public final class SketchCanvas {
         pcs.firePropertyChange(old == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(old.getClass()), true, false);
         pcs.firePropertyChange(nue == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(nue.getClass()), false, true);
         pcs.firePropertyChange(evt);
+        canvas.requestFocusInWindow();
     }
     
     /** Initialize selection handling */
@@ -482,13 +484,13 @@ public final class SketchCanvas {
             try {
                 Constructor<G> con = type.getConstructor(GestureOrchestrator.class);
                 G gesture = con.newInstance(orchestrator);
-                orchestrator.setActiveGesture(gesture);
+                orchestrator.activateGesture(gesture);
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException 
                     | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new IllegalArgumentException(ex);
             }
         } else {
-            orchestrator.setActiveGesture(null);
+            orchestrator.completeActiveGesture();
         }
     }
     

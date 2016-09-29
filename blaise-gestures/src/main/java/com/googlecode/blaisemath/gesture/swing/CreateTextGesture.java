@@ -12,6 +12,8 @@ import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Graphics2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
 import static javax.swing.JOptionPane.OK_OPTION;
@@ -44,6 +46,8 @@ import javax.swing.JTextArea;
  * @author Elisha
  */
 public class CreateTextGesture extends CreateGraphicGesture {
+
+    private static final Logger LOG = Logger.getLogger(CreateTextGesture.class.getName());
     
     private String text;
     
@@ -53,6 +57,9 @@ public class CreateTextGesture extends CreateGraphicGesture {
 
     @Override
     public boolean activate() {
+        if (active) {
+            LOG.log(Level.WARNING, "Attempted to activate gesture twice.");
+        }
         JTextArea textArea = new JTextArea();
         BSwingUtilities.requestFocusWhenShown(textArea);
         if (OK_OPTION == JOptionPane.showConfirmDialog(null, new JScrollPane(textArea),

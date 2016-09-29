@@ -59,6 +59,9 @@ public class CreateImageGesture extends CreateGraphicGesture {
 
     @Override
     public boolean activate() {
+        if (active) {
+            LOG.log(Level.WARNING, "Attempted to activate gesture twice.");
+        }
         if (JFileChooser.APPROVE_OPTION == CHOOSER.showOpenDialog(null)) {
             imageFile = CHOOSER.getSelectedFile();
             if (imageFile != null) {

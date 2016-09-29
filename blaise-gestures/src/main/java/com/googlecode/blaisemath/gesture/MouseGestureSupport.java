@@ -31,6 +31,8 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -47,6 +49,8 @@ import java.awt.geom.Point2D;
  * @author Elisha
  */
 public abstract class MouseGestureSupport<V extends Component> extends MouseAdapter implements MouseGesture {
+
+    private static final Logger LOG = Logger.getLogger(MouseGestureSupport.class.getName());
     
     /** Orchestrates the gesture */
     protected final GestureOrchestrator<V> orchestrator;
@@ -102,6 +106,9 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
     
     @Override
     public boolean activate() {
+        if (active) {
+            LOG.log(Level.WARNING, "Attempted to activate gesture twice.");
+        }
         active = true;
         return active;
     }
