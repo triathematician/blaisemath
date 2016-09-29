@@ -24,7 +24,11 @@ package com.googlecode.blaisemath.util.swing;
  * #L%
  */
 
+import java.awt.event.ComponentEvent;
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 /**
  * Utilities for swing.
@@ -49,4 +53,24 @@ public class BSwingUtilities {
         }
     }
     
+    /**
+     * Registers a listener for the component to request focus when it is shown.
+     * @param c the component to focus
+     */
+    public static void requestFocusWhenShown(final JComponent c) {
+        AncestorListener listener = new AncestorListener(){
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                c.requestFocusInWindow();
+                c.removeAncestorListener(this);
+            }
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+            }
+            @Override
+            public void ancestorMoved(AncestorEvent event) {
+            }
+        };
+        c.addAncestorListener(listener);
+    }
 }
