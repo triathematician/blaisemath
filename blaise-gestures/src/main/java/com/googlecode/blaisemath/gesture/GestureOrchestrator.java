@@ -139,18 +139,32 @@ public final class GestureOrchestrator<V extends Component> {
     public void setActiveGesture(@Nullable MouseGesture g) {
         if (activeGesture != g) {
             MouseGesture old = activeGesture;
-            if (old != null) {
+            if (old != null && old.isActive()) {
                 cancelGesture(old);
             }
-            activeGesture = g;
-            if (g != null && activateGesture(g)) {
-                LOG.log(Level.INFO, "Gesture activated: {0}", g);
-            } else if (g != null) {
+            if (g == null) {
                 activeGesture = null;
-                LOG.log(Level.WARNING, "Gesture activation failed: {0}", g);
+            } else {
+                activeGesture = tryActivate(g);
             }
             pcs.firePropertyChange(ACTIVE_GESTURE_PROP, old, activeGesture);
         }
+    }
+    
+    private MouseGesture tryActivate(MouseGesture g) {
+        boolean activated = g.isActive();
+        MouseGesture res = g;
+        if (activated) {
+            LOG.log(Level.INFO, "Gesture already activated: {0}", g);
+        } else {
+            activated = activateGesture(g);
+            LOG.log(Level.INFO, "Gesture activated: {0}", g);
+        }
+        if (!activated) {
+            res = null;
+            LOG.log(Level.WARNING, "Gesture activation failed: {0}", g);
+        }
+        return res;
     }
     
     //</editor-fold>

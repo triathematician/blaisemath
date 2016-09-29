@@ -33,7 +33,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
- * Proxy for editing a graphic's primitive and style.
+ * Proxy for editing a {@link Graphic}'s primitive and most common style settings.
+ * 
  * @author elisha
  */
 public final class GraphicStyleProxy {
@@ -46,6 +47,8 @@ public final class GraphicStyleProxy {
     public GraphicStyleProxy(Graphic graphic) {
         this.graphic = graphic;
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     
     public Color getFill() {
         return graphic.getStyle().getColor(Styles.FILL, null);
@@ -84,6 +87,8 @@ public final class GraphicStyleProxy {
             throw new UnsupportedOperationException();
         }
     }
+    
+    // </editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE LISTENING">
     //

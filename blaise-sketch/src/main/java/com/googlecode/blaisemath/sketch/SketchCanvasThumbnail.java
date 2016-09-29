@@ -26,6 +26,10 @@ package com.googlecode.blaisemath.sketch;
 
 
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Styles;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -45,11 +49,13 @@ public class SketchCanvasThumbnail extends JComponent {
         this.canvas = canvas;
         setMinimumSize(new Dimension(100, 100));
         setPreferredSize(new Dimension(150, 150));
+        canvas.addPropertyChangeListener(evt -> repaint());
     }
     
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        
         Rectangle2D canvasBounds = canvas.getCanvasModel().getBoundingBox();
         AffineTransform at = PanAndZoomHandler.scaleRectTransform(getBounds(), 
                 new Rectangle2D.Double(canvasBounds.getMinX()-10, canvasBounds.getMinY()-10,
@@ -57,6 +63,14 @@ public class SketchCanvasThumbnail extends JComponent {
         g2.transform(at);
         canvas.getCanvasModel().paintCanvas(g2, null);
         canvas.getGraphicRoot().renderTo(g2);
+        
+        Rectangle2D visibleBounds = canvas.getVisibleBounds();
+        AttributeSet style = AttributeSet.of(
+                Styles.FILL, new Color(128, 128, 255),
+                Styles.STROKE, new Color(0, 0, 255),
+                Styles.STROKE_WIDTH, 2)
+                .and(Styles.OPACITY, .5);
+        ShapeRenderer.getInstance().render(visibleBounds, style, g2);
     }
     
 }

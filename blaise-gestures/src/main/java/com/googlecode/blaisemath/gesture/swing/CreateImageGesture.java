@@ -46,6 +46,8 @@ import javax.swing.JOptionPane;
  */
 public class CreateImageGesture extends CreateGraphicGesture {
 
+    private static final Logger LOG = Logger.getLogger(CreateImageGesture.class.getName());
+    
     private static final JFileChooser CHOOSER = new JFileChooser();
     
     private File imageFile;
@@ -57,22 +59,19 @@ public class CreateImageGesture extends CreateGraphicGesture {
 
     @Override
     public boolean activate() {
-        imageFile = JFileChooser.APPROVE_OPTION == CHOOSER.showOpenDialog(null)
-                ? CHOOSER.getSelectedFile() : null;
-        image = null;
-        if (imageFile != null) {
-            try {
-                image = ImageIO.read(imageFile);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Unable to load image.", "Error", JOptionPane.ERROR_MESSAGE);
-                Logger.getLogger(CreateImageGesture.class.getName()).log(Level.FINE, "Invalid image location", ex);
+        if (JFileChooser.APPROVE_OPTION == CHOOSER.showOpenDialog(null)) {
+            imageFile = CHOOSER.getSelectedFile();
+            if (imageFile != null) {
+                try {
+                    image = ImageIO.read(imageFile);
+                    active = true;
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Unable to load image.", "Error", JOptionPane.ERROR_MESSAGE);
+                    LOG.log(Level.FINE, "Invalid image location", ex);
+                }
             }
         }
-        if (image == null) {
-            JOptionPane.showMessageDialog(null, "Not an image: "+imageFile, "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
+        return active;
     }
 
     @Override

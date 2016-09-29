@@ -10,6 +10,7 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.MultilineTextRenderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Graphics2D;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
@@ -53,18 +54,19 @@ public class CreateTextGesture extends CreateGraphicGesture {
     @Override
     public boolean activate() {
         JTextArea textArea = new JTextArea();
+        BSwingUtilities.requestFocusWhenShown(textArea);
         if (OK_OPTION == JOptionPane.showConfirmDialog(null, new JScrollPane(textArea),
                 "Enter text", OK_CANCEL_OPTION)) {
             text = textArea.getText();
-            return !Strings.isNullOrEmpty(text);
+            active = !Strings.isNullOrEmpty(text);
         }
-        return false;
+        return active;
     }
 
     @Override
     protected Graphic<Graphics2D> createGraphic() {
         return locPoint == null ? null
-                : new PrimitiveGraphic<AnchoredText,Graphics2D>(
+                : new PrimitiveGraphic<>(
                         new AnchoredText(locPoint, text), 
                         Styles.DEFAULT_TEXT_STYLE.copy(), 
                         MultilineTextRenderer.getInstance());

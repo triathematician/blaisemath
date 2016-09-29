@@ -47,6 +47,7 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import static com.googlecode.blaisemath.sketch.SketchFrameView.SELECTION_EMPTY_PROP;
+import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -77,6 +78,8 @@ import org.jdesktop.application.Action;
  * @author elisha
  */
 public final class SketchCanvas {
+
+    private static final Logger LOG = Logger.getLogger(SketchCanvas.class.getName());
     
     //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
     
@@ -94,6 +97,9 @@ public final class SketchCanvas {
     private static final String P_TEXT_TOOL_ACTIVE = "textToolActive";
     private static final String P_IMAGE_TOOL_ACTIVE = "imageToolActive";
     
+    /** For events indicating the component has been repainted. */
+    private static final String P_REPAINT = "repaint";
+    
     private static final ImmutableMap<Class<? extends MouseGesture>,String> TOOL_MAP 
             = ImmutableMap.<Class<? extends MouseGesture>,String>builder()
             .put(CreateMarkerGesture.class, P_MARKER_TOOL_ACTIVE)
@@ -108,7 +114,7 @@ public final class SketchCanvas {
     
     //</editor-fold>
 
-    /** The layer component wrapping the graphic canvas. */
+    /** The layer component wrapping the graphic canvas, responsible for delegating events. */
     private final JLayer<JGraphicComponent> layer;
     /** The graphic canvas. */
     private final JGraphicComponent canvas;
@@ -126,43 +132,43 @@ public final class SketchCanvas {
      * @param actions provides actions for menus
      */
     public SketchCanvas(ActionMap actions) {
-        canvasModel = new SketchCanvasModel();
-        
         canvas = new JGraphicComponent();
-        canvas.setSelectionEnabled(true);
+        canvas.getOverlays().add((component, canvas) -> pcs.firePropertyChange(P_REPAINT, false, true));
+        
+        canvasModel = new SketchCanvasModel();
         canvas.getUnderlays().add(canvasModel.underlay());
 
-        // set up menus
-        try {
-            List<String> selCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(SELECTION_CM_KEY);
-            canvas.getGraphicRoot().addContextMenuInitializer(new ActionMenuInitializer<Graphic<Graphics2D>>(
-                    "Selection", actions, selCm.toArray(new String[0])));
-            List<String> cnvCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(CANVAS_CM_KEY); 
-            canvas.getGraphicRoot().addContextMenuInitializer(new ActionMenuInitializer<Graphic<Graphics2D>>(
-                    null, actions, cnvCm.toArray(new String[0])));
-        } catch (IOException ex) {
-            Logger.getLogger(SketchFrameView.class.getName()).log(Level.SEVERE, 
-                    "Menu config failure.", ex);
-        }
+        initMenus(actions);
 
-        //<editor-fold defaultstate="collapsed" desc="create gesture controller with overlay for intercepting events and rendering gesture hints">
+        // set up gestures
         GestureLayerUI gestureUI = new GestureLayerUI();
         layer = new JLayer<>(canvas, gestureUI);
         orchestrator = gestureUI.getGestureOrchestrator();
-        assert orchestrator != null;
-        orchestrator.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
-            new PropertyChangeListener(){
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    orchestratorPropertyChange(evt);
-                }
-            });
+        initGestureOrchestrator();
+
+        initSelectionHandling();
+    }
+    
+    private void initMenus(ActionMap actions) {
+        try {
+            List<String> selCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(SELECTION_CM_KEY);
+            canvas.getGraphicRoot().addContextMenuInitializer(new ActionMenuInitializer<>(
+                    "Selection", actions, selCm.toArray(new String[0])));
+            List<String> cnvCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(CANVAS_CM_KEY); 
+            canvas.getGraphicRoot().addContextMenuInitializer(new ActionMenuInitializer<>(
+                    null, actions, cnvCm.toArray(new String[0])));
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, "Menu config failure.", ex);
+        }
+    }
+    
+    private void initGestureOrchestrator() {
+        orchestrator.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP, evt -> {
+            orchestratorPropertyChange(evt);
+        });
         orchestrator.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
         new MouseSelectionHandler(orchestrator);
         new MousePanAndZoomHandler(orchestrator);
-        //</editor-fold>
-        
-        initSelectionHandling();
     }
 
     private void orchestratorPropertyChange(PropertyChangeEvent evt) {
@@ -175,27 +181,24 @@ public final class SketchCanvas {
     
     /** Initialize selection handling */
     private void initSelectionHandling() {
-        canvas.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                pcs.firePropertyChange(evt);
-                
-                // propagate flags
-                boolean selEmpty = getSelection().isEmpty();
-                pcs.firePropertyChange(SELECTION_EMPTY_PROP, !selEmpty, selEmpty);
-                
-                // set active gesture
-                Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
-                if (!sel.isEmpty()) {
-                    initSelectionGesture(sel);
-                }
+        canvas.setSelectionEnabled(true);
+        canvas.getSelectionModel().addPropertyChangeListener(evt -> {
+            pcs.firePropertyChange(evt);
+            
+            // propagate flags
+            boolean selEmpty = getSelection().isEmpty();
+            pcs.firePropertyChange(SELECTION_EMPTY_PROP, !selEmpty, selEmpty);
+            
+            // set active gesture
+            Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
+            if (!sel.isEmpty()) {
+                initSelectionGesture(sel);
             }
         });
     }
     
     /** Initializes selection gesture for the given selection. */
-    private void initSelectionGesture(Set<Graphic> sel) 
-    {
+    private void initSelectionGesture(Set<Graphic> sel) {
         if (sel.size() == 1) {
             Graphic gfc = Iterables.getFirst(sel, null);
             if (gfc instanceof PrimitiveGraphicSupport) {
@@ -229,6 +232,14 @@ public final class SketchCanvas {
      */
     public GraphicComposite<Graphics2D> getGraphicRoot() {
         return canvas.getGraphicRoot();
+    }
+    
+    /**
+     * Get the visible boundaries of the canvas, in local coordinates.
+     * @return boundaries
+     */
+    public Rectangle2D getVisibleBounds() {
+        return PanAndZoomHandler.getLocalBounds(canvas);
     }
 
     /**
@@ -467,17 +478,7 @@ public final class SketchCanvas {
     
     /** Turns focal gesture of given type on or off */
     private <G extends MouseGesture> void setFocalGesture(Class<G> type, boolean val) {
-        if (!val) {
-            setFocalGesture(null, true);
-            return;
-        }
-        assert val == true;
-        if (isFocalGesture(type)) {
-            return;
-        }
-        if (type == null) {
-            orchestrator.cancelActiveGesture();
-        } else {
+        if (type != null && val) {
             try {
                 Constructor<G> con = type.getConstructor(GestureOrchestrator.class);
                 G gesture = con.newInstance(orchestrator);
@@ -486,6 +487,8 @@ public final class SketchCanvas {
                     | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new IllegalArgumentException(ex);
             }
+        } else {
+            orchestrator.setActiveGesture(null);
         }
     }
     

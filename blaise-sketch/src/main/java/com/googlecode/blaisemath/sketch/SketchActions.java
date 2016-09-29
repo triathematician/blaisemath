@@ -81,6 +81,8 @@ import javax.swing.JOptionPane;
  */
 public class SketchActions {
 
+    private static final Logger LOG = Logger.getLogger(SketchActions.class.getName());
+    
     private static DataFlavor AS_DATA_FLAVOR;
     private static DataFlavor DIM_DATA_FLAVOR;
     private static DataFlavor GRAPHIC_DATA_FLAVOR;
@@ -93,8 +95,7 @@ public class SketchActions {
             GRAPHIC_DATA_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType 
                     + ";class=com.googlecode.blaisemath.graphics.core.Graphic");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE,
-                    "Problem initializing data flavors.", ex);
+            LOG.log(Level.SEVERE, "Problem initializing data flavors.", ex);
         }
     }
     
@@ -187,15 +188,13 @@ public class SketchActions {
                 if (graphic instanceof PrimitiveGraphicSupport) {
                     setPrimitiveLocation((PrimitiveGraphicSupport) graphic, canvasLoc);
                 } else {
-                    Logger.getLogger(SketchActions.class.getName()).log(Level.WARNING,
-                            "Attempted to paste graphic at a specified location failed because the graphic was of type {0}", graphic.getClass());
+                    LOG.log(Level.WARNING, "Attempted to paste graphic at a specified "
+                            + "location failed because the graphic was of type {0}", graphic.getClass());
                 }
                 canvas.addGraphic(graphic);
                 SketchGraphicUtils.configureGraphicTree(graphic, true);
-            } catch (UnsupportedFlavorException ex) {
-                Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnsupportedFlavorException | IOException ex) {
+                LOG.log(Level.SEVERE, "Paste error", ex);
             }
         }
     }
@@ -225,17 +224,13 @@ public class SketchActions {
             } else if (tr.isDataFlavorSupported(GRAPHIC_DATA_FLAVOR)) {
                 pasteStyle = ((Graphic) tr.getTransferData(GRAPHIC_DATA_FLAVOR)).getStyle();
             }
-        } catch (UnsupportedFlavorException ex) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedFlavorException | IOException ex) {
+            LOG.log(Level.SEVERE, "Paste error", ex);
         }
         if (pasteStyle != null) {
             for (Graphic<Graphics2D> gfc : gfcs) {
                 AttributeSet as = gfc.getStyle();
-//                if (!(as instanceof ImmutableAttributeSet)) {
-                    as.putAll(pasteStyle.getAttributeMap());
-//                }
+                as.putAll(pasteStyle.getAttributeMap());
                 gfc.getParent().graphicChanged(gfc);
             }
         }
@@ -267,10 +262,8 @@ public class SketchActions {
                 Rectangle2D bds = ((Graphic) tr.getTransferData(GRAPHIC_DATA_FLAVOR)).boundingBox();
                 pasteDim = new Dimension((int) bds.getWidth(), (int) bds.getHeight());
             }
-        } catch (UnsupportedFlavorException ex) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedFlavorException | IOException ex) {
+            LOG.log(Level.SEVERE, "Paste error", ex);
         }
         if (pasteDim != null) {
             for (Graphic<Graphics2D> gfc : gfcs) {
@@ -427,7 +420,7 @@ public class SketchActions {
         }
         
         // create the new group and add it to the new parent
-        GraphicComposite<Graphics2D> groupGraphic = new GraphicComposite<Graphics2D>();
+        GraphicComposite<Graphics2D> groupGraphic = new GraphicComposite<>();
         SketchGraphicUtils.configureGraphic(groupGraphic);
         groupGraphic.addGraphics(selection);
         composite.addGraphic(groupGraphic);
@@ -458,9 +451,9 @@ public class SketchActions {
     //<editor-fold defaultstate="collapsed" desc="ARRANGING">
 
     public static void moveForward(Set<Graphic<Graphics2D>> selection) {
-        for (Graphic<Graphics2D> g : selection) {
+        selection.stream().forEach(g -> {
             moveForward(g);
-        }
+        });
     }
 
     public static void moveForward(Graphic<Graphics2D> gr) {
@@ -475,9 +468,9 @@ public class SketchActions {
     }
 
     public static void moveBackward(Set<Graphic<Graphics2D>> selection) {
-        for (Graphic<Graphics2D> g : selection) {
+        selection.stream().forEach(g -> {
             moveBackward(g);
-        }
+        });
     }
 
     public static void moveBackward(Graphic<Graphics2D> gr) {
@@ -492,9 +485,9 @@ public class SketchActions {
     }
 
     public static void moveToFront(Set<Graphic<Graphics2D>> selection) {
-        for (Graphic<Graphics2D> g : selection) {
+        selection.stream().forEach(g -> {
             moveToFront(g);
-        }
+        });
     }
 
     public static void moveToFront(Graphic<Graphics2D> gr) {
@@ -509,9 +502,9 @@ public class SketchActions {
     }
 
     public static void moveToBack(Set<Graphic<Graphics2D>> selection) {
-        for (Graphic<Graphics2D> g : selection) {
+        selection.stream().forEach(g -> {
             moveToBack(g);
-        }
+        });
     }
 
     public static void moveToBack(Graphic<Graphics2D> gr) {
@@ -566,8 +559,7 @@ public class SketchActions {
     public static void alignHorizontal(Set<Graphic<Graphics2D>> selection) {
         Iterable<Graphic<Graphics2D>> sub = Iterables.filter(selection, MOVABLE_PREDICATE);
         if (Iterables.size(sub) < 2) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.INFO,
-                    "Cannot align with fewer than 2 movable predicates.");
+            LOG.log(Level.INFO, "Cannot align with fewer than 2 movable predicates.");
             return;
         }
         ImmutableMap<Graphic<Graphics2D>,Point2D> locs = Maps.toMap(sub, LOC_FUNCTION);
@@ -580,8 +572,7 @@ public class SketchActions {
     public static void alignVertical(Set<Graphic<Graphics2D>> selection) {
         Iterable<Graphic<Graphics2D>> sub = Iterables.filter(selection, MOVABLE_PREDICATE);
         if (Iterables.size(sub) < 2) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.INFO,
-                    "Cannot align with fewer than 2 movable predicates.");
+            LOG.log(Level.INFO, "Cannot align with fewer than 2 movable predicates.");
             return;
         }
         ImmutableMap<Graphic<Graphics2D>,Point2D> locs = Maps.toMap(sub, LOC_FUNCTION);
@@ -595,8 +586,7 @@ public class SketchActions {
         List<Graphic<Graphics2D>> sub = Lists.newArrayList(Iterables.filter(selection, MOVABLE_PREDICATE));
         int count = Iterables.size(sub);
         if (count < 2) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.INFO,
-                    "Cannot distribute with fewer than 2 movable predicates.");
+            LOG.log(Level.INFO, "Cannot distribute with fewer than 2 movable predicates.");
             return;
         }
         Collections.sort(sub, LOC_X_COMPARATOR);
@@ -614,8 +604,7 @@ public class SketchActions {
         List<Graphic<Graphics2D>> sub = Lists.newArrayList(Iterables.filter(selection, MOVABLE_PREDICATE));
         int count = Iterables.size(sub);
         if (count < 2) {
-            Logger.getLogger(SketchActions.class.getName()).log(Level.INFO,
-                    "Cannot distribute with fewer than 2 movable predicates.");
+            LOG.log(Level.INFO, "Cannot distribute with fewer than 2 movable predicates.");
             return;
         }
         Collections.sort(sub, LOC_Y_COMPARATOR);
@@ -634,8 +623,7 @@ public class SketchActions {
     //<editor-fold defaultstate="collapsed" desc="UTILITY METHODS">
     
     private static void logUnsupported(String op, Graphic gfc) {
-        Logger.getLogger(SketchActions.class.getName()).log(Level.WARNING,
-                "{0} not supported for graphic of type {1}", new Object[]{op, gfc.getClass()});
+        LOG.log(Level.WARNING, "{0} not supported for graphic of type {1}", new Object[]{op, gfc.getClass()});
     }
     
     //</editor-fold>
@@ -649,12 +637,15 @@ public class SketchActions {
             this.object = object;
             this.flavor = flavor;
         }
+        @Override
         public DataFlavor[] getTransferDataFlavors() {
             return new DataFlavor[] { flavor };
         }
+        @Override
         public boolean isDataFlavorSupported(DataFlavor flavor) {
             return flavor.equals(this.flavor);
         }
+        @Override
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
             if (flavor.equals(this.flavor)) {
                 return object;
@@ -662,6 +653,7 @@ public class SketchActions {
                 throw new UnsupportedFlavorException(flavor);
             }
         }
+        @Override
         public void lostOwnership(Clipboard clipboard, Transferable contents) {
         }
     }

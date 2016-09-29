@@ -121,13 +121,10 @@ public final class SketchCanvasModel {
      * @return painter
      */
     public CanvasPainter<Graphics2D> underlay() {
-        return new CanvasPainter<Graphics2D>() {
-            @Override
-            public void paint(Component component, Graphics2D canvas) {
-                JGraphicComponent gc = (JGraphicComponent) component;
-                AffineTransform at = gc.getTransform();
-                paintCanvas(canvas, at);
-            }
+        return (component, canvas) -> {
+            JGraphicComponent gc = (JGraphicComponent) component;
+            AffineTransform at = gc.getTransform();
+            paintCanvas(canvas, at);
         };
     }
     
@@ -147,7 +144,6 @@ public final class SketchCanvasModel {
         PathRenderer.getInstance().render(r, style, canvas);
     }
     
-
     //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE LISTENING">
     //
     // PROPERTY CHANGE LISTENING
@@ -169,6 +165,5 @@ public final class SketchCanvasModel {
     }
 
     //</editor-fold>
-
     
 }

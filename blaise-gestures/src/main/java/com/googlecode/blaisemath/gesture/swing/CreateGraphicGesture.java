@@ -73,11 +73,13 @@ public abstract class CreateGraphicGesture extends MouseGestureSupport<JGraphicC
             }
             view.getSelectionModel().setSelection(Collections.singleton(gfc));
         }
+        super.complete();
     }
 
     @Override
     public void cancel() {
         orchestrator.setComponentCursor(Cursor.DEFAULT_CURSOR);
+        super.cancel();
     }
 
     @Override

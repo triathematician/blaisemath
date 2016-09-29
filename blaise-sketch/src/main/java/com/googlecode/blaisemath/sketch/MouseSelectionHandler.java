@@ -55,6 +55,8 @@ import java.util.Set;
  */
 public final class MouseSelectionHandler extends MouseGestureSupport<JGraphicComponent> {
     
+    private static final Boolean MAC = System.getProperty("os.name").toLowerCase().contains("mac");
+    
     private final SetSelectionModel<Graphic<Graphics2D>> selectionModel;
     
     /** Style for drawing selection box */
@@ -64,7 +66,6 @@ public final class MouseSelectionHandler extends MouseGestureSupport<JGraphicCom
     private transient Point pressPt;
     private transient Point dragPt;
     private transient Rectangle2D.Double selectionBox = null;
-    private static Boolean MAC = System.getProperty("os.name").toLowerCase().contains("mac");
     
     public MouseSelectionHandler(GestureOrchestrator<JGraphicComponent> orchestrator) {
         super(orchestrator, "Select", "Select graphics");
