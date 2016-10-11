@@ -49,6 +49,7 @@ import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import static com.googlecode.blaisemath.sketch.SketchFrameView.SELECTION_EMPTY_PROP;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.SetSelectionModel;
+import com.sun.glass.events.KeyEvent;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -102,15 +103,17 @@ public final class SketchCanvas {
     
     private static final ImmutableMap<Class<? extends MouseGesture>,String> TOOL_MAP 
             = ImmutableMap.<Class<? extends MouseGesture>,String>builder()
-            .put(CreateMarkerGesture.class, P_MARKER_TOOL_ACTIVE)
-            .put(CreateLineGesture.class, P_LINE_TOOL_ACTIVE)
-            .put(CreatePathGesture.class, P_PATH_TOOL_ACTIVE)
-            .put(CreateRectangleGesture.class, P_RECTANGLE_TOOL_ACTIVE)
-            .put(CreateCircleGesture.class, P_CIRCLE_TOOL_ACTIVE)
-            .put(CreateEllipseGesture.class, P_ELLIPSE_TOOL_ACTIVE)
-            .put(CreateTextGesture.class, P_TEXT_TOOL_ACTIVE)
-            .put(CreateImageGesture.class, P_IMAGE_TOOL_ACTIVE)
-            .build();
+                .put(SelectionGesture.class, P_SELECT_TOOL_ACTIVE)
+                .put(HandGesture.class, P_HAND_TOOL_ACTIVE)
+                .put(CreateMarkerGesture.class, P_MARKER_TOOL_ACTIVE)
+                .put(CreateLineGesture.class, P_LINE_TOOL_ACTIVE)
+                .put(CreatePathGesture.class, P_PATH_TOOL_ACTIVE)
+                .put(CreateRectangleGesture.class, P_RECTANGLE_TOOL_ACTIVE)
+                .put(CreateCircleGesture.class, P_CIRCLE_TOOL_ACTIVE)
+                .put(CreateEllipseGesture.class, P_ELLIPSE_TOOL_ACTIVE)
+                .put(CreateTextGesture.class, P_TEXT_TOOL_ACTIVE)
+                .put(CreateImageGesture.class, P_IMAGE_TOOL_ACTIVE)
+                .build();
     
     //</editor-fold>
 
@@ -168,8 +171,8 @@ public final class SketchCanvas {
             orchestratorPropertyChange(evt);
         });
         orchestrator.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
-        new MouseSelectionHandler(orchestrator);
-        new MousePanAndZoomHandler(orchestrator);
+        orchestrator.setDefaultGesture(new SelectionGesture(orchestrator));
+        orchestrator.addKeyGesture(KeyEvent.VK_SPACE, new HandGesture(orchestrator));
     }
 
     private void orchestratorPropertyChange(PropertyChangeEvent evt) {
@@ -366,10 +369,11 @@ public final class SketchCanvas {
     }
     
     public boolean isHandToolActive() {
-        return false;
+        return isFocalGesture(HandGesture.class);
     }
     
     public void setHandToolActive(boolean val) {
+        setFocalGesture(HandGesture.class, val);
     }
     
     @Action(selectedProperty = P_HAND_TOOL_ACTIVE)

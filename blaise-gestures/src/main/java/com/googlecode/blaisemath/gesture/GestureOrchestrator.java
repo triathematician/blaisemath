@@ -45,8 +45,8 @@ import javax.annotation.Nullable;
 
 /**
  * <p>
- *   Manages a priority stack of mouse gestures (handlers), where the one on the
- *   top of the stack is currently active.
+ *   Manages a stack of mouse gestures (handlers), where the one on the top of
+ *   the stack is considered to be the active gesture.
  * </p>
  * <p>
  *   This is intended for use on a {@link GestureLayerUI}, which intercepts the
@@ -77,7 +77,9 @@ public final class GestureOrchestrator<V extends Component> {
     private final Map<Class,Configurer> configs = Maps.newHashMap();
     
     /** The stack of gestures */
-    private Deque<MouseGesture> gestures = Queues.newArrayDeque();
+    private final Deque<MouseGesture> gestures = Queues.newArrayDeque();
+    /** The default gesture. This cannot be removed from the stack */
+    private MouseGesture defaultGesture;
     /** Handles property listening */
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -129,56 +131,72 @@ public final class GestureOrchestrator<V extends Component> {
         return gestures.peekFirst();
     }
     
-//    /**
-//     * Sets the active gesture to be the argument, provided it can be successfully
-//     * activated. If the gesture is contained in the stack, it will be moved to
-//     * the front of the stack.
-//     * @param g new active gesture
-//     */
-//    public void setActiveGesture(MouseGesture g) {
-//        checkNotNull(g);
-//        MouseGesture activeGesture = getActiveGesture();
-//        if (activeGesture != g) {
-//            MouseGesture old = activeGesture;
-//            if (old != null && old.isActive()) {
-//                cancelGesture(old);
-//            }
-//            if (g == null) {
-//                activeGesture = null;
-//            } else {
-//                activeGesture = tryActivate(g);
-//            }
-//            pcs.firePropertyChange(P_ACTIVE_GESTURE, old, activeGesture);
-//        }
-//    }
-//    
-//    private MouseGesture tryActivate(MouseGesture g) {
-//        boolean activated = g.isActive();
-//        MouseGesture res = g;
-//        if (activated) {
-//            LOG.log(Level.INFO, "Gesture already activated: {0}", g);
-//        } else {
-//            activated = activateGesture(g);
-//            LOG.log(Level.INFO, "Gesture activated: {0}", g);
-//        }
-//        if (!activated) {
-//            res = null;
-//            LOG.log(Level.WARNING, "Gesture activation failed: {0}", g);
-//        }
-//        return res;
-//    }
+    /**
+     * Sets the default gesture, adding it to the bottom of the stack. This
+     * cannot be removed from the stack. If there was an existing default
+     * gesture, it will be removed from the stack.
+     * @param g the default gesture (or null to reset default)
+     */
+    public void setDefaultGesture(@Nullable MouseGesture g) {
+        if (g == null) {
+            if (defaultGesture != null) {
+                removeGestureFromStack(defaultGesture);
+            }
+        }
+        this.defaultGesture = g;
+        if (g != null) {
+            addOrMoveGestureToBottomOfStack(g);
+            activateTopGesture();
+        }
+    }
+
+    /** Registers a gesture to be automatically activated for certain key events */
+    public void addKeyGesture(int key, MouseGesture gesture) {
+        // TODO
+    }
     
     //</editor-fold>
     
-    /**
-     * Get the current active gesture, or search for a new one if none are available.
-     * @param e the event
-     * @return active gesture for the event, or null if none claim
+    //<editor-fold defaultstate="collapsed" desc="GESTURE API">
+    
+    /** 
+     * Activates the provided gesture, if not already on top of the stack.
+     * @param gesture gesture to activate
      */
-    @Nullable
-    MouseGesture delegateFor(MouseEvent e) {
-        return getActiveGesture();
+    public void activateGesture(MouseGesture gesture) {
+        checkArgument(gesture != null);
+        LOG.log(Level.INFO, "Activating gesture {0}", gesture.getName());
+        boolean activated = gesture.isActive();
+        if (activated) {
+            LOG.log(Level.INFO, "Gesture already activated: {0}", gesture);
+        } else {
+            activated = gesture.activate();
+            LOG.log(Level.INFO, "Gesture activated: {0}", gesture);
+        }
+        if (activated) {
+            addGestureToTopOfStack(gesture);
+        } else {
+            LOG.log(Level.WARNING, "Gesture activation failed: {0}", gesture);
+        }
     }
+    
+    /**
+     * Completes the currently active gesture and removes it from the gesture stack.
+     */
+    public void completeActiveGesture() {
+        completeGesture(getActiveGesture());
+        activateTopGesture();
+    }
+    
+    /**
+     * Cancels the currently active gesture and removes it from the gesture stack.
+     */
+    public void cancelActiveGesture() {
+        cancelGesture(getActiveGesture());
+        activateTopGesture();
+    }
+    
+    //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="SUPPLEMENTAL CONFIGURATION API">
 
@@ -207,42 +225,16 @@ public final class GestureOrchestrator<V extends Component> {
     }
     
     //</editor-fold>
-    
-    /**
-     * Completes the currently active gesture and removes it from the gesture stack.
-     */
-    public void completeActiveGesture() {
-        completeGesture(getActiveGesture());
-    }
-    
-    /**
-     * Cancels the currently active gesture and removes it from the gesture stack.
-     */
-    public void cancelActiveGesture() {
-        cancelGesture(getActiveGesture());
-    }
 
     //<editor-fold defaultstate="collapsed" desc="GESTURE UTILS">
     
-    /** 
-     * Activates the provided gesture, if not already on top of the stack.
-     * @param gesture gesture to activate
-     */
-    public void activateGesture(MouseGesture gesture) {
-        checkArgument(gesture != null);
-        LOG.log(Level.INFO, "Activating gesture {0}", gesture.getName());
-        boolean activated = gesture.isActive();
-        if (activated) {
-            LOG.log(Level.INFO, "Gesture already activated: {0}", gesture);
-        } else {
-            activated = gesture.activate();
-            LOG.log(Level.INFO, "Gesture activated: {0}", gesture);
+    /** Activates the top gesture, if not already active */
+    private boolean activateTopGesture() {
+        MouseGesture g = getActiveGesture();
+        if (g != null && !g.isActive()) {
+            return g.activate();
         }
-        if (activated) {
-            addGestureToStack(gesture);
-        } else {
-            LOG.log(Level.WARNING, "Gesture activation failed: {0}", gesture);
-        }
+        return false;
     }
     
     /**
@@ -265,18 +257,31 @@ public final class GestureOrchestrator<V extends Component> {
         checkArgument(gesture != null);
         LOG.log(Level.INFO, "Canceling gesture {0}", gesture.getName());
         gesture.cancel();
+        removeGestureFromStack(gesture);
     }
     
-    /** Add gesture to top of stack. Internal utility use only. */
-    private void addGestureToStack(MouseGesture g) {
+    /** Add gesture to top of stack. */
+    private void addGestureToTopOfStack(MouseGesture g) {
         MouseGesture oldActive = getActiveGesture();
         gestures.addFirst(g);
+        MouseGesture newActive = gestures.peekFirst();
+        pcs.firePropertyChange(P_ACTIVE_GESTURE, oldActive, newActive);
+    }
+    
+    /** Adds or moves gesture to bottom of stack. */
+    private void addOrMoveGestureToBottomOfStack(MouseGesture g) {
+        MouseGesture oldActive = getActiveGesture();
+        gestures.remove(g);
+        gestures.addLast(g);
         MouseGesture newActive = getActiveGesture();
         pcs.firePropertyChange(P_ACTIVE_GESTURE, oldActive, newActive);
     }
     
-    /** Remove gesture from stack. Internal utility use only. */
+    /** Remove gesture from stack, unless it is the default gesture. */
     private void removeGestureFromStack(MouseGesture g) {
+        if (g == defaultGesture) {
+            return;
+        }
         MouseGesture oldActive = getActiveGesture();
         gestures.remove(g);
         MouseGesture newActive = getActiveGesture();
@@ -284,6 +289,16 @@ public final class GestureOrchestrator<V extends Component> {
     }
     
     //</editor-fold>
+    
+    /**
+     * Get the current active gesture, or search for a new one if none are available.
+     * @param e the event
+     * @return active gesture for the event, or null if none claim
+     */
+    @Nullable
+    MouseGesture delegateFor(MouseEvent e) {
+        return getActiveGesture();
+    }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE LISTENING">
     //

@@ -55,9 +55,9 @@ import java.awt.geom.RectangularShape;
  * 
  * @author elisha
  */
-public class MousePanAndZoomHandler extends MouseGestureSupport {
+public class HandGesture extends MouseGestureSupport {
     
-    public MousePanAndZoomHandler(GestureOrchestrator orchestrator) {
+    public HandGesture(GestureOrchestrator orchestrator) {
         super(orchestrator, "Pan and zoom canvas", "Allows panning and zooming of the background canvas.");
     }
     
