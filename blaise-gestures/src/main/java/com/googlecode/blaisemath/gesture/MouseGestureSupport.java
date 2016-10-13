@@ -64,11 +64,11 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
 
     /** Whether gesture is currently active */
     protected boolean active = false;
-    /** Where the mouse cursor currently is */
+    /** Where the mouse cursor currently is, in local coords */
     protected Point2D movePoint = null;
-    /** Where the mouse was pressed */
+    /** Where the mouse was pressed, in local coords */
     protected Point2D pressPoint = null;
-    /** Where the mouse is following a press/drag */
+    /** Where the mouse is following a press/drag, in local coords */
     protected Point2D locPoint = null;
 
     protected MouseGestureSupport(GestureOrchestrator<V> orchestrator, String name, String description) {
@@ -96,6 +96,7 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
         return description;
     }
 
+    @Override
     public boolean isActive() {
         return active;
     }

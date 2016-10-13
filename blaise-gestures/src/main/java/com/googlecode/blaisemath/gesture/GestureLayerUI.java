@@ -76,7 +76,9 @@ public final class GestureLayerUI<V extends Component> extends LayerUI<V> {
     public void installUI(JComponent c) {
         super.installUI(c);
         layer = (JLayer<V>) c;
-        layer.setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        layer.setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK 
+                | AWTEvent.MOUSE_MOTION_EVENT_MASK 
+                | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
         orchestrator = new GestureOrchestrator<>(layer.getView());
     }
 
