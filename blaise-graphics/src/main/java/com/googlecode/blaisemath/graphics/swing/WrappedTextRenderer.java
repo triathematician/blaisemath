@@ -69,7 +69,7 @@ public class WrappedTextRenderer extends TextRenderer {
     
     @Override
     public String toString() {
-        return String.format("TextStyleWrapped[clip=%s]", clipPath);
+        return String.format("WrappedTextRenderer[clip=%s]", clipPath);
     }
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
@@ -235,11 +235,12 @@ public class WrappedTextRenderer extends TextRenderer {
         Rectangle2D sBounds = font.getStringBounds(string, frc);
 
         List<String> lines = new ArrayList<String>();
-        if (string.length() == 0) {
+        int length = string.length();
+        if (length == 0) {
             // do nothing
         } else if (width < 3*font.getSize()) {
             // if really small, show only first character
-            lines.add(string.substring(0,1)+"...");
+            lines.add(length <= 2 ? string.substring(0,length) : string.substring(0,1)+"...");
         } else if (sBounds.getWidth() <= width-4 && !string.contains("\n")) {
             // enough to fit the entire string
             lines.add(string);

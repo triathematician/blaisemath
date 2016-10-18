@@ -38,6 +38,7 @@ import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
 import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
 import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
 import com.googlecode.blaisemath.graphics.swing.SegmentGraphic;
@@ -65,6 +66,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -162,6 +164,36 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     
     //<editor-fold defaultstate="collapsed" desc="GRAPHICS WITH DELEGATORS">
+    
+    @Action
+    public void addWrappedText() {
+        if (Math.random() < .5) {
+            addWrappedTextRandom();
+        } else {
+            addWrappedTextSmall();
+        }
+    }
+    
+    private void addWrappedTextRandom() {
+        Rectangle2D.Double rect = new Rectangle2D.Double();
+        rect.setFrameFromDiagonal(randomPoint(), randomPoint());
+        LabeledShapeGraphic gfc = new LabeledShapeGraphic();
+        gfc.setPrimitive(rect);
+        gfc.getObjectStyler().setLabelConstant("this is a long label for a rectangle that should get wrapped, "
+                + "since it needs to be really big so we can adequately test something with a long label\n"
+                + "and new line characters");
+        gfc.getObjectStyler().setLabelStyleConstant(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
+        root1.addGraphic(gfc);
+    }
+    
+    private void addWrappedTextSmall() {
+        LabeledShapeGraphic gfc = new LabeledShapeGraphic();
+        Random r = new Random();
+        gfc.setPrimitive(new Rectangle2D.Double(r.nextInt(100)+100, r.nextInt(100)+100, r.nextInt(20)+5, r.nextInt(20)+5));
+        gfc.getObjectStyler().setLabelConstant(r.nextBoolean() ? "ab" : "a");
+        gfc.getObjectStyler().setLabelStyleConstant(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
+        root1.addGraphic(gfc);
+    }
         
     @Action
     public void addDelegatingPointSet() {
