@@ -41,13 +41,13 @@ import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
 import com.googlecode.blaisemath.gesture.GestureLayerUI;
+import com.googlecode.blaisemath.gesture.swing.CreateGraphicGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import static com.googlecode.blaisemath.sketch.SketchFrameView.SELECTION_EMPTY_PROP;
-import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.SetSelectionModel;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Component;
@@ -88,6 +88,7 @@ public final class SketchCanvas {
     private static final String CANVAS_CM_KEY = "Canvas";
     
     private static final String P_SELECT_TOOL_ACTIVE = "selectToolActive";
+    private static final String P_ZOOM_TOOL_ACTIVE = "zoomToolActive";
     private static final String P_HAND_TOOL_ACTIVE = "handToolActive";
     private static final String P_MARKER_TOOL_ACTIVE = "markerToolActive";
     private static final String P_LINE_TOOL_ACTIVE = "lineToolActive";
@@ -104,6 +105,7 @@ public final class SketchCanvas {
     private static final ImmutableMap<Class<? extends MouseGesture>,String> TOOL_MAP 
             = ImmutableMap.<Class<? extends MouseGesture>,String>builder()
                 .put(SelectionGesture.class, P_SELECT_TOOL_ACTIVE)
+                .put(ZoomGesture.class, P_ZOOM_TOOL_ACTIVE)
                 .put(HandGesture.class, P_HAND_TOOL_ACTIVE)
                 .put(CreateMarkerGesture.class, P_MARKER_TOOL_ACTIVE)
                 .put(CreateLineGesture.class, P_LINE_TOOL_ACTIVE)
@@ -170,16 +172,18 @@ public final class SketchCanvas {
         orchestrator.addPropertyChangeListener(GestureOrchestrator.P_ACTIVE_GESTURE, evt -> {
             orchestratorPropertyChange(evt);
         });
-        orchestrator.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
-        orchestrator.setDefaultGesture(new SelectionGesture(orchestrator));
+        orchestrator.addPersistentGesture(new SelectionGesture(orchestrator));
+        orchestrator.addPersistentGesture(new ZoomGesture(orchestrator));
         orchestrator.addKeyGesture(KeyEvent.VK_SPACE, new HandGesture(orchestrator));
     }
 
     private void orchestratorPropertyChange(PropertyChangeEvent evt) {
         MouseGesture old = (MouseGesture) evt.getOldValue();
         MouseGesture nue = (MouseGesture) evt.getNewValue();
-        pcs.firePropertyChange(old == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(old.getClass()), true, false);
-        pcs.firePropertyChange(nue == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(nue.getClass()), false, true);
+        String oldName = old == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(old.getClass());
+        String nueName = nue == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(nue.getClass());
+        pcs.firePropertyChange(oldName, true, false);
+        pcs.firePropertyChange(nueName, false, true);
         pcs.firePropertyChange(evt);
         canvas.requestFocusInWindow();
     }
@@ -488,7 +492,10 @@ public final class SketchCanvas {
             try {
                 Constructor<G> con = type.getConstructor(GestureOrchestrator.class);
                 G gesture = con.newInstance(orchestrator);
-                orchestrator.activateGesture(gesture);
+                if (gesture instanceof CreateGraphicGesture) {
+                    ((CreateGraphicGesture) gesture).setConfigurer(SketchGraphicUtils.configurer());
+                }
+                orchestrator.setTransientGesture(gesture);
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException 
                     | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new IllegalArgumentException(ex);

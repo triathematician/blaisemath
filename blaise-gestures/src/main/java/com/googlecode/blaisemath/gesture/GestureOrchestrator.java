@@ -4,20 +4,23 @@
  */
 package com.googlecode.blaisemath.gesture;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
-import com.googlecode.blaisemath.util.Configurer;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Deque;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
@@ -45,8 +48,20 @@ import javax.annotation.Nullable;
 
 /**
  * <p>
- *   Manages a stack of mouse gestures (handlers), where the one on the top of
- *   the stack is considered to be the active gesture.
+ *   Manages a stack of mouse handlers for a component, where mouse handlers
+ *   are coded as {@link MouseGesture}s.
+ * </p>
+ * <p>
+ *   The stack determines how mouse events are processed. Generally, the top
+ *   of the stack will be the "active" handler and receive all events. However,
+ *   in some cases, e.g. handling {@link MouseWheelEvent}s, some gestures may
+ *   choose not to handle the event and pass the event down the stack.
+ * </p>
+ * <p>
+ *   Internally, gestures have three possible modes. <b>Persistent</b> gestures
+ *   are always available unless explicitly removed. <b>Transient</b> gestures
+ *   are removed from the stack when they are "completed" or "canceled".
+ *   <b>Key</b> gestures override other gestures when a certain key is pressed.
  * </p>
  * <p>
  *   This is intended for use on a {@link GestureLayerUI}, which intercepts the
@@ -54,11 +69,6 @@ import javax.annotation.Nullable;
  *   which passes them along to the appropriate delegate. This class maintains
  *   a reference to the component being managed, and provides a shortcut
  *   for updating the component's cursor.
- * </p>
- * <p>
- *   A table of configuration objects of type {@link Configurer} is also maintained
- *   by the orchestrator, allowing gestures to perform additional configuration
- *   when they are completed.
  * </p>
  * 
  * @param <V> one of the super types of the view component
@@ -73,13 +83,15 @@ public final class GestureOrchestrator<V extends Component> {
 
     /** The component managed by the orchestrator */
     private final V component;
-    /** Configuration map, may be used for finalizing gestures */
-    private final Map<Class,Configurer> configs = Maps.newHashMap();
     
-    /** The stack of gestures */
-    private final Deque<MouseGesture> gestures = Queues.newArrayDeque();
-    /** The default gesture. This cannot be removed from the stack */
-    private MouseGesture defaultGesture;
+    /** Stack of gesture configs */
+    private final Deque<MouseGestureConfig> gestures = Queues.newArrayDeque();
+    
+    /** Current active gesture */
+    private MouseGestureConfig activeGesture;
+    /** Current depressed key */
+    private Integer key;
+    
     /** Handles property listening */
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -93,16 +105,18 @@ public final class GestureOrchestrator<V extends Component> {
         component.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e) {
-                System.out.println("press: "+e);
+                key = e.getID();
+                updateActiveGesture();
             }
             @Override
             public void keyReleased(KeyEvent e) {
-                System.out.println("release: "+e);
+                key = null;
+                updateActiveGesture();
             }
         });
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES/MUTATORS">
 
     /**
      * Get the component related to the gestures.
@@ -110,6 +124,10 @@ public final class GestureOrchestrator<V extends Component> {
      */
     public V getComponent() {
         return component;
+    }
+    
+    public int getComponentCursor() {
+        return component.getCursor().getType();
     }
 
     /**
@@ -128,167 +146,86 @@ public final class GestureOrchestrator<V extends Component> {
      * @return active gesture, or null if there is none
      */
     public MouseGesture getActiveGesture() {
-        return gestures.peekFirst();
+        return activeGesture.getGesture();
     }
-    
-    /**
-     * Sets the default gesture, adding it to the bottom of the stack. This
-     * cannot be removed from the stack. If there was an existing default
-     * gesture, it will be removed from the stack.
-     * @param g the default gesture (or null to reset default)
-     */
-    public void setDefaultGesture(@Nullable MouseGesture g) {
-        if (g == null) {
-            if (defaultGesture != null) {
-                removeGestureFromStack(defaultGesture);
-            }
-        }
-        this.defaultGesture = g;
-        if (g != null) {
-            addOrMoveGestureToBottomOfStack(g);
-            activateTopGesture();
-        }
-    }
-
-    /** Registers a gesture to be automatically activated for certain key events */
-    public void addKeyGesture(int key, MouseGesture gesture) {
-        // TODO
-    }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="GESTURE API">
     
     /** 
-     * Activates the provided gesture, if not already on top of the stack.
-     * @param gesture gesture to activate
+     * Adds a persistent gesture (won't be removed when canceled or completed).
+     * @param gesture gesture
      */
-    public void activateGesture(MouseGesture gesture) {
-        checkArgument(gesture != null);
-        LOG.log(Level.INFO, "Activating gesture {0}", gesture.getName());
-        boolean activated = gesture.isActive();
-        if (activated) {
-            LOG.log(Level.INFO, "Gesture already activated: {0}", gesture);
-        } else {
-            activated = gesture.activate();
-            LOG.log(Level.INFO, "Gesture activated: {0}", gesture);
-        }
-        if (activated) {
-            addGestureToTopOfStack(gesture);
-        } else {
-            LOG.log(Level.WARNING, "Gesture activation failed: {0}", gesture);
-        }
+    public void addPersistentGesture(MouseGesture gesture) {
+        checkNotNull(gesture);
+        gestures.add(new MouseGestureConfig(gesture, MouseGestureType.PERSISTENT));
+        updateActiveGesture();
     }
     
-    /**
-     * Completes the currently active gesture and removes it from the gesture stack.
+    /** 
+     * Adds a transient gesture (will be removed when canceled or completed).
+     * @param gesture gesture
      */
-    public void completeActiveGesture() {
-        completeGesture(getActiveGesture());
-        activateTopGesture();
+    public void addTransientGesture(MouseGesture gesture) {
+        checkNotNull(gesture);
+        gestures.add(new MouseGestureConfig(gesture, MouseGestureType.TRANSIENT));
+        updateActiveGesture();
     }
     
-    /**
-     * Cancels the currently active gesture and removes it from the gesture stack.
+    /** 
+     * Sets a transient gesture, canceling/removing the current active gesture if it is transient.
+     * @param gesture gesture
      */
+    public void setTransientGesture(MouseGesture gesture) {
+        checkNotNull(gesture);
+        if (activeGesture.getType() == MouseGestureType.TRANSIENT) {
+            cancelGesture(activeGesture.getGesture());
+        }
+        gestures.add(new MouseGestureConfig(gesture, MouseGestureType.TRANSIENT));
+        updateActiveGesture();
+    }
+
+    /** 
+     * Registers a gesture to be automatically activated for certain key events.
+     * @param keyCode code that triggers the gesture
+     * @param gesture gesture
+     */
+    public void addKeyGesture(int keyCode, MouseGesture gesture) {
+        checkNotNull(gesture);
+        gestures.add(new MouseGestureConfig(gesture, keyCode));
+        updateActiveGesture();
+    }
+    
+    //</editor-fold>
+    
+    /** Cancels the currently active gesture. */
     public void cancelActiveGesture() {
-        cancelGesture(getActiveGesture());
-        activateTopGesture();
+        cancelGesture(activeGesture.getGesture());
+        updateActiveGesture();
     }
     
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="SUPPLEMENTAL CONFIGURATION API">
-
-    /**
-     * Add a configurer object for gestures returning objects of the given type.
-     * @param <T> type of object being configured
-     * @param cls class of object being configured
-     * @param cfg configurer for the object type
-     */
-    public <T> void addConfigurer(Class<? super T> cls, Configurer<T> cfg) {
-        checkNotNull(cls);
-        checkNotNull(cfg);
-        configs.put(cls, cfg);
-    }
-
-    /**
-     * Retrieve a configurer object for the given object type
-     * @param <T> type of object being configured
-     * @param cls class of object being configured
-     * @return configurer for the object type
-     */
-    @Nullable
-    public <T> Configurer<T> getConfigurer(Class<? super T> cls) {
-        checkNotNull(cls);
-        return configs.get(cls);
+    /** Completes the currently active gesture. */
+    public void completeActiveGesture() {
+        completeGesture(activeGesture.getGesture());
+        updateActiveGesture();
     }
     
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="GESTURE UTILS">
-    
-    /** Activates the top gesture, if not already active */
-    private boolean activateTopGesture() {
-        MouseGesture g = getActiveGesture();
-        if (g != null && !g.isActive()) {
-            return g.activate();
+    /** Completes the given gesture, if active. */
+    void completeGesture(MouseGesture g) {
+        if (!g.isActive()) {
+            LOG.log(Level.WARNING, "Gesture not active: {0}", g);
         }
-        return false;
+        LOG.log(Level.INFO, "Completing gesture: {0}", g);
+        g.complete();
+        removeTransientGesture(g);
     }
     
-    /**
-     * Completes the provided gesture, if it is in an active state.
-     * Null arguments have no effect
-     * @param gesture the gesture to cancel
-     */
-    private void completeGesture(MouseGesture gesture) {
-        checkArgument(gesture != null);
-        LOG.log(Level.INFO, "Completing gesture {0}", gesture.getName());
-        gesture.complete();
-        removeGestureFromStack(gesture);
-    }
-
-    /**
-     * Cancels the provided gesture, if it is in an active state.
-     * @param gesture the gesture to cancel
-     */
-    private void cancelGesture(MouseGesture gesture) {
-        checkArgument(gesture != null);
-        LOG.log(Level.INFO, "Canceling gesture {0}", gesture.getName());
-        gesture.cancel();
-        removeGestureFromStack(gesture);
-    }
-    
-    /** Add gesture to top of stack. */
-    private void addGestureToTopOfStack(MouseGesture g) {
-        MouseGesture oldActive = getActiveGesture();
-        gestures.addFirst(g);
-        MouseGesture newActive = gestures.peekFirst();
-        pcs.firePropertyChange(P_ACTIVE_GESTURE, oldActive, newActive);
-    }
-    
-    /** Adds or moves gesture to bottom of stack. */
-    private void addOrMoveGestureToBottomOfStack(MouseGesture g) {
-        MouseGesture oldActive = getActiveGesture();
-        gestures.remove(g);
-        gestures.addLast(g);
-        MouseGesture newActive = getActiveGesture();
-        pcs.firePropertyChange(P_ACTIVE_GESTURE, oldActive, newActive);
-    }
-    
-    /** Remove gesture from stack, unless it is the default gesture. */
-    private void removeGestureFromStack(MouseGesture g) {
-        if (g == defaultGesture) {
-            return;
+    /** Cancels the given gesture, if active. */
+    void cancelGesture(MouseGesture g) {
+        if (!g.isActive()) {
+            LOG.log(Level.WARNING, "Gesture not active: {0}", g);
         }
-        MouseGesture oldActive = getActiveGesture();
-        gestures.remove(g);
-        MouseGesture newActive = getActiveGesture();
-        pcs.firePropertyChange(P_ACTIVE_GESTURE, oldActive, newActive);
+        LOG.log(Level.INFO, "Canceling gesture: {0}", g);
+        g.cancel();
+        removeTransientGesture(g);
     }
-    
-    //</editor-fold>
     
     /**
      * Get the current active gesture, or search for a new one if none are available.
@@ -298,6 +235,78 @@ public final class GestureOrchestrator<V extends Component> {
     @Nullable
     MouseGesture delegateFor(MouseEvent e) {
         return getActiveGesture();
+    }
+    
+    /** Updates the active gesture. */
+    private void updateActiveGesture() {
+        MouseGestureConfig old = activeGesture;
+        this.activeGesture = locateActiveGesture();
+        if (old != activeGesture) {
+            MouseGesture ag = activeGesture.getGesture();
+            LOG.log(Level.INFO, "Activating gesture {0}", ag.getName());
+            boolean activated = ag.isActive();
+            if (activated) {
+                LOG.log(Level.INFO, "Gesture already activated: {0}", ag);
+            } else {
+                activated = ag.activate();
+                LOG.log(Level.INFO, "Gesture activation {0}: {1}", 
+                        new Object[]{activated ? "succeeded" : "failed", ag});
+            }
+        }
+        pcs.firePropertyChange(P_ACTIVE_GESTURE,
+                old == null ? null : old.getGesture(), 
+                activeGesture == null ? null : activeGesture.getGesture());
+    }
+    
+    /** Locates the active gesture */
+    private MouseGestureConfig locateActiveGesture() {
+        Optional<MouseGestureConfig> keyGesture = keyGesture();
+        if (keyGesture.isPresent()) {
+            return keyGesture.get();
+        } else {
+            return topMatch(gestures, g -> g.getType() != MouseGestureType.KEY);
+        }
+    }
+    
+    /** Get the first match starting from the top of the deque. */
+    private <X> X topMatch(Deque<X> deque, Predicate<X> condition) {
+        List<X> reverse = Lists.newArrayList(deque.descendingIterator());
+        return reverse.stream()
+                .filter(condition)
+                .findFirst().orElse(null);
+    }
+    
+    private Optional<MouseGestureConfig> keyGesture() {
+        if (key == null) {
+            return Optional.absent();
+        }
+        for (MouseGestureConfig gc : gestures) {
+            if (gc.getType() == MouseGestureType.KEY 
+                    && Objects.equals(gc.getKeyCode(), key)) {
+                return Optional.of(gc);
+            }
+        }
+        return Optional.absent();
+    }
+    
+    private void removeTransientGesture(MouseGesture g) {
+        Optional<MouseGestureConfig> config = configOf(g);
+        if (config.isPresent() && config.get().getType() == MouseGestureType.TRANSIENT) {
+            gestures.remove(config.get());
+        } else {
+            LOG.log(Level.INFO, "Not removing {0}: config was absent or wrong type: {1}", 
+                    new Object[]{g, config.orNull()});
+        }
+        updateActiveGesture();
+    }
+    
+    private Optional<MouseGestureConfig> configOf(MouseGesture g) {
+        for (MouseGestureConfig c : gestures) {
+            if (c.getGesture() == g) {
+                return Optional.of(c);
+            }
+        }
+        return Optional.absent();
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE LISTENING">
@@ -320,6 +329,54 @@ public final class GestureOrchestrator<V extends Component> {
         pcs.removePropertyChangeListener(string, pl);
     }
 
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    
+    private static class MouseGestureConfig {
+        private final MouseGesture gesture;
+        private final MouseGestureType type;
+        private final Integer keyCode;
+
+        private MouseGestureConfig(MouseGesture g, MouseGestureType type) {
+            this.gesture = g;
+            this.type = type;
+            this.keyCode = null;
+        }
+
+        private MouseGestureConfig(MouseGesture g, int keyCode) {
+            this.gesture = g;
+            this.type = MouseGestureType.KEY;
+            this.keyCode = keyCode;
+        }
+
+        @Override
+        public String toString() {
+            return "MouseGestureConfig{" + gesture + ", type=" + type + ", keyCode=" + keyCode + '}';
+        }
+
+        private MouseGesture getGesture() {
+            return gesture;
+        }
+
+        private MouseGestureType getType() {
+            return type;
+        }
+
+        private Integer getKeyCode() {
+            return keyCode;
+        }
+    }
+    
+    private static enum MouseGestureType {
+        /** Gestures that never get removed */
+        PERSISTENT,
+        /** Gestures that are temporary and removed when completed/canceled */
+        TRANSIENT,
+        /** Gestures that are only activated when a key is depressed */
+        KEY;
+    }
+    
     //</editor-fold>
     
 }

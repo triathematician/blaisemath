@@ -45,9 +45,24 @@ import javax.annotation.Nullable;
  */
 public abstract class CreateGraphicGesture extends MouseGestureSupport<JGraphicComponent> {
     
+    @Nullable
+    private Configurer<Graphic<Graphics2D>> configurer;
+    
     public CreateGraphicGesture(GestureOrchestrator<JGraphicComponent> orchestrator, String name, String description) {
         super(orchestrator, name, description);
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+
+    public Configurer<Graphic<Graphics2D>> getConfigurer() {
+        return configurer;
+    }
+
+    public void setConfigurer(Configurer<Graphic<Graphics2D>> configurer) {
+        this.configurer = configurer;
+    }
+    
+    //</editor-fold>
     
     /**
      * Create the graphic based on the current state of the gesture
@@ -67,7 +82,6 @@ public abstract class CreateGraphicGesture extends MouseGestureSupport<JGraphicC
         Graphic<Graphics2D> gfc = createGraphic();
         if (gfc != null) {
             view.addGraphic(gfc);
-            Configurer<Graphic<Graphics2D>> configurer = orchestrator.getConfigurer(Graphic.class);
             if (configurer != null) {
                 configurer.configure(gfc);
             }

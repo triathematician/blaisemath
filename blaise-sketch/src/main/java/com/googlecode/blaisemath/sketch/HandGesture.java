@@ -41,23 +41,15 @@ import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGestureSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.setDesiredLocalBounds;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.geom.Point2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.RectangularShape;
-import javax.swing.JLayer;
 
 /**
- * Controls pan and zoom on the graphic canvas. Activates only when the user
- * has the space bar depressed.
- * 
- * TODO - add space bar controls
- * TODO - add zoom controls
+ * Controls panning the canvas.
  * 
  * @author elisha
  */
@@ -85,11 +77,6 @@ public class HandGesture extends MouseGestureSupport {
     public HandGesture(GestureOrchestrator orchestrator) {
         super(orchestrator, "Pan and zoom canvas", "Allows panning and zooming of the background canvas.");
         checkArgument(orchestrator.getComponent() instanceof JGraphicComponent);
-    }
-    
-    @Override
-    public String toString() {
-        return "pan and zoom";
     }
 
     @Override
@@ -143,10 +130,11 @@ public class HandGesture extends MouseGestureSupport {
                 winPt.x = pressedAt.x;
             }
         }
-        double dx = (winPt.x - pressedAt.x) * component.getInverseTransform().getScaleX();
-        double dy = (winPt.y - pressedAt.y) * component.getInverseTransform().getScaleY();
+        AffineTransform at = component.getInverseTransform();
+        double dx = (winPt.x - pressedAt.x) * (at == null ? 1 : at.getScaleX());
+        double dy = (winPt.y - pressedAt.y) * (at == null ? 1 : at.getScaleY());
 
-        setDesiredLocalBounds(component,
+        PanAndZoomHandler.setDesiredLocalBounds(component,
                 new Rectangle2D.Double(
                         oldLocalBounds.getX() - dx, oldLocalBounds.getY() - dy, 
                         oldLocalBounds.getWidth(), oldLocalBounds.getHeight()));
@@ -159,25 +147,5 @@ public class HandGesture extends MouseGestureSupport {
         oldLocalBounds = null;
         mode = null;
     }
-
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.isConsumed()) {
-            return;
-        }
-        JGraphicComponent component = (JGraphicComponent) orchestrator.getComponent();
-        Point2D.Double mouseLoc = new Point2D.Double(e.getPoint().x, e.getPoint().y);
-
-        // ensure the point is within the window
-        RectangularShape bounds = component.getBounds();
-        mouseLoc.x = Math.max(mouseLoc.x, bounds.getMinX());
-        mouseLoc.x = Math.min(mouseLoc.x, bounds.getMaxX());
-        mouseLoc.y = Math.max(mouseLoc.y, bounds.getMinY());
-        mouseLoc.y = Math.min(mouseLoc.y, bounds.getMaxY());
-
-        PanAndZoomHandler.zoomPoint(component, component.toGraphicCoordinate(mouseLoc),
-                (e.getWheelRotation() > 0) ? 1.05 : 0.95);
-    }
-    
     
 }

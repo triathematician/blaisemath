@@ -172,7 +172,7 @@ public abstract class MouseGestureSupport<V extends Component> extends MouseAdap
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseDragged(e);
-        orchestrator.completeActiveGesture();
+        orchestrator.completeGesture(this);
     }
     
     //</editor-fold>
