@@ -85,7 +85,7 @@ import javax.annotation.Nullable;
  * @author Elisha
  */
 public final class AttributeSets {
-    
+
     /** String used to represent null explicitly. */
     private static final String NULL_STRING = "none";
     
