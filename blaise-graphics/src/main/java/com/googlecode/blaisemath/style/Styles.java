@@ -37,7 +37,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
@@ -399,98 +398,5 @@ public final class Styles {
         return defaultStyleContext().applyModifiers(style,
                 AttributeSet.of(StyleHints.HILITE_HINT, true));
     }
-    
-    //</editor-fold>
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
-
-    /** Modifier that adjusts fill/stroke attributes to preset colors. */
-    public static class PresetColorModifier implements StyleModifier {
-        private Color highlightFill = null;
-        private Color highlightStroke = null;
-        private Color selectFill = null;
-        private Color selectStroke = null;
-                
-        @Override
-        public AttributeSet apply(AttributeSet style, AttributeSet hints) {
-            AttributeSet res = style;
-            if (hints.contains(StyleHints.HILITE_HINT)) {
-                res = AttributeSet.createWithParent(res)
-                        .and(Styles.FILL, highlightFill)
-                        .and(Styles.STROKE, highlightStroke);
-            }
-            if (hints.contains(StyleHints.SELECTED_HINT)) {
-                res = AttributeSet.createWithParent(res)
-                        .and(Styles.FILL, selectFill)
-                        .and(Styles.STROKE, selectStroke);
-            }
-            return res;
-        }
-
-        //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-        //
-        // PROPERTY PATTERNS
-        //
-
-        public Color getHighlightFill() {
-            return highlightFill;
-        }
-
-        public void setHighlightFill(Color highlightFill) {
-            this.highlightFill = highlightFill;
-        }
-
-        public Color getHighlightStroke() {
-            return highlightStroke;
-        }
-
-        public void setHighlightStroke(Color highlightStroke) {
-            this.highlightStroke = highlightStroke;
-        }
-
-        public Color getSelectFill() {
-            return selectFill;
-        }
-
-        public void setSelectFill(Color selectFill) {
-            this.selectFill = selectFill;
-        }
-
-        public Color getSelectStroke() {
-            return selectStroke;
-        }
-
-        public void setSelectStroke(Color selectStroke) {
-            this.selectStroke = selectStroke;
-        }
-
-        //</editor-fold>
-
-    }
-
-    /** Modifier that overrides all colors in the source style using the supplied hints. */
-    public static class ColorModifier implements StyleModifier {
-        @Override
-        public AttributeSet apply(AttributeSet style, AttributeSet hints) {
-            AttributeSet res = AttributeSet.createWithParent(style);
-            for (String key : style.getAllAttributes(Color.class)) {
-                res.put(key, StyleHints.modifyColorsDefault(style.getColor(key), hints));
-            }
-            return res;
-        }
-    }
-
-    /** Modifier that modifies stroke-width in the supplied style using the supplied hints. */
-    public static class StrokeWidthModifier implements StyleModifier {
-        @Override
-        public AttributeSet apply(AttributeSet style, AttributeSet hints) {
-            return AttributeSet.createWithParent(style)
-                    .and(STROKE_WIDTH, StyleHints.modifyStrokeWidthDefault(style.getFloat(STROKE_WIDTH), hints));
-        }
-    }
-    
-    //</editor-fold>
-    
     
 }
