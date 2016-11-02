@@ -60,20 +60,6 @@ public final class AnchoredText extends Point2DBean {
         return "AnchoredText["+x+", "+y+"; "+text+"]";
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(x, y, text);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof AnchoredText)) {
-            return false;
-        }
-        AnchoredText at = (AnchoredText) obj;
-        return at.x == x && at.y == y && Objects.equal(at.text, text);
-    }
-
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
     // PROPERTY PATTERNS

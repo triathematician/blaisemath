@@ -27,13 +27,17 @@ package com.googlecode.blaisemath.style;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Table;
 import com.google.common.primitives.Floats;
+import static com.googlecode.blaisemath.style.Anchor.*;
 import com.googlecode.blaisemath.util.Colors;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
@@ -44,6 +48,8 @@ import javax.annotation.Nullable;
  * @author Elisha
  */
 public final class Styles {
+
+    private static final Logger LOG = Logger.getLogger(Styles.class.getName());
     
     //<editor-fold defaultstate="collapsed" desc="STYLE ATTRIBUTE CONSTANTS">
     
@@ -95,10 +101,21 @@ public final class Styles {
     /** Tooltip text */
     public static final String TOOLTIP = "tooltip";
     
+    private static final Table<String, String, Anchor> ANCHOR_BASELINE_LOOKUP = HashBasedTable.create();
+    static {
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_START, ALIGN_BASELINE_BASELINE, SOUTHWEST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_START, ALIGN_BASELINE_MIDDLE, WEST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_START, ALIGN_BASELINE_HANGING, NORTHWEST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_MIDDLE, ALIGN_BASELINE_BASELINE, SOUTH);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_MIDDLE, ALIGN_BASELINE_MIDDLE, CENTER);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_MIDDLE, ALIGN_BASELINE_HANGING, NORTH);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_END, ALIGN_BASELINE_BASELINE, SOUTHEAST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_END, ALIGN_BASELINE_MIDDLE, EAST);
+        ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_END, ALIGN_BASELINE_HANGING, NORTHEAST);
+    }
+    
     //</editor-fold>
-    
-    
-    
+
     public static final AttributeSet DEFAULT_SHAPE_STYLE = AttributeSet
             .of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f)
             .immutable();
@@ -117,8 +134,6 @@ public final class Styles {
             .of(FILL, Color.black, FONT, "Dialog", FONT_SIZE, 12f)
             .and(TEXT_ANCHOR, Anchor.SOUTHWEST)
             .immutable();
-
-    
     
     // utility class
     private Styles() {
@@ -271,23 +286,36 @@ public final class Styles {
      * @return anchor
      */
     public static Anchor anchorOf(AttributeSet style, Anchor def) {
-        Object styleAnchor = style.get(Styles.TEXT_ANCHOR);
-        if (styleAnchor == null) {
-            return def;
-        } else if (styleAnchor instanceof String) {
-            String styleAnchorText = (String) styleAnchor;
-            try {
-                return Anchor.valueOf(styleAnchorText);
-            } catch (IllegalArgumentException x) {
-                throw new IllegalStateException("A text anchor string must match"
-                        + " a value of the Anchor enum, but was "+styleAnchorText, x);
-            }
-        } else if (styleAnchor instanceof Anchor) {
-            return (Anchor) styleAnchor;
-        } else {
-            throw new IllegalStateException("The style "+Styles.TEXT_ANCHOR
-                    +" should either be a string or an Anchor, but was "+styleAnchor);
+        Object anchor = style.get(Styles.TEXT_ANCHOR);
+        if (anchor instanceof Anchor) {
+            return (Anchor) anchor;
+        } else if (isAnchorName(anchor)) {
+            return Anchor.valueOf((String) anchor);
         }
+        
+        Object baseline = style.get(Styles.ALIGN_BASELINE);
+        if (anchor instanceof String && baseline instanceof String) {
+            return anchorFromAttributes((String) anchor, (String) baseline, def);
+        }
+        return def;
+    }
+    
+    private static boolean isAnchorName(Object anchor) {
+        if (!(anchor instanceof String)) {
+            return false;
+        }
+        for (Anchor a : Anchor.values()) {
+            if (anchor.equals(a.name())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private static Anchor anchorFromAttributes(String anchor, String baseline, Anchor def) {
+        return ANCHOR_BASELINE_LOOKUP.contains(anchor, baseline) 
+                ? ANCHOR_BASELINE_LOOKUP.get(anchor, baseline)
+                : def;
     }
     
     //</editor-fold>
