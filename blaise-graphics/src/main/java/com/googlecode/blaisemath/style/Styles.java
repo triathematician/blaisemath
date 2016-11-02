@@ -198,17 +198,6 @@ public final class Styles {
      * Get font from the provided style.
      * @param style style object
      * @return font
-     * @deprecated use {@link #fontOf(com.googlecode.blaisemath.style.AttributeSet)}
-     */
-    @Deprecated
-    public static Font getFont(AttributeSet style) {
-        return fontOf(style);
-    }
-    
-    /**
-     * Get font from the provided style.
-     * @param style style object
-     * @return font
      */
     public static Font fontOf(AttributeSet style) {
         String fontFace = style.getString(Styles.FONT, "Dialog");
@@ -224,17 +213,6 @@ public final class Styles {
     public static void setFont(AttributeSet style, Font font) {
         style.put(Styles.FONT, font.getFontName());
         style.put(Styles.FONT_SIZE, font.getSize());
-    }
-    
-    /**
-     * Get stroke from the provided style.
-     * @param style style object
-     * @return stroke
-     * @deprecated use {@link #strokeOf(com.googlecode.blaisemath.style.AttributeSet)}
-     */
-    @Deprecated
-    public static Stroke getStroke(AttributeSet style) {
-        return strokeOf(style);
     }
     
     /**
@@ -263,19 +241,6 @@ public final class Styles {
             }
         }
         return new BasicStroke(strokeWidth);
-    }
-    
-    /**
-     * Retrieve text anchor from style. Permits the anchor to be either a string
-     * or an instance of {@link Anchor}.
-     * @param style the style to get anchor from
-     * @param def default anchor if there is none set
-     * @return anchor
-     * @deprecated use {@link #anchorOf(com.googlecode.blaisemath.style.AttributeSet, com.googlecode.blaisemath.style.Anchor)}
-     */
-    @Deprecated
-    public static Anchor getAnchor(AttributeSet style, Anchor def) {
-        return anchorOf(style, def);
     }
     
     /**
