@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.svg;
  */
 
 import java.awt.geom.Path2D;
+import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
 /**
@@ -40,7 +41,7 @@ public class SVGPathTest {
     }
     
     @Test
-    public void testSVG() {
+    public void testSvg() {
         // make sure no exceptions are thrown
         
         // lines
@@ -71,4 +72,18 @@ public class SVGPathTest {
                 + "25,100 -30 0,1 50,-25 l 50,-25");
     }
     
+    @Test
+    public void testSvgRel() {
+        assertEquals("M 10 10 L 11 10 L 11 11", recyclePath("M10 10l1 0 0 1"));
+    }
+    
+    @Test
+    public void testSvgRel2() {
+        assertEquals("M 600 350 L 650 325 L 650 325.000031 C 643.096436 311.192902 648.692871 294.403564 662.5 287.500031 C 676.307129 280.596466 693.096436 286.192902 700 300.000031",
+                recyclePath("M600,350 l 50,-25a25,25 -30 0,1 50,-25"));
+    }
+
+    private static String recyclePath(String path) {
+        return SVGPath.shapeConverter().reverse().convert(toPath(path)).getPathStr();
+    }
 }

@@ -88,6 +88,16 @@ public final class SVGText extends SVGElement {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public void setValue(String value) {
+        setContent(value);
+    }
+
+    @Override
+    public String getValue() {
+        return getContent();
+    }
     
     //</editor-fold>
     

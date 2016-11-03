@@ -34,6 +34,7 @@ import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSets;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.style.xml.AttributeSetAdapter;
 import com.googlecode.blaisemath.svg.SVGCircle;
 import com.googlecode.blaisemath.svg.SVGElement;
 import com.googlecode.blaisemath.svg.SVGElements;
@@ -94,8 +95,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
     @Override
     public Graphic<Graphics2D> doForward(SVGElement sh) {
         Graphic<Graphics2D> prim = null;
-        AttributeSet style = sh.getStyle() == null ? Styles.DEFAULT_SHAPE_STYLE.copy()
-                : sh.getStyle();
+        AttributeSet style = aggregateStyle(sh);
         if (sh instanceof SVGRectangle) {
             RectangularShape rsh = SVGRectangle.shapeConverter().convert((SVGRectangle) sh);
             prim = JGraphics.shape(rsh, style);
@@ -134,29 +134,28 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         } else {
             throw new IllegalStateException("Unexpected SVG element: "+sh);
         }
-        if (sh.getOtherAttributes() != null || sh.getId() != null) {
-//            if (prim.getStyle() instanceof ImmutableAttributeSet) {
-//                Logger.getLogger(SVGElementGraphicConverter.class.getName()).log(Level.WARNING, 
-//                        "Attempt to set id of graphic w/ immutable style: {0}", prim.getStyle());
-//            } else 
-                if (prim.getStyle() == null) {
-                Logger.getLogger(SVGElementGraphicConverter.class.getName()).log(Level.WARNING, 
-                        "Attempt to set id of graphic w/ null style: {0}", prim.getStyle());
-            } else {
-                Map<QName, Object> attr = sh.getOtherAttributes();
-                if (attr != null) {
-                    for (Entry<QName, Object> en : attr.entrySet()) {
-                        Object val = AttributeSets.valueFromString((String) en.getValue());
-                        prim.getStyle().put(en.getKey().toString(), val);
-                    }
-                }
-                if (sh.getId() != null) {
-                    prim.getStyle().put(Styles.ID, sh.getId());
-                }
-            }
-        }
         prim.setDefaultTooltip(sh.getId());
         return prim;
+    }
+
+    private AttributeSet aggregateStyle(SVGElement element) {
+        AttributeSet shapeStyle = element.getStyle();
+        AttributeSet res = shapeStyle == null 
+                ? new AttributeSet()
+                : shapeStyle.copy();
+        
+        Map<QName, Object> attr = element.getOtherAttributes();
+        if (attr != null) {
+            for (Entry<QName, Object> en : attr.entrySet()) {
+                Object val = AttributeSets.valueFromString((String) en.getValue());
+                res.put(en.getKey().toString(), val);
+            }
+        }
+        if (element.getId() != null) {
+            res.put(Styles.ID, element.getId());
+        }
+        AttributeSetAdapter.updateColorFields(res);
+        return res;
     }
 
     @Override

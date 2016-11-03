@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAnyAttribute;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
@@ -47,6 +48,7 @@ public abstract class SVGElement {
 
     private final String tag;
     protected String id;
+    protected String value;
     private AttributeSet style = null;
     private Map<QName,Object> otherAttr;
 
@@ -57,7 +59,6 @@ public abstract class SVGElement {
     protected SVGElement(String tag) {
         this.tag = tag;
     }
-
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
@@ -108,6 +109,15 @@ public abstract class SVGElement {
     
     public void setOtherAttributes(Map<QName,Object> other) {
         this.otherAttr = other;
+    }
+    
+    @XmlValue
+    public String getValue() {
+        return value;
+    }
+    
+    public void setValue(String value) {
+        this.value = value;
     }
     
     //</editor-fold>
