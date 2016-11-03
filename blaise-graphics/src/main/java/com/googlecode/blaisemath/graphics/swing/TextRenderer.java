@@ -24,10 +24,6 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-
-
-
-
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
