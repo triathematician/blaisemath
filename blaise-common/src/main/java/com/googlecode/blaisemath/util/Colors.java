@@ -110,6 +110,12 @@ public class Colors {
                     int alpha = Integer.decode(col.substring(0,3));
                     int rgb = Integer.decode("#"+col.substring(3));
                     return new Color((alpha << 24) + rgb, true);
+                } else if (col.length() == 4) {
+                    // #RGB
+                    int red = Integer.valueOf(col.substring(1,2), 16);
+                    int green = Integer.valueOf(col.substring(2,3), 16);
+                    int blue = Integer.valueOf(col.substring(3,4), 16);
+                    return new Color(17*red, 17*green, 17*blue);
                 } else {
                     throw new IllegalArgumentException("Not a color: "+col);
                 }

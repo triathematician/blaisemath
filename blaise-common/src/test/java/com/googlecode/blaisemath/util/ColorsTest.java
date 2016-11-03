@@ -89,6 +89,8 @@ public class ColorsTest extends TestCase {
         assertEquals(Color.green, rev.convert("#00ff00"));
         assertEquals(Color.blue, rev.convert("#0000ff"));
         assertEquals(new Color(0,0,255,128), rev.convert("#800000ff"));
+        assertEquals(Color.blue, rev.convert("#00f"));
+        assertEquals(rev.convert("#ff0033"), rev.convert("#f03"));
         try {
             assertEquals(null, rev.convert("null"));
             fail();

@@ -60,6 +60,7 @@ public class AttributeSetsTest {
 
         assertEquals("fill:#ffffff", result.convert(AttributeSet.of("fill", Color.white)));
         assertEquals(ImmutableMap.of("fill", Color.white), result.reverse().convert("fill:#ffffff").getAttributeMap());
+        assertEquals(ImmutableMap.of("fill", Color.white), result.reverse().convert("fill:#fff").getAttributeMap());
 
         assertEquals("fill:none", result.convert(AttributeSet.of("fill", null)));
         assertEquals(nullMap("fill"), result.reverse().convert("fill:none").getAttributeMap());

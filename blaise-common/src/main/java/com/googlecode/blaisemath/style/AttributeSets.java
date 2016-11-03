@@ -71,7 +71,7 @@ import javax.annotation.Nullable;
  * </p>
  * <ul>
  *   <li>The attribute name is not used for conversion.</li>
- *   <li>If the value matches #RRGGBB or #AARRGGBB it is converted to a color.</li>
+ *   <li>If the value matches #RGB, #RRGGBB, or #AARRGGBB it is converted to a color.</li>
  *   <li>A string value "none" is converted to a null value.</li>
  *   <li>If a value can be parsed as an integer or double, it is converted to that type.</li>
  *   <li>Otherwise, values are left as strings.</li>
@@ -242,7 +242,8 @@ public final class AttributeSets {
         }
         
         protected Object doBackwardBestGuess(String sval) {
-            if (sval.matches("#[0-9a-fA-f]{6}")
+            if (sval.matches("#[0-9a-fA-f]{3}")
+                    || sval.matches("#[0-9a-fA-f]{6}")
                     || sval.matches("#[0-9a-fA-f]{8}")) {
                 return Colors.stringConverter().reverse().convert(sval);
             } else if (sval.matches("!point\\[(.*)\\]")) {
