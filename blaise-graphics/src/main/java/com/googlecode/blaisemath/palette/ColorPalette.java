@@ -1,8 +1,8 @@
 /*
- * SimplePalette.java
+ * ColorPalette.java
  * Created Sep 18, 2013
  */
-package com.googlecode.blaisemath.dev.palette;
+package com.googlecode.blaisemath.palette;
 
 /*
  * #%L
@@ -26,62 +26,43 @@ package com.googlecode.blaisemath.dev.palette;
 
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import javax.annotation.Nullable;
 
 /**
- * Provides access to a coordinated group of colors. Palettes may optionally
- * have {@link CategoricalPalette}s and {@link GradientPalette}s, which can be
- * used to color various information in a way that is coordinated with the palette's
- * color scheme.
- * 
+ * Provides a coordinated group of colorKeys, indexed by string keys.
  * @author Elisha
  */
-public final class SimplePalette {
-    
-    //
-    // STATIC KEYS FOR SPECIFIC COLORS
-    //
+public final class ColorPalette {
     
     /** Unique key for foreground color */
-    public static final String KEY_FOREGROUND = "FOREGROUND";
+    public static final String KEY_FOREGROUND = "foreground";
     /** Unique key for background color */
-    public static final String KEY_BACKGROUND = "BACKGROUND";
+    public static final String KEY_BACKGROUND = "background";
     
-    //
-    // ATTRIBUTES
-    //
-    
-    /** Contains colors associated with specific keys */
-    private final Map<String,Color> keyColors = Maps.newLinkedHashMap();
-    /** Contains a gradient palette */
-    @Nullable
-    private GradientPalette gradientPalette = null;
-    /** Contains a categorical palette */
-    @Nullable 
-    private CategoricalPalette categoryPalette = null;
+    /** Contains colorKeys associated with specific keys */
+    private final Map<String,Color> colors = Maps.newLinkedHashMap();
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
-    public SimplePalette() {
+    public ColorPalette() {
         setForeground(Color.black);
         setBackground(Color.white);
     }
-    
-    
-    //
-    // KEY COLOR MUTATORS
-    //
    
-    /** Get available color keys */
-    public List<String> getColorKeys() {
-        return Lists.newArrayList(keyColors.keySet());
+    /** 
+     * Get available color keys
+     * @return keys
+     */
+    public Set<String> colorKeys() {
+        return Collections.unmodifiableSet(colors.keySet());
     }
     
     /** 
@@ -90,9 +71,9 @@ public final class SimplePalette {
      * @return associated color, null if there is none in this palette for the given key
      */
     @Nullable
-    public Color getColor(String key) {
+    public Color color(String key) {
         checkNotNull(key);
-        return keyColors.get(key);
+        return colors.get(key);
     }
     
     /** 
@@ -103,7 +84,10 @@ public final class SimplePalette {
     public void putColor(String key, Color color) {
         checkNotNull(key);
         checkNotNull(color);
-        keyColors.put(key, color);
+        if (!Objects.equals(color, color(key))) {
+            colors.put(key, color);
+            fireChangeEvent();
+        }
     }
     
     /** 
@@ -113,68 +97,39 @@ public final class SimplePalette {
      */
     public boolean removeColor(String key) {
         checkNotNull(key);
-        return keyColors.remove(key) != null;
+        if (colors.remove(key) != null) {
+            fireChangeEvent();
+            return true;
+        }
+        return false;
     }
-    
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
     // PROPERTY PATTERNS
     //
     
+    public Color getForeground() {
+        return color(KEY_FOREGROUND);
+    }
+    
+    public void setForeground(Color c) {
+        putColor(KEY_FOREGROUND, c);
+    }
+    
     public Color getBackground() {
-        return getColor(KEY_BACKGROUND);
+        return color(KEY_BACKGROUND);
     }
     
     public void setBackground(Color c) {
         putColor(KEY_BACKGROUND, c);
     }
     
-    public Color getForeground() {
-        return getColor(KEY_FOREGROUND);
-    }
-    
-    public void setForeground(Color c) {
-        putColor(KEY_FOREGROUND, c);
-    }
-
-    /**
-     * Get associated categorical color set, which contains a list of unique
-     * colors that can be used for different categories.
-     * @return categorical color set
-     */
-    @Nullable 
-    public CategoricalPalette getCategoricalPalette() {
-        return categoryPalette;
-    }
-
-    public void setCategoricalPalette(@Nullable CategoricalPalette cp) {
-        if (this.categoryPalette != cp) {
-            Object old = this.categoryPalette;
-            this.categoryPalette = cp;
-            pcs.firePropertyChange("categoricalPalette", old, cp);
-        }
-    }
-    
-    /**
-     * Get associated gradient color set, which interpolates colors along a linear scale.
-     * @return gradient color set
-     */
-    @Nullable 
-    public GradientPalette getGradientPalette() {
-        return gradientPalette;
-    }
-
-    public void setGradientPalette(@Nullable GradientPalette gp) {
-        if (this.gradientPalette != gp) {
-            Object old = this.gradientPalette;
-            this.gradientPalette = gp;
-            pcs.firePropertyChange("gradientPalette", old, gp);
-        }
-    }
-    
     //</editor-fold>
     
+    private void fireChangeEvent() {
+        pcs.firePropertyChange("palette", null, this);
+    }    
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE LISTENING">
     //

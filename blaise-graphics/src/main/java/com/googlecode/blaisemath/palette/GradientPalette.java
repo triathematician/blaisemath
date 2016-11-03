@@ -2,7 +2,7 @@
  * GradientPalette.java
  * Created Sep 19, 2013
  */
-package com.googlecode.blaisemath.dev.palette;
+package com.googlecode.blaisemath.palette;
 
 /*
  * #%L
