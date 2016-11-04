@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-rollback release</actionName>
+            <displayName>rollback release</displayName>
+            <goals>
+                <goal>release:rollback</goal>
+            </goals>
+        </action>
+    </actions>
