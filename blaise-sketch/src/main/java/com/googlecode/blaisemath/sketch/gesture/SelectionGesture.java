@@ -2,7 +2,7 @@
  * SelectGesture.java
  * Created Jan 2015
  */
-package com.googlecode.blaisemath.sketch;
+package com.googlecode.blaisemath.sketch.gesture;
 
 /*
  * #%L
@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.sketch;
 
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
-import com.googlecode.blaisemath.gesture.MouseGestureSupport;
+import com.googlecode.blaisemath.gesture.ActivatingMouseGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicSelectionHandler;
@@ -42,6 +42,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
@@ -53,7 +54,7 @@ import java.util.Set;
  * @see JGraphicSelectionHandler
  * @author elisha
  */
-public final class SelectionGesture extends MouseGestureSupport<JGraphicComponent> {
+public final class SelectionGesture extends ActivatingMouseGesture<JGraphicComponent> {
     
     private static final Boolean MAC = System.getProperty("os.name").toLowerCase().contains("mac");
     
@@ -70,6 +71,9 @@ public final class SelectionGesture extends MouseGestureSupport<JGraphicComponen
     public SelectionGesture(GestureOrchestrator<JGraphicComponent> orchestrator) {
         super(orchestrator, "Select", "Select graphics");
         selectionModel = view.getSelectionModel();
+        
+        eventsHandled = Arrays.asList(MouseEvent.MOUSE_CLICKED, MouseEvent.MOUSE_PRESSED, 
+                MouseEvent.MOUSE_DRAGGED, MouseEvent.MOUSE_RELEASED, MouseEvent.MOUSE_MOVED);
     }
     
     @Override
@@ -84,6 +88,8 @@ public final class SelectionGesture extends MouseGestureSupport<JGraphicComponen
                     .render(selectionBox, SELECTION_BOX_STYLE, g);
         }
     }
+    
+    
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -92,9 +98,7 @@ public final class SelectionGesture extends MouseGestureSupport<JGraphicComponen
         }
         super.mouseMoved(e);
         Graphic gfc = view.selectableGraphicAt(e.getPoint());
-        if (gfc != null) {
-            orchestrator.setComponentCursor(Cursor.HAND_CURSOR);
-        }
+        setDesiredCursor(gfc == null ? Cursor.DEFAULT_CURSOR : Cursor.HAND_CURSOR);
     }
 
     @Override

@@ -2,7 +2,7 @@
  * CreatePathGesture.java
  * Created Oct 10, 2014
  */
-package com.googlecode.blaisemath.gesture.swing;
+package com.googlecode.blaisemath.gesture.graphics;
 
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.google.common.collect.Lists;

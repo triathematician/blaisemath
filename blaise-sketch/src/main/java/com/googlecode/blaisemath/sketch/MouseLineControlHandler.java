@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.sketch;
 
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import static com.google.common.base.Preconditions.checkArgument;
-import com.googlecode.blaisemath.gesture.MouseGestureSupport;
+import com.googlecode.blaisemath.gesture.ActivatingMouseGesture;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
@@ -46,7 +46,7 @@ import java.awt.geom.Point2D;
  * 
  * @author elisha
  */
-public class MouseLineControlHandler extends MouseGestureSupport<JGraphicComponent> {
+public class MouseLineControlHandler extends ActivatingMouseGesture<JGraphicComponent> {
     
     private static final int CAPTURE_RAD = 5;
     
@@ -102,10 +102,11 @@ public class MouseLineControlHandler extends MouseGestureSupport<JGraphicCompone
     }
     
     @Override
-    public void cancel() {
+    public boolean cancel() {
         view.getSelectionModel().deselect(graphic);
         controlPoint = null;
         startShape = null;
+        return true;
     }
     
     @Override
