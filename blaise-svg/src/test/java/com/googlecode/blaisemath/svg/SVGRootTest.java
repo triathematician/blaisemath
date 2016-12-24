@@ -39,10 +39,11 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
-import testutil.JAXBTestUtils;
 
 /**
  * @author petereb1
@@ -54,7 +55,13 @@ public class SVGRootTest {
         SVGRoot r = new SVGRoot();
         r.addElement(new SVGRectangle());
         JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
-        JAXBTestUtils.testRecycleObject(r, jc, false, false, System.out);
+        StringWriter sw = new StringWriter();
+        jc.createMarshaller().marshal(r, sw);
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                + "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"
+                + "<rect height=\"0.0\" rx=\"0.0\" ry=\"0.0\" width=\"0.0\" x=\"0.0\" y=\"0.0\"/>"
+                + "</svg>",
+                sw.toString());
     }
 
 }
