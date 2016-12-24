@@ -33,34 +33,35 @@ import javax.annotation.Nonnull;
 /**
  * A graphic updater that operates on a per-item basis, and provides built in
  * functions for setting graphic styles, and for initializing graphic context menus.
- * @param <V> type of object being updated
+ * @param <G> graphics canvas
+ * @param <T> type of object being updated
  * @author petereb1
  */
-public abstract class AttributeGraphicUpdater<V> implements GraphicUpdater<V> {
+public abstract class AttributeGraphicUpdater<G,T> implements GraphicUpdater<G,T> {
 
     /** Generates attributes from base object. */
-    private Function<V,AttributeSet> attr;
+    private Function<T,AttributeSet> attr;
     /** Initializes context menus */
-    private ContextMenuInitializer<V> menu;
+    private ContextMenuInitializer<T> menu;
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
 
-    public Function<V, AttributeSet> getAttributer() {
+    public Function<T, AttributeSet> getAttributer() {
         return attr;
     }
 
-    public void setAttributer(Function<V, AttributeSet> attr) {
+    public void setAttributer(Function<T, AttributeSet> attr) {
         this.attr = attr;
     }
 
-    public ContextMenuInitializer<V> getMenuInitializer() {
+    public ContextMenuInitializer<T> getMenuInitializer() {
         return menu;
     }
 
-    public void setMenuInitializer(ContextMenuInitializer<V> menu) {
+    public void setMenuInitializer(ContextMenuInitializer<T> menu) {
         this.menu = menu;
     }
         
@@ -78,7 +79,7 @@ public abstract class AttributeGraphicUpdater<V> implements GraphicUpdater<V> {
      * @param bounds desired bounding box for the graphic
      * @return graphic
      */
-    public abstract Graphic create(V e, AttributeSet attr, Rectangle2D bounds);
+    public abstract Graphic create(T e, AttributeSet attr, Rectangle2D bounds);
     
     /**
      * Update an existing graphic for the given object.
@@ -87,10 +88,10 @@ public abstract class AttributeGraphicUpdater<V> implements GraphicUpdater<V> {
      * @param bounds desired bounding box for the graphic
      * @param existing the existing graphic (guaranteed to be non-null)
      */
-    public abstract void update(V e, AttributeSet attr, Rectangle2D bounds, @Nonnull Graphic existing);
+    public abstract void update(T e, AttributeSet attr, Rectangle2D bounds, @Nonnull Graphic existing);
 
     @Override
-    public Graphic update(V e, Rectangle2D bounds, Graphic existing) {
+    public Graphic<G> update(T e, Rectangle2D bounds, Graphic<G> existing) {
         AttributeSet as = attr == null ? new AttributeSet() : attr.apply(e);
         if (existing == null) {
             Graphic gfc = create(e, as, bounds);

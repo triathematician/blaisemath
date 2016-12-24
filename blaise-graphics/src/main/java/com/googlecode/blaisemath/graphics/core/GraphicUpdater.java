@@ -29,10 +29,11 @@ import javax.annotation.Nullable;
 
 /**
  * Create {@link Graphic} objects for rendering items.
+ * @param <G> canvas type
  * @param <E> item type
  * @author petereb1
  */
-public interface GraphicUpdater<E> {
+public interface GraphicUpdater<G,E> {
 
     /**
      * Create or edit graphic object for a specified entity.
@@ -42,6 +43,6 @@ public interface GraphicUpdater<E> {
      * @return graphic, possible null
      */
     @Nullable
-    Graphic update(E e, Rectangle2D bounds, Graphic existing);
+    Graphic<G> update(E e, Rectangle2D bounds, Graphic<G> existing);
 
 }
