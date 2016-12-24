@@ -49,6 +49,14 @@ class RandomStyles {
     static int fontSize() {
         return (int)(5+10*Math.random());
     }
+    
+    static String fontWeight() {
+        return Math.random() < .25 ? FONT_WEIGHT_BOLD : null;
+    }
+    
+    static String fontStyle() {
+        return Math.random() < .25 ? FONT_STYLE_ITALIC : null;
+    }
 
     static AttributeSet point() {
         return AttributeSet.of(FILL, color(), STROKE, color(), STROKE_WIDTH, strokeWidth())
@@ -64,7 +72,9 @@ class RandomStyles {
     }
 
     static AttributeSet string() {
-        return AttributeSet.of(FILL, color(), FONT_SIZE, fontSize());
+        return AttributeSet.of(FILL, color(), FONT_SIZE, fontSize())
+                .and(FONT_WEIGHT, fontWeight())
+                .and(FONT_STYLE, fontStyle());
     }
     
 }
