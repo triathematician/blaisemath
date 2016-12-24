@@ -227,8 +227,14 @@ public final class Styles {
      * @param font font
      */
     public static void setFont(AttributeSet style, Font font) {
-        style.put(Styles.FONT, font.getFontName());
-        style.put(Styles.FONT_SIZE, font.getSize());
+        style.put(FONT, font.getFontName());
+        style.put(FONT_SIZE, font.getSize());
+        if (font.isBold()) {
+            style.put(FONT_WEIGHT, FONT_WEIGHT_BOLD);
+        }
+        if (font.isItalic()) {
+            style.put(FONT_STYLE, FONT_STYLE_ITALIC);
+        }
     }
     
     /**
