@@ -80,6 +80,20 @@ public final class Styles {
     public static final String FONT = "font-family";
     @SvgAttribute
     public static final String FONT_SIZE = "font-size";
+    private static final int FONT_SIZE_DEFAULT = 12;
+    
+    /** Denotes weight of text */
+    @SvgAttribute
+    public static final String FONT_WEIGHT = "font-weight";
+    public static final String FONT_WEIGHT_NORMAL = "normal";
+    public static final String FONT_WEIGHT_BOLD = "bold";
+    
+    /** Denotes style of text */
+    @SvgAttribute
+    public static final String FONT_STYLE = "font-style";
+    public static final String FONT_STYLE_NORMAL = "normal";
+    public static final String FONT_STYLE_ITALIC = "italic";
+    
     
     /** Denotes anchor of text relative to a point */
     @SvgAttribute
@@ -88,6 +102,7 @@ public final class Styles {
     public static final String TEXT_ANCHOR_MIDDLE = "middle";
     public static final String TEXT_ANCHOR_END = "end";
     
+    /** Denotes anchor of text baseline */
     @SvgAttribute
     public static final String ALIGN_BASELINE = "alignment-baseline";
     public static final String ALIGN_BASELINE_BASELINE = "baseline";
@@ -200,8 +215,10 @@ public final class Styles {
      */
     public static Font fontOf(AttributeSet style) {
         String fontFace = style.getString(Styles.FONT, "Dialog");
-        Integer pointSize = style.getInteger(Styles.FONT_SIZE, 12);
-        return new Font(fontFace, Font.PLAIN, pointSize);
+        int bold = FONT_WEIGHT_BOLD.equals(style.getString(Styles.FONT_WEIGHT, null)) ? Font.BOLD : 0;
+        int italic = FONT_STYLE_ITALIC.equals(style.getString(Styles.FONT_STYLE, null)) ? Font.ITALIC : 0;
+        Integer pointSize = style.getInteger(Styles.FONT_SIZE, FONT_SIZE_DEFAULT);
+        return new Font(fontFace, bold | italic, pointSize);
     }
     
     /**
@@ -210,8 +227,14 @@ public final class Styles {
      * @param font font
      */
     public static void setFont(AttributeSet style, Font font) {
-        style.put(Styles.FONT, font.getFontName());
-        style.put(Styles.FONT_SIZE, font.getSize());
+        style.put(FONT, font.getFontName());
+        style.put(FONT_SIZE, font.getSize());
+        if (font.isBold()) {
+            style.put(FONT_WEIGHT, FONT_WEIGHT_BOLD);
+        }
+        if (font.isItalic()) {
+            style.put(FONT_STYLE, FONT_STYLE_ITALIC);
+        }
     }
     
     /**
