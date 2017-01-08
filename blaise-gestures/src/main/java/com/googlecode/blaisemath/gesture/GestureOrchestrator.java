@@ -121,11 +121,12 @@ public final class GestureOrchestrator<V extends Component> {
             delegateEvent(e, activeGesture);
         } else if (old != null && !old.cancelsWhen(e)) {
             delegateEvent(e, topGestureFor(e).orElse(null));
-        } else {
-            cancelActiveGesture();
+        } else if (cancelActiveGesture()) {
             activeGesture = tryActivate(topGestureFor(e));
             delegateEvent(e, activeGesture);
             pcs.firePropertyChange(P_ACTIVE_GESTURE, old, activeGesture);
+        } else {
+            LOG.log(Level.INFO, "Gesture not canceled. Event will not be delegated.");
         }
     }
     
@@ -173,6 +174,7 @@ public final class GestureOrchestrator<V extends Component> {
         if (activeGesture != null && activeGesture.cancel()) {
             LOG.log(Level.INFO, "Canceled gesture {0}", activeGesture.getName());
             gestures.remove(activeGesture);
+            activeGesture = null;
             return true;
         }
         return false;
@@ -208,11 +210,27 @@ public final class GestureOrchestrator<V extends Component> {
         return activeGesture;
     }
     
+    /**
+     * Explicitly set the current active gesture. This will force the current
+     * gesture to be canceled, removed if possible, and add/activate the argument.
+     * @param gesture gesture to activate
+     */
+    public void setActiveGesture(MouseGesture gesture) {
+        LOG.log(Level.INFO, "Setting active gesture: {0}", gesture);
+        checkNotNull(gesture);
+        if (activeGesture != gesture) {
+            cancelActiveGesture();
+            addGesture(gesture);
+            gesture.activate();
+        }
+    }
+    
     /** 
      * Adds a gesture to the stack.
      * @param gesture to add
      */
     public void addGesture(MouseGesture gesture) {
+        LOG.log(Level.INFO, "Adding gesture to top of stack: {0}", gesture);
         checkNotNull(gesture);
         gestures.add(gesture);
     }

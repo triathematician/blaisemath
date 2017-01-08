@@ -495,8 +495,7 @@ public final class SketchCanvas {
                 if (gesture instanceof CreateGraphicGesture) {
                     ((CreateGraphicGesture) gesture).setConfigurer(SketchGraphicUtils.configurer());
                 }
-                mouseMaster.addGesture(gesture);
-                gesture.activate();
+                mouseMaster.setActiveGesture(gesture);
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException 
                     | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new IllegalArgumentException(ex);

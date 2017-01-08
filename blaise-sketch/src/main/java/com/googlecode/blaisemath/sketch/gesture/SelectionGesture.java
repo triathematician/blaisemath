@@ -88,8 +88,11 @@ public final class SelectionGesture extends ActivatingMouseGesture<JGraphicCompo
                     .render(selectionBox, SELECTION_BOX_STYLE, g);
         }
     }
-    
-    
+
+    @Override
+    public boolean cancel() {
+        return false;
+    }
 
     @Override
     public void mouseMoved(MouseEvent e) {
