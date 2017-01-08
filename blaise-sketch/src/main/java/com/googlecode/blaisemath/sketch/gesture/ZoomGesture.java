@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.googlecode.blaisemath.sketch;
+package com.googlecode.blaisemath.sketch.gesture;
 
 /*
  * #%L
@@ -38,27 +38,31 @@ package com.googlecode.blaisemath.sketch;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
-import com.googlecode.blaisemath.gesture.MouseGestureSupport;
+import com.googlecode.blaisemath.gesture.ActivatingMouseGesture;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
+import java.util.Arrays;
 
 /**
  * Controls zoom on the graphics canvas.
  * 
  * @author elisha
  */
-public class ZoomGesture extends MouseGestureSupport {
+public class ZoomGesture extends ActivatingMouseGesture {
     
     /**
      * Initialize gesture with given orchestrator
      * @param orchestrator the gesture orchestrator
      */
     public ZoomGesture(GestureOrchestrator orchestrator) {
-        super(orchestrator, "Zoom canvas", "Allows zooming of the background canvas.");
+        super(orchestrator, "Zoom canvas", "Allows zooming of the background canvas using the mouse wheel.");
         checkArgument(orchestrator.getComponent() instanceof JGraphicComponent);
+        
+        eventsHandled = Arrays.asList(MouseEvent.MOUSE_WHEEL);
     }
 
     @Override
@@ -79,5 +83,34 @@ public class ZoomGesture extends MouseGestureSupport {
         PanAndZoomHandler.zoomPoint(component, component.toGraphicCoordinate(mouseLoc),
                 (e.getWheelRotation() > 0) ? 1.05 : 0.95);
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="OTHER MOUSE HANDLERS">
+    
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        // do nothing
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // do nothing
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // do nothing
+    }
+    
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        // do nothing
+    }
+    
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // do nothing
+    }
+    
+    //</editor-fold>
     
 }

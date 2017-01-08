@@ -1,7 +1,7 @@
 /**
  * CreateTextGesture.java Created Oct 3, 2014
  */
-package com.googlecode.blaisemath.gesture.swing;
+package com.googlecode.blaisemath.gesture.graphics;
 
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.google.common.base.Strings;

@@ -1,8 +1,7 @@
 /**
- * CreateEllipseGesture.java 
- * Created Oct 10, 2014
+ * CreateCircleGesture.java Created Oct 10, 2014
  */
-package com.googlecode.blaisemath.gesture.swing;
+package com.googlecode.blaisemath.gesture.graphics;
 
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.graphics.core.Graphic;
@@ -32,23 +31,23 @@ import java.awt.geom.Ellipse2D;
  */
 
 /**
- * Gesture for adding an ellipse to the canvas.
+ * Gesture for adding a circle to the canvas.
  * 
  * @author Elisha
  */
-public class CreateEllipseGesture extends CreateGraphicGesture {
+public final class CreateCircleGesture extends CreateGraphicGesture {
     
-    public CreateEllipseGesture(GestureOrchestrator orchestrator) {
-        super(orchestrator, "Draw ellipse", "Drag from one corner of the ellipse's frame to the other.");
+    public CreateCircleGesture(GestureOrchestrator orchestrator) {
+        super(orchestrator, "Draw circle", "Drag from center of circle to its boundary.");
     }
 
     @Override
     protected Graphic<Graphics2D> createGraphic() {
         if (pressPoint != null && locPoint != null) {
-            Ellipse2D.Double ell = new Ellipse2D.Double();
-            ell.setFrameFromDiagonal(pressPoint, locPoint);
-            return JGraphics.shape(ell, Styles.DEFAULT_SHAPE_STYLE.copy());
-        } else {
+            double rad = pressPoint.distance(locPoint);
+            Ellipse2D.Double circ = new Ellipse2D.Double(pressPoint.getX()-rad, pressPoint.getY()-rad, 2*rad, 2*rad);
+            return JGraphics.shape(circ, Styles.DEFAULT_SHAPE_STYLE.copy());
+        }  else {
             return null;
         }
     }

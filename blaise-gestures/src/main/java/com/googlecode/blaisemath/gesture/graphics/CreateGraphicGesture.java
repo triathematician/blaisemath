@@ -1,11 +1,11 @@
 /**
- * JGraphicCreatorGesture.java
+ * CreateGraphicGesture.java
  * Created Oct 10, 2014
  */
-package com.googlecode.blaisemath.gesture.swing;
+package com.googlecode.blaisemath.gesture.graphics;
 
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
-import com.googlecode.blaisemath.gesture.MouseGestureSupport;
+import com.googlecode.blaisemath.gesture.ActivatingMouseGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.util.Configurer;
@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
  * 
  * @author Elisha
  */
-public abstract class CreateGraphicGesture extends MouseGestureSupport<JGraphicComponent> {
+public abstract class CreateGraphicGesture extends ActivatingMouseGesture<JGraphicComponent> {
     
     @Nullable
     private Configurer<Graphic<Graphics2D>> configurer;
@@ -73,8 +73,8 @@ public abstract class CreateGraphicGesture extends MouseGestureSupport<JGraphicC
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        super.mouseMoved(e);  
-        orchestrator.setComponentCursor(Cursor.CROSSHAIR_CURSOR);
+        super.mouseMoved(e);
+        setDesiredCursor(Cursor.CROSSHAIR_CURSOR);
     }
 
     @Override
@@ -91,9 +91,9 @@ public abstract class CreateGraphicGesture extends MouseGestureSupport<JGraphicC
     }
 
     @Override
-    public void cancel() {
-        orchestrator.setComponentCursor(Cursor.DEFAULT_CURSOR);
-        super.cancel();
+    public boolean cancel() {
+        setDesiredCursor(Cursor.DEFAULT_CURSOR);
+        return super.cancel();
     }
 
     @Override

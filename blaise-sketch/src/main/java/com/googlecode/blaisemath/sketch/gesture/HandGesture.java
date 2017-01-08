@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.googlecode.blaisemath.sketch;
+package com.googlecode.blaisemath.sketch.gesture;
 
 /*
  * #%L
@@ -38,22 +38,28 @@ package com.googlecode.blaisemath.sketch;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
-import com.googlecode.blaisemath.gesture.MouseGestureSupport;
+import com.googlecode.blaisemath.gesture.ActivatingMouseGesture;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
+import java.util.function.Predicate;
 
 /**
  * Controls panning the canvas.
  * 
  * @author elisha
  */
-public class HandGesture extends MouseGestureSupport {
+public class HandGesture extends ActivatingMouseGesture {
+    
+    private static final int ACTIVE_KEY = KeyEvent.VK_SPACE;
     
     /** Basic pan mode */
     private static final String PAN_MODE = "Button1";
@@ -75,14 +81,18 @@ public class HandGesture extends MouseGestureSupport {
      * @param orchestrator the gesture orchestrator
      */
     public HandGesture(GestureOrchestrator orchestrator) {
-        super(orchestrator, "Pan and zoom canvas", "Allows panning and zooming of the background canvas.");
+        super(orchestrator, "Hand", "Allows panning of the background canvas (activated by pressing SPACE).");
         checkArgument(orchestrator.getComponent() instanceof JGraphicComponent);
+
+        eventsHandled = Arrays.asList(MouseEvent.MOUSE_MOVED, MouseEvent.MOUSE_PRESSED,
+                MouseEvent.MOUSE_DRAGGED, MouseEvent.MOUSE_RELEASED);
+        eventFilter = (Predicate<InputEvent>) (e -> active && eventsHandled.contains(e.getID()));
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         super.mouseMoved(e);
-        orchestrator.setComponentCursor(Cursor.MOVE_CURSOR);
+        setDesiredCursor(Cursor.MOVE_CURSOR);
     }
 
     @Override

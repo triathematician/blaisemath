@@ -7,7 +7,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import com.googlecode.blaisemath.util.GAInstrument;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
@@ -478,43 +479,41 @@ public class GraphUtils {
     /**
      * Generates connected components from an adjacency map.
      * @param <V> graph node type
-     * @param adj an adjacency map
+     * @param dirAdj an adjacency map (may be directed)
      * @return set of components, as a set of sets
      */
-    public static <V> Collection<Set<V>> components(Multimap<V,V> adj) {
-        Map<V,Set<V>> setMap = Maps.newLinkedHashMap();
-        for (Entry<V,V> en : adj.entries()) {
-            V v1 = en.getKey();
-            V v2 = en.getValue();
-            boolean v1InSet = setMap.containsKey(v1);
-            boolean v2InSet = setMap.containsKey(v2);
-            
-            if (v1InSet && v2InSet) {
-                // check if components need to be merged
-                if (setMap.get(v1) != setMap.get(v2)) {
-                    Set<V> nue = Sets.newHashSet(Iterables.concat(setMap.get(v1), setMap.get(v2)));
-                    for (V v : nue) {
-                        setMap.put(v, nue);
-                    }
-                }
-            } else if (v1InSet) {
-                // v2 hasn't been seen before
-                Set<V> set = setMap.get(v1);
-                set.add(v2);
-                setMap.put(v2, set);
-            } else if (v2InSet) {
-                // v1 hasn't been seen before
-                Set<V> set = setMap.get(v2);
-                set.add(v1);
-                setMap.put(v1, set);
-            } else {
-                // create new set with v1 and v2
-                Set<V> set = Sets.newHashSet(v1, v2);
-                setMap.put(v1, set);
-                setMap.put(v2, set);
-            }
+    public static <V> Collection<Set<V>> components(Multimap<V,V> dirAdj) {
+        // ensure symmetry
+        Multimap<V,V> adj = HashMultimap.create();
+        for (Entry<V,V> en : dirAdj.entries()) {
+            adj.put(en.getKey(), en.getValue());
+            adj.put(en.getValue(), en.getKey());
         }
-        return Sets.newLinkedHashSet(setMap.values());
+        
+        List<Set<V>> res = Lists.newArrayList();
+        Set<V> toAdd = Sets.newHashSet(adj.keySet());
+        while (!toAdd.isEmpty()) {
+            V next = toAdd.iterator().next();
+            Set<V> vComp = component(adj, next);
+            res.add(vComp);
+            toAdd.removeAll(vComp);
+        }
+        return res;
+    }
+    
+    private static <V> Set<V> component(Multimap<V,V> adj, V v0) {
+        Set<V> toSearch = Sets.newHashSet(v0);
+        Set<V> res = Sets.newHashSet();
+        while (!toSearch.isEmpty()) {
+            Set<V> next = Sets.newHashSet();
+            for (V v : toSearch) {
+                next.addAll(adj.get(v));
+            }
+            res.addAll(toSearch);
+            next.removeAll(res);
+            toSearch = next;
+        }
+        return res;
     }
 
     /**
