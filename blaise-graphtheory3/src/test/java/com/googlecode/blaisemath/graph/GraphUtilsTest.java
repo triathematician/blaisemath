@@ -25,6 +25,9 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 import java.util.ArrayList;
@@ -203,7 +206,7 @@ public class GraphUtilsTest {
 
     @Test
     public void testComponents() {
-        System.out.println("components");
+        System.out.println("components_graph");
         for (Graph g : new Graph[]{UNDIRECTED_INSTANCE, DIRECTED_INSTANCE}) {
             List<Set<Integer>> result1 = new ArrayList<Set<Integer>>(GraphUtils.components(g));
             Collections.sort(result1, new Ordering<Collection>(){
@@ -216,6 +219,33 @@ public class GraphUtilsTest {
             assertCollectionContentsSame(Arrays.asList(20,21), result1.get(1));
             assertCollectionContentsSame(Arrays.asList(15), result1.get(2));
         }
+    }
+    
+    @Test
+    public void testComponents_Multimap() {
+        System.out.println("components_multimap");
+    
+        assertSets(GraphUtils.components(HashMultimap.create()));
+        assertSets(GraphUtils.components(multimap(0, 0)), ImmutableSet.of(0));
+        assertSets(GraphUtils.components(multimap(0, 1, 1, 2)), ImmutableSet.of(0, 1, 2));
+        assertSets(GraphUtils.components(multimap(0, 1, 2, 3)), ImmutableSet.of(0, 1), ImmutableSet.of(2, 3));
+    }
+    
+    private static <X> Multimap<X,X> multimap(X k, X v) {
+        Multimap<X,X> res = HashMultimap.create();
+        res.put(k, v);
+        return res;
+    }
+    
+    private static <X> Multimap<X,X> multimap(X k1, X v1, X k2, X v2) {
+        Multimap<X,X> res = HashMultimap.create();
+        res.put(k1, v1);
+        res.put(k2, v2);
+        return res;
+    }
+    
+    private static <X> void assertSets(Collection<Set<X>> sets, Set... test) {
+        assertCollectionContentsSame(Arrays.asList(test), sets);
     }
 
     @Test
