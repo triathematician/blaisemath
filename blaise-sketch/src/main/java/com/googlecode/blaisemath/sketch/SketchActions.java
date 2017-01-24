@@ -451,9 +451,7 @@ public class SketchActions {
     //<editor-fold defaultstate="collapsed" desc="ARRANGING">
 
     public static void moveForward(Set<Graphic<Graphics2D>> selection) {
-        selection.stream().forEach(g -> {
-            moveForward(g);
-        });
+        selection.forEach(SketchActions::moveForward);
     }
 
     public static void moveForward(Graphic<Graphics2D> gr) {
@@ -468,9 +466,7 @@ public class SketchActions {
     }
 
     public static void moveBackward(Set<Graphic<Graphics2D>> selection) {
-        selection.stream().forEach(g -> {
-            moveBackward(g);
-        });
+        selection.forEach(SketchActions::moveBackward);
     }
 
     public static void moveBackward(Graphic<Graphics2D> gr) {
@@ -485,9 +481,7 @@ public class SketchActions {
     }
 
     public static void moveToFront(Set<Graphic<Graphics2D>> selection) {
-        selection.stream().forEach(g -> {
-            moveToFront(g);
-        });
+        selection.forEach(SketchActions::moveToFront);
     }
 
     public static void moveToFront(Graphic<Graphics2D> gr) {
@@ -502,9 +496,7 @@ public class SketchActions {
     }
 
     public static void moveToBack(Set<Graphic<Graphics2D>> selection) {
-        selection.stream().forEach(g -> {
-            moveToBack(g);
-        });
+        selection.forEach(SketchActions::moveToBack);
     }
 
     public static void moveToBack(Graphic<Graphics2D> gr) {

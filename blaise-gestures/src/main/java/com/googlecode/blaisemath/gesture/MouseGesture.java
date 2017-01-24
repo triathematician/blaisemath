@@ -24,9 +24,11 @@ package com.googlecode.blaisemath.gesture;
  * #L%
  */
 
+import java.awt.event.InputEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -64,8 +66,27 @@ public interface MouseGesture extends MouseListener, MouseMotionListener, MouseW
      * @return active
      */
     boolean isActive();
+
+    /**
+     * Gets a desired cursor setting, or null if none.
+     * @return cursor
+     */
+    @Nullable
+    Integer getDesiredCursor();
     
-    // LIFECYCLE
+    /**
+     * Whether gesture accepts the given event.
+     * @param event event to test
+     * @return true if event should be passed to gesture
+     */
+    boolean shouldHandle(InputEvent event);
+    
+    /**
+     * Whether gesture should be canceled when the given event occurs.
+     * @param event event to test
+     * @return true if event should cause gesture to be canceled
+     */
+    boolean cancelsWhen(InputEvent event);
         
     /**
      * Activate the gesture, preparing it to handle mouse events.
@@ -77,14 +98,17 @@ public interface MouseGesture extends MouseListener, MouseMotionListener, MouseW
 
     /**
      * Completes the gesture, performing final steps and resetting state.
+     * Once completed, a gesture will no longer receive events.
      * Should be called by the orchestrator, not directly invoked.
      */
     void complete();
 
     /**
      * Disable the gesture, canceling any pending operations.
+     * Once canceled, a gesture will no longer receive events.
      * Should be called by the orchestrator, not directly invoked.
+     * @return true if the gesture was canceled, and should no longer receive events
      */
-    void cancel();
+    boolean cancel();
     
 }

@@ -25,6 +25,9 @@ package com.googlecode.blaisemath.sketch;
  */
 
 
+import com.googlecode.blaisemath.sketch.gesture.HandGesture;
+import com.googlecode.blaisemath.sketch.gesture.SelectionGesture;
+import com.googlecode.blaisemath.sketch.gesture.ZoomGesture;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -32,16 +35,16 @@ import com.googlecode.blaisemath.app.ActionMenuInitializer;
 import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateCircleGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateEllipseGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateImageGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateLineGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateMarkerGesture;
-import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreateCircleGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreateEllipseGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreateImageGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreateLineGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreateMarkerGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreatePathGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreateRectangleGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreateTextGesture;
 import com.googlecode.blaisemath.gesture.GestureLayerUI;
-import com.googlecode.blaisemath.gesture.swing.CreateGraphicGesture;
+import com.googlecode.blaisemath.gesture.graphics.CreateGraphicGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
@@ -49,7 +52,6 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import static com.googlecode.blaisemath.sketch.SketchFrameView.SELECTION_EMPTY_PROP;
 import com.googlecode.blaisemath.util.SetSelectionModel;
-import com.sun.glass.events.KeyEvent;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -127,7 +129,7 @@ public final class SketchCanvas {
     private final SketchCanvasModel canvasModel;
     
     /** The gesture orchestrator for the canvas. */
-    private final GestureOrchestrator<JGraphicComponent> orchestrator;
+    private final GestureOrchestrator<JGraphicComponent> mouseMaster;
     
     /** Handles property listening */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -149,7 +151,7 @@ public final class SketchCanvas {
         // set up gestures
         GestureLayerUI gestureUI = new GestureLayerUI();
         layer = new JLayer<>(canvas, gestureUI);
-        orchestrator = gestureUI.getGestureOrchestrator();
+        mouseMaster = gestureUI.getGestureOrchestrator();
         initGestureOrchestrator();
 
         initSelectionHandling();
@@ -169,15 +171,14 @@ public final class SketchCanvas {
     }
     
     private void initGestureOrchestrator() {
-        orchestrator.addPropertyChangeListener(GestureOrchestrator.P_ACTIVE_GESTURE, evt -> {
-            orchestratorPropertyChange(evt);
-        });
-        orchestrator.addPersistentGesture(new SelectionGesture(orchestrator));
-        orchestrator.addPersistentGesture(new ZoomGesture(orchestrator));
-        orchestrator.addKeyGesture(KeyEvent.VK_SPACE, new HandGesture(orchestrator));
+        mouseMaster.addPropertyChangeListener(GestureOrchestrator.P_ACTIVE_GESTURE,
+                evt -> orchestratorGestureChange(evt));
+        mouseMaster.addGesture(new SelectionGesture(mouseMaster));
+        mouseMaster.addGesture(new ZoomGesture(mouseMaster));
+        mouseMaster.addGesture(new HandGesture(mouseMaster));
     }
 
-    private void orchestratorPropertyChange(PropertyChangeEvent evt) {
+    private void orchestratorGestureChange(PropertyChangeEvent evt) {
         MouseGesture old = (MouseGesture) evt.getOldValue();
         MouseGesture nue = (MouseGesture) evt.getNewValue();
         String oldName = old == null ? P_SELECT_TOOL_ACTIVE : TOOL_MAP.get(old.getClass());
@@ -361,11 +362,11 @@ public final class SketchCanvas {
     //<editor-fold defaultstate="collapsed" desc="TOOL/GESTURE ACTIONS">
     
     public boolean isSelectToolActive() {
-        return isFocalGesture(null);
+        return isActive(SelectionGesture.class);
     }
     
     public void setSelectToolActive(boolean val) {
-        setFocalGesture(null, val);
+        setFocalGesture(SelectionGesture.class, val);
     }
     
     @Action(selectedProperty = P_SELECT_TOOL_ACTIVE)
@@ -373,7 +374,7 @@ public final class SketchCanvas {
     }
     
     public boolean isHandToolActive() {
-        return isFocalGesture(HandGesture.class);
+        return isActive(HandGesture.class);
     }
     
     public void setHandToolActive(boolean val) {
@@ -385,7 +386,7 @@ public final class SketchCanvas {
     }
     
     public boolean isMarkerToolActive() {
-        return isFocalGesture(CreateMarkerGesture.class);
+        return isActive(CreateMarkerGesture.class);
     }
     
     public void setMarkerToolActive(boolean val) {
@@ -397,7 +398,7 @@ public final class SketchCanvas {
     }
     
     public boolean isLineToolActive() {
-        return isFocalGesture(CreateLineGesture.class);
+        return isActive(CreateLineGesture.class);
     }
     
     public void setLineToolActive(boolean val) {
@@ -409,7 +410,7 @@ public final class SketchCanvas {
     }
     
     public boolean isPathToolActive() {
-        return isFocalGesture(CreatePathGesture.class);
+        return isActive(CreatePathGesture.class);
     }
     
     public void setPathToolActive(boolean val) {
@@ -421,7 +422,7 @@ public final class SketchCanvas {
     }
     
     public boolean isRectangleToolActive() {
-        return isFocalGesture(CreateRectangleGesture.class);
+        return isActive(CreateRectangleGesture.class);
     }
     
     public void setRectangleToolActive(boolean val) {
@@ -433,7 +434,7 @@ public final class SketchCanvas {
     }
     
     public boolean isCircleToolActive() {
-        return isFocalGesture(CreateCircleGesture.class);
+        return isActive(CreateCircleGesture.class);
     }
     
     public void setCircleToolActive(boolean val) {
@@ -445,7 +446,7 @@ public final class SketchCanvas {
     }
     
     public boolean isEllipseToolActive() {
-        return isFocalGesture(CreateEllipseGesture.class);
+        return isActive(CreateEllipseGesture.class);
     }
     
     public void setEllipseToolActive(boolean val) {
@@ -457,7 +458,7 @@ public final class SketchCanvas {
     }
     
     public boolean isTextToolActive() {
-        return isFocalGesture(CreateTextGesture.class);
+        return isActive(CreateTextGesture.class);
     }
     
     public void setTextToolActive(boolean val) {
@@ -469,7 +470,7 @@ public final class SketchCanvas {
     }
     
     public boolean isImageToolActive() {
-        return isFocalGesture(CreateImageGesture.class);
+        return isActive(CreateImageGesture.class);
     }
     
     public void setImageToolActive(boolean val) {
@@ -481,27 +482,26 @@ public final class SketchCanvas {
     }
     
     /** Checks to see if focal gesture has given type */
-    private <G extends MouseGesture> boolean isFocalGesture(Class<G> type) {
-        return type == null ? orchestrator.getActiveGesture() == null
-                : type.isInstance(orchestrator.getActiveGesture());
+    private <G extends MouseGesture> boolean isActive(Class<G> type) {
+        return type.isInstance(mouseMaster.getActiveGesture());
     }
     
     /** Turns focal gesture of given type on or off */
-    private <G extends MouseGesture> void setFocalGesture(Class<G> type, boolean val) {
-        if (type != null && val) {
+    private <G extends MouseGesture> void setFocalGesture(Class<G> type, boolean turnOn) {
+        if (turnOn) {
             try {
                 Constructor<G> con = type.getConstructor(GestureOrchestrator.class);
-                G gesture = con.newInstance(orchestrator);
+                G gesture = con.newInstance(mouseMaster);
                 if (gesture instanceof CreateGraphicGesture) {
                     ((CreateGraphicGesture) gesture).setConfigurer(SketchGraphicUtils.configurer());
                 }
-                orchestrator.setTransientGesture(gesture);
+                mouseMaster.setActiveGesture(gesture);
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException 
                     | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new IllegalArgumentException(ex);
             }
         } else {
-            orchestrator.completeActiveGesture();
+            mouseMaster.cancelActiveGesture();
         }
     }
     

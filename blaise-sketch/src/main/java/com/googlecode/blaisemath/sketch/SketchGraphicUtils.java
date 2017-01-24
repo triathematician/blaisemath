@@ -74,12 +74,7 @@ public class SketchGraphicUtils {
      * @return configurer
      */
     public static Configurer<Graphic<Graphics2D>> configurer() {
-        return new Configurer<Graphic<Graphics2D>>(){
-            @Override
-            public void configure(Graphic<Graphics2D> obj) {
-                SketchGraphicUtils.configureGraphic(obj);
-            }
-        };
+        return gfc -> SketchGraphicUtils.configureGraphic(gfc);
     }
 
     /**
@@ -99,7 +94,7 @@ public class SketchGraphicUtils {
     
     /** Copy composite along with child graphics */
     private static GraphicComposite<Graphics2D> copyComposite(GraphicComposite<Graphics2D> comp) {
-        GraphicComposite<Graphics2D> res = new GraphicComposite<Graphics2D>();
+        GraphicComposite<Graphics2D> res = new GraphicComposite<>();
         copyGraphicProperties(comp, res);
         for (Graphic<Graphics2D> gr : comp.getGraphics()) {
             res.addGraphic(copy(gr));
@@ -141,7 +136,7 @@ public class SketchGraphicUtils {
         } else {
             throw new IllegalStateException("Unexpected");
         }
-        PrimitiveGraphic<T, Graphics2D> res = new PrimitiveGraphic<T,Graphics2D>(
+        PrimitiveGraphic<T, Graphics2D> res = new PrimitiveGraphic<>(
                 resPrim, src.getStyle().copy(), src.getRenderer());
         copyGraphicProperties(src, res);
         return res;

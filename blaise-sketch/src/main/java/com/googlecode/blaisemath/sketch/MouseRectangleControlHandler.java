@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.sketch;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
-import com.googlecode.blaisemath.gesture.MouseGestureSupport;
+import com.googlecode.blaisemath.gesture.ActivatingMouseGesture;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
@@ -55,7 +55,7 @@ import java.util.logging.Logger;
  * 
  * @author elisha
  */
-public class MouseRectangleControlHandler extends MouseGestureSupport<JGraphicComponent> {
+public class MouseRectangleControlHandler extends ActivatingMouseGesture<JGraphicComponent> {
     
     private static final int CAPTURE_RAD = 5;
     
@@ -111,10 +111,11 @@ public class MouseRectangleControlHandler extends MouseGestureSupport<JGraphicCo
     }
     
     @Override
-    public void cancel() {
+    public boolean cancel() {
         view.getSelectionModel().deselect(graphic);
         controlPoint = null;
         startShape = null;
+        return true;
     }
     
     @Override
