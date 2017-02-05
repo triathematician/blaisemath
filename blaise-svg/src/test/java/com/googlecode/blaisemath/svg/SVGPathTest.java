@@ -78,6 +78,11 @@ public class SVGPathTest {
     }
     
     @Test
+    public void testSvgCloseMove() {
+        assertEquals("M 0 0 L 1 0 ZM 1 1 L 2 2", recyclePath("M 0 0 L 1 0 Z m 1 1 l 1 1"));
+    }
+    
+    @Test
     public void testSvgRel2() {
         assertEquals("M 600 350 L 650 325 L 650 325.000031 C 643.096436 311.192902 648.692871 294.403564 662.5 287.500031 C 676.307129 280.596466 693.096436 286.192902 700 300.000031",
                 recyclePath("M600,350 l 50,-25a25,25 -30 0,1 50,-25"));
