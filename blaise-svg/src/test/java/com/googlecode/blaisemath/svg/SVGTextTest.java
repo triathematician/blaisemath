@@ -38,7 +38,6 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.base.Converter;
 import com.googlecode.blaisemath.util.AnchoredText;
-import java.awt.geom.Ellipse2D;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;

@@ -84,6 +84,7 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         menuBar.add(setsMenu);
         
         JMenu compMenu = new JMenu("Compound Objects");
+        compMenu.add(new JMenuItem(actionMap.get("addLabeledShape")));
         compMenu.add(new JMenuItem(actionMap.get("addLabeledPoint")));
         compMenu.add(new JMenuItem(actionMap.get("addArrow")));
         compMenu.add(new JMenuItem(actionMap.get("add2Point")));
