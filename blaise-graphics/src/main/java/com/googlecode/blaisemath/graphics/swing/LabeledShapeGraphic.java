@@ -83,16 +83,30 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
         if (styler.getLabelDelegate() != null) {
             String label = styler.label(source);
             AttributeSet style = styler.labelStyle(source);
-            if (!Strings.isNullOrEmpty(label) && style != null) {
-                if (textRenderer instanceof WrappedTextRenderer) {
-                    WrappedTextRenderer wtr = (WrappedTextRenderer) textRenderer;
-                    wtr.setTextBounds(primitive instanceof RectangularShape
-                            ? (RectangularShape) primitive
-                            : primitive.getBounds2D());
-                }
-                textRenderer.render(new AnchoredText(label), style, canvas);
-            }
+            renderLabel(canvas, primitive, label, style);
         }
+    }
+    
+    private void renderLabel(Graphics2D canvas, Shape primitive, String label, AttributeSet style) {
+        if (Strings.isNullOrEmpty(label) || style == null) {
+            return;
+        }
+        if (textRenderer instanceof WrappedTextRenderer) {
+            WrappedTextRenderer wtr = (WrappedTextRenderer) textRenderer;
+            wtr.setTextBounds(wrappedLabelBounds(primitive));
+        }
+        textRenderer.render(new AnchoredText(label), style, canvas);
+    }
+
+    /**
+     * Get the bounding box used for wrapped text labels for the given shape.
+     * @param primitive shape
+     * @return label boundaries
+     */
+    public static RectangularShape wrappedLabelBounds(Shape primitive) {
+        return primitive instanceof RectangularShape
+                    ? (RectangularShape) primitive
+                    : primitive.getBounds2D();
     }
 
 }

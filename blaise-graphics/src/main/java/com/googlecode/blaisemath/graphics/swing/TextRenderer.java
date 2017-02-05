@@ -39,6 +39,7 @@ import java.awt.Toolkit;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 /**
@@ -48,25 +49,42 @@ import java.util.logging.Logger;
  */
 public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
     
+    /** Assumed monitor resolution, used in bounding box calculations */
+    private static final int DOTS_PER_INCH = 72;
+    
     private static final Logger LOG = Logger.getLogger(TextRenderer.class.getName());
     private static final TextRenderer INST = new TextRenderer();
     
-    public static Renderer<AnchoredText, Graphics2D> getInstance() {
+    /**
+     * Get default static instance of the renderer.
+     * @return renderer
+     */
+    public static TextRenderer getInstance() {
         return INST;
     }
     
     @Override
     public void render(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
-        String text = primitive.getText();
-        if (Strings.isNullOrEmpty(text)) {
-            return;
-        }
-
+        render(Collections.singleton(primitive), style, canvas);
+    }
+    
+    /**
+     * Render a collection of text primitives at one time.
+     * @param primitives the primitives to render
+     * @param style the style used for rendering
+     * @param canvas where to render it
+     */
+    public void render(Iterable<AnchoredText> primitives, AttributeSet style, Graphics2D canvas) {
         canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         canvas.setColor(style.getColor(Styles.FILL, Color.black));
         canvas.setFont(Styles.fontOf(style));
-        Rectangle2D bounds = boundingBox(primitive, style, canvas);
-        canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getMaxY()));
+        
+        for (AnchoredText at : primitives) {
+            if (!Strings.isNullOrEmpty(at.getText())) {
+                Rectangle2D bounds = boundingBox(at, style, canvas);
+                canvas.drawString(at.getText(), (float) bounds.getX(), (float) (bounds.getMaxY()));
+            }
+        }
     }
 
     @Override
@@ -86,7 +104,14 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         return boundingBox(primitive, style, null);
     }
     
-    public Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+    /**
+     * Get the bounding box for the given text/style to be rendered on the given canvas.
+     * @param primitive text/location
+     * @param style desired style
+     * @param canvas where to render
+     * @return bounding box for the result
+     */
+    public static Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
         }
@@ -95,7 +120,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
                 : canvas.getFontRenderContext();
         double width = font.getStringBounds(primitive.getText(), frc).getWidth();
-        double height = font.getSize()*72/Toolkit.getDefaultToolkit().getScreenResolution();
+        double height = font.getSize()*DOTS_PER_INCH/Toolkit.getDefaultToolkit().getScreenResolution();
         
         Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);
         Point2D offset = style.getPoint(Styles.OFFSET, new Point());
