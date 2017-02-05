@@ -27,10 +27,12 @@ package com.googlecode.blaisemath.svg;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.geom.Line2D;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -58,6 +60,8 @@ public class SVGTool extends javax.swing.JFrame {
         gsvg = new SVGGraphic();
         gsvg.setStyle(Styles.strokeWidth(Color.blue, 2f));
         canvas.addGraphic(gsvg);
+        canvas.addGraphic(JGraphics.path(new Line2D.Double(-1000, 0, 1000, 0), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
+        canvas.addGraphic(JGraphics.path(new Line2D.Double(0, -1000, 0, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
         PanAndZoomHandler.install(canvas);
     }
 
