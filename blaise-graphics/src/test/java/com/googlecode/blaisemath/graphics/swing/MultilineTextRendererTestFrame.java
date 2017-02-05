@@ -35,7 +35,7 @@ import java.awt.geom.Line2D;
  * #%L
  * blaise-graphics
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
