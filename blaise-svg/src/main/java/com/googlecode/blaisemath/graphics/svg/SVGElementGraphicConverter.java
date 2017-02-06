@@ -176,7 +176,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         if (v instanceof LabeledShapeGraphic) {
             res = labeledShapeToSvg((LabeledShapeGraphic<Graphics2D>) v);
         } else if (v instanceof PrimitiveGraphicSupport) {
-            AttributeSet sty = v.renderStyle();
+            AttributeSet sty = v.renderStyle().flatCopy();
             Object p = ((PrimitiveGraphicSupport)v).getPrimitive();
             res = primitiveStyleToSvg(p, sty);
         } else if (v instanceof GraphicComposite) {
@@ -214,9 +214,9 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
     /** Converts a blaise array graphic to SVG group */
     private SVGElement primitiveArrayToSvg(PrimitiveArrayGraphicSupport pags) {
         SVGGroup grp = new SVGGroup();
-        grp.setStyle(pags.renderStyle());
+        grp.setStyle(pags.renderStyle().flatCopy());
         for (Object o : pags.getPrimitive()) {
-            grp.addElement(primitiveStyleToSvg(o, pags.renderStyle()));
+            grp.addElement(primitiveStyleToSvg(o, pags.renderStyle().flatCopy()));
         }
         return grp;
     }
