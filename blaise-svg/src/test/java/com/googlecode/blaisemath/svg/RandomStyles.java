@@ -75,6 +75,7 @@ class RandomStyles {
     static AttributeSet string() {
         return AttributeSet
                 .of(FILL, color())
+                .and(STROKE, null)
                 .and(FONT_SIZE, fontSize());
     }
 

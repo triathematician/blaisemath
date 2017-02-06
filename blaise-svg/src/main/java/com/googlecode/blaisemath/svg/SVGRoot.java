@@ -24,6 +24,8 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.AttributeSet;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,6 +34,7 @@ import java.io.Writer;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -40,7 +43,53 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name="svg")
 public final class SVGRoot extends SVGGroup {
+    
+    private String viewBox = null;
+    private int height = 100;
+    private int width = 100;
 
+    public SVGRoot() {
+        setStyle(AttributeSet.of("font-family", "sans-serif"));
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+
+    @XmlAttribute
+    public String getViewBox() {
+        return viewBox;
+    }
+
+    public void setViewBox(String viewBox) {
+        this.viewBox = viewBox;
+    }
+
+    public void setViewBox(Rectangle2D viewBox) {
+        setViewBox(String.format("%d %d %d %d", (int) viewBox.getMinX(), (int) viewBox.getMinY(), 
+                (int) viewBox.getWidth(), (int) viewBox.getHeight()));
+    }
+
+    @XmlAttribute
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    @XmlAttribute
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+    
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
+    
     /**
      * Attempt to load an SVG root object from the given source.
      * @param input source
@@ -102,5 +151,7 @@ public final class SVGRoot extends SVGGroup {
             throw new IOException("Could not save SVGRoot to output", ex);
         }
     }
+    
+    //</editor-fold>
     
 }

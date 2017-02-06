@@ -27,13 +27,14 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveArrayGraphicSupport;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer.StyledText;
@@ -88,11 +89,32 @@ import javax.xml.namespace.QName;
 public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Graphics2D>> {
     
     private static final Logger LOG = Logger.getLogger(SVGElementGraphicConverter.class.getName());
-    
     private static final SVGElementGraphicConverter INST = new SVGElementGraphicConverter();
-    
+
+    /**
+     * Get global instance of the converter.
+     * @return instance
+     */
     public static Converter<SVGElement, Graphic<Graphics2D>> getInstance() {
         return INST;
+    }
+
+    /**
+     * Convert a graphic component to an SVG object, including a view box.
+     * @param compt component to convert
+     * @return result
+     */
+    public static SVGRoot componentToSvg(JGraphicComponent compt) {
+        SVGRoot root = new SVGRoot();
+        root.setWidth(compt.getWidth());
+        root.setHeight(compt.getHeight());
+        root.setViewBox(PanAndZoomHandler.getLocalBounds(compt));
+        SVGGroup group = (SVGGroup) SVGElementGraphicConverter.getInstance().reverse()
+                .convert(compt.getGraphicRoot());
+        for (SVGElement el : group.getElements()) {
+            root.addElement(el);
+        }
+        return root;
     }
     
     /**
@@ -172,6 +194,13 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
 
     @Override
     public SVGElement doBackward(Graphic<Graphics2D> v) {
+        return graphicToSvg(v);
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="PRIVATE UTILITIES">
+    
+    /** Converts a graphic element to an SVG element */
+    private static SVGElement graphicToSvg(Graphic<Graphics2D> v) {
         SVGElement res = null;
         if (v instanceof LabeledShapeGraphic) {
             res = labeledShapeToSvg((LabeledShapeGraphic<Graphics2D>) v);
@@ -192,11 +221,11 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
     }
 
     /** Converts a blaise composite to an SVG group */
-    private SVGElement compositeToSvg(GraphicComposite<Graphics2D> gc) {
+    private static SVGElement compositeToSvg(GraphicComposite<Graphics2D> gc) {
         SVGGroup grp = new SVGGroup();
         for (Graphic<Graphics2D> g : gc.getGraphics()) {
             try {
-                SVGElement el = doBackward(g);
+                SVGElement el = graphicToSvg(g);
                 if (el != null) {
                     grp.addElement(el);
                 } else {
@@ -210,7 +239,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
     }
 
     /** Converts a blaise array graphic to SVG group */
-    private SVGElement primitiveArrayToSvg(PrimitiveArrayGraphicSupport pags) {
+    private static SVGElement primitiveArrayToSvg(PrimitiveArrayGraphicSupport pags) {
         SVGGroup grp = new SVGGroup();
         grp.setStyle(pags.renderStyle().flatCopy());
         for (Object o : pags.getPrimitive()) {
@@ -277,4 +306,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         
         return res.getElements().size() == 1 ? res.getElements().get(0) : res;
     }
+    
+    //</editor-fold>
+    
 }

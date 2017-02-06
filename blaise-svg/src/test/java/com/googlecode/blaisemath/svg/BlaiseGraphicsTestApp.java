@@ -87,12 +87,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void printSVG() throws JAXBException {
-        SVGRoot root = new SVGRoot();
-        SVGGroup group = (SVGGroup) SVGElementGraphicConverter.getInstance().reverse()
-                .convert(canvas1.getGraphicRoot());
-        for (SVGElement el : group.getElements()) {
-            root.addElement(el);
-        }
+        SVGRoot root = SVGElementGraphicConverter.componentToSvg(canvas1);
         JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
         Marshaller m = jc.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
