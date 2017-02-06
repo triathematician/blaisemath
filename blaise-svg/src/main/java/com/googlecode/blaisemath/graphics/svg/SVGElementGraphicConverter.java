@@ -187,7 +187,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
             throw new IllegalArgumentException("Graphic conversion not supported for "+v.getClass());
         }
         String id = v.renderStyle().getString(Styles.ID, null);
-        if (id != null) {
+        if (id != null && res != null) {
             res.setId(id);
         }
         return res;
@@ -198,10 +198,14 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         SVGGroup grp = new SVGGroup();
         for (Graphic<Graphics2D> g : gc.getGraphics()) {
             try {
-                grp.addElement(doBackward(g));
+                SVGElement el = doBackward(g);
+                if (el != null) {
+                    grp.addElement(el);
+                } else {
+                    LOG.log(Level.WARNING, "Null graphic for {0}", g);
+                }
             } catch (IllegalArgumentException x) {
-                Logger.getLogger(SVGElementGraphicConverter.class.getName())
-                        .log(Level.WARNING, "Graphic not added to result", x);
+                LOG.log(Level.WARNING, "Graphic not added to result", x);
             }
         }
         return grp;
