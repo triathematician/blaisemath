@@ -176,9 +176,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         if (v instanceof LabeledShapeGraphic) {
             res = labeledShapeToSvg((LabeledShapeGraphic<Graphics2D>) v);
         } else if (v instanceof PrimitiveGraphicSupport) {
-            AttributeSet sty = v.renderStyle().flatCopy();
-            Object p = ((PrimitiveGraphicSupport)v).getPrimitive();
-            res = primitiveStyleToSvg(p, sty);
+            res = primitiveStyleToSvg(((PrimitiveGraphicSupport)v).getPrimitive(), v.renderStyle().flatCopy());
         } else if (v instanceof GraphicComposite) {
             res = compositeToSvg((GraphicComposite<Graphics2D>) v);
         } else if (v instanceof PrimitiveArrayGraphicSupport) {
@@ -258,7 +256,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         if (textRend instanceof WrappedTextRenderer) {
             return wrappedTextSvg(label, style, LabeledShapeGraphic.wrappedLabelBounds(gfc.getPrimitive()));
         } else if (textRend instanceof TextRenderer) {
-            return primitiveStyleToSvg(new AnchoredText(label), style);
+            return primitiveStyleToSvg(new AnchoredText(label), style.flatCopy());
         } else {
             LOG.log(Level.WARNING, "Unsupported text renderer: {0}", textRend);
             return null;
@@ -268,6 +266,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
     /** Generates group of text elements formed by wrapping text */
     private static SVGElement wrappedTextSvg(String label, AttributeSet style, RectangularShape bounds) {
         SVGGroup res = new SVGGroup();
+        res.setStyle(style.flatCopy());
         
         Graphics2D testCanvas = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).createGraphics();
         Iterable<StyledText> lines = WrappedTextRenderer.computeLines(label, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);

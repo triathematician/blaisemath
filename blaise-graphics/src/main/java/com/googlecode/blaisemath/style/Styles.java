@@ -280,7 +280,13 @@ public final class Styles {
             return Anchor.valueOf((String) anchor);
         }
         
+        if (anchor == null) {
+            anchor = Styles.TEXT_ANCHOR_START;
+        }
         Object baseline = style.get(Styles.ALIGN_BASELINE);
+        if (baseline == null) {
+            baseline = Styles.ALIGN_BASELINE_BASELINE;
+        }
         if (anchor instanceof String && baseline instanceof String) {
             return anchorFromAttributes((String) anchor, (String) baseline, def);
         }
