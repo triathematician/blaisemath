@@ -65,6 +65,41 @@ public final class SVGPath extends SVGElement {
         super("path");
         this.pathStr = checkSvgPathStr(pathStr);
     }
+        
+    /**
+     * Create an {@code SVGPath} from a {@code PathIterator} object.
+     * @param pi path iterator
+     * @return svg path
+     */
+    public static SVGPath create(PathIterator pi) {
+        float[] cur = new float[6];
+        int curSegmentType = -1;
+        StringBuilder pathString = new StringBuilder();
+        while (!pi.isDone()) {
+            curSegmentType = pi.currentSegment(cur);
+            switch (curSegmentType) {
+                case PathIterator.SEG_MOVETO:
+                    pathString.append("M ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
+                    break;
+                case PathIterator.SEG_LINETO:
+                    pathString.append("L ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
+                    break;
+                case PathIterator.SEG_QUADTO:
+                    pathString.append("Q ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3])).append(" ");
+                    break;
+                case PathIterator.SEG_CUBICTO:
+                    pathString.append("C ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3], cur[4], cur[5])).append(" ");
+                    break;
+                case PathIterator.SEG_CLOSE:
+                    pathString.append("Z");
+                    break;
+                default:
+                    break;
+            }
+            pi.next();
+        }
+        return new SVGPath(pathString.toString().trim());
+    }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
@@ -94,34 +129,7 @@ public final class SVGPath extends SVGElement {
 
         @Override
         protected SVGPath doBackward(Path2D b) {
-            PathIterator pi = b.getPathIterator(null);
-            float[] cur = new float[6];
-            int curSegmentType = -1;
-            StringBuilder pathString = new StringBuilder();
-            while (!pi.isDone()) {
-                curSegmentType = pi.currentSegment(cur);
-                switch (curSegmentType) {
-                    case PathIterator.SEG_MOVETO:
-                        pathString.append("M ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
-                        break;
-                    case PathIterator.SEG_LINETO:
-                        pathString.append("L ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
-                        break;
-                    case PathIterator.SEG_QUADTO:
-                        pathString.append("Q ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3])).append(" ");
-                        break;
-                    case PathIterator.SEG_CUBICTO:
-                        pathString.append("C ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3], cur[4], cur[5])).append(" ");
-                        break;
-                    case PathIterator.SEG_CLOSE:
-                        pathString.append("Z");
-                        break;
-                    default:
-                        break;
-                }
-                pi.next();
-            }
-            return new SVGPath(pathString.toString().trim());
+            return SVGPath.create(b.getPathIterator(null));
         }
     }
     
