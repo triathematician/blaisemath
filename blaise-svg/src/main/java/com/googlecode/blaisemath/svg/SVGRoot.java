@@ -36,6 +36,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Root element for SVG object tree.
@@ -68,7 +69,7 @@ public final class SVGRoot extends SVGGroup {
                 (int) viewBox.getWidth(), (int) viewBox.getHeight()));
     }
 
-    @XmlAttribute
+    @XmlTransient
     public int getHeight() {
         return height;
     }
@@ -77,7 +78,7 @@ public final class SVGRoot extends SVGGroup {
         this.height = height;
     }
 
-    @XmlAttribute
+    @XmlTransient
     public int getWidth() {
         return width;
     }
