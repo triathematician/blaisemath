@@ -169,13 +169,12 @@ public class WrappedTextRenderer extends TextRenderer {
 
     private static List<StyledText> computeEllipseLines(String text, AttributeSet style, Ellipse2D ell, Graphics2D canvas) {
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
+        AttributeSet centeredStyle = AttributeSet.createWithParent(style).and(Styles.TEXT_ANCHOR, Anchor.CENTER);
+        
         if (bounds.getWidth() < ell.getWidth() - 8 || ell.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
-            // entire string fits in box... draw centered
-            AttributeSet centeredStyle = AttributeSet.createWithParent(style).and(Styles.TEXT_ANCHOR, Anchor.CENTER);
             return Arrays.asList(new StyledText(new AnchoredText(ell.getCenterX(), ell.getCenterY(), text), centeredStyle));
         } else {
-            // need to wrap string
-            return computeRectangleLines(text, style,
+            return computeRectangleLines(text, centeredStyle,
                     new Rectangle2D.Double(
                     ell.getX()+ell.getWidth()*.15, ell.getY()+ell.getHeight()*.15,
                     ell.getWidth()*.7, ell.getHeight()*.7),
