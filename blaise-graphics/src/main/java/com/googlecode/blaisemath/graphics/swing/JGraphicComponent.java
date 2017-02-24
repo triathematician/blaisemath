@@ -38,6 +38,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
@@ -287,11 +288,24 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * if there are no graphics.
      */
     public void zoomToAll() {
+        zoomToAll(new Insets(0, 0, 0, 0));
+    }
+
+    /**
+     * Set transform to include all components in the graphic tree inside display
+     * area minus insets.
+     * @param insets insets for zoom
+     */
+    public void zoomToAll(Insets insets) {
         Rectangle2D bounds = getGraphicRoot().boundingBox();
         if (bounds != null) {
-            PanAndZoomHandler.zoomCoordBoxAnimated(this, new Point2D.Double(
-                    bounds.getMinX(), bounds.getMinY()),
-                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+            double minX = bounds.getMinX() - insets.left;
+            double maxX = Math.max(minX, bounds.getMaxX() - insets.right);
+            double minY = bounds.getMinY() - insets.top;
+            double maxY = Math.max(minY, bounds.getMaxY() - insets.bottom);
+            PanAndZoomHandler.zoomCoordBoxAnimated(this, 
+                    new Point2D.Double(minX, minY),
+                    new Point2D.Double(maxX, maxY));
         }
     }
     
