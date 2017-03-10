@@ -135,8 +135,9 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         
         // add positions of isolates and leaf nodes back in
         Map<C, Point2D.Double> res = state.getPositionsCopy();
-        addLeafNodes(graphForInfo, res, params.getDistScale());
-        addIsolates(graphForInfo.getIsolates(), res, params.getDistScale());
+        double distScale = params.getDistScale();
+        addLeafNodes(graphForInfo, res, distScale, distScale*parm.leafScale);
+        addIsolates(graphForInfo.getIsolates(), res, distScale, distScale*parm.isolateScale);
         
         // report and clean up
         LOG.log(Level.INFO, "StaticSpringLayout completed in {0} steps. The final energy "
@@ -149,21 +150,21 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
      * Add leaf nodes that are adjacent to the given positions.
      * @param og the graph
      * @param pos current positions
-     * @param distScale distance between noddes
+     * @param distScale distance between nodes
+     * @param leafScale distance between leaves and adjacent nodes
      * @param <C> graph node type
      */
-    public static <C> void addLeafNodes(OptimizedGraph<C> og, Map<C, Point2D.Double> pos, double distScale) {
-        double nomSz = distScale/2;
+    private static <C> void addLeafNodes(OptimizedGraph<C> og, Map<C, Point2D.Double> pos, double distScale, double leafScale) {
         Set<C> leafs = og.getLeafNodes();
         int n = leafs.size();
         if (n > 0) {
             Rectangle2D bounds = Points.boundingBox(pos.values(), distScale);
             if (bounds == null) {
                 // no points exist, so must be all pairs
-                double sqSide = nomSz * Math.sqrt(n);
+                double sqSide = leafScale * Math.sqrt(n);
                 Rectangle2D pairRegion = new Rectangle2D.Double(-sqSide, -sqSide, 2*sqSide, 2*sqSide);
                 Set orderedLeafs = orderByAdjacency(leafs, og);
-                addPointsToBox(orderedLeafs, pairRegion, pos, nomSz, true);
+                addPointsToBox(orderedLeafs, pairRegion, pos, leafScale, true);
             } else {
                 // add close to their neighboring point
                 Set<C> cores = Sets.newHashSet();
@@ -180,7 +181,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
                 for (C o : cores) {
                     Set<C> leaves = og.getLeavesAdjacentTo(o);
                     Point2D.Double ctr = pos.get(o);
-                    double r = nomSz;
+                    double r = leafScale;
                     double theta = Math.atan2(ctr.y, ctr.x);
                     if (leaves.size() == 1) {
                         pos.put(Iterables.getFirst(leaves, null), new Point2D.Double(
@@ -196,14 +197,14 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
                 }
                 
                 // put the pairs to the right side
-                double area = n * nomSz * nomSz;
+                double area = n * leafScale * leafScale;
                 double ht = Math.min(bounds.getHeight(), 2*Math.sqrt(area));
                 double wid = area/ht;
                 Rectangle2D pairRegion = new Rectangle2D.Double(
                         bounds.getMaxX() + .1*bounds.getWidth(), bounds.getCenterY()-ht/2,
                         wid, ht);
                 Set orderedPairs = orderByAdjacency(pairs, og);
-                addPointsToBox(orderedPairs, pairRegion, pos, nomSz, true);
+                addPointsToBox(orderedPairs, pairRegion, pos, leafScale, true);
             }
         }
     }
@@ -225,28 +226,28 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
      * @param isolates the isolate nodes
      * @param pos position map
      * @param distScale distance between nodes
+     * @param isoScale distance between isolates
      */
-    public static <C> void addIsolates(Set<C> isolates, Map<C, Point2D.Double> pos, double distScale) {
-        double nomSz = distScale/2;
+    private static <C> void addIsolates(Set<C> isolates, Map<C, Point2D.Double> pos, double distScale, double isoScale) {
         int n = isolates.size();
         if (n > 0) {
-            Rectangle2D bounds = Points.boundingBox(pos.values(), nomSz);
+            Rectangle2D bounds = Points.boundingBox(pos.values(), isoScale);
             
             Rectangle2D isolateRegion;
             if (bounds == null) {
                 // put them all in the middle
-                double sqSide = nomSz * Math.sqrt(n);
+                double sqSide = isoScale * Math.sqrt(n);
                 isolateRegion = new Rectangle2D.Double(-sqSide, -sqSide, 2*sqSide, 2*sqSide);
             } else {
                 // put them to the right side
-                double area = n * nomSz * nomSz;
+                double area = n * isoScale * isoScale;
                 double ht = Math.min(bounds.getHeight(), 2*Math.sqrt(area));
                 double wid = area/ht;
                 isolateRegion = new Rectangle2D.Double(
                         bounds.getMaxX() + .1*bounds.getWidth(), bounds.getCenterY()-ht/2,
                         wid, ht);
             }
-            addPointsToBox(isolates, isolateRegion, pos, nomSz, false);
+            addPointsToBox(isolates, isolateRegion, pos, isoScale, false);
         }
     }
 
@@ -282,7 +283,12 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         
         private CircleLayoutParameters initialLayoutParams = new CircleLayoutParameters();
         
+        /** Approximate distance between nodes */
         private double distScale = SpringLayoutParameters.DEFAULT_DIST_SCALE;
+        /** Distance between leaf and adjacent node, as percentage of distScale */
+        private double leafScale = .5;
+        /** Distance between isolates, as percentage of distScale */
+        private double isolateScale = .5;
         private int minSteps = 100;
         private int maxSteps = 5000;
         private double coolStart = 0.5;
@@ -309,6 +315,22 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         public void setDistScale(double distScale) {
             this.distScale = distScale;
             this.energyChangeThreshold = distScale*distScale*1e-6;
+        }
+
+        public double getLeafScale() {
+            return leafScale;
+        }
+
+        public void setLeafScale(double leafScale) {
+            this.leafScale = leafScale;
+        }
+
+        public double getIsolateScale() {
+            return isolateScale;
+        }
+
+        public void setIsolateScale(double isolateScale) {
+            this.isolateScale = isolateScale;
         }
 
         public int getMinSteps() {

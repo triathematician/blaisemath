@@ -19,7 +19,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.base.Converter;
 import com.googlecode.blaisemath.util.AnchoredText;
-import java.awt.geom.Ellipse2D;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;

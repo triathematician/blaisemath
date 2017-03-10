@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ package com.googlecode.blaisemath.svg;
 import com.google.common.base.Converter;
 import com.googlecode.blaisemath.util.AnchoredText;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -80,23 +79,14 @@ public final class SVGText extends SVGElement {
         this.y = y;
     }
 
-    @XmlElement(name="tspan")
-    public String getContent() {
+    @Override
+    public String getValue() {
         return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     @Override
     public void setValue(String value) {
-        setContent(value);
-    }
-
-    @Override
-    public String getValue() {
-        return getContent();
+        this.content = value;
     }
     
     //</editor-fold>

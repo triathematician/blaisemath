@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,11 @@ public class SVGPathTest {
     @Test
     public void testSvgRel() {
         assertEquals("M 10 10 L 11 10 L 11 11", recyclePath("M10 10l1 0 0 1"));
+    }
+    
+    @Test
+    public void testSvgCloseMove() {
+        assertEquals("M 0 0 L 1 0 ZM 1 1 L 2 2", recyclePath("M 0 0 L 1 0 Z m 1 1 l 1 1"));
     }
     
     @Test

@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,13 @@ package com.googlecode.blaisemath.svg;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -58,6 +61,9 @@ public class SVGTool extends javax.swing.JFrame {
         gsvg = new SVGGraphic();
         gsvg.setStyle(Styles.strokeWidth(Color.blue, 2f));
         canvas.addGraphic(gsvg);
+        canvas.addGraphic(JGraphics.path(new Rectangle2D.Double(0, 0, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
+        canvas.addGraphic(JGraphics.path(new Rectangle2D.Double(500, 500, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
+        canvas.addGraphic(JGraphics.path(new Rectangle2D.Double(-500, -500, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
         PanAndZoomHandler.install(canvas);
     }
 

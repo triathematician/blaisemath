@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
 import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
 import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
 import com.googlecode.blaisemath.graphics.swing.SegmentGraphic;
@@ -86,12 +87,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void printSVG() throws JAXBException {
-        SVGRoot root = new SVGRoot();
-        SVGGroup group = (SVGGroup) SVGElementGraphicConverter.getInstance().reverse()
-                .convert(canvas1.getGraphicRoot());
-        for (SVGElement el : group.getElements()) {
-            root.addElement(el);
-        }
+        SVGRoot root = SVGElementGraphicConverter.componentToSvg(canvas1);
         JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
         Marshaller m = jc.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -299,12 +295,26 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="COMPOSITES">
     
     @Action
+    public void addLabeledShape() {
+        Rectangle2D.Double rect = new Rectangle2D.Double();
+        rect.setFrameFromDiagonal(randomPoint(), randomPoint());
+        LabeledShapeGraphic gfc = new LabeledShapeGraphic();
+        gfc.setPrimitive(rect);
+        gfc.setDragEnabled(true);
+        gfc.getObjectStyler().setStyleConstant(RandomStyles.shape());
+        gfc.getObjectStyler().setLabelConstant("this is a long label for a rectangle that should get wrapped, "
+                + "since it needs to be really big so we can adequately test something with a long label\n"
+                + "and new line characters");
+        gfc.getObjectStyler().setLabelStyleConstant(RandomStyles.anchoredString());
+        root1.addGraphic(gfc);
+    }
+
+    @Action
     public void add2Point() {
-      Point2D p1 = randomPoint(), p2 = randomPoint();
+        Point2D p1 = randomPoint(), p2 = randomPoint();
         TwoPointGraphic ag = new TwoPointGraphic(p1, p2);
         ag.setDefaultTooltip("<html><b>Two Points</b>: <i>" + p1 + ", " + p2 + "</i>");
         ag.setDragEnabled(true);
@@ -330,7 +340,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="COOL STUFF USING SPECIAL STYLES">
     
@@ -360,7 +369,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //</editor-fold>
-    
         
     //<editor-fold defaultstate="collapsed" desc="APP CODE">
 
@@ -399,6 +407,5 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //</editor-fold>
-    
     
 }

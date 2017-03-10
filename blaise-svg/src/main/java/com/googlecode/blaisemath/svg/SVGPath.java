@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,41 @@ public final class SVGPath extends SVGElement {
         super("path");
         this.pathStr = checkSvgPathStr(pathStr);
     }
+        
+    /**
+     * Create an {@code SVGPath} from a {@code PathIterator} object.
+     * @param pi path iterator
+     * @return svg path
+     */
+    public static SVGPath create(PathIterator pi) {
+        float[] cur = new float[6];
+        int curSegmentType = -1;
+        StringBuilder pathString = new StringBuilder();
+        while (!pi.isDone()) {
+            curSegmentType = pi.currentSegment(cur);
+            switch (curSegmentType) {
+                case PathIterator.SEG_MOVETO:
+                    pathString.append("M ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
+                    break;
+                case PathIterator.SEG_LINETO:
+                    pathString.append("L ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
+                    break;
+                case PathIterator.SEG_QUADTO:
+                    pathString.append("Q ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3])).append(" ");
+                    break;
+                case PathIterator.SEG_CUBICTO:
+                    pathString.append("C ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3], cur[4], cur[5])).append(" ");
+                    break;
+                case PathIterator.SEG_CLOSE:
+                    pathString.append("Z");
+                    break;
+                default:
+                    break;
+            }
+            pi.next();
+        }
+        return new SVGPath(pathString.toString().trim());
+    }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
@@ -94,34 +129,7 @@ public final class SVGPath extends SVGElement {
 
         @Override
         protected SVGPath doBackward(Path2D b) {
-            PathIterator pi = b.getPathIterator(null);
-            float[] cur = new float[6];
-            int curSegmentType = -1;
-            StringBuilder pathString = new StringBuilder();
-            while (!pi.isDone()) {
-                curSegmentType = pi.currentSegment(cur);
-                switch (curSegmentType) {
-                    case PathIterator.SEG_MOVETO:
-                        pathString.append("M ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
-                        break;
-                    case PathIterator.SEG_LINETO:
-                        pathString.append("L ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
-                        break;
-                    case PathIterator.SEG_QUADTO:
-                        pathString.append("Q ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3])).append(" ");
-                        break;
-                    case PathIterator.SEG_CUBICTO:
-                        pathString.append("C ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3], cur[4], cur[5])).append(" ");
-                        break;
-                    case PathIterator.SEG_CLOSE:
-                        pathString.append("Z");
-                        break;
-                    default:
-                        break;
-                }
-                pi.next();
-            }
-            return new SVGPath(pathString.toString().trim());
+            return SVGPath.create(b.getPathIterator(null));
         }
     }
     
@@ -159,16 +167,17 @@ public final class SVGPath extends SVGElement {
         }
         String[] tokens = tokenizeSvgPath(svg);
         
-        float[] loc = { 0f, 0f };
-        float[] nextAnchor = { 0f, 0f };
-        
+        float[] start = {0f, 0f};
+        float[] loc = {0f, 0f};
+        float[] nextAnchor = {0f, 0f};
+
         GeneralPath gp = new GeneralPath();
         int pos = 0;
         while (pos < tokens.length) {
             SvgPathOperator op = operatorOf(tokens[pos].toLowerCase()); 
             float[] coords = nextFloats(tokens, pos+1);
             boolean relative = Character.isLowerCase(tokens[pos].charAt(0));
-            op.apply(gp, coords, loc, nextAnchor, relative);
+            op.apply(gp, coords, start, loc, nextAnchor, relative);
             pos += coords.length+1;
         }
         return gp;
@@ -309,7 +318,7 @@ public final class SVGPath extends SVGElement {
     private enum SvgPathOperator {
         MOVE('m') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-1; i+=2) {
                     loc[0] = relative ? loc[0]+coords[i] : coords[i];
                     loc[1] = relative ? loc[1]+coords[i+1] : coords[i+1];
@@ -321,11 +330,13 @@ public final class SVGPath extends SVGElement {
                 }
                 nextAnchor[0] = loc[0];
                 nextAnchor[1] = loc[1];
+                start[0] = loc[0];
+                start[1] = loc[1];
             }
         },
         LINE('l') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-1; i+=2) {
                     loc[0] = relative ? loc[0]+coords[i] : coords[i];
                     loc[1] = relative ? loc[1]+coords[i+1] : coords[i+1];
@@ -337,7 +348,7 @@ public final class SVGPath extends SVGElement {
         },
         HLINE('h') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length; i++) {
                     loc[0] = relative ? loc[0]+coords[i] : coords[i];
                     gp.lineTo(loc[0], loc[1]);
@@ -348,7 +359,7 @@ public final class SVGPath extends SVGElement {
         },
         VLINE('v') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length; i++) {
                     loc[1] = relative ? loc[1]+coords[i] : coords[i];
                     gp.lineTo(loc[0], loc[1]);
@@ -359,7 +370,7 @@ public final class SVGPath extends SVGElement {
         },
         CUBIC_CURVE('c') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-5; i+=6) {
                     float x1 = relative ? loc[0]+coords[i] : coords[i];
                     float y1 = relative ? loc[1]+coords[i+1] : coords[i+1];
@@ -375,7 +386,7 @@ public final class SVGPath extends SVGElement {
         },
         SMOOTH_CURVE('s') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-3; i+=4) {
                     float x1 = nextAnchor[0];
                     float y1 = nextAnchor[1];
@@ -391,7 +402,7 @@ public final class SVGPath extends SVGElement {
         },
         QUAD_CURVE('q') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-3; i+=4) {
                     float x1 = relative ? loc[0]+coords[i] : coords[i];
                     float y1 = relative ? loc[1]+coords[i+1] : coords[i+1];
@@ -405,7 +416,7 @@ public final class SVGPath extends SVGElement {
         },
         SMOOTH_QUAD_CURVE('t') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-1; i+=2) {
                     float x1 = nextAnchor[0];
                     float y1 = nextAnchor[1];
@@ -419,7 +430,7 @@ public final class SVGPath extends SVGElement {
         },
         ARC('a') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-6; i+=7) {
                     float rx = coords[i];
                     float ry = coords[i+1];
@@ -436,8 +447,12 @@ public final class SVGPath extends SVGElement {
         },
         CLOSE_PATH('z') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 gp.closePath();
+                loc[0] = start[0];
+                loc[1] = start[1];
+                nextAnchor[0] = start[0];
+                nextAnchor[1] = start[1];
             }
         };
         
@@ -447,7 +462,16 @@ public final class SVGPath extends SVGElement {
             this.cmd = cmd;
         }
 
-        abstract void apply(GeneralPath gp, float[] coords, float[] loc, float[] nextAnchor, boolean relative);
+        /**
+         * Apply the SVG command, adding the results onto the path.
+         * @param gp path to add results onto
+         * @param coords coordinates associated with the current command
+         * @param start starting location for current subpath (modified by move commands)
+         * @param loc current location (modified by most commands)
+         * @param nextAnchor next anchor location (modified for curve commands)
+         * @param relative whether coordinates are relative (true) or absolute (false)
+         */
+        abstract void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative);
     }
     
 }

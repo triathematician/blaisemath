@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graphics.swing;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
@@ -287,11 +288,20 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * if there are no graphics.
      */
     public void zoomToAll() {
+        zoomToAll(new Insets(0, 0, 0, 0));
+    }
+
+    /**
+     * Set transform to include all components in the graphic tree inside display
+     * area plus insets. The insets are expressed in local coordinates, not window
+     * coordinates. Positive insets result in extra space around the graphics.
+     * 
+     * @param outsets additional space to leave around the graphics
+     */
+    public void zoomToAll(Insets outsets) {
         Rectangle2D bounds = getGraphicRoot().boundingBox();
         if (bounds != null) {
-            PanAndZoomHandler.zoomCoordBoxAnimated(this, new Point2D.Double(
-                    bounds.getMinX(), bounds.getMinY()),
-                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+            animatedZoomWithOutsets(bounds, outsets);
         }
     }
     
@@ -314,12 +324,31 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * is selected.
      */
     public void zoomToSelected() {
+        zoomToSelected(new Insets(0, 0, 0, 0));
+    }
+
+    /**
+     * Set transform to include all components in the graphic tree inside display
+     * area plus insets. The insets are expressed in local coordinates, not window
+     * coordinates. Positive insets result in extra space around the graphics.
+     * 
+     * @param outsets additional space to leave around the graphics
+     */
+    public void zoomToSelected(Insets outsets) {
         Rectangle2D bounds = GraphicUtils.boundingBox(getSelectionModel().getSelection());
         if (bounds != null) {
-            PanAndZoomHandler.zoomCoordBoxAnimated(this, new Point2D.Double(
-                    bounds.getMinX(), bounds.getMinY()),
-                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+            animatedZoomWithOutsets(bounds, outsets);
         }
+    }
+    
+    private void animatedZoomWithOutsets(Rectangle2D bounds, Insets outsets) {
+        double minX = bounds.getMinX() - outsets.left;
+        double maxX = Math.max(minX, bounds.getMaxX() + outsets.right);
+        double minY = bounds.getMinY() - outsets.top;
+        double maxY = Math.max(minY, bounds.getMaxY() + outsets.bottom);
+        PanAndZoomHandler.zoomCoordBoxAnimated(this, 
+                new Point2D.Double(minX, minY),
+                new Point2D.Double(maxX, maxY));
     }
     
     /**

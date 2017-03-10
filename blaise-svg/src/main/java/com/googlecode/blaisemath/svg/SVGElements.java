@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Shape;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -83,6 +84,8 @@ public class SVGElements {
             res = SVGLine.shapeConverter().reverse().convert((Line2D) shape);
         } else if (shape instanceof Path2D) {
             res = SVGPath.shapeConverter().reverse().convert((Path2D) shape);
+        } else if (shape instanceof Area) {
+            res = SVGPath.create(shape.getPathIterator(null));
         } else {
             Logger.getLogger(SVGElements.class.getName()).log(Level.WARNING, "Shapes of type {0} are not yet supported.", shape.getClass());
             return null;

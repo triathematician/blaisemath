@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graphics.swing;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Enables pan and zoom of a graphics canvas, by changing the {@link AffineTransform}
@@ -52,6 +54,8 @@ import java.awt.geom.RectangularShape;
  */
 public final class PanAndZoomHandler extends MouseAdapter implements CanvasPainter<Graphics2D> {
 
+    private static final Logger LOG = Logger.getLogger(PanAndZoomHandler.class.getName());
+    
     /** Default number of steps to use in animating pan/zoom */
     private static final int ANIM_STEPS = 25;
     /** How long between animation steps */
@@ -238,14 +242,16 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * @return local bounds associated with the component
      */
     public static Rectangle2D.Double getLocalBounds(JGraphicComponent gc) {
-        if (gc.getInverseTransform() == null) {
+        AffineTransform inverse = gc.getInverseTransform();
+        if (inverse == null) {
             gc.setTransform(new AffineTransform());
+            inverse = new AffineTransform();
         }
         // apply inverse transform to min point of component bounds and max point of component bounds
         Point2D.Double min = new Point2D.Double(0, 0);
         Point2D.Double max = new Point2D.Double(gc.getWidth(), gc.getHeight());
-        Point2D cmin = gc.getInverseTransform().transform(min, null);
-        Point2D cmax = gc.getInverseTransform().transform(max, null);
+        Point2D cmin = inverse.transform(min, null);
+        Point2D cmax = inverse.transform(max, null);
         return new Rectangle2D.Double(cmin.getX(), cmin.getY(), cmax.getX() - cmin.getX(), cmax.getY() - cmin.getY());
     }
 
@@ -285,6 +291,10 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * @return transform
      */
     public static AffineTransform scaleRectTransform(Rectangle2D scaleTo, final Rectangle2D scaleFrom) {
+        if (scaleTo.getWidth() == 0 || scaleTo.getHeight() == 0 || scaleFrom.getWidth() == 0 || scaleFrom.getHeight() == 0) {
+            LOG.log(Level.INFO, "Scaling with zero area rectangles: {0}, {1}. Returning identity transform.", new Object[]{scaleFrom, scaleTo});
+            return new AffineTransform();
+        }
         double scalex = scaleFrom.getWidth() / scaleTo.getWidth();
         double scaley = scaleFrom.getHeight() / scaleTo.getHeight();
         double scale = Math.max(scalex, scaley);

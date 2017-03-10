@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.svg;
 import com.googlecode.blaisemath.style.AttributeSet;
 import static com.googlecode.blaisemath.style.Styles.*;
 import java.awt.Color;
+import java.util.Random;
 
 /**
  *
@@ -74,7 +75,32 @@ class RandomStyles {
     static AttributeSet string() {
         return AttributeSet
                 .of(FILL, color())
+                .and(STROKE, null)
                 .and(FONT_SIZE, fontSize());
+    }
+
+    static AttributeSet anchoredString() {
+        return string()
+                .and(ALIGN_BASELINE, baseline())
+                .and(TEXT_ANCHOR, anchor());
+    }
+    
+    static String baseline() {
+        switch (new Random().nextInt(3)) {
+            case 0: return ALIGN_BASELINE_BASELINE;
+            case 1: return ALIGN_BASELINE_MIDDLE;
+            case 2: return ALIGN_BASELINE_HANGING;
+            default: throw new IllegalStateException();
+        }
+    }
+    
+    static String anchor() {
+        switch (new Random().nextInt(3)) {
+            case 0: return TEXT_ANCHOR_START;
+            case 1: return TEXT_ANCHOR_MIDDLE;
+            case 2: return TEXT_ANCHOR_END;
+            default: throw new IllegalStateException();
+        }
     }
     
 }

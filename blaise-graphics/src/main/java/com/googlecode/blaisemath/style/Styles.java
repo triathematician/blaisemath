@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.style;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -280,7 +280,13 @@ public final class Styles {
             return Anchor.valueOf((String) anchor);
         }
         
+        if (anchor == null) {
+            anchor = Styles.TEXT_ANCHOR_START;
+        }
         Object baseline = style.get(Styles.ALIGN_BASELINE);
+        if (baseline == null) {
+            baseline = Styles.ALIGN_BASELINE_BASELINE;
+        }
         if (anchor instanceof String && baseline instanceof String) {
             return anchorFromAttributes((String) anchor, (String) baseline, def);
         }

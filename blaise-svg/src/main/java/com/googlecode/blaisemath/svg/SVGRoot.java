@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.AttributeSet;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,7 +34,9 @@ import java.io.Writer;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Root element for SVG object tree.
@@ -40,7 +44,53 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name="svg")
 public final class SVGRoot extends SVGGroup {
+    
+    private String viewBox = null;
+    private int height = 100;
+    private int width = 100;
 
+    public SVGRoot() {
+        setStyle(AttributeSet.of("font-family", "sans-serif"));
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+
+    @XmlAttribute
+    public String getViewBox() {
+        return viewBox;
+    }
+
+    public void setViewBox(String viewBox) {
+        this.viewBox = viewBox;
+    }
+
+    public void setViewBox(Rectangle2D viewBox) {
+        setViewBox(String.format("%d %d %d %d", (int) viewBox.getMinX(), (int) viewBox.getMinY(), 
+                (int) viewBox.getWidth(), (int) viewBox.getHeight()));
+    }
+
+    @XmlTransient
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    @XmlTransient
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+    
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
+    
     /**
      * Attempt to load an SVG root object from the given source.
      * @param input source
@@ -102,5 +152,7 @@ public final class SVGRoot extends SVGGroup {
             throw new IOException("Could not save SVGRoot to output", ex);
         }
     }
+    
+    //</editor-fold>
     
 }

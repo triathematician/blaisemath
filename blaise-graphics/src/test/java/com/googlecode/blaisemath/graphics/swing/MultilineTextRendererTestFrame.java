@@ -15,11 +15,13 @@
  */
 package com.googlecode.blaisemath.graphics.swing;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import com.googlecode.blaisemath.util.AnchoredText;
@@ -29,13 +31,14 @@ import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 
 /*
  * #%L
  * blaise-graphics
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,6 +89,19 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
                 new AnchoredText(100, 200, "Here is some\nsample text\nthat is wrapped\nonto multiple\nlines"),
                 textStyle,
                 mlRend));
+        
+        ObjectStyler os = new ObjectStyler();
+        LabeledShapeGraphic lsg = new LabeledShapeGraphic("Here is some sample text that will be automatically wrapped onto multiple lines", 
+                new Rectangle(200, 50, 100, 200), os);
+        os.setLabelDelegate(new Function<Object,String>(){
+            @Override
+            public String apply(Object input) {
+                return input+"";
+            }
+        });
+        os.setLabelStyleConstant(textStyle);
+        lsg.setDragEnabled(true);
+        canvas.addGraphic(lsg);
         
         EditorRegistration.registerEditors();
         

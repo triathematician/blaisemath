@@ -24,5 +24,10 @@ MENUBAR:
         - addDraggableSegment
         - addRay
         - addLine
+    - Zoom:
+        - zoomAll
+        - zoomAllOutsets
+        - zoomSelected
+        - zoomSelectedOutsets
 TOOLBAR:
     - clear1

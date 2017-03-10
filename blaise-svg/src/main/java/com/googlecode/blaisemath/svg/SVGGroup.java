@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.base.Objects;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElementRef;
@@ -33,9 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
- * <p>
- *   SVG group object.
- * </p>
+ * SVG group object.
+ * 
  * @author elisha
  */
 @XmlRootElement(name="g")
@@ -49,6 +49,19 @@ public class SVGGroup extends SVGElement {
 
     public SVGGroup() {
         super("g");
+    }
+   
+    /** 
+     * Create group with initial list of elements
+     * @param elements elements to add
+     * @return group
+     */
+    public static SVGGroup create(SVGElement... elements) {
+        SVGGroup res = new SVGGroup();
+        for (SVGElement el : elements) {
+            res.addElement(el);
+        }
+        return res;
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -66,7 +79,7 @@ public class SVGGroup extends SVGElement {
     }
     
     public void addElement(SVGElement obj) {
-        this.obj.add(obj);
+        this.obj.add(checkNotNull(obj));
     }
     
     //</editor-fold>

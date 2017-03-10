@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graphics.testui;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -92,6 +93,26 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     private Point2D randomPoint() {
         return new Point2D.Double(Math.random()*canvas1.getWidth(), Math.random()*canvas1.getHeight());
+    }
+    
+    @Action
+    public void zoomAll() {
+        canvas1.zoomToAll();
+    }
+    
+    @Action
+    public void zoomSelected() {
+        canvas1.zoomToSelected();
+    }
+    
+    @Action
+    public void zoomAllOutsets() {
+        canvas1.zoomToAll(new Insets(50, 50, 50, 50));
+    }
+    
+    @Action
+    public void zoomSelectedOutsets() {
+        canvas1.zoomToSelected(new Insets(50, 50, 50, 50));
     }
     
     //</editor-fold>
