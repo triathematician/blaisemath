@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util.xml;
  * #%L
  * BlaiseCommon
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,8 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Exports a point as a string.
+ * Exports a point as a string. Results in strings like {@code point[2,3]}.
+ * 
  * @author petereb1
  */
 public class PointAdapter extends XmlAdapter<String,Point> {

@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.annotation;
  * #%L
  * BlaiseCommon
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>
  * This annotation is used to document information about the thread(s) that will
  * be invoking a method. Typical values used include "{@code EDT}" for the swing
  * event-dispatch thread, "{@code multiple}" where the method may be called from
@@ -41,7 +40,6 @@ import java.lang.annotation.Target;
  * called within that method should have the annotation (although the scope might
  * be widened, e.g. moving from {@code InvokedFromThread("my-thread")} to
  * {@code InvokedFromThread("unknown")}).
- * </p>
  * <p>
  * This annotation is only intended to be applied where the thread is not
  * understood from context, or when invalid assumptions might be made. Thread-safe
@@ -49,13 +47,13 @@ import java.lang.annotation.Target;
  * threads, and don't need to be annotated. However, any other method invoked
  * within one of those methods might have the annotation {@code InvokedFromThread("multiple")}
  * or {@code InvokedFromThread("unknown")}.
- * </p>
  * 
  * @author petereb1
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.METHOD})
 public @interface InvokedFromThread {
+    
     /**
      * What thread the method is invoked from.
      * @return string description of the thread, or {@code "unknown"} or {@code "multiple"}

@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util.swing;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ import javax.swing.JPopupMenu;
 
 /**
  * Provides a method that can be used to initialize (add actions to) a {@link JPopupMenu}.
- * The initializer will be provided as argument the <i>source</i> object/graphic
- * that is creating the menu, the <i>location</i> where it is being shown,
- * an optional <i>focus</i> object describing a more specific target for the menu,
- * and an optional <i>selection</i> of objects.
+ * The initializer will be provided as argument the source object/graphic
+ * that is creating the menu, the location where it is being shown,
+ * an optional focus object describing a more specific target for the menu,
+ * and an optional selection of objects.
  *
  * @param <S> focus object type for menu
  * 

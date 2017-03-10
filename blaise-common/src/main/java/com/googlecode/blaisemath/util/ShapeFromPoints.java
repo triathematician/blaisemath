@@ -6,9 +6,9 @@ package com.googlecode.blaisemath.util;
 
 /*
  * #%L
- * BlaiseSketch
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ package com.googlecode.blaisemath.util;
  * limitations under the License.
  * #L%
  */
-
 
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
@@ -60,7 +59,9 @@ public abstract class ShapeFromPoints {
      */
     public abstract Shape create(Point2D press, Point2D release);
     
-    
+    /**
+     * Creates a line from two points.
+     */
     public static class Line extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {
@@ -68,6 +69,9 @@ public abstract class ShapeFromPoints {
         }
     }
     
+    /**
+     * Creates a circle from two points (the first being the center).
+     */
     public static class Circle extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {
@@ -76,6 +80,9 @@ public abstract class ShapeFromPoints {
         }
     }
     
+    /**
+     * Creates an ellipse from two points (the bounding box around the ellipse).
+     */
     public static class Ellipse extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {
@@ -85,6 +92,9 @@ public abstract class ShapeFromPoints {
         }
     }
     
+    /**
+     * Creates a rectangle from two points (two endpoints of the rectangle).
+     */
     public static class Rectangle extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {

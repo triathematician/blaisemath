@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util.xml;
  * #%L
  * BlaiseCommon
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,9 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Serializes a rectangular shape to/from text.
+ * Serializes a rectangular shape to/from text. Results in strings like
+ * {@code rectangle[x=0.0,y=0.0,w=10.0,h=10.5]}.
+ * 
  * @author Elisha Peerson
  */
 public class RectAdapter extends XmlAdapter<String,Rectangle2D> {

@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util.swing;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ package com.googlecode.blaisemath.util.swing;
 
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Represents a single step of logic in a basic animation. A static method initializes
@@ -79,7 +79,7 @@ public abstract class AnimationStep {
 
         public NRunnable(int min, int max, AnimationStep step) {
             checkArgument(max >= min);
-            checkNotNull(step);
+            requireNonNull(step);
             this.min = min;
             this.max = max;
             this.step = step;

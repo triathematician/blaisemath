@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * <p>
- *   Model maintaining a collection of selected objects, and notifying listeners
- *   when that set changes.
- * </p>
+ * Model maintaining a collection of selected objects, and notifying listeners
+ * when that set changes.
+ * 
  * @param <G> type of object that can be selected
+ * 
  * @author elisha
  */
 public class SetSelectionModel<G> {

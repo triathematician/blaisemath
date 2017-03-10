@@ -6,9 +6,9 @@ package com.googlecode.blaisemath.util;
 
 /*
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import javax.swing.Icon;
 
 /**
  * An icon anchored at a given location.
+ * 
  * @author petereb1
  */
 public final class AnchoredIcon extends Point2DBean {

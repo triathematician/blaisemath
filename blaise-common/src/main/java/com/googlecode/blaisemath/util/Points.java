@@ -1,16 +1,14 @@
-package com.googlecode.blaisemath.util;
-
 /*
  * Points.java
  * Created Aug 28, 2013
  */
-
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
- * BlaiseGraphTheory
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +23,6 @@ package com.googlecode.blaisemath.util;
  * limitations under the License.
  * #L%
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Iterables;

@@ -6,9 +6,9 @@ package com.googlecode.blaisemath.style;
 
 /*
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,7 +89,6 @@ public final class AttributeSets {
     /** String used to represent null explicitly. */
     private static final String NULL_STRING = "none";
     
-    
     private static final AttributeSetConverter CONVERTER_INST = new AttributeSetConverter();
     private static final AttributeValueConverter VALUE_CONVERTER_INST = new AttributeValueConverter();
 
@@ -99,7 +98,6 @@ public final class AttributeSets {
     private static final MapJoiner KEYVAL_JOINER = Joiner.on("; ")
             .withKeyValueSeparator(":");
 
-    
     // non-instantiable utility class
     private AttributeSets() {
     }

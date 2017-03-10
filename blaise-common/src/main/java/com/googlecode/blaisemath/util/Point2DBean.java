@@ -1,16 +1,14 @@
-package com.googlecode.blaisemath.util;
-
 /**
  * Point2DBean.java
  * Created Aug 1, 2014
  */
-
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +24,11 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-
 import java.awt.geom.Point2D;
 
 /**
  * An instance of {@link Point2D} that is also a {@link CoordinateBean}.
+ * 
  * @author Elisha
  */
 public class Point2DBean extends Point2D.Double implements CoordinateBean<Point2D> {

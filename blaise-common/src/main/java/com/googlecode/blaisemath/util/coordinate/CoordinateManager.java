@@ -6,9 +6,9 @@ package com.googlecode.blaisemath.util.coordinate;
 
 /*
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,27 +41,23 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * <p>
  * Tracks locations of a collection of objects in a thread-safe manner.
  * Maintains a cache of prior locations, so that if some of the objects are removed,
  * this class "remembers" their prior locations. Listeners may register to be notified
  * when any of the coordinates within the manager change, or when any objects are
  * added to or removed from the manager.
- * </p>
  * <p>
  * The object is thread safe, so the points in the manager can be read from or written to
  * by multiple threads. Thread safety involves managing access to three interdependent
  * state variables, representing the cached locations, the objects that are "active" and
  * the objects that are "inactive". It is fine to iterate over these sets from any thread,
  * although they may change during iteration.
- * </p>
  * <p>
  * Care should be taken with event handlers to ensure thread safety. Listeners
  * registering for {@link CoordinateChangeEvent}s are notified of the change from
  * the thread that makes the change. Collections passed with the event will be
  * either immutable copies, or references passed to this object as parameters to
  * a mutator method.
- * </p>
  *
  * @param <S> type of source object
  * @param <C> type of point
@@ -91,8 +87,6 @@ public final class CoordinateManager<S, C> {
         this.maxCacheSize = maxCacheSize;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHOD">
-    
     /**
      * Create and return new instance of coordinate manager.
      * @param <S> type of source object
@@ -101,10 +95,8 @@ public final class CoordinateManager<S, C> {
      * @return newly created coordinate manager.
      */
     public static <S,C> CoordinateManager<S,C> create(int maxCacheSize) {
-        return new CoordinateManager<S,C>(maxCacheSize);
+        return new CoordinateManager<>(maxCacheSize);
     }
-    
-    //</editor-fold>
 
     public int getMaxCacheSize() {
         return maxCacheSize;
@@ -143,9 +135,7 @@ public final class CoordinateManager<S, C> {
      */
     public synchronized Map<S, C> getActiveLocationCopy() {
         Map<S, C> res = Maps.newHashMap();
-        for (S s : active) {
-            res.put(s, map.get(s));
-        }
+        active.forEach(s -> res.put(s, map.get(s)));
         return res;
     }
     
@@ -167,9 +157,7 @@ public final class CoordinateManager<S, C> {
     public <T extends S> Map<S,C> getLocationCopy(Set<T> obj) {
         synchronized(map) {
             Map<S, C> res = Maps.newHashMap();
-            for (S s : obj) {
-                res.put(s, map.get(s));
-            }
+            obj.forEach(s -> res.put(s, map.get(s)));
             return res;
         }
     }
@@ -181,9 +169,7 @@ public final class CoordinateManager<S, C> {
      */
     public synchronized Map<S, C> getInactiveLocationCopy() {
         Map<S, C> res = Maps.newHashMap();
-        for (S s : inactive) {
-            res.put(s, map.get(s));
-        }
+        inactive.forEach(s -> res.put(s, map.get(s)));
         return res;
     }
 
@@ -242,13 +228,11 @@ public final class CoordinateManager<S, C> {
      * @param obj objects to remove
      */
     public void forget(Set<? extends S> obj) {
-        Set<S> removed = new HashSet<S>();
+        Set<S> removed = new HashSet<>();
         synchronized (map) {
-            for (S k : obj) {
-                if (map.remove(k) != null) {
-                    removed.add(k);
-                }
-            }
+            obj.stream()
+                .filter(k -> map.remove(k) != null)
+                .forEach(removed::add);
         }
         fireCoordinatesChanged(CoordinateChangeEvent.createRemoveEvent(this, removed));
     }
@@ -280,9 +264,7 @@ public final class CoordinateManager<S, C> {
         Map<S,C> restoreMap = Maps.newHashMap();
         synchronized (this) {
             Set<T> restored = Sets.intersection(obj, inactive);
-            for (T t : restored) {
-                restoreMap.put(t, map.get(t));
-            }
+            restored.forEach(t -> restoreMap.put(t, map.get(t)));
             active.addAll(restored);
             inactive.removeAll(restored);
         }
@@ -303,12 +285,6 @@ public final class CoordinateManager<S, C> {
         }
     }
 
-
-    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
-    //
-    // EVENT HANDLING
-    //
-
     /**
      * Fire update, from the thread that invoked the change.
      * The collections in the event are either provided as arguments to
@@ -324,9 +300,7 @@ public final class CoordinateManager<S, C> {
         if ((added == null || added.isEmpty()) && (removed == null || removed.isEmpty())) {
             return;
         }
-        for (CoordinateListener cl : listeners) {
-            cl.coordinatesChanged(evt);
-        }
+        listeners.forEach(cl -> cl.coordinatesChanged(evt));
     }
 
     public final void addCoordinateListener(CoordinateListener cl) {
@@ -338,7 +312,5 @@ public final class CoordinateManager<S, C> {
         checkNotNull(cl);
         listeners.remove(cl);
     }
-
-    //</editor-fold>
 
 }

@@ -6,9 +6,9 @@ package com.googlecode.blaisemath.util;
 
 /*
  * #%L
- * BlaiseCommon
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.awt.geom.Rectangle2D;
 
 /**
  * A rectangle that provides access to "point 1" and "point 2".
+ * 
  * @author petereb1
  */
 public class OrientedRectangle extends Rectangle2D.Double {

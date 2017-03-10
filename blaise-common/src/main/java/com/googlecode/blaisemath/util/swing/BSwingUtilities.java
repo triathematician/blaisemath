@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util.swing;
  * #%L
  * BlaiseCommon
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.util.swing;
  * #L%
  */
 
-import java.awt.event.ComponentEvent;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;

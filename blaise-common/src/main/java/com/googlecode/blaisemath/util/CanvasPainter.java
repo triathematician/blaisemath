@@ -6,9 +6,9 @@ package com.googlecode.blaisemath.util;
 
 /*
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ package com.googlecode.blaisemath.util;
 import java.awt.Component;
 
 /**
- * <p>
  *  An object that paints on a graphics canvas.
- * </p>
+ * 
  * @param <G> type of component to draw on
+ * 
  * @author elisha
  */
 public interface CanvasPainter<G> {

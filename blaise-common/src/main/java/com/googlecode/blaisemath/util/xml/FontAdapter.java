@@ -7,9 +7,9 @@ package com.googlecode.blaisemath.util.xml;
 
 /*
  * #%L
- * BlaiseCommon
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,13 @@ package com.googlecode.blaisemath.util.xml;
  * #L%
  */
 
-import java.awt.Color;
 import java.awt.Font;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * Adapter converting fonts to/from strings.
  *
- * @see Color#decode(java.lang.String)
+ * @see Font#decode(java.lang.String)
  *
  * @author Elisha Peterson
  */

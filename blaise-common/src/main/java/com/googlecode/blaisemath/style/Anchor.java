@@ -7,9 +7,9 @@ package com.googlecode.blaisemath.style;
 
 /*
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ import java.awt.geom.Point2D;
 /**
  * Anchor points for a string. Provides 8 compass directions, as well as a
  * central anchor point.
+ * 
+ * @author Elisha Peterson
  */
 public enum Anchor {
     

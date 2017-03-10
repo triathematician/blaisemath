@@ -7,9 +7,9 @@ package com.googlecode.blaisemath.util.xml;
 
 /*
  * #%L
- * BlaiseCommon
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,9 @@ import java.awt.Color;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * <p>
- *   Adapter converting colors to/from hex strings. Supports #AARRGGBB and #RRGGBB notations.
- *   Uses {@link Colors#stringConverter()} to perform the conversion, but provides
- *   additional flexibility for handling nulls.
- * </p>
+ * Adapter converting colors to/from hex strings. Supports #AARRGGBB and #RRGGBB notations.
+ * Uses {@link Colors#stringConverter()} to perform the conversion, but provides
+ * additional flexibility for handling nulls.
  *
  * @see Color#decode(java.lang.String)
  *

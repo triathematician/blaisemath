@@ -1,14 +1,14 @@
 /*
- * PointAdapter.class
+ * Point2DAdapter.class
  * Created Oct 9, 2013
  */
 package com.googlecode.blaisemath.util.xml;
 
 /*
  * #%L
- * BlaiseCommon
+ * blaise-common
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,9 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Exports a point as a string.
+ * Exports a point as a string. Results in strings like
+ * {@code point[10.0,10.5]}.
+ * 
  * @author petereb1
  */
 public class Point2DAdapter extends XmlAdapter<String,Point2D.Double> {
