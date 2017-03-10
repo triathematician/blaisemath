@@ -293,19 +293,15 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
 
     /**
      * Set transform to include all components in the graphic tree inside display
-     * area minus insets.
-     * @param insets insets for zoom
+     * area plus insets. The insets are expressed in local coordinates, not window
+     * coordinates. Positive insets result in extra space around the graphics.
+     * 
+     * @param outsets additional space to leave around the graphics
      */
-    public void zoomToAll(Insets insets) {
+    public void zoomToAll(Insets outsets) {
         Rectangle2D bounds = getGraphicRoot().boundingBox();
         if (bounds != null) {
-            double minX = bounds.getMinX() - insets.left;
-            double maxX = Math.max(minX, bounds.getMaxX() - insets.right);
-            double minY = bounds.getMinY() - insets.top;
-            double maxY = Math.max(minY, bounds.getMaxY() - insets.bottom);
-            PanAndZoomHandler.zoomCoordBoxAnimated(this, 
-                    new Point2D.Double(minX, minY),
-                    new Point2D.Double(maxX, maxY));
+            animatedZoomWithOutsets(bounds, outsets);
         }
     }
     
@@ -328,12 +324,31 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * is selected.
      */
     public void zoomToSelected() {
+        zoomToSelected(new Insets(0, 0, 0, 0));
+    }
+
+    /**
+     * Set transform to include all components in the graphic tree inside display
+     * area plus insets. The insets are expressed in local coordinates, not window
+     * coordinates. Positive insets result in extra space around the graphics.
+     * 
+     * @param outsets additional space to leave around the graphics
+     */
+    public void zoomToSelected(Insets outsets) {
         Rectangle2D bounds = GraphicUtils.boundingBox(getSelectionModel().getSelection());
         if (bounds != null) {
-            PanAndZoomHandler.zoomCoordBoxAnimated(this, new Point2D.Double(
-                    bounds.getMinX(), bounds.getMinY()),
-                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+            animatedZoomWithOutsets(bounds, outsets);
         }
+    }
+    
+    private void animatedZoomWithOutsets(Rectangle2D bounds, Insets outsets) {
+        double minX = bounds.getMinX() - outsets.left;
+        double maxX = Math.max(minX, bounds.getMaxX() + outsets.right);
+        double minY = bounds.getMinY() - outsets.top;
+        double maxY = Math.max(minY, bounds.getMaxY() + outsets.bottom);
+        PanAndZoomHandler.zoomCoordBoxAnimated(this, 
+                new Point2D.Double(minX, minY),
+                new Point2D.Double(maxX, maxY));
     }
     
     /**
