@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.style;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.style;
  */
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Anchor points for a string. Provides 8 compass directions, as well as a
@@ -76,14 +77,35 @@ public enum Anchor {
     }
     
     /**
-     * Returns an offset that allows a rectangle to be drawn from a given
-     * anchor point rather than from the bottom left.
+     * Returns an offset that allows a rectangle to be drawn from the bottom left
+     * rather than a given anchor point. So if you want to draw a rectangle of
+     * size (width, height) anchored at the CENTER, for instance, you have
+     * to add (-.5*wid, .5*ht) to the anchor (x,y) coordinates to get the bottom left
+     * coordinate of the resulting rectangle.
+     * 
      * @param wid width of rectangle
      * @param ht height of rectangle
      * @return offset position
      */
     public Point2D getRectOffset(double wid, double ht) {
         return new Point2D.Double(xOff*wid, yOff*ht);
+    }
+    
+    /**
+     * Returns an offset that allows a rectangle to be drawn from the bottom left
+     * rather than a given anchor point. So if you want to draw a rectangle of
+     * size (width, height) anchored at the CENTER, for instance, you have
+     * to add (-.5*wid, .5*ht) to the anchor (x,y) coordinates to get the bottom left
+     * coordinate of the resulting rectangle.
+     * 
+     * @param x anchor x position
+     * @param y anchor y position
+     * @param wid width of rectangle
+     * @param ht height of rectangle
+     * @return offset position
+     */
+    public Rectangle2D anchoredRectangle(double x, double y, double wid, double ht) {
+        return new Rectangle2D.Double(x+xOff*wid, y+yOff*ht, wid, ht);
     }
     
 }
