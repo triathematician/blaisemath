@@ -54,6 +54,7 @@ import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.util.Images;
 import com.googlecode.blaisemath.util.Points;
 import java.awt.Color;
 import java.awt.Component;
@@ -166,7 +167,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     private Icon randomIcon() {
         boolean img = Math.random() > .5;
         if (img) {
-            URL iconUrl = BlaiseGraphicsTestApp.class.getResource("resources/cherries.png");
+            URL iconUrl = Images.class.getResource("resources/cherries.png");
             return new ImageIcon(iconUrl);
         } else {
             return new Icon() {

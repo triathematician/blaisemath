@@ -27,12 +27,15 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.base.Converter;
 import com.googlecode.blaisemath.util.AnchoredImage;
+import com.googlecode.blaisemath.util.Images;
 import java.awt.Image;
+import static java.awt.PageAttributes.MediaType.B;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -46,6 +49,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="image")
 public final class SVGImage extends SVGElement {
     
+    private static final Logger LOG = Logger.getLogger(SVGImage.class.getName());
     private static final ImageConverter CONVERTER_INST = new ImageConverter();
     
     private double x;
@@ -127,29 +131,35 @@ public final class SVGImage extends SVGElement {
      * Load (if necessary) and return the image corresponding to the image reference.
      * @return loaded image, or null if it couldn't be loaded
      */
+    @Nullable
     public Image getImage() {
         if (image == null) {
-            URL f;
-            try {
-                f = new URL(imageRef);
-                BufferedImage img = ImageIO.read(f);
-                if (width == null || height == null) {
-                    image = img;
-                    width = (double) img.getWidth();
-                    height = (double) img.getHeight();
-                } else if (width == img.getWidth() && height == img.getHeight()) {
-                    image = img;
-                } else {
-                    int iw = width == null ? img.getWidth() : width.intValue();
-                    int ih = height == null ? img.getHeight() : height.intValue();
-                    image = img.getScaledInstance(iw, ih, Image.SCALE_SMOOTH);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(SVGImage.class.getName()).log(Level.SEVERE, 
-                        "Could not create image.", ex);
-            }
+            loadImage();
         }
         return image;
+    }
+    
+    private void loadImage() {
+        BufferedImage img;
+        try {
+            img = imageRef.startsWith(Images.DATA_URI_PREFIX) 
+                    ? Images.decodeDataUriBase64(imageRef)
+                    : ImageIO.read(new URL(imageRef));
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, "Image load error", ex);
+            return;
+        }
+        if (width == null || height == null) {
+            image = img;
+            width = (double) img.getWidth();
+            height = (double) img.getHeight();
+        } else if (width == img.getWidth() && height == img.getHeight()) {
+            image = img;
+        } else {
+            int iw = width == null ? img.getWidth() : width.intValue();
+            int ih = height == null ? img.getHeight() : height.intValue();
+            image = img.getScaledInstance(iw, ih, Image.SCALE_SMOOTH);
+        }
     }
     
     //</editor-fold>
@@ -157,7 +167,6 @@ public final class SVGImage extends SVGElement {
     public static Converter<SVGImage, AnchoredImage> imageConverter() {
         return CONVERTER_INST;
     }
-    
     
     private static final class ImageConverter extends Converter<SVGImage, AnchoredImage> {
         @Override
@@ -167,8 +176,10 @@ public final class SVGImage extends SVGElement {
 
         @Override
         protected AnchoredImage doForward(SVGImage r) {
-            if (r.width == null || r.height == null) {
-                BufferedImage bi = (BufferedImage) r.getImage();
+            BufferedImage bi = (BufferedImage) r.getImage();
+            if (bi == null) {
+                return null;
+            } else if (r.width == null || r.height == null) {
                 return new AnchoredImage(r.x, r.y, (double) bi.getWidth(), (double) bi.getHeight(), bi, r.imageRef);
             } else {
                 return new AnchoredImage(r.x, r.y, r.width, r.height, r.getImage(), r.imageRef);

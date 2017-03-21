@@ -33,6 +33,7 @@ import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredIcon;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.Images;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -178,9 +179,7 @@ public class SVGElements {
             BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = bi.createGraphics();
             icon.paintIcon(null, g2, 0, 0);
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageIO.write(bi, "png", Base64.getEncoder().wrap(os));
-            return "data:image/png;base64," + os.toString(StandardCharsets.UTF_8.name());
+            return Images.encodeDataUriBase64(bi, "png");
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Encoding error", ex);
             return "";
