@@ -58,6 +58,11 @@ public final class AnchoredImage extends Point2DBean {
         }
     }
 
+    @Override
+    public String toString() {
+        return "AnchoredImage{" + getX() + ',' + getY() + ',' + ref + '}';
+    }
+
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
