@@ -57,6 +57,7 @@ import com.googlecode.blaisemath.svg.SVGPolyline;
 import com.googlecode.blaisemath.svg.SVGRectangle;
 import com.googlecode.blaisemath.svg.SVGRoot;
 import com.googlecode.blaisemath.svg.SVGText;
+import com.googlecode.blaisemath.util.AnchoredIcon;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Graphics2D;
@@ -256,6 +257,8 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
             return SVGElements.create(null, (AnchoredText) primitive, sty);
         } else if (primitive instanceof AnchoredImage) {
             return SVGElements.create(null, (AnchoredImage) primitive, sty);
+        } else if (primitive instanceof AnchoredIcon) {
+            return SVGElements.create(null, (AnchoredIcon) primitive, sty);
         } else if (primitive instanceof Point2D) {
             return SVGElements.create(null, (Point2D) primitive, sty);
         } else {

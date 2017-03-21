@@ -30,9 +30,11 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnchoredIcon;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
+import java.awt.Image;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -42,17 +44,25 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  * Factory methods for converting to/from SVG Objects.
  * @author petereb1
  */
 public class SVGElements {
-    
-    
+    private static final Logger LOG = Logger.getLogger(SVGElements.class.getName());
     
     //
     // UTILITY CLASS - PREVENT INSTANTIATION
@@ -145,6 +155,40 @@ public class SVGElements {
         res.setId(id);
         res.setStyle(style);
         return res;
+    }
+
+    /**
+     * Create new svg image object from given id, anchored icon, and style.
+     * @param id object id
+     * @param icon icon object
+     * @param style object's style
+     * @return svg image object
+     */
+    public static SVGImage create(String id, AnchoredIcon icon, AttributeSet style) {
+        Icon ic = icon.getIcon();
+        if (!(ic instanceof ImageIcon)) {
+            throw new UnsupportedOperationException("Icon type not supported: "+ic);
+        }
+        ImageIcon ii = (ImageIcon) ic;
+        SVGImage res = new SVGImage(icon.getX(), icon.getY(), 
+                (double) icon.getIconWidth(), (double) icon.getIconHeight(), 
+                encodeAsUri(ii.getImage()));
+        res.setId(id);
+        res.setStyle(style);
+        return res;
+    }
+    
+    private static String encodeAsUri(Image image) {
+        try {
+            BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+            bi.createGraphics().drawImage(image, null, null);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write(bi, "png", Base64.getEncoder().wrap(os));
+            return "data:image/png;base64," + os.toString(StandardCharsets.UTF_8.name());
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, "Encoding error", ex);
+            return "";
+        }
     }
 
     /**

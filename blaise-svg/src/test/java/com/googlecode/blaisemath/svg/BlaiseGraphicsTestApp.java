@@ -49,6 +49,7 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.editor.BasicPointStyleEditor;
+import com.googlecode.blaisemath.util.AnchoredIcon;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
@@ -62,10 +63,12 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.xml.bind.JAXBContext;
@@ -144,6 +147,17 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         PrimitiveGraphic bg = JGraphics.text(txt, RandomStyles.string());
         bg.setDragEnabled(true);
         root1.addGraphic(bg);
+    }
+    
+    @Action
+    public void addIcon() {
+        Point2D pt = randomPoint();
+        URL iconUrl = BlaiseGraphicsTestApp.class.getResource("resources/cherries.png");
+        AnchoredIcon icon = new AnchoredIcon(pt.getX(), pt.getY(), new ImageIcon(iconUrl));
+        PrimitiveGraphic bp = JGraphics.icon(icon);
+        bp.setDefaultTooltip("<html><b>Icon</b>: <i> " + pt + "</i>");
+        bp.setDragEnabled(true);
+        root1.addGraphic(bp);
     }
     
     @Action
