@@ -37,6 +37,7 @@ import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Images;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -182,6 +183,7 @@ public class SVGElements {
         try {
             BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = bi.createGraphics();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             icon.paintIcon(null, g2, 0, 0);
             return Images.encodeDataUriBase64(bi, "png");
         } catch (IOException ex) {
