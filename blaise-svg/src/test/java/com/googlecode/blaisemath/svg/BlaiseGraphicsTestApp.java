@@ -56,8 +56,11 @@ import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -68,6 +71,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -152,12 +156,38 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addIcon() {
         Point2D pt = randomPoint();
-        URL iconUrl = BlaiseGraphicsTestApp.class.getResource("resources/cherries.png");
-        AnchoredIcon icon = new AnchoredIcon(pt.getX(), pt.getY(), new ImageIcon(iconUrl));
+        AnchoredIcon icon = new AnchoredIcon(pt.getX(), pt.getY(), randomIcon());
         PrimitiveGraphic bp = JGraphics.icon(icon);
         bp.setDefaultTooltip("<html><b>Icon</b>: <i> " + pt + "</i>");
         bp.setDragEnabled(true);
         root1.addGraphic(bp);
+    }
+    
+    private Icon randomIcon() {
+        boolean img = Math.random() > .5;
+        if (img) {
+            URL iconUrl = BlaiseGraphicsTestApp.class.getResource("resources/cherries.png");
+            return new ImageIcon(iconUrl);
+        } else {
+            return new Icon() {
+                @Override
+                public int getIconWidth() {
+                    return 30;
+                }
+                @Override
+                public int getIconHeight() {
+                    return 30;
+                }
+                @Override
+                public void paintIcon(Component c, Graphics g, int x, int y) {
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(Color.red);
+                    g2.draw(new Line2D.Double(x, y, x+30, y+30));
+                    g2.draw(new Line2D.Double(x+30, y, x, y+30));
+                }
+            };
+        }
     }
     
     @Action
