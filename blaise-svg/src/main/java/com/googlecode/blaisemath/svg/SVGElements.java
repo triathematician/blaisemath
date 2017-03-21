@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
@@ -36,7 +37,6 @@ import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Images;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -47,16 +47,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 /**
  * Factory methods for converting to/from SVG Objects.
@@ -140,7 +135,16 @@ public class SVGElements {
     public static SVGText create(String id, AnchoredText text, AttributeSet style) {
         SVGText res = SVGText.textConverter().reverse().convert(text);
         res.setId(id);
-        res.setStyle(style);
+        Object ta = style.get(Styles.TEXT_ANCHOR);
+        AttributeSet copy = style.copy();
+        if (ta instanceof Anchor) {
+            copy.put(Styles.TEXT_ANCHOR, Styles.toTextAnchor((Anchor) ta));
+            copy.put(Styles.ALIGN_BASELINE, Styles.toAlignBaseline((Anchor) ta));
+        } else if (ta instanceof String && Styles.isAnchorName(ta)) {
+            copy.put(Styles.TEXT_ANCHOR, Styles.toTextAnchor((String) ta));
+            copy.put(Styles.ALIGN_BASELINE, Styles.toAlignBaseline((String) ta));
+        }
+        res.setStyle(copy);
         return res;
     }
 
