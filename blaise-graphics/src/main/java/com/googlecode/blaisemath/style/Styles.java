@@ -275,17 +275,19 @@ public final class Styles {
      */
     public static Anchor anchorOf(AttributeSet style, Anchor def) {
         Object anchor = style.get(Styles.TEXT_ANCHOR);
-        if (anchor instanceof Anchor) {
+        Object baseline = style.get(Styles.ALIGN_BASELINE);
+        
+        if (anchor == null && baseline == null) {
+            return def;
+        } else if (anchor instanceof Anchor) {
             return (Anchor) anchor;
         } else if (isAnchorName(anchor)) {
             return Anchor.valueOf((String) anchor);
         }
         
-        if (anchor == null) {
+        if (anchor == null && baseline instanceof String) {
             anchor = Styles.TEXT_ANCHOR_START;
-        }
-        Object baseline = style.get(Styles.ALIGN_BASELINE);
-        if (baseline == null) {
+        } else if (baseline == null && anchor instanceof String) {
             baseline = Styles.ALIGN_BASELINE_BASELINE;
         }
         if (anchor instanceof String && baseline instanceof String) {

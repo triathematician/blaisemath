@@ -125,10 +125,9 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);
         Point2D offset = style.getPoint(Styles.OFFSET, new Point());
         assert offset != null;
-        Point2D shift = textAnchor.getRectOffset(width, height);
-        return new Rectangle2D.Double(
-                primitive.getX() + offset.getX() + shift.getX(), 
-                primitive.getY() + offset.getY() + shift.getY()-height, 
+        return textAnchor.anchoredRectangle(
+                primitive.getX() + offset.getX(),
+                primitive.getY() + offset.getY()-height,
                 width, height);
     }
     
