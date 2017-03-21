@@ -188,7 +188,14 @@ public class SVGElements {
      * @return svg image object
      */
     public static SVGImage create(String id, AnchoredImage img, AttributeSet style) {
-        SVGImage res = SVGImage.imageConverter().reverse().convert(img);
+        Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
+        Point2D offset = anchor.getRectOffset(img.getWidth(), img.getHeight());
+        AnchoredImage adjustedImage = new AnchoredImage(
+                img.getX() + offset.getX(), 
+                img.getY() - img.getHeight()+ offset.getY(), 
+                (double) img.getWidth(), (double) img.getHeight(),
+                img.getOriginalImage(), img.getReference());
+        SVGImage res = SVGImage.imageConverter().reverse().convert(adjustedImage);
         res.setId(id);
         res.setStyle(AttributeSet.create(style.getAttributeMap()));
         return res;
@@ -202,11 +209,18 @@ public class SVGElements {
      * @return svg image object
      */
     public static SVGImage create(String id, AnchoredIcon icon, AttributeSet style) {
-        SVGImage res = new SVGImage(icon.getX(), icon.getY(), 
+        Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
+        Point2D offset = anchor.getRectOffset(icon.getIconWidth(), icon.getIconHeight());
+        SVGImage res = new SVGImage(
+                icon.getX() + offset.getX(), 
+                icon.getY() - icon.getIconHeight() + offset.getY(), 
                 (double) icon.getIconWidth(), (double) icon.getIconHeight(), 
                 encodeAsUri(icon.getIcon()));
         res.setId(id);
-        res.setStyle(AttributeSet.create(style.getAttributeMap()));
+        AttributeSet sty = AttributeSet.create(style.getAttributeMap());
+        sty.remove(Styles.TEXT_ANCHOR);
+        sty.remove(Styles.ALIGN_BASELINE);
+        res.setStyle(sty);
         return res;        
     }
     

@@ -153,15 +153,28 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         bg.setDragEnabled(true);
         root1.addGraphic(bg);
     }
-    
+
+    private static final String[] ANCHORS = {Styles.TEXT_ANCHOR_END, Styles.TEXT_ANCHOR_MIDDLE, Styles.TEXT_ANCHOR_START};
+    private static final String[] BASELINES = {Styles.ALIGN_BASELINE_BASELINE, Styles.ALIGN_BASELINE_MIDDLE, Styles.ALIGN_BASELINE_HANGING};
+
     @Action
     public void addIcon() {
         Point2D pt = randomPoint();
-        AnchoredIcon icon = new AnchoredIcon(pt.getX(), pt.getY(), randomIcon());
-        PrimitiveGraphic bp = JGraphics.icon(icon);
-        bp.setDefaultTooltip("<html><b>Icon</b>: <i> " + pt + "</i>");
-        bp.setDragEnabled(true);
-        root1.addGraphic(bp);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                AnchoredIcon icon = new AnchoredIcon(pt.getX()+i*50, pt.getY()+j*50, randomIcon());
+                PrimitiveGraphic bp = JGraphics.icon(icon);
+                bp.setStyle(AttributeSet.of(Styles.TEXT_ANCHOR, ANCHORS[i], Styles.ALIGN_BASELINE, BASELINES[j]));
+                bp.setDefaultTooltip("<html><b>Icon</b>: <i> " + pt + "</i>");
+                bp.setDragEnabled(true);
+                root1.addGraphic(bp);
+                
+                root1.addGraphic(JGraphics.path(new Line2D.Double(icon.getX()-20, icon.getY(), icon.getX()+20, icon.getY()),
+                        Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
+                root1.addGraphic(JGraphics.path(new Line2D.Double(icon.getX(), icon.getY()-20, icon.getX(), icon.getY()+20),
+                        Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
+            }
+        }
     }
     
     private Icon randomIcon() {

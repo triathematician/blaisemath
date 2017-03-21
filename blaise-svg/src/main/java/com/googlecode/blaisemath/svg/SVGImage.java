@@ -29,7 +29,6 @@ import com.google.common.base.Converter;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
 import java.awt.Image;
-import static java.awt.PageAttributes.MediaType.B;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
