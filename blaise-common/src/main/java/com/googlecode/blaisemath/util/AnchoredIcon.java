@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,11 @@ public final class AnchoredIcon extends Point2DBean {
     public AnchoredIcon(double x, double y, Icon icon) {
         super(x, y);
         this.icon = icon;
+    }
+
+    @Override
+    public String toString() {
+        return "AnchoredIcon{" + getX() + ',' + getY() + ',' + getIcon() + '}';
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">

@@ -24,8 +24,10 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredIcon;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -46,12 +48,17 @@ public class IconRenderer implements Renderer<AnchoredIcon, Graphics2D> {
 
     @Override
     public void render(AnchoredIcon primitive, AttributeSet style, Graphics2D canvas) {
-        primitive.getIcon().paintIcon(null, canvas, (int) primitive.getX(), (int) primitive.getY());
+        Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
+        Point2D offset = anchor.getRectOffset(primitive.getIconWidth(), primitive.getIconHeight());
+        primitive.getIcon().paintIcon(null, canvas, 
+                (int) (primitive.getX() + offset.getX()), 
+                (int) (primitive.getY() - primitive.getIconHeight() + offset.getY()));
     }
 
     @Override
     public Rectangle2D boundingBox(AnchoredIcon primitive, AttributeSet style) {
-        return new Rectangle2D.Double(primitive.getX(), primitive.getY(), 
+        Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
+        return anchor.anchoredRectangle(primitive.getX(), primitive.getY() - primitive.getIconHeight(), 
                 primitive.getIconWidth(), primitive.getIconHeight());
     }
 

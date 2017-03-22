@@ -73,6 +73,7 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         basicMenu.add(new JMenuItem(actionMap.get("addSegment")));
         basicMenu.add(new JMenuItem(actionMap.get("addRectangle")));
         basicMenu.add(new JMenuItem(actionMap.get("addString")));
+        basicMenu.add(new JMenuItem(actionMap.get("addIcon")));
         menuBar.add(basicMenu);
         
         JMenu setsMenu = new JMenu("Object Sets");
