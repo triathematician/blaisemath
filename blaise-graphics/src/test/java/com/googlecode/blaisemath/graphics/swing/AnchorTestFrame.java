@@ -20,19 +20,32 @@ import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
+import com.googlecode.blaisemath.util.AnchoredIcon;
+import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
 import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
 
 /*
  * #%L
@@ -58,7 +71,7 @@ import java.awt.geom.Line2D;
  *
  * @author elisha
  */
-public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
+public class AnchorTestFrame extends javax.swing.JFrame {
 
     private AttributeSet textStyle = Styles.defaultTextStyle().copy()
             .and(Styles.OFFSET, new Point());
@@ -66,29 +79,45 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
     /**
      * Creates new form MultilineTextRendererTestFrame
      */
-    public MultilineTextRendererTestFrame() {
+    public AnchorTestFrame() {
         initComponents();
+        jComboBox1.setModel(new DefaultComboBoxModel(Anchor.values()));
+        jComboBox1.setSelectedItem(Anchor.SOUTHWEST);
+        
         PanAndZoomHandler.install(canvas);
         canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 100, 200, 100),
                 Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
         canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 200, 200, 200), 
                 Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
-        canvas.addGraphic(JGraphics.path(new Line2D.Double(100, 0, 100, 300),
+        canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 300, 200, 300), 
+                Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
+        canvas.addGraphic(JGraphics.path(new Line2D.Double(0, 400, 200, 400), 
+                Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
+        canvas.addGraphic(JGraphics.path(new Line2D.Double(100, 0, 100, 500),
                 Styles.strokeWidth(new Color(128, 128, 255, 64), 1f)));
         
         canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 100), 
                 Styles.fillStroke(new Color(255, 128, 128, 64), null).and(Styles.MARKER_RADIUS, 12)));
-        canvas.addGraphic(new PrimitiveGraphic<AnchoredText,Graphics2D>(
-                new AnchoredText(100, 100, "Here is some sample text that is a single line"),
-                textStyle,
-                TextRenderer.getInstance()));
+        canvas.addGraphic(JGraphics.text(new AnchoredText(100, 100, "Here is some sample text that is a single line"), textStyle));
         
         canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 200), 
-                Styles.fillStroke(new Color(255, 128, 128, 64), null)));
+                Styles.fillStroke(new Color(255, 128, 128, 64), null).and(Styles.MARKER_RADIUS, 12)));
         canvas.addGraphic(new PrimitiveGraphic<AnchoredText,Graphics2D>(
                 new AnchoredText(100, 200, "Here is some\nsample text\nthat is wrapped\nonto multiple\nlines"),
                 textStyle,
                 mlRend));
+        
+        canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 300), 
+                Styles.fillStroke(new Color(255, 128, 128, 64), null).and(Styles.MARKER_RADIUS, 12)));
+        PrimitiveGraphic<AnchoredIcon, Graphics2D> icon = JGraphics.icon(testIcon(), 100, 300);
+        icon.setStyle(textStyle);
+        canvas.addGraphic(icon);
+        
+        canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 400), 
+                Styles.fillStroke(new Color(255, 128, 128, 64), null).and(Styles.MARKER_RADIUS, 12)));
+        PrimitiveGraphic<AnchoredImage, Graphics2D> image = JGraphics.image(100, 400, 48, 48, testImage(), null);
+        image.setStyle(textStyle);
+        canvas.addGraphic(image);
         
         ObjectStyler os = new ObjectStyler();
         LabeledShapeGraphic lsg = new LabeledShapeGraphic("Here is some sample text that will be automatically wrapped onto multiple lines", 
@@ -113,6 +142,36 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(rp);
         revalidate();
     }
+    
+    private static Icon testIcon() {
+        return new Icon() {
+            @Override
+            public int getIconWidth() {
+                return 30;
+            }
+            @Override
+            public int getIconHeight() {
+                return 30;
+            }
+            @Override
+            public void paintIcon(Component c, Graphics g, int x, int y) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.red);
+                g2.draw(new Line2D.Double(x, y, x+30, y+30));
+                g2.draw(new Line2D.Double(x+30, y, x, y+30));
+            }
+        };
+    }
+    
+    private static Image testImage() {
+        try {
+            return ImageIO.read(AnchorTestFrame.class.getResource("resources/cherries.png"));
+        } catch (IOException ex) {
+            Logger.getLogger(AnchorTestFrame.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -134,6 +193,9 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        jComboBox1 = new javax.swing.JComboBox();
+        jButton7 = new javax.swing.JButton();
         canvas = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
         jScrollPane1 = new javax.swing.JScrollPane();
 
@@ -179,7 +241,7 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
         jToolBar1.add(jButton3);
         jToolBar1.add(jSeparator1);
 
-        jLabel2.setText("alignement-baseline:");
+        jLabel2.setText("alignment-baseline:");
         jToolBar1.add(jLabel2);
 
         jButton4.setText("Baseline");
@@ -214,6 +276,26 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton6);
+        jToolBar1.add(jSeparator2);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jComboBox1);
+
+        jButton7.setText("Clear anchors");
+        jButton7.setFocusable(false);
+        jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton7.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton7);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
         getContentPane().add(canvas, java.awt.BorderLayout.CENTER);
@@ -227,33 +309,52 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         textStyle.put(Styles.TEXT_ANCHOR, Styles.TEXT_ANCHOR_START);
+        jComboBox1.setSelectedItem(Styles.anchorOf(textStyle, null));
         canvas.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         textStyle.put(Styles.TEXT_ANCHOR, Styles.TEXT_ANCHOR_MIDDLE);
+        jComboBox1.setSelectedItem(Styles.anchorOf(textStyle, null));
         canvas.repaint();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         textStyle.put(Styles.TEXT_ANCHOR, Styles.TEXT_ANCHOR_END);
+        jComboBox1.setSelectedItem(Styles.anchorOf(textStyle, null));
         canvas.repaint();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         textStyle.put(Styles.ALIGN_BASELINE, Styles.ALIGN_BASELINE_BASELINE);
+        jComboBox1.setSelectedItem(Styles.anchorOf(textStyle, null));
         canvas.repaint();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         textStyle.put(Styles.ALIGN_BASELINE, Styles.ALIGN_BASELINE_MIDDLE);
+        jComboBox1.setSelectedItem(Styles.anchorOf(textStyle, null));
         canvas.repaint();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         textStyle.put(Styles.ALIGN_BASELINE, Styles.ALIGN_BASELINE_HANGING);
+        jComboBox1.setSelectedItem(Styles.anchorOf(textStyle, null));
         canvas.repaint();
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        Anchor anchor = (Anchor) jComboBox1.getSelectedItem();
+        textStyle.put(Styles.TEXT_ANCHOR, Styles.toTextAnchor(anchor));
+        textStyle.put(Styles.ALIGN_BASELINE, Styles.toAlignBaseline(anchor));
+        canvas.repaint();
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        textStyle.remove(Styles.TEXT_ANCHOR);
+        textStyle.remove(Styles.ALIGN_BASELINE);
+        canvas.repaint();
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,20 +373,21 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MultilineTextRendererTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AnchorTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MultilineTextRendererTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AnchorTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MultilineTextRendererTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AnchorTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MultilineTextRendererTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AnchorTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MultilineTextRendererTestFrame().setVisible(true);
+                new AnchorTestFrame().setVisible(true);
             }
         });
     }
@@ -298,10 +400,13 @@ public class MultilineTextRendererTestFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar jToolBar1;
     private com.googlecode.blaisemath.graphics.swing.MultilineTextRenderer mlRend;
     // End of variables declaration//GEN-END:variables

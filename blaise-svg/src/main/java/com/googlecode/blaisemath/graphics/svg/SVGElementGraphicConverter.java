@@ -37,7 +37,6 @@ import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
-import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer.StyledText;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSets;
 import com.googlecode.blaisemath.style.ObjectStyler;
@@ -57,14 +56,16 @@ import com.googlecode.blaisemath.svg.SVGPolyline;
 import com.googlecode.blaisemath.svg.SVGRectangle;
 import com.googlecode.blaisemath.svg.SVGRoot;
 import com.googlecode.blaisemath.svg.SVGText;
+import com.googlecode.blaisemath.util.AnchoredIcon;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.Colors;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
-import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -109,11 +110,11 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         root.setWidth(compt.getWidth());
         root.setHeight(compt.getHeight());
         root.setViewBox(PanAndZoomHandler.getLocalBounds(compt));
+        root.getStyle().put("background", Colors.stringConverter().convert(compt.getBackground()));
+        root.getStyle().put(Styles.FONT_SIZE, Styles.DEFAULT_TEXT_STYLE.get(Styles.FONT_SIZE));
         SVGGroup group = (SVGGroup) SVGElementGraphicConverter.getInstance().reverse()
                 .convert(compt.getGraphicRoot());
-        for (SVGElement el : group.getElements()) {
-            root.addElement(el);
-        }
+        group.getElements().forEach(root::addElement);
         return root;
     }
     
@@ -205,7 +206,8 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         if (v instanceof LabeledShapeGraphic) {
             res = labeledShapeToSvg((LabeledShapeGraphic<Graphics2D>) v);
         } else if (v instanceof PrimitiveGraphicSupport) {
-            res = primitiveStyleToSvg(((PrimitiveGraphicSupport)v).getPrimitive(), v.renderStyle().flatCopy());
+            PrimitiveGraphicSupport pgs = (PrimitiveGraphicSupport) v;
+            res = primitiveStyleToSvg(pgs.getPrimitive(), v.getStyle(), pgs.getRenderer());
         } else if (v instanceof GraphicComposite) {
             res = compositeToSvg((GraphicComposite<Graphics2D>) v);
         } else if (v instanceof PrimitiveArrayGraphicSupport) {
@@ -217,12 +219,26 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         if (id != null && res != null) {
             res.setId(id);
         }
+        if (res != null && res.getStyle() != null && res.getStyle().getAttributes().isEmpty()) {
+            res.setStyle(null);
+        }
+        if (res != null && res.getStyle() != null) {
+            for (String c : res.getStyle().getAttributes()) {
+                Object col = res.getStyle().get(c);
+                if (col instanceof Color) {
+                    res.getStyle().put(c, Colors.alpha((Color) col, 255));
+                }
+            }
+        }
         return res;
     }
 
     /** Converts a blaise composite to an SVG group */
     private static SVGElement compositeToSvg(GraphicComposite<Graphics2D> gc) {
         SVGGroup grp = new SVGGroup();
+        if (gc.getStyle() != null) {
+            grp.setStyle(AttributeSet.create(gc.getStyle().getAttributeMap()));
+        }
         for (Graphic<Graphics2D> g : gc.getGraphics()) {
             try {
                 SVGElement el = graphicToSvg(g);
@@ -243,19 +259,21 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         SVGGroup grp = new SVGGroup();
         grp.setStyle(pags.renderStyle().flatCopy());
         for (Object o : pags.getPrimitive()) {
-            grp.addElement(primitiveStyleToSvg(o, pags.renderStyle().flatCopy()));
+            grp.addElement(primitiveStyleToSvg(o, pags.renderStyle().flatCopy(), pags.getRenderer()));
         }
         return grp;
     }
 
     /** Creates an SVG element from given primitive/style */
-    private static SVGElement primitiveStyleToSvg(Object primitive, AttributeSet sty) {
+    private static SVGElement primitiveStyleToSvg(Object primitive, AttributeSet sty, Renderer rend) {
         if (primitive instanceof Shape) {
             return SVGElements.create(null, (Shape) primitive, sty);
         } else if (primitive instanceof AnchoredText) {
-            return SVGElements.create(null, (AnchoredText) primitive, sty);
+            return SVGElements.create(null, (AnchoredText) primitive, sty, rend);
         } else if (primitive instanceof AnchoredImage) {
             return SVGElements.create(null, (AnchoredImage) primitive, sty);
+        } else if (primitive instanceof AnchoredIcon) {
+            return SVGElements.create(null, (AnchoredIcon) primitive, sty);
         } else if (primitive instanceof Point2D) {
             return SVGElements.create(null, (Point2D) primitive, sty);
         } else {
@@ -265,7 +283,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
 
     /** Converts a labeled shape to svg */
     private static SVGElement labeledShapeToSvg(LabeledShapeGraphic<Graphics2D> gfc) {
-        SVGElement shape = primitiveStyleToSvg(gfc.getPrimitive(), gfc.renderStyle().flatCopy());
+        SVGElement shape = primitiveStyleToSvg(gfc.getPrimitive(), gfc.renderStyle().flatCopy(), gfc.getRenderer());
         SVGElement text = labelToSvg(gfc);
         return text == null ? shape : SVGGroup.create(shape, text);
     }
@@ -283,28 +301,13 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         }
         Renderer<AnchoredText, Graphics2D> textRend = gfc.getTextRenderer();
         if (textRend instanceof WrappedTextRenderer) {
-            return wrappedTextSvg(label, style, LabeledShapeGraphic.wrappedLabelBounds(gfc.getPrimitive()));
+            return SVGElements.createWrappedText(label, style, LabeledShapeGraphic.wrappedLabelBounds(gfc.getPrimitive()));
         } else if (textRend instanceof TextRenderer) {
-            return primitiveStyleToSvg(new AnchoredText(label), style.flatCopy());
+            return primitiveStyleToSvg(new AnchoredText(label), style.flatCopy(), textRend);
         } else {
             LOG.log(Level.WARNING, "Unsupported text renderer: {0}", textRend);
             return null;
         }
-    }
-
-    /** Generates group of text elements formed by wrapping text */
-    private static SVGElement wrappedTextSvg(String label, AttributeSet style, RectangularShape bounds) {
-        SVGGroup res = new SVGGroup();
-        res.setStyle(style.flatCopy());
-        
-        Graphics2D testCanvas = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).createGraphics();
-        Iterable<StyledText> lines = WrappedTextRenderer.computeLines(label, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
-        
-        for (StyledText st : lines) {
-            res.addElement(primitiveStyleToSvg(st.getText(), st.getStyle()));
-        }
-        
-        return res.getElements().size() == 1 ? res.getElements().get(0) : res;
     }
     
     //</editor-fold>

@@ -40,6 +40,11 @@ public final class AnchoredIcon extends Point2DBean {
         this.icon = icon;
     }
 
+    @Override
+    public String toString() {
+        return "AnchoredIcon{" + getX() + ',' + getY() + ',' + getIcon() + '}';
+    }
+
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES

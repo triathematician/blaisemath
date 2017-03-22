@@ -30,6 +30,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
 import com.google.common.primitives.Floats;
 import static com.googlecode.blaisemath.style.Anchor.*;
 import com.googlecode.blaisemath.util.Colors;
@@ -273,18 +274,24 @@ public final class Styles {
      * @return anchor
      */
     public static Anchor anchorOf(AttributeSet style, Anchor def) {
+        if (style == null) {
+            return def;
+        }
+        
         Object anchor = style.get(Styles.TEXT_ANCHOR);
-        if (anchor instanceof Anchor) {
+        Object baseline = style.get(Styles.ALIGN_BASELINE);
+        
+        if (anchor == null && baseline == null) {
+            return def;
+        } else if (anchor instanceof Anchor) {
             return (Anchor) anchor;
         } else if (isAnchorName(anchor)) {
             return Anchor.valueOf((String) anchor);
         }
         
-        if (anchor == null) {
+        if (anchor == null && baseline instanceof String) {
             anchor = Styles.TEXT_ANCHOR_START;
-        }
-        Object baseline = style.get(Styles.ALIGN_BASELINE);
-        if (baseline == null) {
+        } else if (baseline == null && anchor instanceof String) {
             baseline = Styles.ALIGN_BASELINE_BASELINE;
         }
         if (anchor instanceof String && baseline instanceof String) {
@@ -293,7 +300,81 @@ public final class Styles {
         return def;
     }
     
-    private static boolean isAnchorName(Object anchor) {
+    // </editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="ANCHOR CONVERSIONS">
+    
+    /**
+     * Create an anchor from the given anchor string and baseline string.
+     * If either argument is null/invalid, a default value is assumed.
+     * @param textAnchor anchor string
+     * @param alignBaseline baseline string
+     * @return anchor
+     */
+    public static Anchor toAnchor(@Nullable String textAnchor, @Nullable String alignBaseline) {
+        String ta = textAnchor == null || !(TEXT_ANCHOR_START.equals(textAnchor)
+                || TEXT_ANCHOR_MIDDLE.equals(textAnchor) || TEXT_ANCHOR_END.equals(textAnchor))
+                ? TEXT_ANCHOR_START : textAnchor;
+        String ab = alignBaseline == null || !(ALIGN_BASELINE_BASELINE.equals(alignBaseline) 
+                || ALIGN_BASELINE_MIDDLE.equals(alignBaseline) || ALIGN_BASELINE_HANGING.equals(alignBaseline))
+                ? ALIGN_BASELINE_BASELINE : alignBaseline;
+        return anchorFromAttributes(ta, ab, Anchor.SOUTHWEST);
+    }
+    
+    /**
+     * Get the text-anchor attribute of the given anchor.
+     * @param anchor anchor an Anchor or string anchor name
+     * @return text-anchor attribute
+     */
+    public static String toTextAnchor(Anchor anchor) {
+        for (Cell<String,String,Anchor> cell : ANCHOR_BASELINE_LOOKUP.cellSet()) {
+            if (cell.getValue() == anchor) {
+                return cell.getRowKey();
+            }
+        }
+        return TEXT_ANCHOR_START;
+    }
+    
+    /**
+     * Get the text-anchor attribute of the given anchor.
+     * @param anchorName the string name of an Anchor
+     * @return text-anchor attribute
+     */
+    public static String toTextAnchor(String anchorName) {
+        return toTextAnchor(isAnchorName(anchorName) ? Anchor.valueOf(anchorName)
+                : Anchor.SOUTHWEST);
+    }
+    
+    /**
+     * Get the alignment-baseline attribute of the given anchor.
+     * @param anchor anchor an Anchor or string anchor name
+     * @return alignment-baseline attribute
+     */
+    public static String toAlignBaseline(Anchor anchor) {
+        for (Cell<String,String,Anchor> cell : ANCHOR_BASELINE_LOOKUP.cellSet()) {
+            if (cell.getValue() == anchor) {
+                return cell.getColumnKey();
+            }
+        }
+        return ALIGN_BASELINE_BASELINE;
+    }
+    
+    /**
+     * Get the alignment-baseline attribute of the given anchor.
+     * @param anchorName the string name of an Anchor
+     * @return alignment-baseline attribute
+     */
+    public static String toAlignBaseline(String anchorName) {
+        return toAlignBaseline(isAnchorName(anchorName) ? Anchor.valueOf(anchorName)
+                : Anchor.SOUTHWEST);
+    }
+    
+    /**
+     * Tests whether given argument is a string and an anchor name.
+     * @param anchor to test
+     * @return true if its a string anchor name
+     */
+    public static boolean isAnchorName(Object anchor) {
         if (!(anchor instanceof String)) {
             return false;
         }
