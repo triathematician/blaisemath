@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.sketch;
  * #%L
  * blaise-sketch
  * --
- * Copyright (C) 2014 - 2016 Elisha Peterson
+ * Copyright (C) 2014 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
