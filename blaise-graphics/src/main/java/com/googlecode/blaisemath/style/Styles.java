@@ -274,6 +274,10 @@ public final class Styles {
      * @return anchor
      */
     public static Anchor anchorOf(AttributeSet style, Anchor def) {
+        if (style == null) {
+            return def;
+        }
+        
         Object anchor = style.get(Styles.TEXT_ANCHOR);
         Object baseline = style.get(Styles.ALIGN_BASELINE);
         
