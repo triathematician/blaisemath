@@ -58,6 +58,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     public static final String RENDERER_PROP = "renderer";
     
     /** What is being drawn */
+    @Nullable
     protected O primitive;
     /** Draws the primitive on the graphics canvas */
     @Nullable
@@ -122,24 +123,27 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     
     @Override
     public void renderTo(G canvas) {
-        if (renderer != null) {
+        if (renderer != null && primitive != null) {
             renderer.render(primitive, renderStyle(), canvas);
         }
     }
 
     @Override
     public Rectangle2D boundingBox() {
-        return renderer == null ? null : renderer.boundingBox(primitive, renderStyle());
+        return renderer == null || primitive == null ? null 
+                : renderer.boundingBox(primitive, renderStyle());
     }
 
     @Override
     public boolean contains(Point2D point) {
-        return renderer != null && renderer.contains(primitive, renderStyle(), point);
+        return renderer != null && primitive != null
+                && renderer.contains(primitive, renderStyle(), point);
     }
 
     @Override
     public boolean intersects(Rectangle2D box) {
-        return renderer != null && renderer.intersects(primitive, renderStyle(), box);
+        return renderer != null && primitive != null
+                && renderer.intersects(primitive, renderStyle(), box);
     }
     
     //
