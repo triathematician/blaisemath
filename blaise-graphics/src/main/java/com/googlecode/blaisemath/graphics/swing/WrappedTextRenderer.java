@@ -201,7 +201,7 @@ public class WrappedTextRenderer extends TextRenderer {
         double y0 = getInitialY(textAnchor, rect, sz, lines.size());
         
         List<StyledText> res = Lists.newArrayList();
-        AttributeSet plainStyle = style.copy();
+        AttributeSet plainStyle = style.flatCopy();
         plainStyle.put(Styles.FONT_SIZE, font.getSize2D());
         plainStyle.remove(Styles.ALIGN_BASELINE);
         plainStyle.remove(Styles.TEXT_ANCHOR);
