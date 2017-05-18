@@ -24,6 +24,8 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -31,6 +33,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.stream.Collectors.toList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -44,8 +50,10 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlRootElement(name="svg")
 public final class SVGRoot extends SVGGroup {
+
+    private static final Logger LOG = Logger.getLogger(SVGRoot.class.getName());
     
-    private String viewBox = null;
+    private Rectangle2D viewBox = null;
     private int height = 100;
     private int width = 100;
 
@@ -57,19 +65,34 @@ public final class SVGRoot extends SVGGroup {
 
     @XmlAttribute
     public String getViewBox() {
-        return viewBox;
+        return viewBox == null ? null : String.format("%d %d %d %d", (int) viewBox.getMinX(), (int) viewBox.getMinY(), 
+                (int) viewBox.getWidth(), (int) viewBox.getHeight());
     }
 
     public void setViewBox(String viewBox) {
+        if (Strings.isNullOrEmpty(viewBox)) {
+            return;
+        }
+        try {
+            List<Double> vals = Splitter.onPattern("\\s+").splitToList(viewBox).stream()
+                    .map(s -> s.contains(".") ? Double.valueOf(s) : Integer.valueOf(s))
+                    .collect(toList());
+            this.viewBox = new Rectangle2D.Double(vals.get(0), vals.get(1), vals.get(2), vals.get(3));
+        } catch (NumberFormatException | IndexOutOfBoundsException x) {
+            LOG.log(Level.WARNING, "Invalid view box: " + viewBox, x);
+        }
+    }
+    
+    @XmlTransient
+    public Rectangle2D getViewBoxAsRectangle() {
+        return viewBox;
+    }
+
+    public void setViewBoxAsRectangle(Rectangle2D viewBox) {
         this.viewBox = viewBox;
     }
 
-    public void setViewBox(Rectangle2D viewBox) {
-        setViewBox(String.format("%d %d %d %d", (int) viewBox.getMinX(), (int) viewBox.getMinY(), 
-                (int) viewBox.getWidth(), (int) viewBox.getHeight()));
-    }
-
-    @XmlTransient
+    @XmlAttribute
     public int getHeight() {
         return height;
     }
@@ -78,7 +101,7 @@ public final class SVGRoot extends SVGGroup {
         this.height = height;
     }
 
-    @XmlTransient
+    @XmlAttribute
     public int getWidth() {
         return width;
     }
