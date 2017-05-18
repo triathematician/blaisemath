@@ -299,7 +299,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         double scaley = scaleFrom.getHeight() / scaleTo.getHeight();
         double scale = Math.max(scalex, scaley);
         AffineTransform res = new AffineTransform();
-        res.translate(scaleTo.getWidth()/2, scaleTo.getHeight()/2);
+        res.translate(scaleTo.getCenterX(), scaleTo.getCenterY());
         res.scale(1 / scale, 1 / scale);
         res.translate(-scaleFrom.getCenterX(), -scaleFrom.getCenterY());
         return res;
