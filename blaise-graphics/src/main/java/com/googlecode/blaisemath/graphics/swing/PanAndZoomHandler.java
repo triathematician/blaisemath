@@ -34,6 +34,7 @@ import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -263,7 +264,10 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      */
     @InvokedFromThread("multiple")
     public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle2D rect) {
-        setDesiredLocalBounds(comp, comp.getBounds(), rect);
+        Insets insets = comp.getInsets();
+        Rectangle bounds = new Rectangle(comp.getX() + insets.left, comp.getY() + insets.top,
+                comp.getWidth() - insets.left - insets.right, comp.getHeight() - insets.top - insets.bottom);
+        setDesiredLocalBounds(comp, bounds, rect);
     }
     
     /**
