@@ -148,6 +148,23 @@ public final class SVGRoot extends SVGGroup {
     }
     
     /**
+     * Attempt to save an SVG element to the given source, wrapping in a root
+     * SVG if necessary.
+     * @param el object to save
+     * @return SVG string
+     * @throws java.io.IOException if save fails
+     */
+    public static String saveToString(SVGElement el) throws IOException {
+        if (el instanceof SVGRoot) {
+            return saveToString((SVGRoot) el);
+        } else {
+            SVGRoot root = new SVGRoot();
+            root.addElement(el);
+            return saveToString(root);
+        }
+    }
+    
+    /**
      * Attempt to save an SVG root object to the given source.
      * @param root object to save
      * @param output where to save it

@@ -33,7 +33,10 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Uses an {@link SVGElement} as a primitive to be rendered on a {@link JGraphicComponent}.
@@ -42,6 +45,9 @@ import java.util.Collections;
  * @author elisha
  */
 public class SVGGraphic extends GraphicComposite<Graphics2D> {
+
+    private static final Logger LOG = Logger.getLogger(SVGGraphic.class.getName());
+    private static final boolean RENDER_BOUNDS = false;
     
     /** Source SVG element to be drawn */
     private SVGElement element;
@@ -60,6 +66,20 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         SVGGraphic res = new SVGGraphic();
         res.setElement(element);
         return res;
+    }
+    
+    /**
+     * Create a new instance for the provided SVG.
+     * @param svg svg as a string
+     * @return graphic
+     */
+    public static SVGGraphic create(String svg) {
+        try {
+            return create(SVGRoot.load(svg));
+        } catch (IOException ex) {
+            LOG.log(Level.WARNING, "Invalid SVG", ex);
+            return new SVGGraphic();
+        }
     }
     
     private void updateGraphics() {
@@ -149,7 +169,7 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
     @Override
     public void renderTo(Graphics2D canvas) {
         AffineTransform tx = transform();
-        if (graphicBounds != null) {
+        if (RENDER_BOUNDS && graphicBounds != null) {
             canvas.setColor(Color.red);
             canvas.draw(graphicBounds);
         }
