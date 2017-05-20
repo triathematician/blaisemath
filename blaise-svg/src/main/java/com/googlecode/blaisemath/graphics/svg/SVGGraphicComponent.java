@@ -1,7 +1,3 @@
-/**
- * SVGGraphicComponent.java
- * Created on Sep 30, 2014
- */
 package com.googlecode.blaisemath.graphics.svg;
 
 /*
@@ -28,12 +24,8 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.svg.SVGElement;
 
 /**
- * <p>
- *   Swing component for displaying an SVG element or elements.
- * </p>
- * <p>
- *   This class is not designed for serialization.
- * </p>
+ * Swing component for displaying a single SVG element or elements.
+ * 
  * @author petereb1
  */
 public class SVGGraphicComponent extends JGraphicComponent {

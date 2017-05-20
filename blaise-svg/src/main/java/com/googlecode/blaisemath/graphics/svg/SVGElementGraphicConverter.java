@@ -1,8 +1,3 @@
-/**
- * SVGElementGraphicConverter.java
- * Created Sep 27, 2014
- */
-
 package com.googlecode.blaisemath.graphics.svg;
 
 /*
