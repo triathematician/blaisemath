@@ -50,8 +50,8 @@ import javax.swing.JPopupMenu;
 public class SVGGraphic extends GraphicComposite<Graphics2D> {
 
     private static final Logger LOG = Logger.getLogger(SVGGraphic.class.getName());
-    private static final boolean RENDER_BOUNDS = true;
-    private static final boolean RENDER_VIEW_BOX = true;
+    private static final boolean RENDER_BOUNDS = false;
+    private static final boolean RENDER_VIEW_BOX = false;
     
     /** Source SVG element to be drawn */
     private SVGElement element;
