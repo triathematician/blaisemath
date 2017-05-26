@@ -1,14 +1,10 @@
-/*
- * CategoricalPalette.java
- * Created Sep 19, 2013
- */
 package com.googlecode.blaisemath.palette;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +25,8 @@ package com.googlecode.blaisemath.palette;
  * Describes a list of "categorical" colors, with optional labels. Categorical colors
  * should be easily distinguishable from one another, and do not indicate a scale.
  * 
- * @author Elisha
+ * @author Elisha Peterson
+ * @since 2.3.0
  */
 public final class CategoricalPalette {
 

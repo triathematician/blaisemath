@@ -28,7 +28,6 @@ import com.google.common.base.Converter;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSets;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.xml.ColorAdapter;
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;

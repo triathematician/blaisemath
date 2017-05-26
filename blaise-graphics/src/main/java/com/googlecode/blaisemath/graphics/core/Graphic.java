@@ -45,13 +45,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
 /**
- * <p>
  * An object along with style and renderer information allowing it to be drawn
  * on a graphics canvas.
- * </p>
  * <p>
  * Key additional features are:
- * </p>
  * <ul>
  * <li>A <em>parent</em> (via get and set methods), which is a
  * {@link GraphicComposite} and provides access to default styles of various
@@ -69,9 +66,9 @@ import javax.swing.event.EventListenerList;
  * </li>
  * </ul>
  * <p>
- *    Implementations must provide the object to be rendered, as well as the
- *    render functionality, and they must implement their own drag functionality.
- * </p>
+ * Implementations must provide the object to be rendered, as well as the
+ * render functionality, and they must implement their own drag functionality
+ * if desired.
  * 
  * @param <G> type of graphics canvas to render to
  *

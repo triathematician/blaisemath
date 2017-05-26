@@ -1,14 +1,10 @@
-/*
- * ColorPalette.java
- * Created Sep 18, 2013
- */
 package com.googlecode.blaisemath.palette;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,17 +33,19 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 /**
- * Provides a coordinated group of colorKeys, indexed by string keys.
- * @author Elisha
+ * An ordered collection of named colors.
+ * 
+ * @author Elisha Peterson
+ * @since 2.3.0
  */
 public final class ColorPalette {
     
     /** Unique key for foreground color */
-    public static final String KEY_FOREGROUND = "foreground";
+    public static final String KEY_FOREGROUND = "fg";
     /** Unique key for background color */
-    public static final String KEY_BACKGROUND = "background";
+    public static final String KEY_BACKGROUND = "bg";
     
-    /** Contains colorKeys associated with specific keys */
+    /** Contains colors associated with specific keys */
     private final Map<String,Color> colors = Maps.newLinkedHashMap();
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -55,25 +53,6 @@ public final class ColorPalette {
     public ColorPalette() {
         setForeground(Color.black);
         setBackground(Color.white);
-    }
-   
-    /** 
-     * Get available color keys
-     * @return keys
-     */
-    public Set<String> colorKeys() {
-        return Collections.unmodifiableSet(colors.keySet());
-    }
-    
-    /** 
-     * Get color associated with a given key, or null if there is none.
-     * @param key the color key
-     * @return associated color, null if there is none in this palette for the given key
-     */
-    @Nullable
-    public Color color(String key) {
-        checkNotNull(key);
-        return colors.get(key);
     }
     
     /** 
@@ -108,6 +87,25 @@ public final class ColorPalette {
     //
     // PROPERTY PATTERNS
     //
+   
+    /** 
+     * Get available color keys
+     * @return keys
+     */
+    public Set<String> colorKeys() {
+        return Collections.unmodifiableSet(colors.keySet());
+    }
+    
+    /** 
+     * Get color associated with a given key, or null if there is none.
+     * @param key the color key
+     * @return associated color, null if there is none in this palette for the given key
+     */
+    @Nullable
+    public Color color(String key) {
+        checkNotNull(key);
+        return colors.get(key);
+    }
     
     public Color getForeground() {
         return color(KEY_FOREGROUND);
