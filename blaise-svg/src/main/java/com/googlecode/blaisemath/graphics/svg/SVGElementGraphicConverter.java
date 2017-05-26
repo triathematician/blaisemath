@@ -1,8 +1,3 @@
-/**
- * SVGElementGraphicConverter.java
- * Created Sep 27, 2014
- */
-
 package com.googlecode.blaisemath.graphics.svg;
 
 /*
@@ -109,7 +104,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         SVGRoot root = new SVGRoot();
         root.setWidth(compt.getWidth());
         root.setHeight(compt.getHeight());
-        root.setViewBox(PanAndZoomHandler.getLocalBounds(compt));
+        root.setViewBoxAsRectangle(PanAndZoomHandler.getLocalBounds(compt));
         root.getStyle().put("background", Colors.stringConverter().convert(compt.getBackground()));
         root.getStyle().put(Styles.FONT_SIZE, Styles.DEFAULT_TEXT_STYLE.get(Styles.FONT_SIZE));
         SVGGroup group = (SVGGroup) SVGElementGraphicConverter.getInstance().reverse()

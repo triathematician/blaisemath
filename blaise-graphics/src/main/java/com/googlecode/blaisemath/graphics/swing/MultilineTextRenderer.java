@@ -117,6 +117,9 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         }
 
         Font font = Styles.fontOf(style);
+        if (canvas != null) {
+            canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        }
         FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
                 : canvas.getFontRenderContext();
         

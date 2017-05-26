@@ -1,7 +1,3 @@
-/**
- * SVGGraphicComponent.java
- * Created on Sep 30, 2014
- */
 package com.googlecode.blaisemath.graphics.svg;
 
 /*
@@ -26,22 +22,52 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.svg.SVGElement;
+import com.googlecode.blaisemath.svg.SVGRoot;
+import java.awt.Dimension;
+import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * <p>
- *   Swing component for displaying an SVG element or elements.
- * </p>
- * <p>
- *   This class is not designed for serialization.
- * </p>
+ * Swing component for displaying a single SVG element or elements.
+ * 
  * @author petereb1
  */
 public class SVGGraphicComponent extends JGraphicComponent {
 
-    protected final transient SVGGraphic graphic = new SVGGraphic();
+    private static final Logger LOG = Logger.getLogger(SVGGraphicComponent.class.getName());
+
+    protected final SVGGraphic graphic = new SVGGraphic();
 
     public SVGGraphicComponent() {
         addGraphic(graphic);
+    }
+    
+    /**
+     * Create the component with the given SVG element
+     * @param svg the svg
+     * @return component
+     */
+    public static SVGGraphicComponent create(SVGElement svg) {
+        SVGGraphicComponent res = new SVGGraphicComponent();
+        res.setElement(svg);
+        return res;
+    }
+    
+    /**
+     * Create the component with the given SVG string
+     * @param svg the svg
+     * @return component
+     */
+    public static SVGGraphicComponent create(String svg) {
+        SVGGraphicComponent res = new SVGGraphicComponent();
+        res.setSvgText(svg);
+        Rectangle2D bounds = res.graphic.getGraphicBounds();
+        if (bounds != null) {
+            res.setPreferredSize(new Dimension((int) bounds.getWidth()+1, (int) bounds.getHeight()+1));
+        }
+        return res;
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
@@ -55,6 +81,23 @@ public class SVGGraphicComponent extends JGraphicComponent {
 
     public void setElement(SVGElement el) {
         graphic.setElement(el);
+    }
+    
+    public String getSvgText() {
+        try {
+            return SVGRoot.saveToString(graphic.getElement());
+        } catch (IOException x) {
+            LOG.log(Level.WARNING, "Unable to save SVG", x);
+            return "<svg/>";
+        }
+    }
+    
+    public void setSvgText(String svg) {
+        try {
+            setElement(SVGRoot.load(svg));
+        } catch (IOException x) {
+            LOG.log(Level.WARNING, "Set SVG Failed", x);
+        }
     }
     
     //</editor-fold>

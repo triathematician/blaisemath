@@ -4,7 +4,7 @@
         @XmlNs(prefix="", namespaceURI="http://www.w3.org/2000/svg"),
         @XmlNs(prefix="xlink", namespaceURI="http://www.w3.org/1999/xlink")
     },
-    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED
+    elementFormDefault = XmlNsForm.QUALIFIED
 )
 package com.googlecode.blaisemath.svg;
 
@@ -29,5 +29,6 @@ package com.googlecode.blaisemath.svg;
  */
 
 import javax.xml.bind.annotation.XmlNs;
+import javax.xml.bind.annotation.XmlNsForm;
 import javax.xml.bind.annotation.XmlSchema;
 
