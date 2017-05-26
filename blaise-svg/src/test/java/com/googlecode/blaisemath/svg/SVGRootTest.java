@@ -39,7 +39,7 @@ public class SVGRootTest {
         r.addElement(new SVGRectangle());
         String text = SVGRoot.saveToString(r);
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<svg height=\"100\" width=\"100\" style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
+                + "<svg height=\"100.0\" width=\"100.0\" style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
                 + "    <rect height=\"0.0\" rx=\"0.0\" ry=\"0.0\" width=\"0.0\" x=\"0.0\" y=\"0.0\"/>\n"
                 + "</svg>\n",
                 text);
@@ -47,8 +47,9 @@ public class SVGRootTest {
     
     @Test
     public void testLoad() throws IOException {
-        URL rsc = SVGRootTest.class.getResource("resources/test.svg");
-        SVGRoot.load(rsc.openStream());
+        SVGRoot.load(SVGRootTest.class.getResource("resources/test.svg").openStream());
+        SVGRoot.load(SVGRootTest.class.getResource("resources/test2.svg").openStream());
+        SVGRoot.load(SVGRootTest.class.getResource("resources/test3.svg").openStream());
         
         SVGRoot.load("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                 + "<svg height=\"100\" width=\"100\" style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"

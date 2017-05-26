@@ -97,8 +97,8 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         primitiveElement = nue;
         
         if (element instanceof SVGRoot) {
-            int wid = ((SVGRoot) element).getWidth();
-            int ht = ((SVGRoot) element).getHeight();
+            double wid = ((SVGRoot) element).getWidth();
+            double ht = ((SVGRoot) element).getHeight();
             this.graphicBounds = new Rectangle2D.Double(0, 0, wid, ht);
         }
     }
