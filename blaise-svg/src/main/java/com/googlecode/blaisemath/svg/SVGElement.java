@@ -37,9 +37,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
 /**
- * <p>
- *   Common interface for SVG types.
- * </p>
+ * Common interface for SVG types.
+ * 
  * @author elisha
  */
 public abstract class SVGElement {

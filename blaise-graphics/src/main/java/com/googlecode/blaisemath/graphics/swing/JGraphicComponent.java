@@ -329,23 +329,23 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
 
     /**
      * Set transform to include all components in the graphic tree inside display
-     * area plus insets. The insets are expressed in local coordinates, not window
+     * area plus insets. The outsets are expressed in local coordinates, not window
      * coordinates. Positive insets result in extra space around the graphics.
      * 
-     * @param outsets additional space to leave around the graphics
+     * @param locCoordOutsets additional space to leave around the graphics (in local coordinate space)
      */
-    public void zoomToSelected(Insets outsets) {
+    public void zoomToSelected(Insets locCoordOutsets) {
         Rectangle2D bounds = GraphicUtils.boundingBox(getSelectionModel().getSelection());
         if (bounds != null) {
-            animatedZoomWithOutsets(bounds, outsets);
+            animatedZoomWithOutsets(bounds, locCoordOutsets);
         }
     }
     
-    private void animatedZoomWithOutsets(Rectangle2D bounds, Insets outsets) {
-        double minX = bounds.getMinX() - outsets.left;
-        double maxX = Math.max(minX, bounds.getMaxX() + outsets.right);
-        double minY = bounds.getMinY() - outsets.top;
-        double maxY = Math.max(minY, bounds.getMaxY() + outsets.bottom);
+    private void animatedZoomWithOutsets(Rectangle2D bounds, Insets locCoordOutsets) {
+        double minX = bounds.getMinX() - locCoordOutsets.left;
+        double maxX = Math.max(minX, bounds.getMaxX() + locCoordOutsets.right);
+        double minY = bounds.getMinY() - locCoordOutsets.top;
+        double maxY = Math.max(minY, bounds.getMaxY() + locCoordOutsets.bottom);
         PanAndZoomHandler.zoomCoordBoxAnimated(this, 
                 new Point2D.Double(minX, minY),
                 new Point2D.Double(maxX, maxY));

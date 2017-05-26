@@ -42,6 +42,7 @@ import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Ellipse2D;
@@ -186,6 +187,7 @@ public class WrappedTextRenderer extends TextRenderer {
 
     private static List<StyledText> computeRectangleLines(String text, AttributeSet style, Rectangle2D rect, Graphics2D canvas) {
         // make font smaller if lots of words
+        canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         Font font = Styles.fontOf(style);
         if (rect.getWidth() * rect.getHeight() < (font.getSize() * font.getSize() / 1.5) * text.length()
                 || rect.getWidth() < font.getSize() * 5) {
@@ -199,7 +201,8 @@ public class WrappedTextRenderer extends TextRenderer {
         double y0 = getInitialY(textAnchor, rect, sz, lines.size());
         
         List<StyledText> res = Lists.newArrayList();
-        AttributeSet plainStyle = style.copy();
+        AttributeSet plainStyle = style.flatCopy();
+        plainStyle.put(Styles.FONT_SIZE, font.getSize2D());
         plainStyle.remove(Styles.ALIGN_BASELINE);
         plainStyle.remove(Styles.TEXT_ANCHOR);
         plainStyle.remove(Styles.OFFSET);
