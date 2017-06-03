@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
@@ -183,10 +182,7 @@ public class SVGTool extends javax.swing.JFrame {
             gsvg.setElement(new SVGPath(text.getText()));
         } else {
             try {
-                String svg = text.getText();
-                CharSource cs = CharSource.wrap(svg);
-                SVGRoot root = SVGRoot.load(cs.openStream());
-                gsvg.setElement(root);
+                gsvg.setElement(SVGRoot.load(text.getText()));
             } catch (IOException ex) {
                 Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -197,49 +193,29 @@ public class SVGTool extends javax.swing.JFrame {
     
     private void saveBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBActionPerformed
         if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(this)) {
-            FileOutputStream out = null;
-            try {
+            try (FileOutputStream out = new FileOutputStream(chooser.getSelectedFile())) {
                 SVGElement el = gsvg.getElement();
                 if (!(el instanceof SVGRoot)) {
                     SVGRoot rootEl = new SVGRoot();
                     rootEl.addElement(el);
                     el = rootEl;
                 }
-                out = new FileOutputStream(chooser.getSelectedFile());
                 SVGRoot.save((SVGRoot) el, out);
             } catch (IOException x) {
                 Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, x);
-            } finally {
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
             }
         }
     }//GEN-LAST:event_saveBActionPerformed
 
     private void loadBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBActionPerformed
         if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(chooser.getSelectedFile());
+            try (FileInputStream fis = new FileInputStream(chooser.getSelectedFile())) {
                 SVGRoot r = SVGRoot.load(fis);
                 gsvg.setElement(r);
                 String fs = Files.toString(chooser.getSelectedFile(), Charset.defaultCharset());
                 text.setText(fs);
             } catch (IOException x) {
                 Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, x);
-            } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
             }
         }
     }//GEN-LAST:event_loadBActionPerformed

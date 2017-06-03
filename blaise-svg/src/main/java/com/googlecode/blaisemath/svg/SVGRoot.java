@@ -1,7 +1,3 @@
-/**
- * SVGRoot.java
- * Created on Sep 26, 2014
- */
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -26,6 +22,7 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import static com.googlecode.blaisemath.graphics.svg.SVGUtils.parseLength;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -37,9 +34,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.stream.Collectors.toList;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -54,8 +48,8 @@ public final class SVGRoot extends SVGGroup {
     private static final Logger LOG = Logger.getLogger(SVGRoot.class.getName());
     
     private Rectangle2D viewBox = null;
-    private int height = 100;
-    private int width = 100;
+    private double height = 100;
+    private double width = 100;
 
     public SVGRoot() {
         setStyle(AttributeSet.of("font-family", "sans-serif"));
@@ -92,27 +86,55 @@ public final class SVGRoot extends SVGGroup {
         this.viewBox = viewBox;
     }
 
-    @XmlAttribute
-    public int getHeight() {
+    @XmlTransient
+    public double getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
         this.height = height;
     }
+    
+    @XmlAttribute(name = "height")
+    private String getHeightString() {
+        return height+"";
+    }
+    
+    private void setHeightString(String ht) {
+        setHeight(parseLength(ht));
+    }
 
-    @XmlAttribute
-    public int getWidth() {
+    @XmlTransient
+    public double getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(double width) {
         this.width = width;
     }
     
+    @XmlAttribute(name = "width")
+    private String getWidthString() {
+        return width+"";
+    }
+    
+    private void setWidthString(String ht) {
+        setWidth(parseLength(ht));
+    }
+    
     //</editor-fold>
-
+    
     //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
+            
+    /**
+     * Attempt to load an SVG root object from the given string.
+     * @param input string
+     * @return root object, if loaded properly
+     * @throws java.io.IOException if input fails
+     */
+    public static SVGRoot load(String input) throws IOException {
+        return SvgIo.read(input);
+    }
     
     /**
      * Attempt to load an SVG root object from the given source.
@@ -121,12 +143,7 @@ public final class SVGRoot extends SVGGroup {
      * @throws java.io.IOException if input fails
      */
     public static SVGRoot load(InputStream input) throws IOException {
-        try {
-            JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
-            return (SVGRoot) jc.createUnmarshaller().unmarshal(input);
-        } catch (JAXBException ex) {
-            throw new IOException("Could not load SVGRoot from input", ex);
-        }
+        return SvgIo.read(input);
     }
 
     /**
@@ -136,11 +153,33 @@ public final class SVGRoot extends SVGGroup {
      * @throws java.io.IOException if input fails
      */
     public static SVGRoot load(Reader reader) throws IOException {
-        try {
-            JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
-            return (SVGRoot) jc.createUnmarshaller().unmarshal(reader);
-        } catch (JAXBException ex) {
-            throw new IOException("Could not load SVGRoot from input", ex);
+        return SvgIo.read(reader);
+    }
+    
+    /**
+     * Attempt to save an SVG root object to the given source.
+     * @param root object to save
+     * @return SVG string
+     * @throws java.io.IOException if save fails
+     */
+    public static String saveToString(SVGRoot root) throws IOException {
+        return SvgIo.writeToString(root);
+    }
+    
+    /**
+     * Attempt to save an SVG element to the given source, wrapping in a root
+     * SVG if necessary.
+     * @param el object to save
+     * @return SVG string
+     * @throws java.io.IOException if save fails
+     */
+    public static String saveToString(SVGElement el) throws IOException {
+        if (el instanceof SVGRoot) {
+            return saveToString((SVGRoot) el);
+        } else {
+            SVGRoot root = new SVGRoot();
+            root.addElement(el);
+            return saveToString(root);
         }
     }
     
@@ -151,14 +190,7 @@ public final class SVGRoot extends SVGGroup {
      * @throws java.io.IOException if save fails
      */
     public static void save(SVGRoot root, OutputStream output) throws IOException {
-        try {
-            JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
-            Marshaller m = jc.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            m.marshal(root, output);
-        } catch (JAXBException ex) {
-            throw new IOException("Could not save SVGRoot to output", ex);
-        }
+        SvgIo.write(root, output);
     }
     
     /**
@@ -168,12 +200,7 @@ public final class SVGRoot extends SVGGroup {
      * @throws java.io.IOException if save fails
      */
     public static void save(SVGRoot root, Writer writer) throws IOException {
-        try {
-            JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
-            jc.createMarshaller().marshal(root, writer);
-        } catch (JAXBException ex) {
-            throw new IOException("Could not save SVGRoot to output", ex);
-        }
+        SvgIo.write(root, writer);
     }
     
     //</editor-fold>

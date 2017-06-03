@@ -31,9 +31,15 @@ import com.googlecode.blaisemath.svg.SVGRoot;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JPopupMenu;
 
 /**
  * Uses an {@link SVGElement} as a primitive to be rendered on a {@link JGraphicComponent}.
@@ -42,6 +48,10 @@ import java.util.Collections;
  * @author elisha
  */
 public class SVGGraphic extends GraphicComposite<Graphics2D> {
+
+    private static final Logger LOG = Logger.getLogger(SVGGraphic.class.getName());
+    private static final boolean RENDER_BOUNDS = false;
+    private static final boolean RENDER_VIEW_BOX = false;
     
     /** Source SVG element to be drawn */
     private SVGElement element;
@@ -62,6 +72,20 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         return res;
     }
     
+    /**
+     * Create a new instance for the provided SVG.
+     * @param svg svg as a string
+     * @return graphic
+     */
+    public static SVGGraphic create(String svg) {
+        try {
+            return create(SVGRoot.load(svg));
+        } catch (IOException ex) {
+            LOG.log(Level.WARNING, "Invalid SVG", ex);
+            return new SVGGraphic();
+        }
+    }
+    
     private void updateGraphics() {
         Graphic<Graphics2D> nue = SVGElementGraphicConverter.getInstance()
                 .convert(element);
@@ -73,8 +97,8 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         primitiveElement = nue;
         
         if (element instanceof SVGRoot) {
-            int wid = ((SVGRoot) element).getWidth();
-            int ht = ((SVGRoot) element).getHeight();
+            double wid = ((SVGRoot) element).getWidth();
+            double ht = ((SVGRoot) element).getHeight();
             this.graphicBounds = new Rectangle2D.Double(0, 0, wid, ht);
         }
     }
@@ -107,7 +131,7 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
     
     //</editor-fold>
     
-    /** Generate transform used to scale/translate the SVG */
+    /** Generate transform used to scale/translate the SVG. Transforms the view box to within the graphic bounds. */
     private AffineTransform transform() {
         if (graphicBounds == null || !(element instanceof SVGRoot)) {
             return null;
@@ -116,13 +140,18 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         return viewBox == null ? null : PanAndZoomHandler.scaleRectTransform(graphicBounds, viewBox);
     }
     
-    /** Inverse transform */
+    /** Inverse transform. Transforms the graphic bounds to the view box. */
     private AffineTransform inverseTransform() {
         if (graphicBounds == null || !(element instanceof SVGRoot)) {
             return null;
         }
-        Rectangle2D viewBox = ((SVGRoot) element).getViewBoxAsRectangle();
-        return viewBox == null ? null : PanAndZoomHandler.scaleRectTransform(viewBox, graphicBounds);
+        AffineTransform t = transform();
+        try {
+            return t == null || t.getDeterminant() == 0 ? null : t.createInverse();
+        } catch (NoninvertibleTransformException ex) {
+            LOG.log(Level.SEVERE, "Unexpected", ex);
+            return null;
+        }
     }
 
     @Override
@@ -134,22 +163,61 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
 
     @Override
     public boolean contains(Point2D point) {
-        AffineTransform tx = inverseTransform();
-        return tx == null ? super.contains(point)
-                : super.contains(tx.transform(point, null));
+        Point2D tp = transform(point);
+        return inViewBox(tp) && super.contains(tp);
     }
 
     @Override
     public boolean intersects(Rectangle2D box) {
-        AffineTransform tx = inverseTransform();
-        return tx == null ? super.intersects(box) 
-                : super.intersects(tx.createTransformedShape(box).getBounds2D());
+        Rectangle2D vb = viewBox();
+        Rectangle2D tbox = vb == null ? transform(box) : transform(box).createIntersection(vb);
+        return tbox.getWidth() >= 0 && tbox.getHeight() >= 0 && super.intersects(tbox);
+    }
+
+    @Override
+    public Graphic<Graphics2D> graphicAt(Point2D point) {
+        Point2D tp = transform(point);
+        return !inViewBox(tp) ? null : super.graphicAt(tp);
+    }
+
+    @Override
+    public Graphic<Graphics2D> selectableGraphicAt(Point2D point) {
+        Point2D tp = transform(point);
+        return !inViewBox(tp) ? null : super.selectableGraphicAt(tp);
+    }
+
+    @Override
+    public Set<Graphic<Graphics2D>> selectableGraphicsIn(Rectangle2D box) {
+        Rectangle2D vb = viewBox();
+        Rectangle2D tp = vb == null ? transform(box) : transform(box).createIntersection(vb);
+        return tp.getWidth() <= 0 || tp.getHeight() <= 0 ? Collections.emptySet()
+                : super.selectableGraphicsIn(tp);
+    }
+
+    @Override
+    public Graphic<Graphics2D> mouseGraphicAt(Point2D point) {
+        Point2D tp = transform(point);
+        return !inViewBox(tp) ? null : super.mouseGraphicAt(tp);
+    }
+
+    @Override
+    public String getTooltip(Point2D p) {
+        Point2D tp = transform(p);
+        return !inViewBox(tp) ? null : super.getTooltip(tp);
+    }
+
+    @Override
+    public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
+        Point2D tp = transform(point);
+        if (inViewBox(tp)) {
+            super.initContextMenu(menu, src, tp, focus, selection);
+        }
     }
 
     @Override
     public void renderTo(Graphics2D canvas) {
         AffineTransform tx = transform();
-        if (graphicBounds != null) {
+        if (RENDER_BOUNDS && graphicBounds != null) {
             canvas.setColor(Color.red);
             canvas.draw(graphicBounds);
         }
@@ -158,9 +226,35 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         } else {
             AffineTransform original = canvas.getTransform();
             canvas.transform(transform());
+            Rectangle2D viewBox = viewBox();
+            canvas.setClip(viewBox);
+            if (RENDER_VIEW_BOX && viewBox != null) {
+                canvas.setColor(Color.blue);
+                canvas.draw(viewBox);
+            }
             super.renderTo(canvas);
             canvas.setTransform(original);
         }
+    }
+    
+    private Point2D transform(Point2D pt) {
+        AffineTransform tx = inverseTransform();
+        return tx == null ? pt : tx.transform(pt, null);
+    }
+    
+    private Rectangle2D transform(Rectangle2D box) {
+        AffineTransform tx = inverseTransform();
+        return tx == null ? box : tx.createTransformedShape(box).getBounds2D();
+    }
+    
+    private Rectangle2D viewBox() {
+        return element instanceof SVGRoot ? ((SVGRoot) element).getViewBoxAsRectangle() : null;
+    }
+
+    /** Test if point is in view box, where point is in svg coords */
+    private boolean inViewBox(Point2D pt) {
+        Rectangle2D box = viewBox();
+        return box == null || box.contains(pt);
     }
 
 }

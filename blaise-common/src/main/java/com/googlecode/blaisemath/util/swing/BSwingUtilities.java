@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.util.swing;
  * #L%
  */
 
-import java.awt.event.ComponentEvent;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
