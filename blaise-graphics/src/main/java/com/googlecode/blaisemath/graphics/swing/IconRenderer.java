@@ -50,9 +50,11 @@ public class IconRenderer implements Renderer<AnchoredIcon, Graphics2D> {
     public void render(AnchoredIcon primitive, AttributeSet style, Graphics2D canvas) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
         Point2D offset = anchor.getRectOffset(primitive.getIconWidth(), primitive.getIconHeight());
-        primitive.getIcon().paintIcon(null, canvas, 
-                (int) (primitive.getX() + offset.getX()), 
-                (int) (primitive.getY() - primitive.getIconHeight() + offset.getY()));
+        double dx = primitive.getX() + offset.getX();
+        double dy = primitive.getY() - primitive.getIconHeight() + offset.getY();
+        canvas.translate(dx, dy);
+        primitive.getIcon().paintIcon(null, canvas,  0, 0);
+        canvas.translate(-dx, -dy);
     }
 
     @Override

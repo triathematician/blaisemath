@@ -265,7 +265,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     @InvokedFromThread("multiple")
     public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle2D rect) {
         Insets insets = comp.getInsets();
-        Rectangle bounds = new Rectangle(comp.getX() + insets.left, comp.getY() + insets.top,
+        Rectangle bounds = new Rectangle(insets.left, insets.top,
                 comp.getWidth() - insets.left - insets.right, comp.getHeight() - insets.top - insets.bottom);
         setDesiredLocalBounds(comp, bounds, rect);
     }
