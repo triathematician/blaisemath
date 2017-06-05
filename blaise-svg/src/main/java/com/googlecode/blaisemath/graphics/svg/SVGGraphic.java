@@ -227,7 +227,6 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         } else {
             AffineTransform original = canvas.getTransform();
             canvas.transform(transform());
-            Shape originalClip = canvas.getClip();
             Rectangle2D viewBox = viewBox();
             canvas.setClip(viewBox);
             if (RENDER_VIEW_BOX && viewBox != null) {
@@ -236,7 +235,7 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
             }
             super.renderTo(canvas);
             canvas.setTransform(original);
-            canvas.setClip(originalClip);
+            canvas.setClip(null);
         }
     }
     
