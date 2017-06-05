@@ -30,6 +30,7 @@ import com.googlecode.blaisemath.svg.SVGElement;
 import com.googlecode.blaisemath.svg.SVGRoot;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -226,6 +227,7 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         } else {
             AffineTransform original = canvas.getTransform();
             canvas.transform(transform());
+            Shape originalClip = canvas.getClip();
             Rectangle2D viewBox = viewBox();
             canvas.setClip(viewBox);
             if (RENDER_VIEW_BOX && viewBox != null) {
@@ -234,6 +236,7 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
             }
             super.renderTo(canvas);
             canvas.setTransform(original);
+            canvas.setClip(originalClip);
         }
     }
     
