@@ -226,16 +226,17 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
             super.renderTo(canvas);
         } else {
             AffineTransform original = canvas.getTransform();
-            canvas.transform(transform());
+            Shape oldClip = canvas.getClip();
+            canvas.transform(tx);
             Rectangle2D viewBox = viewBox();
-            canvas.setClip(viewBox);
-            if (RENDER_VIEW_BOX && viewBox != null) {
+            canvas.setClip(viewBox.createIntersection(transform(oldClip.getBounds2D())));
+            if (RENDER_VIEW_BOX) {
                 canvas.setColor(Color.blue);
                 canvas.draw(viewBox);
             }
             super.renderTo(canvas);
             canvas.setTransform(original);
-            canvas.setClip(null);
+            canvas.setClip(oldClip);
         }
     }
     
