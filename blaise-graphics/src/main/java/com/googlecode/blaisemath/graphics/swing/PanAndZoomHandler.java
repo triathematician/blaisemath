@@ -249,10 +249,11 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
             inverse = new AffineTransform();
         }
         // apply inverse transform to min point of component bounds and max point of component bounds
-        Point2D.Double min = new Point2D.Double(0, 0);
-        Point2D.Double max = new Point2D.Double(gc.getWidth(), gc.getHeight());
-        Point2D cmin = inverse.transform(min, null);
-        Point2D cmax = inverse.transform(max, null);
+        Insets insets = gc.getInsets();
+        Rectangle bounds = new Rectangle(insets.left, insets.top,
+                gc.getWidth() - insets.left - insets.right, gc.getHeight() - insets.top - insets.bottom);
+        Point2D cmin = inverse.transform(new Point2D.Double(bounds.getMinX(), bounds.getMinY()), null);
+        Point2D cmax = inverse.transform(new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()), null);
         return new Rectangle2D.Double(cmin.getX(), cmin.getY(), cmax.getX() - cmin.getX(), cmax.getY() - cmin.getY());
     }
 
