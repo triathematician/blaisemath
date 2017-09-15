@@ -7,7 +7,7 @@ package com.googlecode.blaisemath.util;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,6 +94,17 @@ public class ReflectionUtils {
         } catch (SecurityException ex) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     "Unable to get no-arg constructor for " + cls, ex);
+        }
+        if (con == null && Number.class.isAssignableFrom(cls)) {
+            return cls == Integer.class ? (T) new Integer(0)
+                    : cls == Double.class ? (T) new Double(0)
+                    : cls == Float.class ? (T) new Float(0)
+                    : cls == Long.class ? (T) new Long(0)
+                    : cls == Short.class ? (T) new Short((short) 0)
+                    : cls == Byte.class ? (T) new Byte((byte) 0)
+                    : cls == Character.class ? (T) new Character((char) 0)
+                    : cls == Boolean.class ? (T) Boolean.TRUE
+                    : null;
         }
         if (con != null) {
             try {

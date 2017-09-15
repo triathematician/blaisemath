@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,10 @@ final class DefaultPropertyComponent extends JButton {
             }
         });
         setEnabled(false);
+        updateButtonText();
+    }
+    
+    private void updateButtonText() {
         Object value = parent.getPropertyValue(row);
         if (value != null) {
             if (value.getClass().isArray()) {
@@ -78,6 +82,7 @@ final class DefaultPropertyComponent extends JButton {
             } else {
                 PropertySheetDialog.show(window, true, value);
             }
+            updateButtonText();
         }
     }
 }

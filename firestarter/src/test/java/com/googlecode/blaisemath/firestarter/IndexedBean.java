@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,22 @@ public class IndexedBean {
     public void setStrings(String[] string) { this.string = string; }
     public String getStrings(int index) { return this.string[index]; }
     public void setStrings(int index, String newString) { this.string[index] = newString; }
+    
+    private Integer[] ports = {80, 443};
+    public Integer[] getPorts() {
+        return ports;
+    }
+    public void setPorts(Integer[] ports) {
+        this.ports = ports;
+    }
+    
+    public Integer getPorts(int index) {
+        return this.ports[index];
+    }
+    
+    public void setPorts(int index, Integer port) {
+        this.ports[index] = port;
+    }
 
     protected NumberBean[] nb = new NumberBean[]{new NumberBean(), new NumberBean()};
     public NumberBean[] getNbs() { return nb; }

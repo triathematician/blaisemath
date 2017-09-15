@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2016 Elisha Peterson
+ * Copyright (C) 2009 - 2017 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import javax.swing.AbstractAction;
 import static javax.swing.Action.SHORT_DESCRIPTION;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.CellEditor;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -88,6 +89,7 @@ public final class IndexedPropertySheet extends PropertySheet {
             @Override
             public void actionPerformed(ActionEvent e) {
                 beanModel.addNewValue();
+                handleTableChange();
             }
         };
         aa.putValue(SHORT_DESCRIPTION, "Add a new element to the end of the list.");
@@ -97,7 +99,12 @@ public final class IndexedPropertySheet extends PropertySheet {
         AbstractAction remove = new AbstractAction("-") {
             @Override
             public void actionPerformed(ActionEvent e) {
+                CellEditor cellEditor = table.getCellEditor();
+                if (cellEditor != null) {
+                    cellEditor.stopCellEditing();
+                }
                 beanModel.removeValues(table.getSelectedRows());
+                handleTableChange();
             }
         };
         remove.putValue(SHORT_DESCRIPTION, "Remove the selected element from the end of the list.");
