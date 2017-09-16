@@ -84,6 +84,7 @@ public final class IndexedPropertySheet extends PropertySheet {
     
     @Override
     protected void initToolbar() {
+        toolsVisible = true;
         // set up tool panel
         AbstractAction aa = new AbstractAction("+") {
             @Override

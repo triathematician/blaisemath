@@ -57,7 +57,7 @@ public class Testing extends javax.swing.JFrame {
         EditorRegistration.registerEditors();
         PropertyEditorManager.registerEditor(TestEnum.class, EnumEditor.class);
         PropertyEditorManager.registerEditor(IndexedBean.class, EnumObjectEditor.class);
-        PropertySheet.TOOLBAR_VISIBLE_DEFAULT = true;
+        PropertySheet.TOOLBAR_VISIBLE_DEFAULT = false;
 
         initComponents();
 
