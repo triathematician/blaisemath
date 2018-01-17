@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * blaise-svg
  * --
- * Copyright (C) 2014 - 2017 Elisha Peterson
+ * Copyright (C) 2014 - 2018 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,9 @@ class SvgIo {
     static SVGRoot flexibleNamespaceParse(InputSource input) throws IOException {
         try {
             XMLFilter filter = new SvgNamespaceFilter();
-            filter.setParent(SAXParserFactory.newInstance().newSAXParser().getXMLReader());
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            filter.setParent(factory.newSAXParser().getXMLReader());
             UnmarshallerHandler umHandler = unmarshaller().getUnmarshallerHandler();
             filter.setContentHandler(umHandler);
             filter.parse(input);

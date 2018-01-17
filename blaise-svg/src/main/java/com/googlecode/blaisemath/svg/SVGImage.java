@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2017 Elisha Peterson
+ * Copyright (C) 2014 - 2018 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,14 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.base.Converter;
+import com.google.common.base.Strings;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
@@ -123,7 +125,10 @@ public final class SVGImage extends SVGElement {
     }
 
     public void setImageRef(String imageRef) {
-        this.imageRef = imageRef;
+        if (!Objects.equals(this.imageRef, imageRef)) {
+            this.imageRef = imageRef;
+            image = null;
+        }
     }
     
     /**
@@ -132,7 +137,7 @@ public final class SVGImage extends SVGElement {
      */
     @Nullable
     public Image getImage() {
-        if (image == null) {
+        if (image == null && !Strings.isNullOrEmpty(imageRef)) {
             loadImage();
         }
         return image;
@@ -145,7 +150,7 @@ public final class SVGImage extends SVGElement {
                     ? Images.decodeDataUriBase64(imageRef)
                     : ImageIO.read(new URL(imageRef));
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "Image load error", ex);
+            LOG.log(Level.SEVERE, "Failed to load image from "+imageRef, ex);
             return;
         }
         if (width == null || height == null) {
@@ -175,11 +180,11 @@ public final class SVGImage extends SVGElement {
 
         @Override
         protected AnchoredImage doForward(SVGImage r) {
-            BufferedImage bi = (BufferedImage) r.getImage();
+            Image bi = r.getImage();
             if (bi == null) {
                 return null;
             } else if (r.width == null || r.height == null) {
-                return new AnchoredImage(r.x, r.y, (double) bi.getWidth(), (double) bi.getHeight(), bi, r.imageRef);
+                return new AnchoredImage(r.x, r.y, (double) bi.getWidth(null), (double) bi.getHeight(null), bi, r.imageRef);
             } else {
                 return new AnchoredImage(r.x, r.y, r.width, r.height, r.getImage(), r.imageRef);
             }

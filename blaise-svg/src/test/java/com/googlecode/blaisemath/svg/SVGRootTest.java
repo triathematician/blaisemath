@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2017 Elisha Peterson
+ * Copyright (C) 2014 - 2018 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,8 @@ package com.googlecode.blaisemath.svg;
  */
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URL;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import org.junit.Test;
 
 /**
@@ -57,6 +54,9 @@ public class SVGRootTest {
                 + "</svg>");
         
         SVGRoot.load("<svg><rect height=\"0.0\" rx=\"0.0\" ry=\"0.0\" width=\"0.0\" x=\"0.0\" y=\"0.0\"/></svg>");
+        
+        SVGRoot r2 = SVGRoot.load("<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\"><image xlink:href=\"file:src/test/resources/com/googlecode/blaisemath/util/resources/cherries.png\"/></svg>");
+        assertTrue(r2.getElements().get(0) instanceof SVGImage);
     }
 
 }

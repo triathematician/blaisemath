@@ -19,7 +19,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2017 Elisha Peterson
+ * Copyright (C) 2014 - 2018 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.base.Converter;
 import com.googlecode.blaisemath.util.AnchoredImage;
+import java.io.File;
+import java.net.MalformedURLException;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
@@ -47,21 +49,36 @@ import org.junit.Test;
  * @author elisha
  */
 public class SVGImageTest extends TestCase {
+    
+    @Test
+    public void testLoadImage() throws MalformedURLException {
+        System.out.println("loadImage");
+        SVGImage i = new SVGImage();
+        assertTrue(i.getImage() == null);
+        
+        i.setImageRef("cherries.png");
+        assertTrue(i.getImage() == null);
+
+        i.setImageRef("file:cherries.png");
+        assertTrue(i.getImage() == null);
+        
+        i.setImageRef("file:src/test/resources/com/googlecode/blaisemath/util/resources/cherries.png");
+        assertTrue(i.getImage() != null);
+        assertEquals(20.0, i.getWidth());
+        assertEquals(20.0, i.getHeight());
+    }
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
         Converter<SVGImage, AnchoredImage> conv = SVGImage.imageConverter();
-        
         assertEquals(null, conv.reverse().convert(null));
-        
     }
 
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
         Converter<SVGImage, AnchoredImage> conv = SVGImage.imageConverter();
-        
         assertEquals(null, conv.convert(null));
     }
     

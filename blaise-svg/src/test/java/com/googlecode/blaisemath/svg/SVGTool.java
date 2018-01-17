@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2017 Elisha Peterson
+ * Copyright (C) 2014 - 2018 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,7 +182,12 @@ public class SVGTool extends javax.swing.JFrame {
             gsvg.setElement(new SVGPath(text.getText()));
         } else {
             try {
-                gsvg.setElement(SVGRoot.load(text.getText()));
+                SVGRoot root = SVGRoot.load(text.getText());
+                gsvg.setElement(root);
+                Object bg = root.getStyle().get("background");
+                if (bg instanceof Color) {
+                    canvas.setBackground((Color) bg);
+                }
             } catch (IOException ex) {
                 Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, ex);
             }
