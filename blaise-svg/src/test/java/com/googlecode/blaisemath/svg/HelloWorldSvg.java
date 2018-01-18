@@ -23,7 +23,6 @@ package com.googlecode.blaisemath.svg;
 
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
-import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
@@ -35,6 +34,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -65,7 +65,7 @@ public class HelloWorldSvg extends JFrame {
         Graphic g1 = JGraphics.path(new Rectangle2D.Double(0, 0, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f));
         Graphic g2 = JGraphics.path(new Rectangle2D.Double(500, 500, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f));
         Graphic g3 = JGraphics.path(new Rectangle2D.Double(-500, -500, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f));
-        gc.getGraphicRoot().setGraphics(Arrays.asList(g1, g2, g3));
+        gc.getGraphicRoot().setGraphics((List) Arrays.asList(g1, g2, g3));
         PanAndZoomHandler.install(gc);
 
         JPanel p = new JPanel(new BorderLayout());
@@ -81,7 +81,7 @@ public class HelloWorldSvg extends JFrame {
                 SVGGraphic gfc = SVGGraphic.create(svg);
                 gfc.setBoundingBoxVisible(true);
                 gfc.setGraphicBounds(new Rectangle2D.Double(50, 50, 400, 300));
-                gc.getGraphicRoot().setGraphics(Arrays.asList(g1, g2, g3, gfc));
+                gc.getGraphicRoot().setGraphics((List) Arrays.asList(g1, g2, g3, gfc));
             }
         });
         p.add(tb, BorderLayout.NORTH);
