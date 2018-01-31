@@ -140,7 +140,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         addIsolates(graphForInfo.getIsolates(), res, distScale, distScale*parm.isolateScale);
         
         // report and clean up
-        LOG.log(Level.INFO, "StaticSpringLayout completed in {0} steps. The final energy "
+        LOG.log(Level.FINE, "StaticSpringLayout completed in {0} steps. The final energy "
                         + "change was {1}, and the final energy was {2}", 
                 new Object[]{step, energyChange, lastEnergy});
         return res;
