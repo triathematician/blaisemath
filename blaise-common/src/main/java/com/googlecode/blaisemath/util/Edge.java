@@ -14,7 +14,7 @@ import javax.annotation.concurrent.Immutable;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2017 Elisha Peterson
+ * Copyright (C) 2014 - 2018 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
