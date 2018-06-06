@@ -1,7 +1,3 @@
-/**
- * StringEditor.java
- * Created on Jul 1, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*

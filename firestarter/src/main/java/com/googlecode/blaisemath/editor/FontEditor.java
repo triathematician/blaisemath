@@ -1,7 +1,3 @@
-/*
- * FontEditor.java
- * Created Nov 8, 2011
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -53,10 +49,10 @@ import javax.swing.SwingUtilities;
  */
 public final class FontEditor extends MPanelEditorSupport {
 
-    private static final int[] PT_SIZES = {3, 5, 8, 10, 12, 14, 18, 24, 36, 48};
-
+    /** List of font sizes to show in dropdown */
+    private static final int[] PT_SIZES = {3, 5, 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 72, 96, 108, 120};
     /** Static list of fonts. Will be loaded only once. */
-    private static List<String> fonts = new ArrayList<String>();
+    private static final List<String> FONTS = new ArrayList<>();
     
     private static boolean loadStarted = false;
     private static boolean fontsLoaded = false;
@@ -96,7 +92,7 @@ public final class FontEditor extends MPanelEditorSupport {
      */
     private void initializeComboBoxes() {
         if (fontsLoaded) {
-            familyNameCombo = new JComboBox(fonts.toArray());
+            familyNameCombo = new JComboBox(FONTS.toArray());
         } else {
             familyNameCombo = new JComboBox(new Object[]{"<html><i>Loading fonts...</i>"});
             familyNameCombo.setEnabled(false);
@@ -120,12 +116,7 @@ public final class FontEditor extends MPanelEditorSupport {
         styleCombo.setAlignmentX(Component.CENTER_ALIGNMENT);
         styleCombo.setAlignmentY(Component.CENTER_ALIGNMENT);
         
-        ActionListener comboListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleComboChange();
-            }
-        };
+        ActionListener comboListener = e -> handleComboChange();
         familyNameCombo.addActionListener(comboListener);
         fontSizeCombo.addActionListener(comboListener);
         styleCombo.addActionListener(comboListener);
@@ -166,16 +157,13 @@ public final class FontEditor extends MPanelEditorSupport {
     
     private void loadFontsInBackground() {
         String[] ff = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        synchronized(fonts) {
-            fonts.addAll(Arrays.asList(ff));
+        synchronized(FONTS) {
+            FONTS.addAll(Arrays.asList(ff));
             if (newValue != null) {
-                SwingUtilities.invokeLater(new Runnable(){
-                    @Override
-                    public void run() {
-                        familyNameCombo.setModel(new DefaultComboBoxModel(fonts.toArray()));
-                        familyNameCombo.setEnabled(true);
-                        familyNameCombo.setSelectedItem(((Font)newValue).getFamily());
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    familyNameCombo.setModel(new DefaultComboBoxModel(FONTS.toArray()));
+                    familyNameCombo.setEnabled(true);
+                    familyNameCombo.setSelectedItem(((Font)newValue).getFamily());
                 });
             }
             fontsLoaded = true;

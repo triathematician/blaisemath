@@ -1,7 +1,3 @@
-/**
- * MultiSpinnerSupport.java
- * Created on Jul 2, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -30,13 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * <p>
- *   Base class for editors that use multiple coordinates.
- * </p>
+ * Base class for editors that use multiple coordinates.
  *
  * @param <N> numeric type for the spinners
  * 
@@ -69,15 +62,12 @@ public abstract class MultiSpinnerSupport<N extends Number> extends MPanelEditor
             panel.add(spinners[i]);
         }
 
-        ChangeListener cl = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                List<N> vals = new ArrayList<N>();
-                for (int i = 0; i < n; i++) {
-                    vals.add((N) spinners[i].getValue());
-                }
-                setNewValueList(vals);
+        ChangeListener cl = e -> {
+            List<N> vals = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                vals.add((N) spinners[i].getValue());
             }
+            setNewValueList(vals);
         };
 
         for (int i = 0; i < n; i++) {

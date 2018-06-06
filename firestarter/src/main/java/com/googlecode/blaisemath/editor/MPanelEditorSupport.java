@@ -1,8 +1,3 @@
-/**
- * MPanelEditorSupport.java
- * Created on Jul 2, 2009
- */
-
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -26,18 +21,15 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
 
 /**
- * <p>
- *   Generic super class for custom editors that use a panel for layout and display.
- * </p>
+ * Generic super class for custom editors that use a panel for layout and display.
  *
  * @author Elisha Peterson
  */
 public abstract class MPanelEditorSupport extends MPropertyEditorSupport {
+    
     protected JPanel panel;
 
     public MPanelEditorSupport() {
@@ -59,12 +51,9 @@ public abstract class MPanelEditorSupport extends MPropertyEditorSupport {
             initCustomizer();
             initEditorValue();
         }
-        panel.addPropertyChangeListener("enabled", new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                for (int i = 0; i < panel.getComponentCount(); i++) {
-                    panel.getComponent(i).setEnabled(panel.isEnabled());
-                }
+        panel.addPropertyChangeListener("enabled", evt -> {
+            for (int i = 0; i < panel.getComponentCount(); i++) {
+                panel.getComponent(i).setEnabled(panel.isEnabled());
             }
         });
         return panel;

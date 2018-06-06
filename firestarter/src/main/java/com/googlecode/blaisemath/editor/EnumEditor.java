@@ -1,7 +1,3 @@
-/**
- * EnumEditor.java
- * Created on Jul 2, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -26,16 +22,14 @@ package com.googlecode.blaisemath.editor;
 
 import java.awt.Component;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 /**
- * <p>
- *   Uses a combo box for editing enum's.
- * </p>
+ * Uses a combo box for editing enum's. Must be registered separately for each
+ * enum type that uses it.
  *
  * @author Elisha Peterson
  */
@@ -54,12 +48,9 @@ public final class EnumEditor extends MPanelEditorSupport {
         combo.setAlignmentY(Component.CENTER_ALIGNMENT);
         panel.add(combo);
 
-        combo.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    setNewValue(evt.getItem());
-                }
+        combo.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                setNewValue(evt.getItem());
             }
         });
     }

@@ -1,7 +1,3 @@
-/**
- * BeanEditorModel.java
- * Created Sep 18, 2014
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -67,11 +63,6 @@ public interface PropertyModel extends ListModel<String> {
      * @param value
      */
     void setPropertyValue(int row, Object value);
-
-
-    //
-    // PROPERTY CHANGE
-    //
 
     void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
 

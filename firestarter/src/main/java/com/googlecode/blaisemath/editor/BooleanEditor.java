@@ -1,7 +1,3 @@
-/**
- * BooleanEditor.java
- * Created on Jul 1, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -27,7 +23,6 @@ package com.googlecode.blaisemath.editor;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -66,16 +61,13 @@ public final class BooleanEditor extends MPanelEditorSupport {
         panel.add(label);
 
         // initialize listening
-        checkbox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    setNewValue(Boolean.TRUE);
-                    label.setText(getValidName(true));
-                } else {
-                    setNewValue(Boolean.FALSE);
-                    label.setText(getValidName(false));
-                }
+        checkbox.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                setNewValue(Boolean.TRUE);
+                label.setText(getValidName(true));
+            } else {
+                setNewValue(Boolean.FALSE);
+                label.setText(getValidName(false));
             }
         });
     }

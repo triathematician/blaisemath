@@ -1,7 +1,3 @@
-/**
- * PropertySheet.java
- * Created on Jun 29, 2009
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -48,9 +44,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 /**
- * <p>
- *   Provides a table used for editing a list of properties.
- * </p>
+ * Table used for editing a collection of key-value properties.
  *
  * @author Elisha Peterson
  */
@@ -138,12 +132,7 @@ public class PropertySheet extends JPanel {
                 (fg.getGreen()+5*bg.getGreen())/6,
                 (fg.getBlue()+5*bg.getBlue())/6));
         model = new PropertySheetModel(new PropertyEditorModel(pm));
-        model.addTableModelListener(new TableModelListener(){
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                handleTableChange();
-            }
-        });
+        model.addTableModelListener(e -> handleTableChange());
         table.setModel(model);
         table.getTableHeader().setReorderingAllowed(false);
         updateRowHeights();
@@ -178,13 +167,10 @@ public class PropertySheet extends JPanel {
         Font font = filterCombo.getFont().deriveFont( (float) filterCombo.getFont().getSize() - 2);
         filterCombo.setFont(font);
         filterCombo.setSelectedItem(BeanPropertyFilter.STANDARD);
-        filterCombo.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (getPropertyModel() instanceof BeanPropertyModel) {
-                    ((BeanPropertyModel)getPropertyModel()).setFilter(
-                            (BeanPropertyFilter) filterCombo.getSelectedItem());
-                }
+        filterCombo.addActionListener((ActionEvent e) -> {
+            if (getPropertyModel() instanceof BeanPropertyModel) {
+                ((BeanPropertyModel)getPropertyModel()).setFilter(
+                        (BeanPropertyFilter) filterCombo.getSelectedItem());
             }
         });
 
@@ -201,9 +187,6 @@ public class PropertySheet extends JPanel {
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
     
     /** 
      * Get the core property model used by the property sheet.
@@ -238,11 +221,6 @@ public class PropertySheet extends JPanel {
     }
     
     //</editor-fold>
-
-    
-    //
-    // EVENT HANDLING
-    //
 
     /** Updates the size of the table. */
     void updateRowHeights() {
@@ -286,12 +264,8 @@ public class PropertySheet extends JPanel {
     public void addBeanChangeListener(String propertyName, PropertyChangeListener listener) {
         getPropertyModel().addPropertyChangeListener(propertyName, listener);
     }
-
     
     // <editor-fold defaultstate="collapsed" desc="Inner Classes">
-    //
-    //                  INNER CLASSES
-    //
 
     /** Provides support for editing properties. */
     class ValueColEditor extends AbstractCellEditor implements TableCellEditor, TableCellRenderer {

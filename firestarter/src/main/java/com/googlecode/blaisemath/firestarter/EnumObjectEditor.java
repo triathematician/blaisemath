@@ -1,7 +1,3 @@
-/**
- * EnumObjectEditor.java
- * Created on Jul 2, 2009
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -29,9 +25,7 @@ import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
@@ -43,16 +37,16 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
- * <p>
- *  This class implements a customized editor for components that do not have a default
- *  assigned editor, but have an associated "getInstance" method, with argument taking
- *  an enum value, such that each enum returns a value of the object. When the enum value is
- *  selected in a ComboBox, the underlying value is updated.
- * </p>
+ * Implements a customized editor for components that do not have a default
+ * assigned editor, but have an associated "getInstance" method, with argument taking
+ * an enum value, such that each enum returns a value of the object. When the enum value is
+ * selected in a ComboBox, the underlying value is updated.
  * 
  * @author Elisha Peterson
  */
 public final class EnumObjectEditor extends MPanelEditorSupport {
+
+    private static final Logger LOG = Logger.getLogger(EnumObjectEditor.class.getName());
 
     /** Method used to retrieve new instances. */
     private Method instanceMethod;
@@ -73,22 +67,14 @@ public final class EnumObjectEditor extends MPanelEditorSupport {
         combo = new JComboBox();
         combo.setEditable(false);
         combo.setBackground(panel.getBackground());
-        combo.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                handleSelectionChange(e);
-            }
-        });
+        combo.addItemListener(this::handleSelectionChange);
         panel.add(combo, BorderLayout.CENTER);
 
         JButton button = new JButton("...");
         button.setMargin(new Insets(3, 3, 3, 2));
-        button.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Window win = SwingUtilities.getWindowAncestor(panel);
-                PropertySheetDialog.show(win, false, newValue);
-            }
+        button.addActionListener((ActionEvent e) -> {
+            Window win = SwingUtilities.getWindowAncestor(panel);
+            PropertySheetDialog.show(win, false, newValue);
         });
         panel.add(button, BorderLayout.EAST);
     }
@@ -143,11 +129,9 @@ public final class EnumObjectEditor extends MPanelEditorSupport {
                 setNewValue( super.getValue() );
             } else {
                 try {
-                    setNewValue( instanceMethod.invoke(null, e.getItem()) );
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(EnumObjectEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
-                    Logger.getLogger(EnumObjectEditor.class.getName()).log(Level.SEVERE, null, ex);
+                    setNewValue(instanceMethod.invoke(null, e.getItem()));
+                } catch (IllegalAccessException | InvocationTargetException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
                 }
             }
         }

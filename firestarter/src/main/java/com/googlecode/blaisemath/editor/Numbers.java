@@ -1,8 +1,3 @@
-/**
- * Numbers.java
- * Created Sep 21, 2014
- */
-
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -29,12 +24,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>
- *   
- * </p>
+ * Number parse utilities
+ * 
  * @author elisha
  */
 class Numbers {
+
+    private static final Logger LOG = Logger.getLogger(Numbers.class.getName());
     
     // utility clas
     private Numbers() {
@@ -51,8 +47,7 @@ class Numbers {
             try {
                 res[i] = Integer.decode(arr[i]);
             } catch (NumberFormatException ex) {
-                Logger.getLogger(Numbers.class.getName()).log(Level.WARNING, 
-                        "Not an integer", ex);
+                LOG.log(Level.WARNING, "Not an integer", ex);
                 res[i] = 0;
             }
         }
@@ -70,8 +65,7 @@ class Numbers {
             try {
                 res[i] = Double.parseDouble(arr[i]);
             } catch (NumberFormatException ex) {
-                Logger.getLogger(Numbers.class.getName()).log(Level.WARNING, 
-                        "Not a double", ex);
+                LOG.log(Level.WARNING, "Not a double", ex);
                 res[i] = 0;
             }
         }

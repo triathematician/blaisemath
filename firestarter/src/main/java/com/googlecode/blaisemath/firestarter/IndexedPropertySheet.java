@@ -1,7 +1,3 @@
-/**
- * IndexedPropertySheet.java
- * Created on Jan 28, 2010
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -24,12 +20,12 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-import static com.googlecode.blaisemath.util.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.beans.IndexedPropertyDescriptor;
+import static java.util.Objects.requireNonNull;
 import javax.swing.AbstractAction;
 import static javax.swing.Action.SHORT_DESCRIPTION;
 import javax.swing.Box;
@@ -39,12 +35,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
- * <p>
- *   <code>IndexedPropertySheet</code> is a table-formatted list of individual properties
- *   within an array, useful for editing indexed properties. Almost all of the functionality
- *   is borrowed from <code>PropertySheet</code>... the underyling model here will be an
- *   <code>IndexedBeanEditorSupport</code>.
- * </p>
+ * Table-formatted list of individual properties within an array, useful for editing 
+ * indexed properties. Uses {@link BeanIndexedPropertyModel} for the underlying model.
  *
  * @author Elisha Peterson
  */
@@ -60,7 +52,7 @@ public final class IndexedPropertySheet extends PropertySheet {
      * @return newly forBeand property sheet
      */
     public static PropertySheet forIndexedProperty(Object bean, String propName) {
-        checkNotNull(bean);
+        requireNonNull(bean);
         return forIndexedProperty(bean, ReflectionUtils.indexedPropertyDescriptor(bean.getClass(), propName));
     }
 
@@ -71,8 +63,8 @@ public final class IndexedPropertySheet extends PropertySheet {
      * @return newly forBeand property sheet
      */
     public static PropertySheet forIndexedProperty(Object bean, IndexedPropertyDescriptor ipd) {
-        checkNotNull(bean);
-        checkNotNull(ipd);
+        requireNonNull(bean);
+        requireNonNull(ipd);
         
         IndexedPropertySheet res = new IndexedPropertySheet();
         res.beanModel = new BeanIndexedPropertyModel(bean, ipd);

@@ -1,7 +1,3 @@
-/**
- * MPropertyEditorSupport.java
- * Created on Jul 1, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -27,30 +23,25 @@ package com.googlecode.blaisemath.editor;
 import java.beans.PropertyEditorSupport;
 
 /**
- * <p>
- *   <code>MPropertyEditorSupport</code> extends the basic property editor to
- *   improve handling of events. Maintains a temporary <code>newValue</code> object that
+ *   Extends the basic property editor to
+ *   improve handling of events. Maintains a temporary {@code newValue} object that
  *   tracks changes by the editor. These changes will pass events to any interested
- *   listeners if adjusted through the <code>setNewValue</code> method rather than directly.
+ *   listeners if adjusted through the {@link #setNewValue(java.lang.Object)} method rather than directly.
  *   An interested bean can then check the "newValue" to see what has changed.
- * </p>
  * <p>
- *   The <code>cancelEditAction()</code> and <code>stopEditAction()</code> methods will
+ *   The {@link #cancelEditAction()} and {@link #stopEditAction()} methods will
  *   either reset the editor to the initial state, or make a permanent change to the
  *   initial value. In both cases, an event may be fired to indicate that the external
  *   value has changed.
- * </p>
  * <p>
  *   Registered listeners hear when the new value is changed somehow. If interested
- *   in updating constantly, they should look to the <code>getNewValue()</code> method.
- *   If only interested in the final value, they should update only when the <code>getValue()</code>
+ *   in updating constantly, they should look to the {@link #getNewValue()} method.
+ *   If only interested in the final value, they should update only when the {@link #getValue()}
  *   method returns a different value.
- * </p>
  * <p>
  *   External changes, e.g. to the underlying bean, should be handled by invoking the
- *   <code>setValue</code> method here. This calls the <code>initEditorValue</code>
+ *   {@link #setValue(java.lang.Object)} method here. This calls the {@link #initEditorValue()}
  *   method to set up the editor based on some external value.
- * </p>
  *
  * @author Elisha Peterson
  * @see java.beans.PropertyEditor

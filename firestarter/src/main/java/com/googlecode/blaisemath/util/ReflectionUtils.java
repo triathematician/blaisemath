@@ -1,6 +1,3 @@
-/**
- * ReflectionUtils.java Created Sep 20, 2014
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -40,6 +37,8 @@ import java.util.logging.Logger;
  */
 public class ReflectionUtils {
 
+    private static final Logger LOG = Logger.getLogger(ReflectionUtils.class.getName());
+
     private static final String FAIL_NEW_MSG = "Failed to invoke constructor";
     private static final String FAIL_INVOKE_MSG = "Failed to invoke read method";
     private static final String NO_READ_MSG = "No read method available";
@@ -60,8 +59,7 @@ public class ReflectionUtils {
         try {
             beanInfo = Introspector.getBeanInfo(cls);
         } catch (IntrospectionException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName())
-                    .log(Level.WARNING, "Error in bean introspection for class " + cls, ex);
+            LOG.log(Level.WARNING, "Error in bean introspection for class " + cls, ex);
         }
         return beanInfo;
     }
@@ -89,11 +87,9 @@ public class ReflectionUtils {
         try {
             con = cls.getDeclaredConstructor();
         } catch (NoSuchMethodException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    "There is no no-arg constructor for " + cls, ex);
+            LOG.log(Level.FINE, "There is no no-arg constructor for " + cls, ex);
         } catch (SecurityException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    "Unable to get no-arg constructor for " + cls, ex);
+            LOG.log(Level.FINE, "Unable to get no-arg constructor for " + cls, ex);
         }
         if (con == null && Number.class.isAssignableFrom(cls)) {
             return cls == Integer.class ? (T) new Integer(0)
@@ -109,18 +105,8 @@ public class ReflectionUtils {
         if (con != null) {
             try {
                 return con.newInstance();
-            } catch (InstantiationException ex) {
-                Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                        FAIL_NEW_MSG, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                        FAIL_NEW_MSG, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                        FAIL_NEW_MSG, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                        FAIL_NEW_MSG, ex);
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                LOG.log(Level.FINE, FAIL_NEW_MSG, ex);
             }
         }
         return null;
@@ -131,21 +117,13 @@ public class ReflectionUtils {
             throw new IllegalArgumentException();
         }
         if (pd.getReadMethod() == null) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    NO_READ_MSG);
+            LOG.log(Level.FINE, NO_READ_MSG);
             return null;
         }
         try {
             return pd.getReadMethod().invoke(parent);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            LOG.log(Level.FINE, FAIL_INVOKE_MSG, ex);
         }
         return null;
     }
@@ -155,22 +133,14 @@ public class ReflectionUtils {
             throw new IllegalArgumentException();
         }
         if (pd.getWriteMethod() == null) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    NO_WRITE_MSG);
+            LOG.log(Level.FINE, NO_WRITE_MSG);
             return false;
         }
         try {
             pd.getWriteMethod().invoke(parent, val);
             return true;
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            LOG.log(Level.FINE, FAIL_INVOKE_MSG, ex);
         }
         return false;
     }
@@ -180,21 +150,13 @@ public class ReflectionUtils {
             throw new IllegalArgumentException();
         }
         if (pd.getIndexedReadMethod() == null) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    NO_READ_MSG);
+            LOG.log(Level.FINE, NO_READ_MSG);
             return null;
         }
         try {
             return pd.getIndexedReadMethod().invoke(parent, index);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            LOG.log(Level.FINE, FAIL_INVOKE_MSG, ex);
         }
         return null;
     }
@@ -204,22 +166,14 @@ public class ReflectionUtils {
             throw new IllegalArgumentException();
         }
         if (pd.getIndexedWriteMethod() == null) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    NO_WRITE_MSG);
+            LOG.log(Level.FINE, NO_WRITE_MSG);
             return false;
         }
         try {
             pd.getIndexedWriteMethod().invoke(parent, index, value);
             return true;
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            LOG.log(Level.FINE, FAIL_INVOKE_MSG, ex);
         }
         return false;
     }

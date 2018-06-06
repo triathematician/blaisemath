@@ -1,7 +1,3 @@
-/**
- * EditorRegistration.java
- * Created on Jul 1, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -24,22 +20,19 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
-import static com.googlecode.blaisemath.util.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Color;
 import java.awt.Font;
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
+import static java.util.Objects.requireNonNull;
 
 /**
- * <p>
- *   Static code for registering and accessing registered property editors.
- * </p>
+ * Static code for registering and accessing registered property editors.
  *
  * @author Elisha Peterson
  */
@@ -114,12 +107,13 @@ public class EditorRegistration {
     
     /**
      * Returns editor type for a given object/class, as registered by the property manager.
+     * @param <T> object type
      * @param obj the object type
      * @param cls the class type
      * @return a property editor for the provided class, or {@code null} if there is no available editor
      */
     public static <T> PropertyEditor getRegisteredEditor(T obj, Class<?> cls) {
-        checkNotNull(cls);
+        requireNonNull(cls);
         PropertyEditor result = PropertyEditorManager.findEditor(cls);
         if (result != null) {
             return result;
@@ -133,6 +127,7 @@ public class EditorRegistration {
         }
         // look for the object instance type
         if (obj != null) {
+            assert cls != null;
             assert cls.isInstance(obj);
             result = PropertyEditorManager.findEditor(obj.getClass());
             if (result != null) {
@@ -193,16 +188,13 @@ public class EditorRegistration {
     /** Sets up change listening to update the bean when the value changes. */
     static void addChangeListening(final Object bean, final PropertyDescriptor descriptor, final PropertyEditor result) {
         if (descriptor.getWriteMethod() != null) {
-            result.addPropertyChangeListener(new PropertyChangeListener(){
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    Object source = evt.getSource();
-                    Object newValue = source instanceof MPropertyEditorSupport
-                            ? ((MPropertyEditorSupport) source).getNewValue()
-                            : source instanceof PropertyEditor ? ((PropertyEditor) source).getValue()
-                            : source;
-                    ReflectionUtils.tryInvokeWrite(bean, descriptor, newValue);
-                }
+            result.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                Object source = evt.getSource();
+                Object newValue = source instanceof MPropertyEditorSupport
+                        ? ((MPropertyEditorSupport) source).getNewValue()
+                        : source instanceof PropertyEditor ? ((PropertyEditor) source).getValue()
+                        : source;
+                ReflectionUtils.tryInvokeWrite(bean, descriptor, newValue);
             });
         }
     }
@@ -236,16 +228,13 @@ public class EditorRegistration {
     /** Sets up change listening to update the bean when the value changes (indexed properties). */
     static void addChangeListening(final Object bean, final IndexedPropertyDescriptor descriptor, final int n, final PropertyEditor result) {
         if (descriptor.getIndexedWriteMethod() != null) {
-            result.addPropertyChangeListener(new PropertyChangeListener(){
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    Object source = evt.getSource();
-                    Object newValue = source instanceof MPropertyEditorSupport
-                            ? ((MPropertyEditorSupport) source).getNewValue()
-                            : source instanceof PropertyEditor ? ((PropertyEditor) source).getValue()
-                            : source;
-                    ReflectionUtils.tryInvokeIndexedWrite(bean, descriptor, n, newValue);
-                }
+            result.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                Object source = evt.getSource();
+                Object newValue = source instanceof MPropertyEditorSupport
+                        ? ((MPropertyEditorSupport) source).getNewValue()
+                        : source instanceof PropertyEditor ? ((PropertyEditor) source).getValue()
+                        : source;
+                ReflectionUtils.tryInvokeIndexedWrite(bean, descriptor, n, newValue);
             });
         }
     }

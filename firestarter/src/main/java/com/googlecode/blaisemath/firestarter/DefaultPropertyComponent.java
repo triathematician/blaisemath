@@ -21,19 +21,15 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.IndexedPropertyDescriptor;
 import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 /**
- * <p>
- *  This class implements a customized editor for components that do not have a default
+ *  Implements a customized editor for components that do not have a default
  *  assigned editor. By default, this creates a dialog box displaying the bean properties
  *  of the property itself. The button's text is displayed using the text of the property.
- * </p>
  */
 final class DefaultPropertyComponent extends JButton {
 
@@ -46,12 +42,7 @@ final class DefaultPropertyComponent extends JButton {
         super(parent.getElementAt(row));
         this.parent = parent;
         this.row = row;
-        addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateProperty();
-            }
-        });
+        addActionListener(e -> updateProperty());
         setEnabled(false);
         updateButtonText();
     }
@@ -74,11 +65,11 @@ final class DefaultPropertyComponent extends JButton {
         Object value = parent.getPropertyValue(row);
         if (value != null) {
             Window window = SwingUtilities.windowForComponent(this);
-            if (parent instanceof BeanPropertyModel 
-                    && ((BeanPropertyModel)parent).getPropertyDescriptor(row) instanceof IndexedPropertyDescriptor) {
-                PropertySheetDialog.show(window, true, 
-                        ((BeanPropertyModel)parent).getBean(), 
-                        (IndexedPropertyDescriptor) ((BeanPropertyModel)parent).getPropertyDescriptor(row));
+            if (parent instanceof BeanPropertyModel
+                    && ((BeanPropertyModel) parent).getPropertyDescriptor(row) instanceof IndexedPropertyDescriptor) {
+                PropertySheetDialog.show(window, true,
+                        ((BeanPropertyModel) parent).getBean(),
+                        (IndexedPropertyDescriptor) ((BeanPropertyModel) parent).getPropertyDescriptor(row));
             } else {
                 PropertySheetDialog.show(window, true, value);
             }

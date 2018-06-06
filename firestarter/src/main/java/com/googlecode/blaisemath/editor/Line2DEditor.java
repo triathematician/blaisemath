@@ -1,7 +1,3 @@
-/**
- * RectangleEditor.java
- * Created on Jul 2, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -29,9 +25,7 @@ import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
- * <p>
- *   Edits a rectangle: x, y, width, height.
- * </p>
+ * Edits a line: x1, y1, x2, y2.
  *
  * @author Elisha Peterson
  */

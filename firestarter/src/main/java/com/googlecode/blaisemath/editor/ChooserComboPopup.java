@@ -1,5 +1,3 @@
-/*
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -24,8 +22,6 @@ package com.googlecode.blaisemath.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
@@ -46,15 +42,12 @@ public class ChooserComboPopup extends JPopupMenu {
         s.buildChooser();
         p.add(s, BorderLayout.NORTH);
         JButton b = new JButton("Other ...");
-        b.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Color color = null;
-                color = JColorChooser.showDialog(getParent(), "Color Chooser", color);
-                ce.setNewValue(color);
-                ce.initEditorValue();
-                setVisible(false);
-            }
+        b.addActionListener(e -> {
+            Color color = null;
+            color = JColorChooser.showDialog(getParent(), "Color Chooser", color);
+            ce.setNewValue(color);
+            ce.initEditorValue();
+            setVisible(false);
         });
         p.add(b, BorderLayout.SOUTH);
         add(p);

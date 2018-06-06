@@ -1,7 +1,3 @@
-/**
- * NumberEditor.java
- * Created on Jun 30, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -32,9 +28,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * <p>
- *   Components for editing numbers, using spinners.
- * </p>
+ * Components for editing numbers, using spinners.
  *
  * @author Elisha Peterson
  */
@@ -46,12 +40,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
     public NumberEditor() {
         spinner = new JSpinner();
-        spinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                setNewValue(spinner.getValue());
-            }
-        });
+        spinner.addChangeListener(e -> setNewValue(spinner.getValue()));
     }
 
     @Override

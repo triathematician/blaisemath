@@ -1,7 +1,3 @@
-/**
- * DimensionEditor.java
- * Created on Jun 18, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -29,9 +25,7 @@ import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
- * <p>
- *   Edits a {@link Dimension} using 2 spinners.
- * </p>
+ * Edits a {@link Dimension} using 2 spinners.
  *
  * @author Elisha Peterson
  */

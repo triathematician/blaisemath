@@ -1,7 +1,3 @@
-/**
- * Point2DEditor.java
- * Created on Jun 18, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -29,9 +25,7 @@ import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
- * <p>
- *   Edits a single Point2D with event handling support.
- * </p>
+ * Edits a single Point2D with event handling support.
  *
  * @author Elisha Peterson
  */

@@ -1,8 +1,3 @@
-/*
- * PropertySheetDialog.java
- * Created on Aug 4, 2009, 12:47:50 PM
- */
-
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -25,22 +20,18 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-import com.google.common.base.Predicate;
 import java.awt.Frame;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.IndexedPropertyDescriptor;
+import java.util.function.Predicate;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 
 /**
- * <p>
- *   Shows a property sheet for a specified bean within a dialog box.
- * </p>
- * @author ae3263
+ * Shows a property sheet for a specified bean within a dialog box.
+ * @author Elisha Peterson
  */
 public class PropertySheetDialog extends javax.swing.JDialog {
     
@@ -191,12 +182,9 @@ public class PropertySheetDialog extends javax.swing.JDialog {
                 ), java.awt.BorderLayout.CENTER);
 
         JButton okButton = new JButton("Close");
-        okButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                dispose();
-            }
+        okButton.addActionListener(e -> {
+            setVisible(false);
+            dispose();
         });
         add(okButton, java.awt.BorderLayout.SOUTH);
 

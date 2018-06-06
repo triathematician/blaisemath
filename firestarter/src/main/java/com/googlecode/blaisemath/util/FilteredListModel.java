@@ -1,7 +1,3 @@
-/**
- * FilteredPropertyList.java
- * Created on Jul 3, 2009
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -24,36 +20,33 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-import com.google.common.base.Predicate;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import static java.util.stream.Collectors.toCollection;
 import javax.swing.AbstractListModel;
 
 /**
- * <p>
- *   {@code FilteredListModel} maintains an array of {@link PropertyDescriptor}s, as well
- *   as a vector representing a filtered version of this array.
- * </p>
+ * Maintains an array of {@link PropertyDescriptor}s, as well
+ * as a vector representing a filtered version of this array.
+ * 
  * @param <O> the type of the elements of this model
  *
  * @author Elisha Peterson
  */
 public class FilteredListModel<O> extends AbstractListModel<O> {
 
-    protected List<O> unfilteredItems = new ArrayList<O>();
-    private final List<O> filterItems = new ArrayList<O>();
+    protected List<O> unfilteredItems = new ArrayList<>();
+    private final List<O> filterItems = new ArrayList<>();
     
     /** Stores the present filter value. */
     protected Predicate<O> filter = null;
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
 
     public List<O> getUnfilteredItems() {
         return Collections.unmodifiableList(unfilteredItems);
@@ -64,7 +57,7 @@ public class FilteredListModel<O> extends AbstractListModel<O> {
      * @param items properties
      */
     public void setUnfilteredItems(List<O> items) {
-        this.unfilteredItems = new ArrayList<O>(items);
+        this.unfilteredItems = new ArrayList<>(items);
         refilter();
     }
     
@@ -102,7 +95,8 @@ public class FilteredListModel<O> extends AbstractListModel<O> {
     /** Refilters the list of properties based on the current criteria. */
     protected final void refilter() {
         if (filter != null) {
-            Set<O> unsorted = filter(unfilteredItems, filter);
+            Set<O> unsorted = unfilteredItems.stream()
+                    .filter(filter).collect(toCollection(LinkedHashSet::new));
             filterItems.clear();
             filterItems.addAll(unsorted);
         } else {
@@ -110,15 +104,5 @@ public class FilteredListModel<O> extends AbstractListModel<O> {
             filterItems.addAll(unfilteredItems);
         }
         fireContentsChanged(this, 0, getSize()+1);
-    }
-    
-    private static <T> Set<T> filter(Iterable<T> src, Predicate<? super T> filter) {
-        Set<T> res = new LinkedHashSet<T>();
-        for (T t : src) {
-            if (filter.apply(t) && !res.contains(t)) {
-                res.add(t);
-            }
-        }
-        return res;
     }
 }

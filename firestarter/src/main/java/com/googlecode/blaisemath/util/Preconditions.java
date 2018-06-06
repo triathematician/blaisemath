@@ -1,7 +1,3 @@
-/**
- * Preconditions.java
- * Created Sep 24, 2014
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -34,19 +30,6 @@ public class Preconditions {
    
     // utility class
     private Preconditions() {
-    }
-    
-    /**
-     * Throws an exception if argument is null
-     * @param arg the argument
-     * @return the argument, if it is not null
-     * @throws IllegalArgumentException if it is null
-     */
-    public static <T> T checkNotNull(T arg) {
-        if (arg == null) {
-            throw new IllegalArgumentException("Null argument: "+arg);
-        }
-        return arg;
     }
     
     /**
