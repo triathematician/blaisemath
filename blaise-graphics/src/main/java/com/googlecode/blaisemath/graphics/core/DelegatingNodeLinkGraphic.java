@@ -24,10 +24,10 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
+import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.AnchoredText;
-import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
  * 
  * @author Elisha Peterson
  */
-public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicComposite<G> {
+public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends GraphicComposite<G> {
     
     private static final int NODE_CACHE_SIZE = 20000;
 

@@ -123,7 +123,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         double height = font.getSize()*DOTS_PER_INCH/Toolkit.getDefaultToolkit().getScreenResolution();
         
         Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);
-        Point2D offset = style.getPoint(Styles.OFFSET, new Point());
+        Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());
         assert offset != null;
         return textAnchor.anchoredRectangle(
                 primitive.getX() + offset.getX(),

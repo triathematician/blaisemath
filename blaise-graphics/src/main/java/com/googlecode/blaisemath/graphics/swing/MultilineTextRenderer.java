@@ -94,7 +94,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         
         double lineHeight = font.getLineMetrics("", frc).getHeight();
         Rectangle2D bounds = boundingBox(text, style);  
-        Point2D offset = style.getPoint(Styles.OFFSET, new Point());
+        Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());
         assert offset != null;
         double x0 = text.getX() + offset.getX();
         double y0 = bounds.getMaxY();
@@ -133,7 +133,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         height -= (lineHeight - font.getSize()*72/Toolkit.getDefaultToolkit().getScreenResolution());
         
         Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);       
-        Point2D offset = style.getPoint(Styles.OFFSET, new Point());
+        Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());
         assert offset != null;
         Point2D shift = textAnchor.getRectOffset(width, height);
         return new Rectangle2D.Double(

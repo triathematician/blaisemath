@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 elisha.
+ * Copyright 2014 Elisha.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.googlecode.blaisemath.style;
 
 /*
  * #%L
- * blaise-graphics
+ * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2014 - 2018 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,32 +37,32 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import static org.junit.Assert.assertEquals;
+import com.googlecode.blaisemath.style.Marker;
+import com.googlecode.blaisemath.style.Markers;
+import java.awt.Point;
+import java.awt.Shape;
+import java.util.List;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
  *
- * @author elisha
+ * @author Elisha
  */
-public class AttributeSetTest {
+public class MarkersTest extends TestCase {
     
-    @Test
-    public void testOf() throws Exception {
-        AttributeSet.of("key", null);
-        // shouldn't throw an exception to have null values
-        AttributeSet.of("key", "val");
+    public MarkersTest() {
     }
-    
+
     @Test
-    public void testNullWithParent() {
-        AttributeSet par = AttributeSet.of("key", "val");
-        
-        AttributeSet set1 = AttributeSet.createWithParent(par);
-        assertEquals("val", set1.get("key"));
-        
-        AttributeSet set2 = AttributeSet.createWithParent(par)
-                .and("key", null);
-        assertEquals(null, set2.get("key"));
+    public void testGetAvailableMarkers() {
+        System.out.println("getAvailableMarkers");
+        List<Marker> result = Markers.getAvailableMarkers();
+        assertFalse(result.isEmpty());
+        for (Marker m : result) {
+            Shape s = m.create(new Point(), .5, 1f);
+            assertNotNull(s);
+        }
     }
     
 }

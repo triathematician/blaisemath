@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.graphics.testui;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Maps;
+import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
@@ -53,8 +54,8 @@ import com.googlecode.blaisemath.style.editor.BasicPointStyleEditor;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
-import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
+import com.sun.javafx.geom.Edge;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -286,49 +287,38 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         for (int i = 0; i < 15; i++) {
             pts.put(i, randomPoint());
         }         
-        Set<Edge<Integer>> edges = new HashSet<Edge<Integer>>();
+        Set<EndpointPair<Integer>> edges = new HashSet<>();
         for (int i = 0; i < pts.size(); i++) {
             int n = (int) (Math.random()*6);
             for (int j = 0; j < n; j++) {
-                edges.add(new Edge<Integer>(i, (int)(Math.random()*pts.size())));
+                edges.add(EndpointPair.unordered(i, (int)(Math.random()*pts.size())));
             }
         }
         // create graphic
-        DelegatingNodeLinkGraphic<Integer,Edge<Integer>,Graphics2D> gr = JGraphics.nodeLink();
+        DelegatingNodeLinkGraphic<Integer,EndpointPair<Integer>,Graphics2D> gr = JGraphics.nodeLink();
         gr.setDragEnabled(true);
         gr.setNodeLocations(pts);
-        gr.getNodeStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
-            public AttributeSet apply(Integer src) {
-                Point2D pt = pts.get(src);
-                int yy = (int) Math.min(pt.getX()/3, 255);
-                return AttributeSet.of(Styles.FILL, new Color(yy, 0, 255-yy),
-                        Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
-            }
+        gr.getNodeStyler().setStyleDelegate((Integer src) -> {
+            Point2D pt = pts.get(src);
+            int yy = (int) Math.min(pt.getX()/3, 255);
+            return AttributeSet.of(Styles.FILL, new Color(yy, 0, 255-yy),
+                    Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
         });
-        gr.getNodeStyler().setLabelDelegate(new Function<Integer, String>() {
-            public String apply(Integer src) {
-                Point2D pt = pts.get(src);
-                return String.format("(%.1f,%.1f)", pt.getX(), pt.getY());
-            }
+        gr.getNodeStyler().setLabelDelegate((Integer src) -> {
+            Point2D pt = pts.get(src);
+            return String.format("(%.1f,%.1f)", pt.getX(), pt.getY());
         });
-        gr.getNodeStyler().setLabelStyleDelegate(new Function<Integer, AttributeSet>(){
-            AttributeSet bss = Styles.defaultTextStyle();
-            public AttributeSet apply(Integer src) {
-                return bss;                
-            }
-        });
+        gr.getNodeStyler().setLabelStyleDelegate((Integer src) -> Styles.defaultTextStyle());
         gr.setEdgeSet(edges);
-        gr.getEdgeStyler().setStyleDelegate(new Function<Edge<Integer>,AttributeSet>(){
-            public AttributeSet apply(Edge<Integer> src) {
-                Point2D src0 = pts.get(src.getNode1()), src1 = pts.get(src.getNode2());
-                int dx = (int) (src0.getX() - src1.getX());
-                dx = Math.min(Math.abs(dx/2), 255);
-                int dy = (int) (src0.getY() - src1.getY());
-                dy = Math.min(Math.abs(dy/3), 255);
-                
-                return AttributeSet.of(Styles.STROKE, new Color(dx, dy, 255-dy),
-                        Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
-            }
+        gr.getEdgeStyler().setStyleDelegate((EndpointPair<Integer> src) -> {
+            Point2D src0 = pts.get(src.nodeU());
+            Point2D src1 = pts.get(src.nodeV());
+            int dx = (int) (src0.getX() - src1.getX());
+            dx = Math.min(Math.abs(dx/2), 255);
+            int dy = (int) (src0.getY() - src1.getY());
+            dy = Math.min(Math.abs(dy/3), 255);
+            return AttributeSet.of(Styles.STROKE, new Color(dx, dy, 255-dy),
+                    Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
         });
         root1.addGraphic(gr);
     }

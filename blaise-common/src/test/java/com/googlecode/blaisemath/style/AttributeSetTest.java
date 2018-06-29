@@ -1,10 +1,31 @@
 package com.googlecode.blaisemath.style;
 
-import com.google.common.base.Predicate;
+/*-
+ * #%L
+ * blaise-common
+ * --
+ * Copyright (C) 2014 - 2018 Elisha Peterson
+ * --
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.util.Map;
-import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -40,13 +61,13 @@ public class AttributeSetTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        AttributeSet instance = new AttributeSet();
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("{  }", new AttributeSet().toString());
+        assertEquals("{ a:1; b:2 }", AttributeSet.of("a", 1, "b", 2).toString());
+        assertEquals("{ a:true }", AttributeSet.of("a", true).toString());
+        assertEquals("{ a:what }", AttributeSet.of("a", "what").toString());
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="FACTORY/BUILDER TESTS">
 
     /**
      * Test of create method, of class AttributeSet.
@@ -54,26 +75,25 @@ public class AttributeSetTest {
     @Test
     public void testCreate() {
         System.out.println("create");
-        Map map = null;
-        AttributeSet expResult = null;
-        AttributeSet result = AttributeSet.create(map);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("{ a:1 }", AttributeSet.create(ImmutableMap.of("a", 1)).toString());
     }
 
     /**
-     * Test of createWithParent method, of class AttributeSet.
+     * Test of withParent method, of class AttributeSet.
      */
     @Test
-    public void testCreateWithParent() {
-        System.out.println("createWithParent");
-        AttributeSet parent = null;
-        AttributeSet expResult = null;
-        AttributeSet result = AttributeSet.withParent(parent);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testWithParent() {
+        System.out.println("withParent");
+        assertEquals(null, AttributeSet.withParent(null).getParent().orElse(null));
+        assertEquals("{ a:1 }", AttributeSet.withParent(AttributeSet.of("a", 1)).getParent().get().toString());
+        
+        AttributeSet par = AttributeSet.of("key", "val");
+        AttributeSet set1 = AttributeSet.withParent(par);
+        assertEquals("val", set1.get("key"));
+        
+        AttributeSet set2 = AttributeSet.withParent(par)
+                .and("key", null);
+        assertEquals(null, set2.get("key"));
     }
 
     /**
@@ -82,12 +102,11 @@ public class AttributeSetTest {
     @Test
     public void testCopyOf() {
         System.out.println("copyOf");
-        AttributeSet set = null;
-        AttributeSet expResult = null;
-        AttributeSet result = AttributeSet.copyOf(set);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet set = AttributeSet.withParent(AttributeSet.of("a", 1)).and("b", 2);
+        AttributeSet copy = AttributeSet.copyOf(set);
+        assertFalse(set == copy);
+        assertTrue(set.getAttributeMap().equals(copy.getAttributeMap()));
+        assertTrue(set.getParent().get() == copy.getParent().get());
     }
 
     /**
@@ -96,12 +115,10 @@ public class AttributeSetTest {
     @Test
     public void testFlatCopyOf() {
         System.out.println("flatCopyOf");
-        AttributeSet set = null;
-        AttributeSet expResult = null;
+        AttributeSet set = AttributeSet.withParent(AttributeSet.of("a", 1)).and("b", 2);
         AttributeSet result = AttributeSet.flatCopyOf(set);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(Sets.newHashSet("b"), set.getAttributes());
+        assertEquals(Sets.newHashSet("a", "b"), result.getAttributes());
     }
 
     /**
@@ -110,13 +127,10 @@ public class AttributeSetTest {
     @Test
     public void testCopy_AttributeSet_StringArr() {
         System.out.println("copy");
-        AttributeSet sty = null;
-        String[] keys = null;
-        AttributeSet expResult = null;
-        AttributeSet result = AttributeSet.copy(sty, keys);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet a = AttributeSet.withParent(new AttributeSet()).and("a", 1).and("b", 2).and("c", 3);
+        AttributeSet b = AttributeSet.copy(a, "a", "b");
+        assertEquals(ImmutableSet.of("a", "b"), b.getAttributes());
+        assertFalse(b.getParent().isPresent());
     }
 
     /**
@@ -125,13 +139,7 @@ public class AttributeSetTest {
     @Test
     public void testOf_String_Object() {
         System.out.println("of");
-        String k1 = "";
-        Object v1 = null;
-        AttributeSet expResult = null;
-        AttributeSet result = AttributeSet.of(k1, v1);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("{ a:1 }", AttributeSet.of("a", 1).toString());
     }
 
     /**
@@ -140,15 +148,7 @@ public class AttributeSetTest {
     @Test
     public void testOf_4args() {
         System.out.println("of");
-        String k1 = "";
-        Object v1 = null;
-        String k2 = "";
-        Object v2 = null;
-        AttributeSet expResult = null;
-        AttributeSet result = AttributeSet.of(k1, v1, k2, v2);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("{ a:1; b:2 }", AttributeSet.of("a", 1, "b", 2).toString());
     }
 
     /**
@@ -157,17 +157,7 @@ public class AttributeSetTest {
     @Test
     public void testOf_6args() {
         System.out.println("of");
-        String k1 = "";
-        Object v1 = null;
-        String k2 = "";
-        Object v2 = null;
-        String k3 = "";
-        Object v3 = null;
-        AttributeSet expResult = null;
-        AttributeSet result = AttributeSet.of(k1, v1, k2, v2, k3, v3);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("{ a:1; b:2; c:3 }", AttributeSet.of("a", 1, "b", 2, "c", 3).toString());
     }
 
     /**
@@ -176,14 +166,7 @@ public class AttributeSetTest {
     @Test
     public void testAnd() {
         System.out.println("and");
-        String key = "";
-        Object val = null;
-        AttributeSet instance = new AttributeSet();
-        AttributeSet expResult = null;
-        AttributeSet result = instance.and(key, val);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("{ a:1 }", new AttributeSet().and("a", 1).toString());
     }
 
     /**
@@ -192,12 +175,15 @@ public class AttributeSetTest {
     @Test
     public void testImmutable() {
         System.out.println("immutable");
-        AttributeSet instance = new AttributeSet();
-        AttributeSet expResult = null;
+        AttributeSet instance = AttributeSet.of("a", 1);
         AttributeSet result = instance.immutable();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        try {
+            result.remove("a");
+            fail();
+        } catch (UnsupportedOperationException x) {
+            return;
+        }
+        fail();
     }
 
     /**
@@ -206,13 +192,17 @@ public class AttributeSetTest {
     @Test
     public void testImmutableWithParent() {
         System.out.println("immutableWithParent");
-        AttributeSet par = null;
-        AttributeSet instance = new AttributeSet();
-        AttributeSet expResult = null;
+        AttributeSet instance = AttributeSet.of("a", 1);
+        AttributeSet par = new AttributeSet();
         AttributeSet result = instance.immutableWithParent(par);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        try {
+            result.remove("a");
+            fail();
+        } catch (UnsupportedOperationException x) {
+            return;
+        }
+        fail();
+        assertEquals(par, result.getParent().get());
     }
 
     /**
@@ -221,12 +211,11 @@ public class AttributeSetTest {
     @Test
     public void testCopy_0args() {
         System.out.println("copy");
-        AttributeSet instance = new AttributeSet();
-        AttributeSet expResult = null;
+        AttributeSet par = new AttributeSet();
+        AttributeSet instance = AttributeSet.withParent(par).and("a", 1);
         AttributeSet result = instance.copy();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(par, result.getParent().get());
+        assertEquals(1, result.get("a"));
     }
 
     /**
@@ -235,17 +224,18 @@ public class AttributeSetTest {
     @Test
     public void testFlatCopy() {
         System.out.println("flatCopy");
-        AttributeSet instance = new AttributeSet();
-        AttributeSet expResult = null;
+        AttributeSet par = AttributeSet.of("b", 2);
+        AttributeSet instance = AttributeSet.withParent(par).and("a", 1);
         AttributeSet result = instance.flatCopy();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(null, result.getParent().orElse(null));
+        assertEquals(ImmutableSet.of("a", "b"), result.getAttributes());
+        assertEquals(ImmutableSet.of("a", "b"), result.getAllAttributes());
     }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="ACCESSOR TESTS">
 
-    /**
-     * Test of getParent method, of class AttributeSet.
-     */
     @Test
     public void testGetParent() {
         System.out.println("getParent");
@@ -255,46 +245,19 @@ public class AttributeSetTest {
         assertTrue(instance2.getParent().isPresent());
     }
 
-    /**
-     * Test of getAttributes method, of class AttributeSet.
-     */
-    @Test
-    public void testGetAttributes() {
-        System.out.println("getAttributes");
-        AttributeSet instance = new AttributeSet();
-        Set<String> expResult = null;
-        Set<String> result = instance.getAttributes();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAllAttributes method, of class AttributeSet.
-     */
     @Test
     public void testGetAllAttributes_0args() {
         System.out.println("getAllAttributes");
-        AttributeSet instance = new AttributeSet();
-        Set<String> expResult = null;
-        Set<String> result = instance.getAllAttributes();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet par = AttributeSet.of("b", 2);
+        AttributeSet instance = AttributeSet.withParent(par).and("a", 1);
+        assertEquals(ImmutableSet.of("a", "b"), instance.getAllAttributes());
     }
 
-    /**
-     * Test of getAttributeMap method, of class AttributeSet.
-     */
     @Test
     public void testGetAttributeMap() {
         System.out.println("getAttributeMap");
-        AttributeSet instance = new AttributeSet();
-        Map<String, Object> expResult = null;
-        Map<String, Object> result = instance.getAttributeMap();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", 1);
+        assertEquals(ImmutableMap.of("a", 1), instance.getAttributeMap());
     }
 
     /**
@@ -303,13 +266,28 @@ public class AttributeSetTest {
     @Test
     public void testGetAllAttributes_Class() {
         System.out.println("getAllAttributes");
-        Class type = null;
-        AttributeSet instance = new AttributeSet();
-        Set<String> expResult = null;
-        Set<String> result = instance.getAllAttributes(type);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", 1, "b", 3.0);
+        assertEquals(ImmutableSet.of("a"), instance.getAllAttributes(Integer.class));
+    }
+
+    /**
+     * Test of getAttributes method, of class AttributeSet.
+     */
+    @Test
+    public void testGetAttributes_0args() {
+        AttributeSet par = AttributeSet.of("b", 2);
+        AttributeSet instance = AttributeSet.withParent(par).and("a", 1);
+        assertEquals(ImmutableSet.of("a"), instance.getAttributes());
+    }
+
+    /**
+     * Test of getAttributes method, of class AttributeSet.
+     */
+    @Test
+    public void testGetAttributes_Predicate() {
+        System.out.println("getAttributes");
+        AttributeSet instance = AttributeSet.of("a", 1, "a2", 2, "b", 3);
+        assertEquals(ImmutableSet.of("a", "a2"), instance.getAttributes(s -> s.startsWith("a")));
     }
 
     /**
@@ -348,10 +326,11 @@ public class AttributeSetTest {
         assertEquals(null, as.getOrDefault("c", -1));
         assertEquals(1, as.getOrDefault("d", -1));
     }
+    
+    //</editor-fold>
 
-    /**
-     * Test of put method, of class AttributeSet.
-     */
+    //<editor-fold defaultstate="collapsed" desc="MUTATOR TESTS">
+    
     @Test
     public void testPut() {
         System.out.println("put");
@@ -362,9 +341,6 @@ public class AttributeSetTest {
         assertTrue(as.contains("a"));
     }
 
-    /**
-     * Test of putIfAbsent method, of class AttributeSet.
-     */
     @Test
     public void testPutIfAbsent() {
         System.out.println("putIfAbsent");
@@ -375,218 +351,149 @@ public class AttributeSetTest {
         assertEquals(3, as.get("b"));
     }
 
-    /**
-     * Test of putAll method, of class AttributeSet.
-     */
     @Test
     public void testPutAll() {
         System.out.println("putAll");
         AttributeSet instance = new AttributeSet();
-        instance.putAll(null);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.putAll(ImmutableMap.of("a", 1, "b", "bb"));
+        assertEquals("{ a:1; b:bb }", instance.toString());
     }
 
-    /**
-     * Test of remove method, of class AttributeSet.
-     */
     @Test
     public void testRemove() {
         System.out.println("remove");
-        String key = "";
-        AttributeSet instance = new AttributeSet();
-        Object expResult = null;
-        Object result = instance.remove(key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", 1);
+        assertEquals(1, instance.remove("a"));
+        assertEquals(null, instance.get("a"));
     }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="TYPED ACCESSOR TESTS">
 
-    /**
-     * Test of getString method, of class AttributeSet.
-     */
     @Test
     public void testGetString_String() {
         System.out.println("getString");
-        String key = "";
-        AttributeSet instance = new AttributeSet();
-        String expResult = "";
-        String result = instance.getString(key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", 1, "b", "2", "c", null);
+        assertEquals("1", instance.getString("a"));
+        assertEquals("2", instance.getString("b"));
+        assertEquals(null, instance.getString("c"));
+        assertEquals(null, instance.getString("d"));
     }
 
-    /**
-     * Test of getString method, of class AttributeSet.
-     */
     @Test
     public void testGetString_String_String() {
         System.out.println("getString");
-        String key = "";
-        String def = "";
-        AttributeSet instance = new AttributeSet();
-        String expResult = "";
-        String result = instance.getString(key, def);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", 1, "b", "2", "c", null);
+        assertEquals("1", instance.getString("a", "x"));
+        assertEquals("x", instance.getString("d", "x"));
     }
 
-    /**
-     * Test of getColor method, of class AttributeSet.
-     */
-    @Test
-    public void testGetColor_String() {
-        System.out.println("getColor");
-        String key = "";
-        AttributeSet instance = new AttributeSet();
-        Color expResult = null;
-        Color result = instance.getColor(key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getColor method, of class AttributeSet.
-     */
-    @Test
-    public void testGetColor_String_Color() {
-        System.out.println("getColor");
-        String key = "";
-        Color def = null;
-        AttributeSet instance = new AttributeSet();
-        Color expResult = null;
-        Color result = instance.getColor(key, def);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getPoint method, of class AttributeSet.
-     */
-    @Test
-    public void testGetPoint_String() {
-        System.out.println("getPoint");
-        String key = "";
-        AttributeSet instance = new AttributeSet();
-        Point2D expResult = null;
-        Point2D result = instance.getPoint(key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getPoint method, of class AttributeSet.
-     */
-    @Test
-    public void testGetPoint_String_Point2D() {
-        System.out.println("getPoint");
-        String key = "";
-        Point2D def = null;
-        AttributeSet instance = new AttributeSet();
-        Point2D expResult = null;
-        Point2D result = instance.getPoint(key, def);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getBoolean method, of class AttributeSet.
-     */
     @Test
     public void testGetBoolean_String() {
         System.out.println("getBoolean");
-        String key = "";
-        AttributeSet instance = new AttributeSet();
-        Boolean expResult = null;
-        Boolean result = instance.getBoolean(key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", "true", "b", false, "c", null).and("d", 1);
+        assertEquals(true, instance.getBoolean("a"));
+        assertEquals(false, instance.getBoolean("b"));
+        assertEquals(null, instance.getBoolean("c"));
+        assertEquals(null, instance.getBoolean("d"));
+        assertEquals(null, instance.getBoolean("e"));
     }
 
-    /**
-     * Test of getBoolean method, of class AttributeSet.
-     */
     @Test
     public void testGetBoolean_String_Boolean() {
         System.out.println("getBoolean");
-        String key = "";
-        Boolean def = null;
-        AttributeSet instance = new AttributeSet();
-        Boolean expResult = null;
-        Boolean result = instance.getBoolean(key, def);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", "true");
+        assertEquals(true, instance.getBoolean("a", false));
+        assertEquals(false, instance.getBoolean("b", false));
     }
-
-    /**
-     * Test of getFloat method, of class AttributeSet.
-     */
-    @Test
-    public void testGetFloat_String() {
-        System.out.println("getFloat");
-        String key = "";
-        AttributeSet instance = new AttributeSet();
-        Float expResult = null;
-        Float result = instance.getFloat(key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getFloat method, of class AttributeSet.
-     */
-    @Test
-    public void testGetFloat_String_Float() {
-        System.out.println("getFloat");
-        String key = "";
-        Float def = null;
-        AttributeSet instance = new AttributeSet();
-        Float expResult = null;
-        Float result = instance.getFloat(key, def);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getInteger method, of class AttributeSet.
-     */
+    
     @Test
     public void testGetInteger_String() {
         System.out.println("getInteger");
-        String key = "";
-        AttributeSet instance = new AttributeSet();
-        Integer expResult = null;
-        Integer result = instance.getInteger(key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", "1", "b", 2, "c", null).and("d", 3.0);
+        assertEquals(1, (int) instance.getInteger("a"));
+        assertEquals(2, (int) instance.getInteger("b"));
+        assertEquals(null, instance.getInteger("c"));
+        assertEquals(3, (int) instance.getInteger("d"));
+        assertEquals(null, instance.getInteger("e"));
     }
 
-    /**
-     * Test of getInteger method, of class AttributeSet.
-     */
     @Test
     public void testGetInteger_String_Integer() {
         System.out.println("getInteger");
-        String key = "";
-        Integer def = null;
-        AttributeSet instance = new AttributeSet();
-        Integer expResult = null;
-        Integer result = instance.getInteger(key, def);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        AttributeSet instance = AttributeSet.of("a", "1");
+        assertEquals(1, (int) instance.getInteger("a", 2));
+        assertEquals(2, (int) instance.getInteger("b", 2));
     }
+
+    @Test
+    public void testGetFloat_String() {
+        System.out.println("getFloat");
+        AttributeSet instance = AttributeSet.of("a", "1", "b", 2f, "c", null).and("d", 3);
+        assertEquals(new Float(1), instance.getFloat("a"));
+        assertEquals(new Float(2), instance.getFloat("b"));
+        assertEquals(null, instance.getFloat("c"));
+        assertEquals(new Float(3), instance.getFloat("d"));
+        assertEquals(null, instance.getFloat("e"));
+    }
+
+    @Test
+    public void testGetFloat_String_Float() {
+        System.out.println("getFloat");
+        AttributeSet instance = AttributeSet.of("a", "1");
+        assertEquals(new Float(1), instance.getFloat("a", 2f));
+        assertEquals(new Float(2), instance.getFloat("b", 2f));
+    }
+
+    @Test
+    public void testGetColor_String() {
+        System.out.println("getColor");
+        AttributeSet instance = AttributeSet.of("a", "red", "b", Color.red, "c", null).and("d", 1);
+        assertEquals(Color.red, instance.getColor("a"));
+        assertEquals(Color.red, instance.getColor("b"));
+        assertEquals(null, instance.getColor("c"));
+        assertEquals(null, instance.getColor("d"));
+        assertEquals(null, instance.getColor("e"));
+    }
+
+    @Test
+    public void testGetColor_String_Color() {
+        System.out.println("getColor");
+        AttributeSet instance = AttributeSet.of("a", "red", "b", Color.red, "c", null).and("d", 1);
+        assertEquals(Color.red, instance.getColor("a", Color.black));
+        assertEquals(Color.red, instance.getColor("b", Color.black));
+        assertEquals(Color.black, instance.getColor("c", Color.black));
+        assertEquals(Color.black, instance.getColor("d", Color.black));
+        assertEquals(Color.black, instance.getColor("e", Color.black));
+    }
+
+    @Test
+    public void testGetPoint_String() {
+        System.out.println("getPoint");
+        AttributeSet instance = AttributeSet.of("a", new Point(1, 2), "b", Color.red, "c", null).and("d", "point(1,2)");
+        assertEquals(new Point(1, 2), instance.getPoint2D("a"));
+        assertEquals(null, instance.getPoint2D("b"));
+        assertEquals(null, instance.getPoint2D("c"));
+//        assertEquals(new Point(1, 2), instance.getPoint2D("d"));
+        assertEquals(null, instance.getPoint2D("e"));
+    }
+
+    @Test
+    public void testGetPoint_String_Point2D() {
+        System.out.println("getPoint");
+        AttributeSet instance = AttributeSet.of("a", new Point(1, 2), "b", Color.red, "c", null).and("d", "point(1,2)");
+        Point def = new Point(3, 4);
+        assertEquals(new Point(1, 2), instance.getPoint2D("a", def));
+        assertEquals(def, instance.getPoint2D("b", def));
+        assertEquals(def, instance.getPoint2D("c", def));
+//        assertEquals(new Point(1, 2), instance.getPoint2D("d", def));
+        assertEquals(def, instance.getPoint2D("e", def));
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="CHANGE EVENT TESTS">
 
     /**
      * Test of addChangeListener method, of class AttributeSet.
@@ -614,48 +521,7 @@ public class AttributeSetTest {
         System.out.println("fireStateChanged");
         // no test -- boilerplate code
     }
-
-    /**
-     * Test of withParent method, of class AttributeSet.
-     */
-    @Test
-    public void testWithParent() {
-        System.out.println("withParent");
-        AttributeSet parent = null;
-        AttributeSet expResult = null;
-        AttributeSet result = AttributeSet.withParent(parent);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAttributes method, of class AttributeSet.
-     */
-    @Test
-    public void testGetAttributes_0args() {
-        System.out.println("getAttributes");
-        AttributeSet instance = new AttributeSet();
-        Set<String> expResult = null;
-        Set<String> result = instance.getAttributes();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAttributes method, of class AttributeSet.
-     */
-    @Test
-    public void testGetAttributes_Predicate() {
-        System.out.println("getAttributes");
-        Predicate<String> filter = null;
-        AttributeSet instance = new AttributeSet();
-        Set<String> expResult = null;
-        Set<String> result = instance.getAttributes(filter);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+    
+    //</editor-fold>
     
 }

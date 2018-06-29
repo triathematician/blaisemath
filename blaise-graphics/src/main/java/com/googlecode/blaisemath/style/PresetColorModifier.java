@@ -40,10 +40,10 @@ public class PresetColorModifier implements StyleModifier {
     public AttributeSet apply(AttributeSet style, AttributeSet hints) {
         AttributeSet res = style;
         if (hints.contains(StyleHints.HILITE_HINT)) {
-            res = AttributeSet.createWithParent(res).and(Styles.FILL, highlightFill).and(Styles.STROKE, highlightStroke);
+            res = AttributeSet.withParent(res).and(Styles.FILL, highlightFill).and(Styles.STROKE, highlightStroke);
         }
         if (hints.contains(StyleHints.SELECTED_HINT)) {
-            res = AttributeSet.createWithParent(res).and(Styles.FILL, selectFill).and(Styles.STROKE, selectStroke);
+            res = AttributeSet.withParent(res).and(Styles.FILL, selectFill).and(Styles.STROKE, selectStroke);
         }
         return res;
     }

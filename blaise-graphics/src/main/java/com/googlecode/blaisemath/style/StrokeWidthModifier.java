@@ -32,7 +32,7 @@ public class StrokeWidthModifier implements StyleModifier {
 
     @Override
     public AttributeSet apply(AttributeSet style, AttributeSet hints) {
-        return AttributeSet.createWithParent(style).and(Styles.STROKE_WIDTH,
+        return AttributeSet.withParent(style).and(Styles.STROKE_WIDTH,
                 StyleHints.modifyStrokeWidthDefault(style.getFloat(Styles.STROKE_WIDTH), hints));
     }
     

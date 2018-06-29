@@ -20,6 +20,7 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -32,7 +33,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -63,7 +63,7 @@ public class AttributeSet {
 
     @Override
     public String toString() {
-        return "AttributeSet " + attributeMap;
+        return "{ " + Joiner.on("; ").withKeyValueSeparator(":").join(attributeMap) + " }";
     }
 
     //<editor-fold defaultstate="collapsed" desc="FACTORY METHODS">
@@ -398,7 +398,7 @@ public class AttributeSet {
 
     @Nullable
     public String getString(String key, String def) {
-        return TypeConverter.convert(key, String.class, def);
+        return TypeConverter.convert(get(key), String.class, def);
     }
 
     /**
@@ -420,7 +420,7 @@ public class AttributeSet {
      */
     @Nullable
     public Boolean getBoolean(String key, @Nullable Boolean def) {
-        return TypeConverter.convert(key, Boolean.class, def);
+        return TypeConverter.convert(get(key), Boolean.class, def);
     }
     
     /**
@@ -436,7 +436,7 @@ public class AttributeSet {
 
     @Nullable
     public Integer getInteger(String key, @Nullable Integer def) {
-        return TypeConverter.convert(key, Integer.class, def);
+        return TypeConverter.convert(get(key), Integer.class, def);
     }
 
     /**
@@ -452,7 +452,7 @@ public class AttributeSet {
 
     @Nullable
     public Float getFloat(String key, @Nullable Float def) {
-        return TypeConverter.convert(key, Float.class, def);
+        return TypeConverter.convert(get(key), Float.class, def);
     }
 
     /**
@@ -468,7 +468,7 @@ public class AttributeSet {
 
     @Nullable
     public Double getDouble(String key, @Nullable Double def) {
-        return TypeConverter.convert(key, Double.class, def);
+        return TypeConverter.convert(get(key), Double.class, def);
     }
     
     /**
@@ -484,7 +484,7 @@ public class AttributeSet {
     
     @Nullable
     public Color getColor(String key, @Nullable Color def) {
-        return TypeConverter.convert(key, Color.class, def);
+        return TypeConverter.convert(get(key), Color.class, def);
     }
     
     @Nullable
@@ -494,7 +494,7 @@ public class AttributeSet {
     
     @Nullable
     public Point2D getPoint2D(String key, @Nullable Point2D def) {
-        return TypeConverter.convert(key, Point2D.class, def);
+        return TypeConverter.convert(get(key), Point2D.class, def);
     }
     
     //</editor-fold>

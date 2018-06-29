@@ -1,8 +1,3 @@
-/**
- * DelegatingEdgeSetGraphic.java
- * Created Aug 28, 2012
- */
-
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -30,10 +25,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
+import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
@@ -41,10 +36,6 @@ import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -64,7 +55,7 @@ import javax.swing.SwingUtilities;
  * 
  * @author elisha
  */
-public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComposite<G> {
+public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends GraphicComposite<G> {
 
     private static final Logger LOG = Logger.getLogger(DelegatingEdgeSetGraphic.class.getName());
     public static final String EDGE_RENDERER_PROP = "edgeRenderer";
@@ -117,12 +108,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     @InvokedFromThread("unknown")
     private void handleCoordinateChange(final CoordinateChangeEvent<S,Point2D> evt) {
         updateQueue.add(evt);
-        BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
-            @Override
-            public void run() {
-                processNextCoordinateChangeEvent();
-            }
-        });
+        BSwingUtilities.invokeOnEventDispatchThread(this::processNextCoordinateChangeEvent);
     }
     
     @InvokedFromThread("EDT")
@@ -154,8 +140,8 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
         List<Graphic<G>> addMe = Lists.newArrayList();
         for (E edge : Sets.newLinkedHashSet(edges.keySet())) {
             DelegatingPrimitiveGraphic<E,Shape,G> dsg = edges.get(edge);
-            Point2D p1 = locs.get(edge.getNode1());
-            Point2D p2 = locs.get(edge.getNode2());
+            Point2D p1 = locs.get(edge.nodeU());
+            Point2D p2 = locs.get(edge.nodeV());
             if (p1 == null || p2 == null) {
                 if (dsg != null) {
                     removeMe.add(dsg);
@@ -164,7 +150,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             } else {
                 Line2D.Double line = new Line2D.Double(p1, p2);
                 if (dsg == null) {
-                    dsg = new DelegatingPrimitiveGraphic<E,Shape,G>(edge, line,
+                    dsg = new DelegatingPrimitiveGraphic<>(edge, line,
                         edgeStyler, edgeRenderer);
                     edges.put(edge, dsg);
                     dsg.setObjectStyler(edgeStyler);

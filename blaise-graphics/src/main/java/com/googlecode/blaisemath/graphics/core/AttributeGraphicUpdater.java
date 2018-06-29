@@ -1,7 +1,3 @@
-/**
- * AttributeGraphicUpdater.java
- * Created on Mar 23, 2015
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*

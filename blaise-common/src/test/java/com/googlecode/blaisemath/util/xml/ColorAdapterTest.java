@@ -30,23 +30,17 @@ import junit.framework.TestCase;
  */
 public class ColorAdapterTest extends TestCase {
 
-    /**
-     * Test of marshal method, of class ColorAdapter.
-     */
-    public void testMarshal() throws Exception {
+    public void testMarshal() {
         System.out.println("marshal");
         ColorAdapter ca = new ColorAdapter();
         assertEquals("null", ca.marshal(null));
         assertEquals("#ff0000", ca.marshal(Color.red));
         assertEquals("#0000ff", ca.marshal(Color.blue));
-        assertEquals("#c0ff8080", ca.marshal(new Color(255,128,128,192)));
+        assertEquals("#ff8080c0", ca.marshal(new Color(255,128,128,192)));
         assertEquals("#00000000", ca.marshal(new Color(0,0,0,0)));
     }
 
-    /**
-     * Test of unmarshal method, of class ColorAdapter.
-     */
-    public void testUnmarshal() throws Exception {
+    public void testUnmarshal() {
         System.out.println("unmarshal");
         ColorAdapter ca = new ColorAdapter();
         assertEquals(null, ca.unmarshal(null));

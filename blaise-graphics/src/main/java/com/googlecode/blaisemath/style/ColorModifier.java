@@ -34,7 +34,7 @@ public class ColorModifier implements StyleModifier {
 
     @Override
     public AttributeSet apply(AttributeSet style, AttributeSet hints) {
-        AttributeSet res = AttributeSet.createWithParent(style);
+        AttributeSet res = AttributeSet.withParent(style);
         for (String key : style.getAllAttributes(Color.class)) {
             res.put(key, StyleHints.modifyColorsDefault(style.getColor(key), hints));
         }
