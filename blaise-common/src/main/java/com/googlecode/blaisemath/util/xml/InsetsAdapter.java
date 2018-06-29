@@ -1,7 +1,3 @@
-/*
- * InsetsAdapter.java
- * Created on Aug 26, 2013
- */
 package com.googlecode.blaisemath.util.xml;
 
 /*
@@ -40,6 +36,8 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  */
 public class InsetsAdapter extends XmlAdapter<String,Insets> {
 
+    private static final Logger LOG = Logger.getLogger(InsetsAdapter.class.getName());
+
     @Override
     public Insets unmarshal(String v) throws Exception {
         if (Strings.isNullOrEmpty(v)) {
@@ -56,8 +54,7 @@ public class InsetsAdapter extends XmlAdapter<String,Insets> {
                 Integer r = Integer.valueOf(kv.get("r"));
                 return new Insets(t, l, b, r);
             } catch (NumberFormatException x) {
-                Logger.getLogger(InsetsAdapter.class.getName()).log(Level.FINEST,
-                        "Not an integer", x);
+                LOG.log(Level.FINEST, "Not an integer", x);
                 return null;
             }
         } else {

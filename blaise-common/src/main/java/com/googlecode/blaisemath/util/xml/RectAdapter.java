@@ -1,7 +1,3 @@
-/*
- * RectAdapter.java
- * Created on Aug 26, 2013
- */
 package com.googlecode.blaisemath.util.xml;
 
 /*
@@ -39,6 +35,8 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  */
 public class RectAdapter extends XmlAdapter<String,Rectangle2D> {
 
+    private static final Logger LOG = Logger.getLogger(RectAdapter.class.getName());
+
     @Override
     public Rectangle2D unmarshal(String v) {
         if (v == null) {
@@ -55,22 +53,19 @@ public class RectAdapter extends XmlAdapter<String,Rectangle2D> {
                 Double h = Double.valueOf(kv.get("h"));
                 return new Rectangle2D.Double(x,y,w,h);
             } catch (NumberFormatException x) {
-                Logger.getLogger(RectAdapter.class.getName()).log(Level.FINEST,
-                        "Not a double", x);
+                LOG.log(Level.FINEST, "Not a double", x);
                 return null;
             }
         } else {
-            Logger.getLogger(RectAdapter.class.getName()).log(Level.FINEST,
-                    "Not a valid rectangle", v);
+            LOG.log(Level.FINEST, "Not a valid rectangle", v);
             return null;
         }
     }
 
     @Override
     public String marshal(Rectangle2D v) {
-        return v == null ? "null"
-                : String.format("rectangle[x=%f,y=%f,w=%f,h=%f]", 
-                        v.getX(), v.getY(), v.getWidth(), v.getHeight());
+        return v == null ? "null" : String.format("rectangle[x=%f,y=%f,w=%f,h=%f]",
+                v.getX(), v.getY(), v.getWidth(), v.getHeight());
     }
 
 }

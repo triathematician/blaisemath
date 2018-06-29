@@ -1,11 +1,5 @@
 package com.googlecode.blaisemath.util;
 
-/**
- * OrientedPoint2D.java
- * Created Jul 31, 2014
- */
-
-
 /*
  * #%L
  * BlaiseGraphics
@@ -26,9 +20,8 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-
-import com.google.common.base.Objects;
 import java.awt.geom.Point2D;
+import java.util.Objects;
 
 /**
  * A point with an orientation.
@@ -60,7 +53,7 @@ public class OrientedPoint2D extends Point2DBean {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(x, y, angle);
+        return Objects.hash(x, y, angle);
     }
 
     @Override

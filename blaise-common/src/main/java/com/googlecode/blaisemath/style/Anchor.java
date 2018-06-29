@@ -1,8 +1,3 @@
-/**
- * Anchor.java
- * Created Sep 2009
- */
-
 package com.googlecode.blaisemath.style;
 
 /*

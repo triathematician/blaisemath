@@ -1,8 +1,3 @@
-/**
- * CoordinateChangeEvent.java
- * Created Aug 31, 2012
- */
-
 package com.googlecode.blaisemath.util.coordinate;
 
 /*
@@ -28,7 +23,7 @@ package com.googlecode.blaisemath.util.coordinate;
 import java.util.EventObject;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * <p>

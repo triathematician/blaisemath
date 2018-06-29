@@ -1,8 +1,3 @@
-/*
- * FontAdapter.java
- * Created on May 7, 2013
- */
-
 package com.googlecode.blaisemath.util.xml;
 
 /*

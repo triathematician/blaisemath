@@ -1,12 +1,6 @@
 package com.googlecode.blaisemath.util;
 
 /*
- * Points.java
- * Created Aug 28, 2013
- */
-
-
-/*
  * #%L
  * BlaiseGraphTheory
  * --
@@ -31,7 +25,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Iterables;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utilities for working with points.
@@ -85,8 +79,7 @@ public class Points {
      * @param margin additional padding to include around the box
      * @return bounding box
      */
-    @Nullable 
-    public static Rectangle2D.Double boundingBox(Iterable<? extends Point2D> pts, double margin) {
+    public static Rectangle2D.@Nullable Double boundingBox(Iterable<? extends Point2D> pts, double margin) {
         double minx = Double.MAX_VALUE, miny = Double.MAX_VALUE, maxx = -Double.MAX_VALUE, maxy = -Double.MAX_VALUE;
         int count = 0;
         for (Point2D p : pts) {

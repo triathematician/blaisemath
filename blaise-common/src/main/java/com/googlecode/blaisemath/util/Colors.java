@@ -1,7 +1,3 @@
-/*
- * Colors.java
- * Created Aug 24, 2013
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -28,6 +24,7 @@ package com.googlecode.blaisemath.util;
 import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkArgument;
 import java.awt.Color;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Provides a number of utilities for working with colors, e.g. creating lighter/darker colors,
@@ -42,6 +39,38 @@ public class Colors {
     // utility class
     private Colors() {
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="DERIVED COLOR UTILS">
+    
+    /**
+     * Convert color to string. Results in #RRGGBB or #RRGGBBAA, depending on
+     * whether or not the color has an alpha channel.
+     * @param c color
+     * @return string
+     * @throws NullPointerException if c is null
+     */
+    public static String toString(Color c) {
+        requireNonNull(c);
+        if (c.getAlpha() == 255) {
+            return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
+        } else {
+            return String.format("#%02x%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+        }
+    }
+    
+    /**
+     * Flexible color decoder. Uses {@link javafx.scene.paint.Color#web(java.lang.String)} to decode.
+     * @param v color string
+     * @return color
+     * @throws NullPointerException if v is null
+     * @throws IllegalArgumentException if v is an invalid string
+     */
+    public static Color fromString(String v) {
+        requireNonNull(v);
+        javafx.scene.paint.Color fx = javafx.scene.paint.Color.web(v);
+        return new Color((float) fx.getRed(), (float) fx.getGreen(),
+                (float) fx.getBlue(), (float) fx.getOpacity());
+    }
 
     /**
      * Transform the alpha component of a color
@@ -55,7 +84,7 @@ public class Colors {
     }
 
     /**
-     * Produces a color that is lighter than the specified color
+     * Produces a color that is lighter than the specified color.
      * @param c source color
      * @return new color
      */
@@ -63,8 +92,12 @@ public class Colors {
         return new Color(lighten(c.getRed()), lighten(c.getGreen()), lighten(c.getBlue()), c.getAlpha());
     }
 
+    private static int lighten(int i) {
+        return i + Math.min(64, (255-i)/2);
+    }
+
     /**
-     * Produces a color that is "blander" than the specified color (reducing saturation)
+     * Produces a color that is "blander" than the specified color (reducing saturation by 50%).
      * @param c source color
      * @return new color
      */
@@ -74,11 +107,13 @@ public class Colors {
         Color c2 = Color.getHSBColor(hsb[0], .5f*hsb[1], hsb[2]);
         return new Color(c2.getRed(), c2.getGreen(), c2.getBlue(), c.getAlpha());
     }
-
-    private static int lighten(int i) {
-        return i + Math.min(64, (255-i)/2);
-    }
     
+    //</editor-fold>
+    
+    /**
+     * Get static instance of converter.
+     * @return converter
+     */
     public static Converter<Color, String> stringConverter() {
         return CONVERTER_INST;
     }
@@ -94,45 +129,14 @@ public class Colors {
      * @author Elisha Peterson
      */
     private static final class ColorStringConverter extends Converter<Color, String> {
-
         @Override
         protected Color doBackward(String v) {
-            if (v == null) {
-                return null;
-            }
-            String col = v.startsWith("#") ? v : ("#"+v);
-            try {
-                if (col.length() == 7) {
-                    // #RRGGBB
-                    return Color.decode(col);
-                } else if (col.length() == 9) {
-                    // #AARRGGBB
-                    int alpha = Integer.decode(col.substring(0,3));
-                    int rgb = Integer.decode("#"+col.substring(3));
-                    return new Color((alpha << 24) + rgb, true);
-                } else if (col.length() == 4) {
-                    // #RGB
-                    int red = Integer.valueOf(col.substring(1,2), 16);
-                    int green = Integer.valueOf(col.substring(2,3), 16);
-                    int blue = Integer.valueOf(col.substring(3,4), 16);
-                    return new Color(17*red, 17*green, 17*blue);
-                } else {
-                    throw new IllegalArgumentException("Not a color: "+col);
-                }
-            } catch (NumberFormatException x) {
-                throw new IllegalArgumentException("Not a color: "+col, x);
-            }
+            return v == null ? null : Colors.fromString(v);
         }
 
         @Override
         protected String doForward(Color c) {
-            if (c == null) {
-                return null;
-            } else if (c.getAlpha() == 255) {
-                return String.format("#%02x%02x%02x", c.getRed(),c.getGreen(),c.getBlue());
-            } else {
-                return String.format("#%02x%02x%02x%02x", c.getAlpha(), c.getRed(),c.getGreen(),c.getBlue());
-            }
+            return c == null ? null : Colors.toString(c);
         }
     }
     

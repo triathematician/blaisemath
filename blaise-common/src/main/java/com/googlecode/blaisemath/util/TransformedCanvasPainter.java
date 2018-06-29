@@ -1,7 +1,3 @@
-/**
- * TransformedCanvasPainter.java
- * Created on Sep 22, 2014
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -37,11 +33,12 @@ import java.util.logging.Logger;
  */
 public abstract class TransformedCanvasPainter implements CanvasPainter<Graphics2D> {
 
+    private static final Logger LOG = Logger.getLogger(TransformedCanvasPainter.class.getName());
+
     @Override
     public void paint(Component component, Graphics2D canvas) {
         if (!(component instanceof TransformedCoordinateSpace)) {
-            Logger.getLogger(TransformedCanvasPainter.class.getName()).log(Level.FINE,
-                    "Painting on a component that is not a TransformedCoordinateSpace");
+            LOG.log(Level.FINE, "Painting on a component that is not a TransformedCoordinateSpace");
             paintTransformed(component, canvas);
         } else {
             AffineTransform oldTransform = canvas.getTransform();

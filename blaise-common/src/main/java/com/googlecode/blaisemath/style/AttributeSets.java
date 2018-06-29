@@ -1,7 +1,3 @@
-/**
- * AttributeSets.java
- * Created Summer 2014
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -29,7 +25,6 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Converter;
 import com.google.common.base.Joiner;
 import com.google.common.base.Joiner.MapJoiner;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Splitter;
 import com.google.common.base.Splitter.MapSplitter;
 import com.google.common.collect.Maps;
@@ -44,9 +39,10 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
+import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * <p>
@@ -122,7 +118,7 @@ public final class AttributeSets {
      */
     @Beta
     public static Converter<AttributeSet,String> stringConverter(Map<String, Class<?>> types) {
-        return new AttributeSetConverter(checkNotNull(types));
+        return new AttributeSetConverter(requireNonNull(types));
     }
     
     /**
@@ -152,7 +148,7 @@ public final class AttributeSets {
         }
 
         private AttributeSetConverter(Map<String, Class<?>> types) {
-            this.types = checkNotNull(types);
+            this.types = requireNonNull(types);
         }
         
         @Override
@@ -233,7 +229,7 @@ public final class AttributeSets {
         }
 
         private AttributeValueConverter(Class<?> prefType) {
-            this.prefType = checkNotNull(prefType);
+            this.prefType = requireNonNull(prefType);
         }
         
         @Override
@@ -245,7 +241,7 @@ public final class AttributeSets {
             if (sval.matches("#[0-9a-fA-f]{3}")
                     || sval.matches("#[0-9a-fA-f]{6}")
                     || sval.matches("#[0-9a-fA-f]{8}")) {
-                return Colors.stringConverter().reverse().convert(sval);
+                return Colors.fromString(sval);
             } else if (sval.matches("!point\\[(.*)\\]")) {
                 return new Point2DAdapter().unmarshal(sval);
             } else if (sval.matches("!rectangle\\[(.*)\\]")) {
@@ -265,9 +261,9 @@ public final class AttributeSets {
         }
         
         protected Object doBackward(String sval, Class<?> prefType) {
-            checkNotNull(prefType);
+            requireNonNull(prefType);
             if (prefType == Color.class) {
-                return Colors.stringConverter().reverse().convert(sval);
+                return Colors.fromString(sval);
             } else if (Point2D.class.isAssignableFrom(prefType)) {
                 return new Point2DAdapter().unmarshal(sval);
             } else if (Rectangle2D.class.isAssignableFrom(prefType)) {
@@ -291,7 +287,7 @@ public final class AttributeSets {
         @Override
         protected String doForward(Object val) {
             if (val instanceof Color) {
-                return Colors.stringConverter().convert((Color) val);
+                return Colors.toString((Color) val);
             } else if (val instanceof Marker) {
                 return val.getClass().getSimpleName();
             } else if (val instanceof Rectangle2D) {

@@ -1,7 +1,3 @@
-/**
- * AnchoredImage.java
- * Created on Sep 12, 2014
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -27,7 +23,7 @@ package com.googlecode.blaisemath.util;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An image anchored at a given location.
@@ -45,7 +41,7 @@ public final class AnchoredImage extends Point2DBean {
         this(x, y, null, null, image, ref);
     }
 
-    public AnchoredImage(double x, double y, @Nullable java.lang.Double width, @Nullable java.lang.Double height, Image image, @Nullable String ref) {
+    public AnchoredImage(double x, double y, java.lang.@Nullable Double width, java.lang.@Nullable Double height, Image image, @Nullable String ref) {
         super(x, y);
         this.width = width;
         this.height = height;

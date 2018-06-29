@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.googlecode.blaisemath.util.xml;
 
 /*
@@ -29,8 +23,6 @@ package com.googlecode.blaisemath.util.xml;
 
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 import junit.framework.TestCase;
 
 /**

@@ -1,10 +1,4 @@
-/*
- * DraggablePointBean.java
- * Created Jan 229, 2011
- */
 package com.googlecode.blaisemath.util;
-
-import com.googlecode.blaisemath.util.CoordinateBean;
 
 /*
  * #%L
@@ -30,8 +24,6 @@ import com.googlecode.blaisemath.util.CoordinateBean;
  * Interface that can get and set a point in an arbitrary coordinate system.
  * A third method allows the point to be set based on an initial point, and
  * coordinates for the start and end of a drag gesture.
- * 
- * @see CoordinateBean
  * 
  * @param <C> coordinate of the point
  * 

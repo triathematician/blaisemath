@@ -1,11 +1,5 @@
 package com.googlecode.blaisemath.util;
 
-/**
- * AnchoredString.java
- * Created Jul 31, 2014
- */
-
-
 /*
  * #%L
  * BlaiseGraphics
@@ -26,8 +20,6 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-
-import com.google.common.base.Objects;
 import java.awt.geom.Point2D;
 
 /**
@@ -61,9 +53,6 @@ public final class AnchoredText extends Point2DBean {
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
     
     public String getText() {
         return text;

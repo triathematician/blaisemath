@@ -1,7 +1,3 @@
-/*
- * PointBean.java
- * Created Jan 2011
- */
 package com.googlecode.blaisemath.util;
 
 /*

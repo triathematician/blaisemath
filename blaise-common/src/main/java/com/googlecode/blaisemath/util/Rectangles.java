@@ -1,7 +1,3 @@
-/**
- * Rectangles.java
- * Created on Mar 4, 2015
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -26,7 +22,7 @@ package com.googlecode.blaisemath.util;
 
 import com.google.common.collect.Iterables;
 import java.awt.geom.Rectangle2D;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class for working with rectangles.

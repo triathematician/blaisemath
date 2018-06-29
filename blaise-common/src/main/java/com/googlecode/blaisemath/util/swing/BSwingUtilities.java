@@ -1,7 +1,3 @@
-/**
- * BSwingUtilities.java
- * Created on Oct 30, 2014
- */
 package com.googlecode.blaisemath.util.swing;
 
 /*

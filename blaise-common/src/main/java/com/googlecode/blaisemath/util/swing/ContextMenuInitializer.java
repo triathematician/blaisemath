@@ -1,7 +1,3 @@
-/**
- * ContextMenuInitializer.java
- * Created Aug 25, 2012
- */
 package com.googlecode.blaisemath.util.swing;
 
 /*
@@ -26,8 +22,8 @@ package com.googlecode.blaisemath.util.swing;
 
 import java.awt.geom.Point2D;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Provides a method that can be used to initialize (add actions to) a {@link JPopupMenu}.

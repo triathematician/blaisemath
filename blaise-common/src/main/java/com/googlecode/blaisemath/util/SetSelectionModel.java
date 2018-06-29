@@ -1,7 +1,3 @@
-/**
- * SetSelectionModel.java
- * Created Aug 1, 2012
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -24,7 +20,6 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -32,6 +27,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collection;
 import java.util.Collections;
+import static java.util.Objects.requireNonNull;
 import java.util.Set;
 
 /**
@@ -55,9 +51,6 @@ public class SetSelectionModel<G> {
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
 
     public boolean isEmpty() {
         return selected.isEmpty();
@@ -103,7 +96,7 @@ public class SetSelectionModel<G> {
      * @param g elements to add
      */
     public void selectAll(Collection<G> g) {
-        checkNotNull(g);
+        requireNonNull(g);
         if (!selected.containsAll(g)) {
             Set<G> old = getSelection();
             Iterables.addAll(selected, g);
@@ -119,7 +112,7 @@ public class SetSelectionModel<G> {
     }
 
     public void deselectAll(Collection<G> g) {
-        checkNotNull(g);
+        requireNonNull(g);
         Set<G> old = getSelection();
         if (selected.removeAll(g)) {
             pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
@@ -143,9 +136,6 @@ public class SetSelectionModel<G> {
     }
 
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
-    //
-    // EVENT HANDLING
-    //
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);

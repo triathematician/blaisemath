@@ -1,7 +1,3 @@
-/*
- * ListSlider.java
- * Created Jul 8, 2010
- */
 package com.googlecode.blaisemath.util.swing;
 
 /*
@@ -23,12 +19,12 @@ package com.googlecode.blaisemath.util.swing;
  * limitations under the License.
  * #L%
  */
-import com.google.common.base.Objects;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -91,7 +87,7 @@ public final class ListSlider extends JSlider {
      * @param values values for list
      */
     public void setList(List<Double> values) {
-        if (!Objects.equal(this.pegs, values)) {
+        if (!Objects.equals(this.pegs, values)) {
             this.pegs = values;
             setMaximum(pegs.size() - 1);
             setValue(0);

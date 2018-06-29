@@ -1,7 +1,3 @@
-/*
- * PointAdapter.class
- * Created Oct 9, 2013
- */
 package com.googlecode.blaisemath.util.xml;
 
 /*
@@ -40,6 +36,8 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  */
 public class PointAdapter extends XmlAdapter<String,Point> {
 
+    private static final Logger LOG = Logger.getLogger(PointAdapter.class.getName());
+
     @Override
     public Point unmarshal(String v) {
         if (v == null) {
@@ -54,21 +52,18 @@ public class PointAdapter extends XmlAdapter<String,Point> {
                 int y = Integer.valueOf(Iterables.get(kv, 1));
                 return new Point(x,y);
             } catch (NumberFormatException x) {
-                Logger.getLogger(PointAdapter.class.getName()).log(Level.FINEST,
-                        "Not an integer", x);
+                LOG.log(Level.FINEST, "Not an integer", x);
                 return null;
             }
         } else {
-            Logger.getLogger(PointAdapter.class.getName()).log(Level.FINEST,
-                    "Not a valid point", v);
+            LOG.log(Level.FINEST, "Not a valid point", v);
             return null;
         }
     }
 
     @Override
     public String marshal(Point v) {
-        return v == null ? "null"
-                : String.format("point[%d,%d]", v.x, v.y);
+        return v == null ? "null" : String.format("point[%d,%d]", v.x, v.y);
     }
     
 }

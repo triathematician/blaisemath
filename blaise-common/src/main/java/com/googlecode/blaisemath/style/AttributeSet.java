@@ -1,7 +1,3 @@
-/**
- * AttributeSet.java
- * Created Jul 31, 2014
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -24,22 +20,24 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
-
-import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.util.converter.TypeConverter;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Provides a map of key-value pairs providing style elements, similar to what
@@ -55,7 +53,8 @@ public class AttributeSet {
     public static final AttributeSet EMPTY = ImmutableAttributeSet.copyOf(new AttributeSet());
     
     /** The parent attribute set */
-    protected Optional<AttributeSet> parent = Optional.absent();
+    @Nullable
+    protected AttributeSet parent = null;
     /** The map of style key/value pairs */
     protected final Map<String,Object> attributeMap = Maps.newHashMap();
     
@@ -85,9 +84,9 @@ public class AttributeSet {
      * @param parent the parent
      * @return new attribute set
      */
-    public static AttributeSet createWithParent(@Nullable AttributeSet parent) {
+    public static AttributeSet withParent(@Nullable AttributeSet parent) {
         AttributeSet res = new AttributeSet();
-        res.parent = Optional.fromNullable(parent);
+        res.parent = parent;
         return res;
     }
     
@@ -97,7 +96,7 @@ public class AttributeSet {
      * @return copy
      */
     public static AttributeSet copyOf(AttributeSet set) {
-        AttributeSet res = createWithParent(set.getParent());
+        AttributeSet res = withParent(set.getParent().orElse(null));
         for (String k : set.getAttributeMap().keySet()) {
             res.put(k, copyValue(set.get(k)));
         }
@@ -182,12 +181,12 @@ public class AttributeSet {
      * @param v3 third value
      * @return created set
      */
-    public static AttributeSet of(String k1, @Nullable Object v1, String k2, @Nullable Object v2, String k3, @Nullable Object v3) {
+    public static AttributeSet of(String k1, @Nullable Object v1, String k2, @Nullable Object v2, 
+            String k3, @Nullable Object v3) {
         return of(k1, v1).and(k2, v2).and(k3, v3);
     }
     
     //</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER METHODS">
     
@@ -238,25 +237,13 @@ public class AttributeSet {
     }
     
     //</editor-fold>
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
-    
-    @Nullable
-    public AttributeSet getParent() {
-        return parent.orNull();
-    }
-    
-    //</editor-fold>
-    
 
     //<editor-fold defaultstate="collapsed" desc="GENERIC ATTRIBUTE METHODS">
-    //
-    // GENERIC ATTRIBUTE METHODS
-    //
+    
+    @Nullable
+    public Optional<AttributeSet> getParent() {
+        return Optional.ofNullable(parent);
+    }
     
     /**
      * Get the set of attributes known in this set.
@@ -267,23 +254,24 @@ public class AttributeSet {
     }
     
     /**
-     * Get the attributes and the values in this set as a map
-     * @return attribute map
-     */
-    public Map<String,Object> getAttributeMap() {
-        return Maps.newHashMap(attributeMap);
-    }
-    
-    /**
      * Get this attributes, and all parent attributes.
      * @return attribute keys
      */
     public Set<String> getAllAttributes() {
-        if (parent.isPresent()) {
-            return Sets.union(attributeMap.keySet(), parent.get().getAllAttributes());
+        if (parent != null) {
+            return Sets.union(attributeMap.keySet(), parent.getAllAttributes());
         } else {
             return getAttributes();
         }
+    }
+    
+    /**
+     * Gets a filtered set of attributes.
+     * @param filter attribute name filter
+     * @return attribute keys
+     */
+    public Set<String> getAttributes(Predicate<String> filter) {
+        return Sets.filter(getAllAttributes(), filter);
     }
 
     /**
@@ -291,13 +279,21 @@ public class AttributeSet {
      * @param type attribute type
      * @return attribute keys
      */
-    public Set<String> getAllAttributes(Class type) {
+    public Set<String> getAllAttributes(Class<?> type) {
         Map<String, Object> filtered = Maps.filterValues(attributeMap, Predicates.instanceOf(type));
-        if (parent.isPresent()) {
-            return Sets.union(filtered.keySet(), parent.get().getAllAttributes(type));
+        if (parent != null) {
+            return Sets.union(filtered.keySet(), parent.getAllAttributes(type));
         } else {
             return filtered.keySet();
         }
+    }
+    
+    /**
+     * Get copy of the attributes and the values in this set as a map.
+     * @return attribute map
+     */
+    public Map<String,Object> getAttributeMap() {
+        return Maps.newHashMap(attributeMap);
     }
     
     /**
@@ -307,23 +303,37 @@ public class AttributeSet {
      */
     public boolean contains(String key) {
         return attributeMap.containsKey(key)
-                || (parent.isPresent() && parent.get().contains(key));
+                || (parent != null && parent.contains(key));
     }
     
     /**
-     * Get the given attribute.
+     * Get the given attribute. Return null if not found.
      * @param key the key
      * @return value of the found attribute, either contained in this set or its parent,
      *      or null if there is none
      */
     @Nullable
     public Object get(String key) {
+        return getOrDefault(key, null);
+    }
+    
+    /**
+     * Get the given attribute, or return the given default value if not found.
+     * Will return "null" if this class has an explicit entry with a null value
+     * for the attribute.
+     * @param key the key
+     * @param def default value to return
+     * @return value of the found attribute, either contained in this set or its parent,
+     *      or the default value if there is none
+     */
+    @Nullable
+    public Object getOrDefault(String key, @Nullable Object def) {
         if (attributeMap.containsKey(key)) {
             return attributeMap.get(key);
-        } else if (parent.isPresent()) {
-            return parent.get().get(key);
+        } else if (parent != null) {
+            return parent.getOrDefault(key, def);
         } else {
-            return null;
+            return def;
         }
     }
 
@@ -336,8 +346,21 @@ public class AttributeSet {
     @Nullable
     public Object put(String key, @Nullable Object value) {
         Object res = attributeMap.put(key, value);
-        fireStateChanged();
+        if (!Objects.equals(res, value)) {
+            fireStateChanged();
+        }
         return res;
+    }
+
+    /**
+     * Adds a value, only if the key is not already present.
+     * @param key the key
+     * @param value the attribute value (may be null)
+     */
+    public void putIfAbsent(String key, @Nullable Object value) {
+        if (!attributeMap.containsKey(key)) {
+            put(key, value);
+        }
     }
     
     /**
@@ -356,58 +379,26 @@ public class AttributeSet {
      * @return the removed value, null if none
      */
     public Object remove(String key) {
-        Object res = attributeMap.remove(key);
-        fireStateChanged();
-        return res;
+        if (attributeMap.containsKey(key)) {
+            Object res = attributeMap.remove(key);
+            fireStateChanged();
+            return res;
+        }
+        return null;
     }
     
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="TYPED ACCESSORS">
-    
-    @Nullable
-    private <C> C getTyped(String key, Class<C> cls, @Nullable C def) {
-        try {
-            return cls.cast(contains(key) ? (C) get(key) : def);
-        } catch (ClassCastException x) {
-            LOG.log(Level.WARNING, "Cast from "+get(key)+" to "+cls+" failed.", x);
-            throw x;
-        }
-    }
 
+    @Nullable
     public String getString(String key) {
-        return getTyped(key, String.class, null);
+        return getString(key, null);
     }
 
+    @Nullable
     public String getString(String key, String def) {
-        return getTyped(key, String.class, def);
-    }
-    
-    /**
-     * Retrieve given attribute as a color.
-     * @param key attribute key
-     * @return color, or null if not present
-     * @throws ClassCastException if attribute is present but not a color
-     */
-    @Nullable
-    public Color getColor(String key) {
-        return getTyped(key, Color.class, null);
-    }
-    
-    @Nullable
-    public Color getColor(String key, @Nullable Color def) {
-        return getTyped(key, Color.class, def);
-    }
-    
-    @Nullable
-    public Point2D getPoint(String key) {
-        return getTyped(key, Point2D.class, null);
-    }
-    
-    @Nullable
-    public Point2D getPoint(String key, @Nullable Point2D def) {
-        return getTyped(key, Point2D.class, def);
+        return TypeConverter.convert(key, String.class, def);
     }
 
     /**
@@ -417,7 +408,7 @@ public class AttributeSet {
      */
     @Nullable
     public Boolean getBoolean(String key) {
-        return getTyped(key, Boolean.class, null);
+        return getBoolean(key, null);
     }
 
 
@@ -429,11 +420,23 @@ public class AttributeSet {
      */
     @Nullable
     public Boolean getBoolean(String key, @Nullable Boolean def) {
-        try {
-            return getTyped(key, Boolean.class, def);
-        } catch (ClassCastException x) {
-            return get(key) instanceof String ? Boolean.valueOf((String) get(key)) : false;
-        }
+        return TypeConverter.convert(key, Boolean.class, def);
+    }
+    
+    /**
+     * Retrieve given attribute as an integer.
+     * @param key attribute key
+     * @return integer, or null if not present
+     * @throws ClassCastException if attribute is present but not a integer
+     */
+    @Nullable
+    public Integer getInteger(String key) {
+        return getInteger(key, null);
+    }
+
+    @Nullable
+    public Integer getInteger(String key, @Nullable Integer def) {
+        return TypeConverter.convert(key, Integer.class, def);
     }
 
     /**
@@ -449,40 +452,54 @@ public class AttributeSet {
 
     @Nullable
     public Float getFloat(String key, @Nullable Float def) {
-        if (contains(key)) {
-            Number n = (Number) get(key);
-            return n == null ? null
-                    : n instanceof Float ? (Float) n
-                    : n.floatValue();
-        } else {
-            return def;
-        }
+        return TypeConverter.convert(key, Float.class, def);
     }
-    
+
+    /**
+     * Retrieve given attribute as a double.
+     * @param key attribute key
+     * @return double, or null if not present
+     * @throws ClassCastException if attribute is present but not a double
+     */
     @Nullable
-    public Integer getInteger(String key) {
-        return getInteger(key, null);
+    public Double getDouble(String key) {
+        return getDouble(key, null);
     }
 
     @Nullable
-    public Integer getInteger(String key, @Nullable Integer def) {
-        if (contains(key)) {
-            Number n = (Number) get(key);
-            return n == null ? null
-                    : n instanceof Integer ? (Integer) n
-                    : n.intValue();
-        } else {
-            return def;
-        }
+    public Double getDouble(String key, @Nullable Double def) {
+        return TypeConverter.convert(key, Double.class, def);
+    }
+    
+    /**
+     * Retrieve given attribute as a color.
+     * @param key attribute key
+     * @return color, or null if not present
+     * @throws ClassCastException if attribute is present but not a color
+     */
+    @Nullable
+    public Color getColor(String key) {
+        return getColor(key, null);
+    }
+    
+    @Nullable
+    public Color getColor(String key, @Nullable Color def) {
+        return TypeConverter.convert(key, Color.class, def);
+    }
+    
+    @Nullable
+    public Point2D getPoint2D(String key) {
+        return getPoint2D(key, null);
+    }
+    
+    @Nullable
+    public Point2D getPoint2D(String key, @Nullable Point2D def) {
+        return TypeConverter.convert(key, Point2D.class, def);
     }
     
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
-    //
-    // EVENT HANDLING
-    //
 
     public void addChangeListener(ChangeListener l) { 
         listenerList.add(ChangeListener.class, l);

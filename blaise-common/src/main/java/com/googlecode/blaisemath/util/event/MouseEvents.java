@@ -1,7 +1,3 @@
-/**
- * MouseEvents.java
- * Created Oct 3, 2014
- */
 package com.googlecode.blaisemath.util.event;
 
 /*

@@ -1,7 +1,3 @@
-/**
- * AnimationStep.java
- * Created Jul 12, 2014
- */
 package com.googlecode.blaisemath.util.swing;
 
 /*
@@ -26,9 +22,9 @@ package com.googlecode.blaisemath.util.swing;
 
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Represents a single step of logic in a basic animation. A static method initializes
@@ -79,7 +75,7 @@ public abstract class AnimationStep {
 
         public NRunnable(int min, int max, AnimationStep step) {
             checkArgument(max >= min);
-            checkNotNull(step);
+            requireNonNull(step);
             this.min = min;
             this.max = max;
             this.step = step;

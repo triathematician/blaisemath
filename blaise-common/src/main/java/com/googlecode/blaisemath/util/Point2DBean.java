@@ -1,11 +1,5 @@
 package com.googlecode.blaisemath.util;
 
-/**
- * Point2DBean.java
- * Created Aug 1, 2014
- */
-
-
 /*
  * #%L
  * BlaiseGraphics
@@ -25,7 +19,6 @@ package com.googlecode.blaisemath.util;
  * limitations under the License.
  * #L%
  */
-
 
 import java.awt.geom.Point2D;
 

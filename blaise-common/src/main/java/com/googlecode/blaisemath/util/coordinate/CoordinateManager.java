@@ -1,7 +1,3 @@
-/*
- * CoordinateManager.java
- * Created Oct 5, 2011
- */
 package com.googlecode.blaisemath.util.coordinate;
 
 /*
@@ -24,21 +20,21 @@ package com.googlecode.blaisemath.util.coordinate;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import static java.util.Objects.requireNonNull;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.ThreadSafe;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * <p>
@@ -68,7 +64,6 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * @author Elisha Peterson
  */
-@ThreadSafe
 public final class CoordinateManager<S, C> {
     
     /** Max size of the cache */
@@ -101,7 +96,7 @@ public final class CoordinateManager<S, C> {
      * @return newly created coordinate manager.
      */
     public static <S,C> CoordinateManager<S,C> create(int maxCacheSize) {
-        return new CoordinateManager<S,C>(maxCacheSize);
+        return new CoordinateManager<>(maxCacheSize);
     }
     
     //</editor-fold>
@@ -180,11 +175,7 @@ public final class CoordinateManager<S, C> {
      * @return object locations
      */
     public synchronized Map<S, C> getInactiveLocationCopy() {
-        Map<S, C> res = Maps.newHashMap();
-        for (S s : inactive) {
-            res.put(s, map.get(s));
-        }
-        return res;
+        return inactive.stream().collect(toMap(s -> s, map::get));
     }
 
     //
@@ -242,7 +233,7 @@ public final class CoordinateManager<S, C> {
      * @param obj objects to remove
      */
     public void forget(Set<? extends S> obj) {
-        Set<S> removed = new HashSet<S>();
+        Set<S> removed = new HashSet<>();
         synchronized (map) {
             for (S k : obj) {
                 if (map.remove(k) != null) {
@@ -280,9 +271,7 @@ public final class CoordinateManager<S, C> {
         Map<S,C> restoreMap = Maps.newHashMap();
         synchronized (this) {
             Set<T> restored = Sets.intersection(obj, inactive);
-            for (T t : restored) {
-                restoreMap.put(t, map.get(t));
-            }
+            restored.forEach(t -> restoreMap.put(t, map.get(t)));
             active.addAll(restored);
             inactive.removeAll(restored);
         }
@@ -303,11 +292,7 @@ public final class CoordinateManager<S, C> {
         }
     }
 
-
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
-    //
-    // EVENT HANDLING
-    //
 
     /**
      * Fire update, from the thread that invoked the change.
@@ -330,12 +315,12 @@ public final class CoordinateManager<S, C> {
     }
 
     public final void addCoordinateListener(CoordinateListener cl) {
-        checkNotNull(cl);
+        requireNonNull(cl);
         listeners.add(cl);
     }
 
     public final void removeCoordinateListener(CoordinateListener cl) {
-        checkNotNull(cl);
+        requireNonNull(cl);
         listeners.remove(cl);
     }
 

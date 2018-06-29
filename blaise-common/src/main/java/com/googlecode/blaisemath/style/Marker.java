@@ -1,8 +1,3 @@
-/*
- * ShapeFactory.java
- * Created Jan 22, 2011
- */
-
 package com.googlecode.blaisemath.style;
 
 /*

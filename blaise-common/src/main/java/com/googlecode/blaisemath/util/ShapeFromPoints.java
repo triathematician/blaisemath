@@ -1,7 +1,3 @@
-/**
- * ShapeFromPoints.java
- * Created Oct 11, 2014
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -24,13 +20,12 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Creates a shape from two mouse positions.
@@ -60,7 +55,7 @@ public abstract class ShapeFromPoints {
      */
     public abstract Shape create(Point2D press, Point2D release);
     
-    
+    /** Creates line from two points */
     public static class Line extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {
@@ -68,6 +63,7 @@ public abstract class ShapeFromPoints {
         }
     }
     
+    /** Creates circle from two points (center and outside) */  
     public static class Circle extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {
@@ -76,6 +72,7 @@ public abstract class ShapeFromPoints {
         }
     }
     
+    /** Creates ellipse from two points (corners of frame) */  
     public static class Ellipse extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {
@@ -85,6 +82,7 @@ public abstract class ShapeFromPoints {
         }
     }
     
+    /** Creates ellipse from two points (corners of rectangle) */  
     public static class Rectangle extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {

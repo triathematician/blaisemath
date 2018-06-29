@@ -1,7 +1,3 @@
-/**
- * GraphicCoordinateSpace.java
- * Created Oct 11, 2014
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -26,7 +22,7 @@ package com.googlecode.blaisemath.util;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Provides methods for translating between graphic coordinate space and

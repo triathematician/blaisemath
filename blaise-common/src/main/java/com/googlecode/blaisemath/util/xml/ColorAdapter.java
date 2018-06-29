@@ -1,8 +1,3 @@
-/*
- * ColorAdapter.java
- * Created on May 7, 2013
- */
-
 package com.googlecode.blaisemath.util.xml;
 
 /*
@@ -32,11 +27,9 @@ import java.awt.Color;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * <p>
- *   Adapter converting colors to/from hex strings. Supports #AARRGGBB and #RRGGBB notations.
- *   Uses {@link Colors#stringConverter()} to perform the conversion, but provides
- *   additional flexibility for handling nulls.
- * </p>
+ * Adapter converting colors to/from hex strings. Supports #AARRGGBB, #RRGGBB, and #RGB notations.
+ * Uses {@link Colors#stringConverter()} to perform the conversion, but provides
+ * additional flexibility for handling nulls.
  *
  * @see Color#decode(java.lang.String)
  *

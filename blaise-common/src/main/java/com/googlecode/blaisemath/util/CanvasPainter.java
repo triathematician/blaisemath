@@ -1,7 +1,3 @@
-/**
- * CanvasPainter.java
- * Created Aug 1, 2012
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -27,9 +23,8 @@ package com.googlecode.blaisemath.util;
 import java.awt.Component;
 
 /**
- * <p>
- *  An object that paints on a graphics canvas.
- * </p>
+ * An object that paints on a graphics canvas.
+ * 
  * @param <G> type of component to draw on
  * @author elisha
  */
