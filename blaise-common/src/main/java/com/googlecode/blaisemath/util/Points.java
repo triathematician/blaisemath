@@ -22,9 +22,13 @@ package com.googlecode.blaisemath.util;
 
 
 import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
+import static java.util.Objects.requireNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -36,6 +40,46 @@ public class Points {
     
     private Points() {
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="STRING CONVERSION">
+    
+    /**
+     * Encode point as string, in the form (a, b)
+     * @param p point to encode
+     * @return string
+     */
+    public static String encode(Point2D p) {
+        requireNonNull(p);
+        if (p instanceof Point) {
+            return String.format("(%d,%d)", ((Point) p).x, ((Point) p).y);
+        } else {
+            return String.format("(%f,%f)", p.getX(), p.getY());
+        }
+    }
+    
+    /**
+     * Decodes point from string, assuming the notation used by {@link #encode}.
+     * @param v string
+     * @return decoded string
+     * @throws NullPointerException if v is null
+     * @throws IllegalArgumentException if v is an invalid string
+     */
+    public static Point2D decode(String v) {
+        String str = v.trim();
+        if (str.startsWith("(") && str.endsWith(")")) {
+            str = str.substring(1, str.length() - 1).trim();
+        }
+        NumberSplitter splitter = NumberSplitter.onPattern("\\s*[,\\s]\\s*");
+        List<Integer> attempt = splitter.trySplitToIntegers(str, null);
+        if (attempt != null && attempt.size() == 2) {
+            return new Point(attempt.get(0), attempt.get(1));
+        }
+        List<Double> attempt2 = splitter.trySplitToDoubles(str, null);
+        if (attempt2 != null && attempt2.size() == 2) {
+            return new Point2D.Double(attempt2.get(0), attempt2.get(1));
+        }
+        throw new IllegalArgumentException("Invalid point: "+v);
+    }
 
     /**
      * Formats a point with n decimal places
@@ -43,9 +87,11 @@ public class Points {
      * @param n number of decimal places
      * @return formatted point, e.g. (2.1,-3.0)
      */
-    public static String formatPoint(Point2D p, int n) {
+    public static String format(Point2D p, int n) {
         return String.format("(%."+n+"f, %."+n+"f)", p.getX(), p.getY());
     }
+    
+    //</editor-fold>
     
     /**
      * Wraps a point as a {@link DraggableCoordinate} object.

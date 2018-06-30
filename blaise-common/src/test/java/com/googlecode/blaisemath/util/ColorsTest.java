@@ -57,10 +57,10 @@ public class ColorsTest extends TestCase {
     @Test
     public void testToString() {
         System.out.println("toString");
-        assertEquals("#ff0000", Colors.toString(Color.red));
-        assertEquals("#00ff00", Colors.toString(Color.green));
-        assertEquals("#0000ff", Colors.toString(Color.blue));
-        assertEquals("#01020304", Colors.toString(new Color(1,2,3,4)));
+        assertEquals("#ff0000", Colors.encode(Color.red));
+        assertEquals("#00ff00", Colors.encode(Color.green));
+        assertEquals("#0000ff", Colors.encode(Color.blue));
+        assertEquals("#01020304", Colors.encode(new Color(1,2,3,4)));
     }
 
     @Test
@@ -76,17 +76,17 @@ public class ColorsTest extends TestCase {
     @Test
     public void testFromString() {
         System.out.println("fromString");
-        assertEquals(Color.red, Colors.fromString("ff0000"));
-        assertEquals(Color.red, Colors.fromString("#ff0000"));
-        assertEquals(Color.green, Colors.fromString("#00ff00"));
-        assertEquals(Color.blue, Colors.fromString("#0000ff"));
-        assertEquals(new Color(0,0,255,128), Colors.fromString("#0000ff80"));
-        assertEquals(Color.blue, Colors.fromString("#00f"));
-        assertEquals(Colors.fromString("#ff0033"), Colors.fromString("#f03"));
-        assertEquals(Color.blue, Colors.fromString("blue"));
-        assertEquals(new Color(218, 165, 32), Colors.fromString("goldenrod"));
-        assertIllegal(() -> Colors.fromString("null"));
-        assertIllegal(() -> Colors.fromString("not a color"));
+        assertEquals(Color.red, Colors.decode("ff0000"));
+        assertEquals(Color.red, Colors.decode("#ff0000"));
+        assertEquals(Color.green, Colors.decode("#00ff00"));
+        assertEquals(Color.blue, Colors.decode("#0000ff"));
+        assertEquals(new Color(0,0,255,128), Colors.decode("#0000ff80"));
+        assertEquals(Color.blue, Colors.decode("#00f"));
+        assertEquals(Colors.decode("#ff0033"), Colors.decode("#f03"));
+        assertEquals(Color.blue, Colors.decode("blue"));
+        assertEquals(new Color(218, 165, 32), Colors.decode("goldenrod"));
+        assertIllegal(() -> Colors.decode("null"));
+        assertIllegal(() -> Colors.decode("not a color"));
     }
 
     @Test

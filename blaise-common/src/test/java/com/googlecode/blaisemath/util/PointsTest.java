@@ -35,9 +35,9 @@ public class PointsTest {
     @Test
     public void testFormatPoint() {
         System.out.println("formatPoint");
-        assertEquals("(0, 0)", Points.formatPoint(new Point(), 0));
-        assertEquals("(0.0, 0.0)", Points.formatPoint(new Point(), 1));
-        assertEquals("(1.02, -3.00)", Points.formatPoint(new Point2D.Double(1.02,-3), 2));
+        assertEquals("(0, 0)", Points.format(new Point(), 0));
+        assertEquals("(0.0, 0.0)", Points.format(new Point(), 1));
+        assertEquals("(1.02, -3.00)", Points.format(new Point2D.Double(1.02,-3), 2));
     }
     
 }

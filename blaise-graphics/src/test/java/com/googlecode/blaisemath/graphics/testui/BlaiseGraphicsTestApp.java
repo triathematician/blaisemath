@@ -165,7 +165,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             @Override
             public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
                 Point2D pt = bp.getPoint(bp.indexOf(point));
-                menu.add(Points.formatPoint(pt, 2));
+                menu.add(Points.format(pt, 2));
                 menu.add(getContext().getActionMap().get("editPointSetStyle"));
             }
         });

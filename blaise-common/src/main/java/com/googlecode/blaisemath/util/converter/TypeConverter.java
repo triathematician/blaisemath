@@ -20,15 +20,20 @@ package com.googlecode.blaisemath.util.converter;
  * #L%
  */
 
+import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.util.Colors;
+import com.googlecode.blaisemath.util.Points;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -40,6 +45,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class TypeConverter {
 
     private static final Logger LOG = Logger.getLogger(TypeConverter.class.getName());
+
+    private static final Map<Class, Function<String, ?>> FUNC_LOOKUP = ImmutableMap.<Class, Function<String, ?>>builder()
+            .put(Color.class, Colors::decode)
+            .put(Point2D.class, Points::decode)
+            .build();
     
     /**
      * Convert value to target type, if possible. Returns a default value if the
@@ -50,8 +60,7 @@ public class TypeConverter {
      * @param def default value to return if value is null, or unable to convert
      * @return converted value
      */
-    @Nullable
-    public static <X> X convert(@Nullable Object value, Class<X> targetType, @Nullable X def) {
+    public static <X> @Nullable X convert(@Nullable Object value, Class<X> targetType, @Nullable X def) {
         try {
             if (value == null) {
                 return def;
@@ -80,12 +89,11 @@ public class TypeConverter {
      * @return converted value
      * @throws UnsupportedOperationException if unable to convert
      */
-    @Nullable
-    public static <X> X convertFromString(@Nullable String value, Class<X> targetType, @Nullable X def) {
+    public static <X> @Nullable X convertFromString(@Nullable String value, Class<X> targetType, @Nullable X def) {
         if (value == null) {
             return def;
-        } else if (targetType == Color.class) {
-            return (X) Colors.fromString(value);
+        } else if (FUNC_LOOKUP.containsKey(targetType)) {
+            return (X) FUNC_LOOKUP.get(targetType).apply(value);
         }
         
         Optional<Method> decoder = ReflectionUtils.findStaticMethodOrNull(targetType, 
@@ -107,6 +115,8 @@ public class TypeConverter {
         }
         throw new UnsupportedOperationException("Cannot construct instance of "+targetType+" from a string.");
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="NUMBERS">
     
     /**
      * Convert value to target numeric type, if possible. Returns a default value if unable
@@ -155,4 +165,7 @@ public class TypeConverter {
             throw new UnsupportedOperationException("Unsupported number: "+n);
         }
     }
+    
+    //</editor-fold>
+    
 }

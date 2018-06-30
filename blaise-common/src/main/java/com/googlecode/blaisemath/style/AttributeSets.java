@@ -241,7 +241,7 @@ public final class AttributeSets {
             if (sval.matches("#[0-9a-fA-f]{3}")
                     || sval.matches("#[0-9a-fA-f]{6}")
                     || sval.matches("#[0-9a-fA-f]{8}")) {
-                return Colors.fromString(sval);
+                return Colors.decode(sval);
             } else if (sval.matches("!point\\[(.*)\\]")) {
                 return new Point2DAdapter().unmarshal(sval);
             } else if (sval.matches("!rectangle\\[(.*)\\]")) {
@@ -263,7 +263,7 @@ public final class AttributeSets {
         protected Object doBackward(String sval, Class<?> prefType) {
             requireNonNull(prefType);
             if (prefType == Color.class) {
-                return Colors.fromString(sval);
+                return Colors.decode(sval);
             } else if (Point2D.class.isAssignableFrom(prefType)) {
                 return new Point2DAdapter().unmarshal(sval);
             } else if (Rectangle2D.class.isAssignableFrom(prefType)) {
@@ -287,7 +287,7 @@ public final class AttributeSets {
         @Override
         protected String doForward(Object val) {
             if (val instanceof Color) {
-                return Colors.toString((Color) val);
+                return Colors.encode((Color) val);
             } else if (val instanceof Marker) {
                 return val.getClass().getSimpleName();
             } else if (val instanceof Rectangle2D) {

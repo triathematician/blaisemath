@@ -49,7 +49,7 @@ public class Colors {
      * @return string
      * @throws NullPointerException if c is null
      */
-    public static String toString(Color c) {
+    public static String encode(Color c) {
         requireNonNull(c);
         if (c.getAlpha() == 255) {
             return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
@@ -65,7 +65,7 @@ public class Colors {
      * @throws NullPointerException if v is null
      * @throws IllegalArgumentException if v is an invalid string
      */
-    public static Color fromString(String v) {
+    public static Color decode(String v) {
         requireNonNull(v);
         javafx.scene.paint.Color fx = javafx.scene.paint.Color.web(v);
         return new Color((float) fx.getRed(), (float) fx.getGreen(),
@@ -131,12 +131,12 @@ public class Colors {
     private static final class ColorStringConverter extends Converter<Color, String> {
         @Override
         protected Color doBackward(String v) {
-            return v == null ? null : Colors.fromString(v);
+            return v == null ? null : Colors.decode(v);
         }
 
         @Override
         protected String doForward(Color c) {
-            return c == null ? null : Colors.toString(c);
+            return c == null ? null : Colors.encode(c);
         }
     }
     

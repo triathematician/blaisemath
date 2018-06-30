@@ -148,7 +148,7 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
     public String getPointTooltip(Point2D pt) {
         Preconditions.checkNotNull(pt);
         return pointTipper == null
-                ? Points.formatPoint(pt, 1)
+                ? Points.format(pt, 1)
                 : pointTipper.apply(pt);
     }
     
