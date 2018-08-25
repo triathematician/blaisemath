@@ -283,12 +283,26 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
         setTransform(null);
     }
     
+    //<editor-fold defaultstate="collapsed" desc="ZOOM OPERATIONS">
+    
     /**
      * Set transform to include all components in the graphic tree. Does nothing
-     * if there are no graphics.
+     * if there are no graphics. Animates zoom operation.
      */
     public void zoomToAll() {
-        zoomToAll(new Insets(0, 0, 0, 0));
+        zoomToAll(new Insets(0, 0, 0, 0), true);
+    }
+
+    /**
+     * Set transform to include all components in the graphic tree inside display
+     * area plus insets. The insets are expressed in local coordinates, not window
+     * coordinates. Positive insets result in extra space around the graphics.
+     * Animates zoom operation.
+     * 
+     * @param outsets additional space to leave around the graphics
+     */
+    public void zoomToAll(Insets outsets) {
+        zoomToAll(outsets, true);
     }
 
     /**
@@ -297,50 +311,89 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * coordinates. Positive insets result in extra space around the graphics.
      * 
      * @param outsets additional space to leave around the graphics
+     * @param animate if true, zoom operation will animate
      */
-    public void zoomToAll(Insets outsets) {
+    public void zoomToAll(Insets outsets, boolean animate) {
         Rectangle2D bounds = getGraphicRoot().boundingBox();
-        if (bounds != null) {
+        if (bounds != null && animate) {
             animatedZoomWithOutsets(bounds, outsets);
+        } else if (bounds != null) {
+            instantZoomWithOutsets(bounds, outsets);
         }
     }
     
     /**
-     * Zooms in in to the graphics canvas.
+     * Zooms in in to the graphics canvas (animated).
      */
     public void zoomIn() {
-        PanAndZoomHandler.zoomIn(this);
+        PanAndZoomHandler.zoomIn(this, true);
+    }
+    
+    /**
+     * Zooms in in to the graphics canvas.
+     * @param animate if true, zoom operation will animate
+     */
+    public void zoomIn(boolean animate) {
+        PanAndZoomHandler.zoomIn(this, animate);
+    }
+    
+    /**
+     * Zooms out of the graphics canvas (animated).
+     */
+    public void zoomOut() {
+        PanAndZoomHandler.zoomOut(this, true);
     }
     
     /**
      * Zooms out of the graphics canvas.
      */
-    public void zoomOut() {
-        PanAndZoomHandler.zoomOut(this);
+    public void zoomOut(boolean animate) {
+        PanAndZoomHandler.zoomOut(this, animate);
     }
     
     /**
      * Set transform to include all selected components. Does nothing if nothing
-     * is selected.
+     * is selected. Zoom is animated.
      */
     public void zoomToSelected() {
-        zoomToSelected(new Insets(0, 0, 0, 0));
+        zoomToSelected(new Insets(0, 0, 0, 0), true);
     }
 
     /**
      * Set transform to include all components in the graphic tree inside display
      * area plus insets. The outsets are expressed in local coordinates, not window
      * coordinates. Positive insets result in extra space around the graphics.
+     * Zoom is animated.
      * 
      * @param locCoordOutsets additional space to leave around the graphics (in local coordinate space)
      */
     public void zoomToSelected(Insets locCoordOutsets) {
+        zoomToSelected(locCoordOutsets, true);
+    }
+
+    /**
+     * Set transform to include all components in the graphic tree inside display
+     * area plus insets. The outsets are expressed in local coordinates, not window
+     * coordinates. Positive insets result in extra space around the graphics.
+     * Zoom is anmiated.
+     * 
+     * @param locCoordOutsets additional space to leave around the graphics (in local coordinate space)
+     * @boolean animate if true, zoom is animated
+     */
+    public void zoomToSelected(Insets locCoordOutsets, boolean animate) {
         Rectangle2D bounds = GraphicUtils.boundingBox(getSelectionModel().getSelection());
-        if (bounds != null) {
+        if (bounds != null && animate) {
             animatedZoomWithOutsets(bounds, locCoordOutsets);
+        } else if (bounds != null) {
+            instantZoomWithOutsets(bounds, locCoordOutsets);
         }
     }
     
+    /**
+     * Utility method to animate the zoom operation to the target local bounds.
+     * @param bounds local bounds
+     * @param locCoordOutsets outsets beyond the local bounds
+     */
     private void animatedZoomWithOutsets(Rectangle2D bounds, Insets locCoordOutsets) {
         double minX = bounds.getMinX() - locCoordOutsets.left;
         double maxX = Math.max(minX, bounds.getMaxX() + locCoordOutsets.right);
@@ -350,6 +403,22 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
                 new Point2D.Double(minX, minY),
                 new Point2D.Double(maxX, maxY));
     }
+    
+    /**
+     * Utility method to instantly change the zoom to the target local bounds.
+     * @param bounds local bounds
+     * @param locCoordOutsets outsets beyond the local bounds
+     */
+    private void instantZoomWithOutsets(Rectangle2D bounds, Insets locCoordOutsets) {
+        double minX = bounds.getMinX() - locCoordOutsets.left;
+        double maxX = Math.max(minX, bounds.getMaxX() + locCoordOutsets.right);
+        double minY = bounds.getMinY() - locCoordOutsets.top;
+        double maxY = Math.max(minY, bounds.getMaxY() + locCoordOutsets.bottom);
+        PanAndZoomHandler.setDesiredLocalBounds(this, 
+                new Rectangle2D.Double(minX, minY, maxX-minX, maxY-minY));
+    }
+    
+    //</editor-fold>
     
     /**
      * Convert window point location to graphic root location
