@@ -380,7 +380,6 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * 
      * @param locCoordOutsets additional space to leave around the graphics (in local coordinate space)
      * @param animate if true, zoom operation will animate
-     * @boolean animate if true, zoom is animated
      */
     public void zoomToSelected(Insets locCoordOutsets, boolean animate) {
         Rectangle2D bounds = GraphicUtils.boundingBox(getSelectionModel().getSelection());
