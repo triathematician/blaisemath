@@ -26,8 +26,8 @@ package com.googlecode.blaisemath.graphics.core;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.CoordinateBean;
-import com.googlecode.blaisemath.util.DraggableCoordinate;
+import com.googlecode.blaisemath.coordinate.CoordinateBean;
+import com.googlecode.blaisemath.coordinate.DraggableCoordinate;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -192,9 +192,6 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     
     
     //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
-    //
-    // INNER CLASSES
-    //
     
     /** A draggable point generating events when it's position changes. */
     private class ProxyPointDraggable implements DraggableCoordinate<Point2D> {
@@ -205,7 +202,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
 
         @Override
         public void setPoint(Point2D p) {
-            ((Point2D)primitive).setLocation(p);
+            ((Point2D) primitive).setLocation(p);
         }
 
         @Override

@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.util;
  */
 
 
-import com.google.common.base.Converter;
 import java.awt.Color;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -53,6 +52,15 @@ public class ColorsTest extends TestCase {
         System.out.println("alphas");
         assertEquals(new Color(255, 255, 255, 0), Colors.alpha(Color.white, 0));
     }
+    
+    @Test
+    public void testInterpolate() {
+        System.out.println("interpolate");
+        assertEquals(Color.green, Colors.interpolate(Color.red, 0f, Color.green));
+        assertEquals(new Color(77, 179, 0), Colors.interpolate(Color.red, .3f, Color.green));
+        assertEquals(new Color(128, 128, 0), Colors.interpolate(Color.red, .5f, Color.green));
+        assertEquals(Color.red, Colors.interpolate(Color.red, 1f, Color.green));
+    }
 
     @Test
     public void testToString() {
@@ -64,18 +72,18 @@ public class ColorsTest extends TestCase {
     }
 
     @Test
-    public void testConvertToString() {
-        System.out.println("convertToString");
-        assertEquals(null, Colors.stringConverter().convert(null));
-        assertEquals("#ff0000", Colors.stringConverter().convert(Color.red));
-        assertEquals("#00ff00", Colors.stringConverter().convert(Color.green));
-        assertEquals("#0000ff", Colors.stringConverter().convert(Color.blue));
-        assertEquals("#01020304", Colors.stringConverter().convert(new Color(1,2,3,4)));
+    public void testEncode() {
+        System.out.println("encode");
+        assertNPE(() -> Colors.encode(null));
+        assertEquals("#ff0000", Colors.encode(Color.red));
+        assertEquals("#00ff00", Colors.encode(Color.green));
+        assertEquals("#0000ff", Colors.encode(Color.blue));
+        assertEquals("#01020304", Colors.encode(new Color(1,2,3,4)));
     }
 
     @Test
-    public void testFromString() {
-        System.out.println("fromString");
+    public void testDecode() {
+        System.out.println("decode");
         assertEquals(Color.red, Colors.decode("ff0000"));
         assertEquals(Color.red, Colors.decode("#ff0000"));
         assertEquals(Color.green, Colors.decode("#00ff00"));
@@ -88,28 +96,21 @@ public class ColorsTest extends TestCase {
         assertIllegal(() -> Colors.decode("null"));
         assertIllegal(() -> Colors.decode("not a color"));
     }
-
-    @Test
-    public void testConvertFromString() {
-        System.out.println("convertFromString");
-        Converter<String, Color> rev = Colors.stringConverter().reverse();
-        assertEquals(null, rev.convert(null));
-        assertEquals(Color.red, rev.convert("ff0000"));
-        assertEquals(Color.red, rev.convert("#ff0000"));
-        assertEquals(Color.green, rev.convert("#00ff00"));
-        assertEquals(Color.blue, rev.convert("#0000ff"));
-        assertEquals(new Color(0,0,255,128), rev.convert("#0000ff80"));
-        assertEquals(Color.blue, rev.convert("#00f"));
-        assertEquals(rev.convert("#ff0033"), rev.convert("#f03"));
-        assertIllegal(() -> rev.convert("null"));
-        assertIllegal(() -> rev.convert("not a color"));
-    }
     
     private static void assertIllegal(Runnable r) {
         try {
             r.run();
             fail();
         } catch (IllegalArgumentException x) {
+            // expected
+        }
+    }
+    
+    private static void assertNPE(Runnable r) {
+        try {
+            r.run();
+            fail();
+        } catch (NullPointerException x) {
             // expected
         }
     }

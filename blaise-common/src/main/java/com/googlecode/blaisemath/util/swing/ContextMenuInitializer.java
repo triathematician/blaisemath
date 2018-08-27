@@ -27,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Provides a method that can be used to initialize (add actions to) a {@link JPopupMenu}.
- * The initializer will be provided as argument the <i>source</i> object/graphic
+ * The initializer will be provided as argument the <i>source</i> object
  * that is creating the menu, the <i>location</i> where it is being shown,
  * an optional <i>focus</i> object describing a more specific target for the menu,
  * and an optional <i>selection</i> of objects.
@@ -44,8 +44,9 @@ public interface ContextMenuInitializer<S> {
      * @param src source for context menu
      * @param point mouse location
      * @param focus object of focus
-     * @param selection current selection (null's okay)
+     * @param selection current selection
      */
-    void initContextMenu(JPopupMenu popup, S src, Point2D point, @Nullable Object focus, @Nullable Set selection);
+    void initContextMenu(JPopupMenu popup, S src, Point2D point, @Nullable Object focus,
+            @Nullable Set selection);
 
 }

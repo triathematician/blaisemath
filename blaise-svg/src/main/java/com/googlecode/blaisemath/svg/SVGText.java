@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.graphics.swing.AnchoredText;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 

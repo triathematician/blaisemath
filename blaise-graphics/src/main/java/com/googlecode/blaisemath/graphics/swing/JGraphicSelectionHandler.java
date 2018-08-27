@@ -30,7 +30,6 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.Color;
 import java.awt.Component;

@@ -37,7 +37,7 @@ package com.googlecode.blaisemath.svg;
 
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.graphics.swing.AnchoredText;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;

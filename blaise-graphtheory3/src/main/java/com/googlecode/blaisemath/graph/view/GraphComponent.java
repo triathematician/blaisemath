@@ -41,7 +41,7 @@ import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import java.awt.Graphics2D;
 import java.awt.event.HierarchyEvent;

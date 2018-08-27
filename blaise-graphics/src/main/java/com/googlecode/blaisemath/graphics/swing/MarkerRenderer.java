@@ -31,7 +31,7 @@ import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.OrientedPoint2D;
+import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;

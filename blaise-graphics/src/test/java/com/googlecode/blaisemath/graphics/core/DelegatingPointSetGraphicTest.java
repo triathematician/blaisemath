@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import org.junit.Test;
 
 /**

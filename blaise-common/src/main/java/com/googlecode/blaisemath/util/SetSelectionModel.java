@@ -31,10 +31,9 @@ import static java.util.Objects.requireNonNull;
 import java.util.Set;
 
 /**
- * <p>
- *   Model maintaining a collection of selected objects, and notifying listeners
- *   when that set changes.
- * </p>
+ * Tracks a set of objects, with convenience methods to adjust the set, and
+ * notifies listeners on changes.
+ * 
  * @param <G> type of object that can be selected
  * @author elisha
  */

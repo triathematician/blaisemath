@@ -57,15 +57,15 @@ public abstract class AnimationStep {
      * @return timer executing the animation
      */
     public static javax.swing.Timer animate(int min, int max, int delay, AnimationStep step) {
-        NRunnable runner = new NRunnable(min, max, step);
-        return runner.runNTimes(delay);
+        AnimationRunner runner = new AnimationRunner(min, max, step);
+        return runner.startTimer(delay);
     }
     
     /**
      * Runnable that cancels after a given number of steps. The {@link AnimationStep}
      * is called for every value between a min and a max integer value.
      */
-    private static final class NRunnable implements ActionListener {
+    private static final class AnimationRunner implements ActionListener {
         private final int min;
         private final int max;
         private final AnimationStep step;
@@ -73,7 +73,7 @@ public abstract class AnimationStep {
         private int runStep = 0;
         private javax.swing.Timer timer;
 
-        public NRunnable(int min, int max, AnimationStep step) {
+        public AnimationRunner(int min, int max, AnimationStep step) {
             checkArgument(max >= min);
             requireNonNull(step);
             this.min = min;
@@ -96,7 +96,7 @@ public abstract class AnimationStep {
          * @param period how long between animation steps
          * @return timer executing the animation
          */
-        public javax.swing.Timer runNTimes(int period) {
+        public javax.swing.Timer startTimer(int period) {
             runStep = min;
             timer = new javax.swing.Timer(0, this);
             timer.setRepeats(true);

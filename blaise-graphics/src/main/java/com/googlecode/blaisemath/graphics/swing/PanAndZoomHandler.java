@@ -28,9 +28,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.swing.AnimationStep;
-import com.googlecode.blaisemath.util.swing.BSwingUtilities;
+import com.googlecode.blaisemath.util.swing.MoreSwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -281,7 +280,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      */
     @InvokedFromThread("multiple")
     public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle compBounds, final Rectangle2D rect) {
-        BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+        MoreSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
             @Override
             public void run() {
                 comp.setTransform(scaleRectTransform(compBounds, rect));

@@ -30,9 +30,9 @@ import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
-import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import java.awt.geom.Point2D;
 import java.util.Map;
 

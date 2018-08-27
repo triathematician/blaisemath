@@ -36,11 +36,11 @@ import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.RE
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.AnchoredText;
-import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.swing.BSwingUtilities;
+import com.googlecode.blaisemath.graphics.swing.AnchoredText;
+import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.swing.MoreSwingUtilities;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +151,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     @InvokedFromThread("unknown")
     private void handleCoordinateChange(final CoordinateChangeEvent evt) {
         updateQueue.add(evt);
-        BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+        MoreSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
             @Override
             public void run() {
                 processNextCoordinateChangeEvent();

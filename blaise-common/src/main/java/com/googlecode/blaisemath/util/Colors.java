@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.util;
  */
 
 
-import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkArgument;
 import java.awt.Color;
 import static java.util.Objects.requireNonNull;
@@ -32,15 +31,11 @@ import static java.util.Objects.requireNonNull;
  * 
  * @author Elisha
  */
-public class Colors {
-
-    private static final ColorStringConverter CONVERTER_INST = new ColorStringConverter();
+public final class Colors {
     
     // utility class
     private Colors() {
     }
-    
-    //<editor-fold defaultstate="collapsed" desc="DERIVED COLOR UTILS">
     
     /**
      * Convert color to string. Results in #RRGGBB or #RRGGBBAA, depending on
@@ -82,14 +77,31 @@ public class Colors {
         checkArgument(a >= 0 && a <= 255);
         return new Color(col.getRed(), col.getGreen(), col.getBlue(), a);
     }
-
+    
+    /**
+     * Interpolates between two colors, e.g. r = r1*wt + r2*(1-wt).
+     * @param c1 first color
+     * @param wt weight of first color (between 0 and 1)
+     * @param c2 second color
+     * @return interpolated color
+     */
+    public static Color interpolate(Color c1, float wt, Color c2) {
+        checkArgument(wt >= 0f && wt <= 1f);
+        float awt = 1-wt;
+        return new Color((c1.getRed()*wt + c2.getRed()*awt)/255,
+                (c1.getGreen()*wt + c2.getGreen()*awt)/255,
+                (c1.getBlue()*wt + c2.getBlue()*awt)/255,
+                (c1.getAlpha()*wt + c2.getAlpha()*awt)/255);
+    }
+    
     /**
      * Produces a color that is lighter than the specified color.
      * @param c source color
      * @return new color
      */
     public static Color lighterThan(Color c) {
-        return new Color(lighten(c.getRed()), lighten(c.getGreen()), lighten(c.getBlue()), c.getAlpha());
+        return new Color(lighten(c.getRed()), lighten(c.getGreen()),
+                lighten(c.getBlue()), c.getAlpha());
     }
 
     private static int lighten(int i) {
@@ -107,39 +119,5 @@ public class Colors {
         Color c2 = Color.getHSBColor(hsb[0], .5f*hsb[1], hsb[2]);
         return new Color(c2.getRed(), c2.getGreen(), c2.getBlue(), c.getAlpha());
     }
-    
-    //</editor-fold>
-    
-    /**
-     * Get static instance of converter.
-     * @return converter
-     */
-    public static Converter<Color, String> stringConverter() {
-        return CONVERTER_INST;
-    }
-    
-    //<editor-fold defaultstate="collapsed" desc="INNER">
-    
-    /**
-     * Converts colors to/from hex strings. Supports {@code #AARRGGBB} and
-     * {@code #RRGGBB} formats.
-     *
-     * @see Color#decode(java.lang.String)
-     *
-     * @author Elisha Peterson
-     */
-    private static final class ColorStringConverter extends Converter<Color, String> {
-        @Override
-        protected Color doBackward(String v) {
-            return v == null ? null : Colors.decode(v);
-        }
-
-        @Override
-        protected String doForward(Color c) {
-            return c == null ? null : Colors.encode(c);
-        }
-    }
-    
-    //</editor-fold>
     
 }

@@ -39,7 +39,7 @@ import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.StaticSpringLayout.StaticSpringLayoutParameters;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.Points;
+import com.googlecode.blaisemath.util.geom.Points;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;

@@ -38,7 +38,6 @@ import static com.googlecode.blaisemath.style.Anchor.SOUTHWEST;
 import static com.googlecode.blaisemath.style.Anchor.WEST;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Insets;

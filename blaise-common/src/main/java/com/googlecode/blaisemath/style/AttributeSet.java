@@ -25,7 +25,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.util.converter.TypeConverter;
+import com.googlecode.blaisemath.util.type.TypeConverter;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.Collections;

@@ -28,7 +28,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.Points;
+import com.googlecode.blaisemath.util.geom.Points;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 import javax.annotation.Nullable;

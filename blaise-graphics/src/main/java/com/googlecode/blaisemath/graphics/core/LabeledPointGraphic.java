@@ -30,7 +30,7 @@ import com.google.common.base.Strings;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.graphics.swing.AnchoredText;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 

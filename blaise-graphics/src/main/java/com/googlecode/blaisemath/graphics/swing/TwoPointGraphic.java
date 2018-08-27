@@ -28,7 +28,7 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.OrientedPoint2D;
+import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 

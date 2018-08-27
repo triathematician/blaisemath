@@ -29,10 +29,10 @@ import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.swing.BSwingUtilities;
+import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.swing.MoreSwingUtilities;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -108,7 +108,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
     @InvokedFromThread("unknown")
     private void handleCoordinateChange(final CoordinateChangeEvent<S,Point2D> evt) {
         updateQueue.add(evt);
-        BSwingUtilities.invokeOnEventDispatchThread(this::processNextCoordinateChangeEvent);
+        MoreSwingUtilities.invokeOnEventDispatchThread(this::processNextCoordinateChangeEvent);
     }
     
     @InvokedFromThread("EDT")

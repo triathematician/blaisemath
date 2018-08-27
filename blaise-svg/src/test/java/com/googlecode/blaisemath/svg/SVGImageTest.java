@@ -37,7 +37,7 @@ package com.googlecode.blaisemath.svg;
 
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.util.AnchoredImage;
+import com.googlecode.blaisemath.graphics.swing.AnchoredImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import junit.framework.TestCase;

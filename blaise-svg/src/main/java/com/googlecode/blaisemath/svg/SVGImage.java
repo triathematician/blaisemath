@@ -25,9 +25,10 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import afu.org.checkerframework.checker.nullness.qual.Nullable;
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.util.AnchoredImage;
+import com.googlecode.blaisemath.graphics.swing.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -36,7 +37,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
