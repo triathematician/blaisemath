@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-graphtheory3</artifactId>
-    <version>3.0.9-beta-SNAPSHOT</version>
+    <version>3.0.9-beta</version>
     <packaging>jar</packaging>
     
     <name>blaise-graphtheory3</name>
@@ -31,7 +31,7 @@
         <url>https://github.com/triathematician/blaisemath</url>
         <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
         <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>blaise-graphtheory3-3.0.9-beta</tag>
   </scm>    
     <issueManagement>
         <system>GitHub Issues</system>
