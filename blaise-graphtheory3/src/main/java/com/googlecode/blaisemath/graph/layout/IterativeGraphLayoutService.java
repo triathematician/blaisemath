@@ -58,7 +58,7 @@ class IterativeGraphLayoutService extends AbstractScheduledService {
             public void failed(Service.State from, Throwable failure) {
                 LOG.log(Level.SEVERE, "Layout service failed", failure);
             }
-        }, MoreExecutors.sameThreadExecutor());
+        }, MoreExecutors.newDirectExecutorService());
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
