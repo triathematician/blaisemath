@@ -346,6 +346,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
     
     /**
      * Zooms out of the graphics canvas.
+     * @param animate if true, zoom operation will animate
      */
     public void zoomOut(boolean animate) {
         PanAndZoomHandler.zoomOut(this, animate);
@@ -378,6 +379,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * Zoom is anmiated.
      * 
      * @param locCoordOutsets additional space to leave around the graphics (in local coordinate space)
+     * @param animate if true, zoom operation will animate
      * @boolean animate if true, zoom is animated
      */
     public void zoomToSelected(Insets locCoordOutsets, boolean animate) {
