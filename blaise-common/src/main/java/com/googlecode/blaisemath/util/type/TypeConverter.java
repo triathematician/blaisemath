@@ -22,8 +22,10 @@ package com.googlecode.blaisemath.util.type;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.util.Colors;
-import com.googlecode.blaisemath.util.geom.Points;
+import com.googlecode.blaisemath.util.encode.Point2DCoder;
+import com.googlecode.blaisemath.util.encode.PointCoder;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -45,10 +47,13 @@ public class TypeConverter {
 
     private static final Logger LOG = Logger.getLogger(TypeConverter.class.getName());
 
-    private static final Map<Class, Function<String, ?>> FUNC_LOOKUP = ImmutableMap.<Class, Function<String, ?>>builder()
-            .put(Color.class, Colors::decode)
-            .put(Point2D.class, Points::decode)
-            .build();
+    /** Functions for decoding specific types */
+    private static final Map<Class, Function<String, ?>> TYPE_DECODERS
+            = ImmutableMap.<Class, Function<String, ?>>builder()
+                    .put(Color.class, Colors::decode)
+                    .put(Point.class, new PointCoder()::decode)
+                    .put(Point2D.class, new Point2DCoder()::decode)
+                    .build();
     
     /**
      * Convert value to target type, if possible. Returns a default value if the
@@ -59,7 +64,8 @@ public class TypeConverter {
      * @param def default value to return if value is null, or unable to convert
      * @return converted value
      */
-    public static <X> @Nullable X convert(@Nullable Object value, Class<X> targetType, @Nullable X def) {
+    public static <X> @Nullable X convert(@Nullable Object value, Class<X> targetType,
+            @Nullable X def) {
         try {
             if (value == null) {
                 return def;
@@ -88,11 +94,12 @@ public class TypeConverter {
      * @return converted value
      * @throws UnsupportedOperationException if unable to convert
      */
-    public static <X> @Nullable X convertFromString(@Nullable String value, Class<X> targetType, @Nullable X def) {
+    public static <X> @Nullable X convertFromString(@Nullable String value, 
+            Class<X> targetType, @Nullable X def) {
         if (value == null) {
             return def;
-        } else if (FUNC_LOOKUP.containsKey(targetType)) {
-            return (X) FUNC_LOOKUP.get(targetType).apply(value);
+        } else if (TYPE_DECODERS.containsKey(targetType)) {
+            return (X) TYPE_DECODERS.get(targetType).apply(value);
         }
         
         Optional<Method> decoder = ReflectionUtils.findStaticMethod(targetType, 
@@ -100,7 +107,8 @@ public class TypeConverter {
         if (decoder.isPresent()) {
             try {
                 return (X) decoder.get().invoke(null, value);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException ex) {
+            } catch (IllegalAccessException | IllegalArgumentException 
+                    | InvocationTargetException | ClassCastException ex) {
                 LOG.log(Level.SEVERE, "Failed to invoke factory method "+decoder.get(), ex);
             }
         }
@@ -108,11 +116,13 @@ public class TypeConverter {
         if (con.isPresent()) {
             try {
                 return (X) con.get().newInstance(value);
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            } catch (InstantiationException | IllegalAccessException 
+                    | IllegalArgumentException | InvocationTargetException ex) {
                 LOG.log(Level.SEVERE, "Failed to invoke constructor "+con.get(), ex);
             }
         }
-        throw new UnsupportedOperationException("Cannot construct instance of "+targetType+" from a string.");
+        throw new UnsupportedOperationException("Cannot construct instance of "
+                + targetType + " from a string.");
     }
     
     //<editor-fold defaultstate="collapsed" desc="NUMBERS">
@@ -128,7 +138,8 @@ public class TypeConverter {
      * @throws UnsupportedOperationException if unable to convert
      */
     @Nullable
-    public static <X extends Number> X convertToNumber(@Nullable Object value, Class<X> targetType, @Nullable X def) {
+    public static <X extends Number> X convertToNumber(@Nullable Object value, 
+            Class<X> targetType, @Nullable X def) {
         if (value == null) {
             return def;
         }

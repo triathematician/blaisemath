@@ -20,9 +20,8 @@ package com.googlecode.blaisemath.util.encode;
  * #L%
  */
 
-import com.google.common.base.Splitter;
 import java.awt.geom.Rectangle2D;
-import java.util.Map;
+import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -39,25 +38,21 @@ public final class Rectangle2DCoder implements StringEncoder<Rectangle2D>, Strin
 
     @Override
     public String encode(Rectangle2D v) {
-        return v == null ? "null" : String.format("rectangle[x=%f,y=%f,w=%f,h=%f]",
-                v.getX(), v.getY(), v.getWidth(), v.getHeight());
+        requireNonNull(v);
+        return String.format("rectangle2d(%f,%f,%f,%f)", v.getX(), v.getY(), v.getWidth(), v.getHeight());
     }
 
     @Override
     public Rectangle2D decode(String v) {
-        if (v == null) {
-            return null;
-        }
-        Matcher m = Pattern.compile("rectangle\\[(.*)\\]").matcher(v.toLowerCase().trim());
-        if (m.find()) {
-            String inner = m.group(1);
-            Map<String,String> kv = Splitter.on(",").trimResults().withKeyValueSeparator("=").split(inner);
+        requireNonNull(v);
+        Matcher m = Pattern.compile("rectangle2d\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim());
+        if (m.matches()) {
             try {
-                Double x = Double.valueOf(kv.get("x"));
-                Double y = Double.valueOf(kv.get("y"));
-                Double w = Double.valueOf(kv.get("w"));
-                Double h = Double.valueOf(kv.get("h"));
-                return new Rectangle2D.Double(x,y,w,h);
+                Double x = Double.valueOf(m.group(1));
+                Double y = Double.valueOf(m.group(2));
+                Double w = Double.valueOf(m.group(3));
+                Double h = Double.valueOf(m.group(4));
+                return new Rectangle2D.Double(x, y, w, h);
             } catch (NumberFormatException x) {
                 LOG.log(Level.FINEST, "Not a double", x);
                 return null;

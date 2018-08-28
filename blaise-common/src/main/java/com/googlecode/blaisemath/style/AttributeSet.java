@@ -25,8 +25,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.util.type.TypeConverter;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.Map;
@@ -184,6 +184,43 @@ public class AttributeSet {
     public static AttributeSet of(String k1, @Nullable Object v1, String k2, @Nullable Object v2, 
             String k3, @Nullable Object v3) {
         return of(k1, v1).and(k2, v2).and(k3, v3);
+    }
+    
+    /**
+     * Generate attribute set with given key/value pairs.
+     * @param k1 first key
+     * @param v1 first value
+     * @param k2 second key
+     * @param v2 second value
+     * @param k3 third key
+     * @param v3 third value
+     * @param k4 fourth key
+     * @param v4 fourth value
+     * @return created set
+     */
+    public static AttributeSet of(String k1, @Nullable Object v1, String k2, @Nullable Object v2, 
+            String k3, @Nullable Object v3, String k4, @Nullable Object v4) {
+        return of(k1, v1).and(k2, v2).and(k3, v3).and(k4, v4);
+    }
+    
+    /**
+     * Generate attribute set with given key/value pairs.
+     * @param k1 first key
+     * @param v1 first value
+     * @param k2 second key
+     * @param v2 second value
+     * @param k3 third key
+     * @param v3 third value
+     * @param k4 fourth key
+     * @param v4 fourth value
+     * @param k5 fifth key
+     * @param v5 fifth value
+     * @return created set
+     */
+    public static AttributeSet of(String k1, @Nullable Object v1, String k2, @Nullable Object v2, 
+            String k3, @Nullable Object v3, String k4, @Nullable Object v4,
+            String k5, @Nullable Object v5) {
+        return of(k1, v1).and(k2, v2).and(k3, v3).and(k4, v4).and(k5, v5);
     }
     
     //</editor-fold>
@@ -398,7 +435,7 @@ public class AttributeSet {
 
     @Nullable
     public String getString(String key, String def) {
-        return TypeConverter.convert(get(key), String.class, def);
+        return AttributeSetCoder.convertValue(get(key), String.class, def);
     }
 
     /**
@@ -420,7 +457,7 @@ public class AttributeSet {
      */
     @Nullable
     public Boolean getBoolean(String key, @Nullable Boolean def) {
-        return TypeConverter.convert(get(key), Boolean.class, def);
+        return AttributeSetCoder.convertValue(get(key), Boolean.class, def);
     }
     
     /**
@@ -436,7 +473,7 @@ public class AttributeSet {
 
     @Nullable
     public Integer getInteger(String key, @Nullable Integer def) {
-        return TypeConverter.convert(get(key), Integer.class, def);
+        return AttributeSetCoder.convertValue(get(key), Integer.class, def);
     }
 
     /**
@@ -452,7 +489,7 @@ public class AttributeSet {
 
     @Nullable
     public Float getFloat(String key, @Nullable Float def) {
-        return TypeConverter.convert(get(key), Float.class, def);
+        return AttributeSetCoder.convertValue(get(key), Float.class, def);
     }
 
     /**
@@ -468,7 +505,7 @@ public class AttributeSet {
 
     @Nullable
     public Double getDouble(String key, @Nullable Double def) {
-        return TypeConverter.convert(get(key), Double.class, def);
+        return AttributeSetCoder.convertValue(get(key), Double.class, def);
     }
     
     /**
@@ -484,7 +521,17 @@ public class AttributeSet {
     
     @Nullable
     public Color getColor(String key, @Nullable Color def) {
-        return TypeConverter.convert(get(key), Color.class, def);
+        return AttributeSetCoder.convertValue(get(key), Color.class, def);
+    }
+    
+    @Nullable
+    public Point getPoint(String key) {
+        return getPoint(key, null);
+    }
+    
+    @Nullable
+    public Point getPoint(String key, @Nullable Point def) {
+        return AttributeSetCoder.convertValue(get(key), Point.class, def);
     }
     
     @Nullable
@@ -494,7 +541,7 @@ public class AttributeSet {
     
     @Nullable
     public Point2D getPoint2D(String key, @Nullable Point2D def) {
-        return TypeConverter.convert(get(key), Point2D.class, def);
+        return AttributeSetCoder.convertValue(get(key), Point2D.class, def);
     }
     
     //</editor-fold>

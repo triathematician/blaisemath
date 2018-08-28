@@ -1,20 +1,54 @@
 package com.googlecode.blaisemath.style;
 
+/*-
+ * #%L
+ * blaise-common
+ * --
+ * Copyright (C) 2014 - 2018 Elisha Peterson
+ * --
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Ints;
 import com.googlecode.blaisemath.util.Colors;
+import com.googlecode.blaisemath.util.encode.FontCoder;
+import com.googlecode.blaisemath.util.encode.InsetsCoder;
+import com.googlecode.blaisemath.util.encode.Point2DCoder;
+import com.googlecode.blaisemath.util.encode.PointCoder;
+import com.googlecode.blaisemath.util.encode.Rectangle2DCoder;
+import com.googlecode.blaisemath.util.encode.RectangleCoder;
 import com.googlecode.blaisemath.util.encode.StringDecoder;
 import com.googlecode.blaisemath.util.encode.StringEncoder;
+import com.googlecode.blaisemath.util.type.TypeConverter;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import static java.util.Collections.emptyMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import static java.util.Objects.requireNonNull;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -60,30 +94,84 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
     /** String used to represent null explicitly. */
     private static final String NULL_STRING = "none";
     
-    private static final Joiner.MapJoiner KEYVAL_JOINER = Joiner.on("; ")
+    /** Joins values into the result string */
+    private static final Joiner.MapJoiner CODER_JOINER = Joiner.on("; ")
             .withKeyValueSeparator(":");
-    private static final Splitter.MapSplitter KEYVAL_SPLITTER = Splitter.on(";")
-            .omitEmptyStrings().trimResults()
-            .withKeyValueSeparator(Splitter.on(":").trimResults());
+    /** Functions used to encode specific types. Listed in order of type checks for encoding. */
+    private static final CoderMap CODERS = new CoderMap()
+                    .put(Color.class, Colors::encode)
+                    .put(Font.class, new FontCoder()::encode)
+                    .put(Insets.class, new InsetsCoder()::encode)
+                    .put(Point.class, new PointCoder()::encode)
+                    .put(Point2D.class, new Point2DCoder()::encode)
+                    .put(Rectangle.class, new RectangleCoder()::encode)
+                    .put(Rectangle2D.class, new Rectangle2DCoder()::encode)
+                    .put(Marker.class, v -> v.getClass().getSimpleName());
+    
+    /** Splits key-value pairs in a string to decode */
+    private static final Splitter DECODER_PAIR_SPLITTER = Splitter.on(";")
+            .omitEmptyStrings().trimResults();
+    /** Splits key from value */
+    private static final Splitter DECODER_KEY_SPLITTER = Splitter.on(":")
+            .omitEmptyStrings().trimResults();
+    /** Functions used to encode specific types. Listed in order of type checks for decoding. */
+    private static final DecoderMap DECODERS = new DecoderMap()
+                    .put(Integer.class, Integer::valueOf)
+                    .put(Float.class, Float::valueOf)
+                    .put(Double.class, Double::valueOf)
+                    .put(Boolean.class, Boolean::valueOf)
+                    .put(Anchor.class, Anchor::valueOf)
+                    .put(String.class, s -> s)
+                    .put(Color.class, Colors::decode)
+                    .put(Font.class, Font::decode)
+                    .put(Insets.class, new InsetsCoder()::decode)
+                    .put(Point.class, new PointCoder()::decode)
+                    .put(Point2D.class, new Point2DCoder()::decode)
+                    .put(Rectangle.class, new RectangleCoder()::decode)
+                    .put(Rectangle2D.class, new Rectangle2DCoder()::decode);
 
     /** Used in deserialization for custom type mapping */
-    private final @Nullable Map<String, Class<?>> types = null;
+    private final Map<String, Class<?>> types;
+
+    /**
+     * Get default coder instance.
+     */
+    public AttributeSetCoder() {
+        this(null);
+    }
+    
+    /**
+     * Get coder instance where particular keys are associated with particular types,
+     * which allows decoding operations to generate the correct types in more cases.
+     * @param types types associated with keys
+     */
+    public AttributeSetCoder(Map<String, Class<?>> types) {
+        this.types = types == null ? emptyMap() : types;
+    }
 
     @Override
     public String encode(AttributeSet style) {
         requireNonNull(style);
         Map<String,String> props = Maps.newTreeMap();
-        style.getAttributes().forEach(s -> tryPut(props, style, s));
-        return KEYVAL_JOINER.join(props);
+        style.getAttributes().forEach(s -> tryPut(props, s, style.get(s)));
+        return CODER_JOINER.join(props);
     }
 
     @Override
     public AttributeSet decode(String str) {
         requireNonNull(str);
+        
+        // perform two separate splits instead of using MapSplitter to allow for duplicate keys
         AttributeSet res = new AttributeSet();
-        for (Entry<String, String> en : KEYVAL_SPLITTER.split(str).entrySet()) {
-            String key = en.getKey();
-            String sval = en.getValue();
+        List<String> pairs = DECODER_PAIR_SPLITTER.splitToList(str);
+        for (String p : pairs) {
+            List<String> kv = DECODER_KEY_SPLITTER.splitToList(p);
+            if (kv.size() != 2) {
+                LOG.log(Level.WARNING, "Invalid attribute string: {0}", str);
+                return res;
+            }
+            String key = kv.get(0);
+            String sval = kv.get(1);
             Object val = NULL_STRING.equals(sval) ? null
                     : types.containsKey(key) ? decodeValue(sval, types.get(key))
                     : decodeValue(sval, Object.class);
@@ -92,61 +180,52 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
         return res;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="ENCODE UTILS">
+    //<editor-fold defaultstate="collapsed" desc="VALUE CONVERSION UTILS">
     
-    private static void tryPut(Map<String, String> props, AttributeSet style, String key) {
-        try {
-            props.put(key, encodeValue(style.get(key)));
-        } catch (UnsupportedOperationException x) {
-            LOG.log(Level.WARNING, "Cannot convert value "+style.get(key)+" to string.", x);
-        }
+    /**
+     * Converts value from one type to another, with optional default.
+     * @param val value to convert
+     * @param type target type
+     * @param def default value
+     * @return value of target type if possible, else default
+     */
+    static <X> @Nullable X convertValue(@Nullable Object value, Class<X> targetType,
+            @Nullable X def) {
+        return TypeConverter.convert(value, targetType, def);
     }
     
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="VALUE ENCODING">
+    //<editor-fold defaultstate="collapsed" desc="ENCODE UTILS">
+    
+    /** Attempt to convert given value to a string and add to target map */
+    private static void tryPut(Map<String, String> props, String key, Object value) {
+        try {
+            props.put(key, encodeValue(value));
+        } catch (UnsupportedOperationException x) {
+            LOG.log(Level.WARNING, "Cannot convert value " + value + " to string.", x);
+        }
+    }
     
     /**
-     * Converts values to strings. Supports the following types:
-     * 
-     * <ul>
-     * <li>String</li>
-     * <li>Double</li>
-     * <li>Float</li>
-     * <li>Integer</li>
-     * <li>Color - in the form #RRGGBB or #AARRGGBB</li>
-     * <li>Point - in the form !point[5,6.2]</li>
-     * <li>Rectangle - in the form !rectangle[x=2,y=3,w=7,h=12]</li>
-     * <li>Boolean - reverses as text</li>
-     * <li>Font - reverses as text</li>
-     * <li>Anchor - reverses as text</li>
-     * </ul>
-     * 
-     * <p> When decoding from strings, the above lists describes how strings that
-     * may match more than one type are handled. Types lower in the list are
-     * always used prior to those higher up in the list.
-     * 
-     * @param x value to encode
+     * Converts values to strings. 
+     * @param val value to encode
+     * @return encoded value
      */
-    private static String encodeValue(Object val) {
+    static String encodeValue(Object val) {
         try {
-            if (val instanceof Color) {
-                return Colors.encode((Color) val);
-            } else if (val instanceof Marker) {
-                return val.getClass().getSimpleName();
-            } else if (val instanceof Rectangle) {
-                return "!"+new RectangleAdapter().marshal((Rectangle)val);
-            } else if (val instanceof Rectangle2D) {
-                return "!"+new Rectangle2DAdapter().marshal((Rectangle2D)val);
-            } else if (val instanceof Point) {
-                return "!"+new PointAdapter().marshal((Point)val);
-            } else if (val instanceof Point2D.Double) {
-                return "!"+new Point2DAdapter().marshal((Point2D.Double)val);
-            } else if (val instanceof Font) {
-                return new FontAdapter().marshal((Font) val);
+            if (val == null) {
+                return NULL_STRING;
+            } else if (CODERS.containsKey(val.getClass())) {
+                return (String) ((Function) CODERS.get(val.getClass())).apply(val);
             } else {
-                return val+"";
+                for (Class c : CODERS.keySet()) {
+                    if (c.isAssignableFrom(val.getClass())) {
+                        return (String) ((Function) CODERS.get(c)).apply(val);
+                    }
+                }
             }
+            return val+"";
         } catch (Exception x) {
             LOG.log(Level.WARNING, "Unable to convert "+val, x);
             return null;
@@ -155,7 +234,7 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
     
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="VALUE DECODING">
+    //<editor-fold defaultstate="collapsed" desc="DECODE UTILS">
     
     /**
      * Decodes a string value as a target type.
@@ -164,68 +243,62 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
      * @param type decoded type
      * @return 
      */
-    private static <X> X decodeValue(String x, Class<X> type) {
-        Object val = VALUE_CONVERTER_INST.reverse().convert(x);
-        return NULL_STRING.equals(val) ? null : val;
-    }
-        
-    protected static Object doBackwardBestGuess(String sval) {
+    static <X> X decodeValue(String val, Class<X> type) {
+        requireNonNull(val);
+        String trim = val.trim();
         try {
-            if (sval.matches("#[0-9a-fA-f]{3}")
-                    || sval.matches("#[0-9a-fA-f]{6}")
-                    || sval.matches("#[0-9a-fA-f]{8}")) {
-                return Colors.decode(sval);
-            } else if (sval.matches("!point\\[(.*)\\]")) {
-                return new Point2DAdapter().unmarshal(sval);
-            } else if (sval.matches("!rectangle\\[(.*)\\]")) {
-                return new RectangleAdapter().unmarshal(sval);
+            if (NULL_STRING.equals(val)) {
+                return null;
+            } else if (DECODERS.containsKey(type)) {
+                return (X) DECODERS.get(type).apply(val);
+            } else if (trim.matches("#[0-9a-fA-f]{3}")
+                    || trim.matches("#[0-9a-fA-f]{6}")
+                    || trim.matches("#[0-9a-fA-f]{8}")) {
+                return (X) DECODERS.get(Color.class).apply(trim);
+            } else if (trim.matches("\\((.*),(.*)\\)") && trim.contains(".")) {
+                return (X) DECODERS.get(Point2D.class).apply(trim);
+            } else if (trim.matches("\\((.*),(.*)\\)")) {
+                return (X) DECODERS.get(Point.class).apply(trim);
+            } else if (trim.matches("rectangle\\((.*)\\)")) {
+                return (X) DECODERS.get(Rectangle.class).apply(trim);
+            } else if (trim.matches("rectangle2d\\((.*)\\)")) {
+                return (X) DECODERS.get(Rectangle2D.class).apply(trim);
             }
-            try {
-                return Integer.valueOf(sval);
-            } catch (NumberFormatException x) {
-                // wasn't an integer, try the next thing
+            Integer i = Ints.tryParse(trim);
+            if (type.isInstance(i)) {
+                return (X) i;
             }
-            try {
-                return Double.valueOf(sval);
-            } catch (NumberFormatException x) {
-                // wasn't a double, try the next thing
+            Double d = Doubles.tryParse(trim);
+            if (type.isInstance(d)) {
+                return (X) d;
             }
-            return sval;
+            if (type.isInstance(val)) {
+                return (X) val;
+            }
         } catch (Exception x) {
-            LOG.log(Level.WARNING, "Unable to convert "+sval, x);
+            LOG.log(Level.WARNING, "Unable to decode "+val+" as "+type, x);
             return null;
         }
-    }
-
-    protected static Object doBackward(String sval, Class<?> prefType) {
-        try {
-            requireNonNull(prefType);
-            if (prefType == Color.class) {
-                return Colors.decode(sval);
-            } else if (Point2D.class.isAssignableFrom(prefType)) {
-                return new Point2DAdapter().unmarshal(sval);
-            } else if (Rectangle2D.class.isAssignableFrom(prefType)) {
-                return new RectangleAdapter().unmarshal(sval);
-            } else if (prefType == Integer.class) {
-                return Integer.valueOf(sval);
-            } else if (prefType == Float.class) {
-                return Float.valueOf(sval);
-            } else if (prefType == Double.class) {
-                return Double.valueOf(sval);
-            } else if (prefType == String.class) {
-                return sval;
-            } else if (prefType == Boolean.class) {
-                return Boolean.valueOf(sval);
-            } else if (prefType == Anchor.class) {
-                return Anchor.valueOf(sval);
-            }
-            return sval;
-        } catch (Exception x) {
-            LOG.log(Level.WARNING, "Unable to convert "+sval, x);
-            return null;
-        }
+        LOG.log(Level.WARNING, "Unable to decode {0} as {1}", new Object[]{val, type});
+        return null;
     }
     
     //</editor-fold>
+    
+    /** Utility type for storing coders */
+    private static class CoderMap extends LinkedHashMap<Class, Function> {
+        private <X> CoderMap put(Class<X> type, Function<X, String> toStr) {
+            super.put(type, toStr);
+            return this;
+        }
+    }
+    
+    /** Utility type for storing decoders */ 
+    private static class DecoderMap extends LinkedHashMap<Class, Function> {
+        private <X> DecoderMap put(Class<X> type, Function<String, X> fromStr) {
+            super.put(type, fromStr);
+            return this;
+        }
+    }
     
 }

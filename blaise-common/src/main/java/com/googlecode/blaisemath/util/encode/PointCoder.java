@@ -21,10 +21,7 @@ package com.googlecode.blaisemath.util.encode;
  */
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-import com.googlecode.blaisemath.util.NumberSplitter;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.List;
 import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
@@ -44,19 +41,17 @@ public final class PointCoder implements StringEncoder<Point>, StringDecoder<Poi
     @Override
     public String encode(Point v) {
         requireNonNull(v);
-        return String.format("point[%d,%d]", v.x, v.y);
+        return String.format("(%d,%d)", v.x, v.y);
     }
 
     @Override
     public Point decode(String v) {
         requireNonNull(v);
-        Matcher m = Pattern.compile("point\\[(.*)\\]").matcher(v.toLowerCase().trim());
-        if (m.find()) {
-            String inner = m.group(1);
-            Iterable<String> kv = Splitter.on(",").trimResults().split(inner);
+        Matcher m = Pattern.compile("\\((.*),(.*)\\)").matcher(v.toLowerCase().trim());
+        if (m.matches()) {
             try {
-                int x = Integer.valueOf(Iterables.get(kv, 0));
-                int y = Integer.valueOf(Iterables.get(kv, 1));
+                int x = Integer.valueOf(m.group(1).trim());
+                int y = Integer.valueOf(m.group(2).trim());
                 return new Point(x,y);
             } catch (NumberFormatException x) {
                 LOG.log(Level.FINEST, "Not an integer", x);
@@ -67,43 +62,5 @@ public final class PointCoder implements StringEncoder<Point>, StringDecoder<Poi
             return null;
         }
     }
-    
-//    /**
-//     * Encode point as string, in the form (a, b)
-//     * @param p point to encode
-//     * @return string
-//     */
-//    public static String encode(Point2D p) {
-//        requireNonNull(p);
-//        if (p instanceof Point) {
-//            return String.format("(%d,%d)", ((Point) p).x, ((Point) p).y);
-//        } else {
-//            return String.format("(%f,%f)", p.getX(), p.getY());
-//        }
-//    }
-//    
-//    /**
-//     * Decodes point from string, assuming the notation used by {@link #encode}.
-//     * @param v string
-//     * @return decoded string
-//     * @throws NullPointerException if v is null
-//     * @throws IllegalArgumentException if v is an invalid string
-//     */
-//    public static Point2D decode(String v) {
-//        String str = v.trim();
-//        if (str.startsWith("(") && str.endsWith(")")) {
-//            str = str.substring(1, str.length() - 1).trim();
-//        }
-//        NumberSplitter splitter = NumberSplitter.onPattern("\\s*[,\\s]\\s*");
-//        List<Integer> attempt = splitter.trySplitToIntegers(str, null);
-//        if (attempt != null && attempt.size() == 2) {
-//            return new Point(attempt.get(0), attempt.get(1));
-//        }
-//        List<Double> attempt2 = splitter.trySplitToDoubles(str, null);
-//        if (attempt2 != null && attempt2.size() == 2) {
-//            return new Point2D.Double(attempt2.get(0), attempt2.get(1));
-//        }
-//        throw new IllegalArgumentException("Invalid point: "+v);
-//    }
     
 }

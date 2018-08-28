@@ -24,8 +24,8 @@ package com.googlecode.blaisemath.util.xml;
  * #L%
  */
 
-import com.google.common.base.Converter;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.AttributeSetCoder;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.util.logging.Level;
@@ -42,15 +42,14 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 public final class AttributeSetAdapter extends XmlAdapter<String, AttributeSet> {
     private static final Logger LOG = Logger.getLogger(AttributeSetAdapter.class.getName());
 
-    private static final Converter<AttributeSet,String> INST = AttributeSets.stringConverter();
-    private static final Converter<String,AttributeSet> REV_INST = INST.reverse();
+    private static final AttributeSetCoder INST = new AttributeSetCoder();
     
     private static final String[] COLOR_KEYS = { Styles.FILL, Styles.STROKE };
     private static final String[] NUMBER_KEYS = { Styles.STROKE_WIDTH };
     
     @Override
     public AttributeSet unmarshal(String v) {
-        AttributeSet res = REV_INST.convert(v);
+        AttributeSet res = INST.decode(v);
         if (res != null) {
             updateColorFields(res);
             updateNumberFields(res);
@@ -60,7 +59,7 @@ public final class AttributeSetAdapter extends XmlAdapter<String, AttributeSet> 
 
     @Override
     public String marshal(AttributeSet v) {
-        return INST.convert(v);
+        return INST.encode(v);
     }
     
     /**
@@ -105,13 +104,7 @@ public final class AttributeSetAdapter extends XmlAdapter<String, AttributeSet> 
         String name = s.toLowerCase();
         try {
             return (Color) Color.class.getField(name).get(null);
-        } catch (NoSuchFieldException ex) {
-            LOG.log(Level.FINE, null, ex);
-        } catch (SecurityException ex) {
-            LOG.log(Level.FINE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            LOG.log(Level.FINE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             LOG.log(Level.FINE, null, ex);
         }
         return null;

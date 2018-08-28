@@ -21,20 +21,20 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import com.google.common.base.Converter;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.util.Colors;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import static java.util.stream.Collectors.toMap;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.BeforeClass;
 
 /**
  *
@@ -42,7 +42,11 @@ import org.junit.BeforeClass;
  */
 public class AttributeSetCoderTest {
     
-    private AttributeSetCoder inst = new AttributeSetCoder();
+    private final AttributeSetCoder inst = new AttributeSetCoder();
+    private final AttributeSetCoder typedInst = new AttributeSetCoder(
+            Arrays.asList(Boolean.class, Integer.class, Float.class, Double.class,
+                    Point.class, Rectangle.class, Font.class, Color.class, Marker.class).stream()
+                    .collect(toMap(Class::getSimpleName, c -> c)));
     
     @Test
     public void testEncode() throws Exception {
@@ -59,33 +63,8 @@ public class AttributeSetCoderTest {
         assertEquals(2, as.getAttributes().size());
         assertEquals(Color.red, as.get("fill"));
         assertEquals(Color.green, as.get("stroke"));
-    }
-
-    private static Converter<AttributeSet, String> CONV;
-    private static Converter<String, AttributeSet> REV;
-    private static Converter<Object, String> VAL_CONV;
-    private static Converter<String, Object> VAL_REV;
-    private static Converter<AttributeSet, String> TYPED;
-    private static Converter<String, AttributeSet> TYPED_REV;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        CONV = AttributeSets.stringConverter();
-        REV = CONV.reverse();
-        VAL_CONV = AttributeSets.valueConverter();
-        VAL_REV = VAL_CONV.reverse();
         
-        Map<String,Class<?>> types = Maps.newHashMap();
-        for (Class c : new Class[] { Boolean.class, 
-            Integer.class, Float.class, Double.class, 
-            Point.class, Rectangle.class, 
-            Font.class, Color.class,
-            Marker.class
-        }) {
-            types.put(c.getSimpleName(), c);
-        }
-        TYPED = AttributeSets.stringConverter(types);
-        TYPED_REV = TYPED.reverse();
+        assertEquals(Color.green, inst.decode("fill: red; fill: lime").getColor("fill"));
     }
     
     //<editor-fold defaultstate="collapsed" desc="VALUE CONVERSIONS">
@@ -94,134 +73,118 @@ public class AttributeSetCoderTest {
     public void testConvertNull() {
         System.out.println("testConvertNull");
 
-        assertEquals(null, VAL_CONV.convert(null));
-        assertEquals(null, VAL_REV.convert(null));
+        assertEquals("none", AttributeSetCoder.encodeValue(null));
+        assertEquals(null, AttributeSetCoder.decodeValue("none", Object.class));
+        try {
+            AttributeSetCoder.decodeValue(null, Object.class);
+            fail("Expected NPE");
+        } catch (NullPointerException x) {
+            // expected
+        }
     }
     
     @Test
     public void testConvertString() {
         System.out.println("testConvertString");
 
-        assertEquals("x", VAL_CONV.convert("x"));
-        assertEquals("x", VAL_REV.convert("x"));
+        assertEquals("x", AttributeSetCoder.encodeValue("x"));
+        assertEquals("x", AttributeSetCoder.decodeValue("x", Object.class));
+    }
+    
+    @Test
+    public void testConvertColor() {
+        System.out.println("testConvertColor");
+
+        assertEquals("#ff0000", AttributeSetCoder.encodeValue(Color.red));
+        assertEquals("#ff000080", AttributeSetCoder.encodeValue(Colors.alpha(Color.red, 128)));
+        assertEquals(Color.red, AttributeSetCoder.decodeValue("#ff0000", Object.class));
+        assertEquals(Color.red, AttributeSetCoder.decodeValue("#f00", Object.class));
+        assertEquals("red", AttributeSetCoder.decodeValue("red", Object.class));
+        assertEquals(Color.red, AttributeSetCoder.decodeValue("red", Color.class));
     }
     
     @Test
     public void testConvertBoolean() {
         System.out.println("testConvertBoolean");
 
-        assertEquals("true", VAL_CONV.convert(true));
-        assertEquals("true", VAL_REV.convert("true"));
-        assertEquals(true, TYPED_REV.convert("Boolean: true").get("Boolean"));
-        assertEquals(false, TYPED_REV.convert("Boolean: whatever").get("Boolean"));
+        assertEquals("true", AttributeSetCoder.encodeValue(true));
+        assertEquals("true", AttributeSetCoder.encodeValue("true"));
+        assertEquals(true, typedInst.decode("Boolean: true").get("Boolean"));
+        assertEquals(false, typedInst.decode("Boolean: whatever").get("Boolean"));
     }
     
     @Test
     public void testConvertInteger() {
         System.out.println("testConvertInteger");
 
-        assertEquals("4", VAL_CONV.convert(4));
-        assertEquals(4, VAL_REV.convert("4"));
-        assertEquals(5, TYPED_REV.convert("Integer: 5").get("Integer"));
+        assertEquals("4", AttributeSetCoder.encodeValue(4));
+        assertEquals(4, AttributeSetCoder.decodeValue("4", Object.class));
+        assertEquals(5, typedInst.decode("Integer: 5").get("Integer"));
     }
     
     @Test
     public void testConvertFloat() {
         System.out.println("testConvertFloat");
 
-        assertEquals("4.0", VAL_CONV.convert(4f));
-        assertEquals(4.0, VAL_REV.convert("4.0"));
-        assertEquals(4f, TYPED_REV.convert("Float: 4").get("Float"));
+        assertEquals("4.0", AttributeSetCoder.encodeValue(4f));
+        assertEquals(4.0, AttributeSetCoder.decodeValue("4.0", Object.class));
+        assertEquals(4f, typedInst.decode("Float: 4").get("Float"));
     }
     
     @Test
     public void testConvertDouble() {
         System.out.println("testConvertDouble");
 
-        assertEquals("4.0", VAL_CONV.convert(4.0));
-        assertEquals(4.0, VAL_REV.convert("4.0"));
-        assertEquals(4.0, TYPED_REV.convert("Double: 4").get("Double"));
+        assertEquals("4.0", AttributeSetCoder.encodeValue(4.0));
+        assertEquals(4.0, AttributeSetCoder.decodeValue("4.0", Object.class));
+        assertEquals(4.0, typedInst.decode("Double: 4").get("Double"));
     }
     
     @Test
     public void testConvertPoint() {
         System.out.println("testConvertPoint");
 
-        assertEquals("!point[5.000000,6.000000]", VAL_CONV.convert(new Point2D.Double(5,6)));
-        assertEquals("!point[5,6]", VAL_CONV.convert(new Point(5,6)));
-        assertEquals(new Point2D.Double(5, 6), VAL_REV.convert("!point[5,6]"));
-        assertEquals(new Point(5, 6), TYPED_REV.convert("Point: !point[5,6]").get("Point"));
+        assertEquals("(5.000000,6.000000)", AttributeSetCoder.encodeValue(new Point2D.Double(5,6)));
+        assertEquals("(5,6)", AttributeSetCoder.encodeValue(new Point(5,6)));
+        assertEquals(new Point2D.Double(5, 6), AttributeSetCoder.decodeValue("(5.0,6.0)", Object.class));
+        assertEquals(new Point(5, 6), typedInst.decode("Point: (5,6)").get("Point"));
     }
     
     @Test
     public void testConvertRect() {
         System.out.println("testConvertRect");
         
-        assertEquals("!rectangle[x=5.000000,y=6.000000,w=7.000000,h=8.000000]", VAL_CONV.convert(new Rectangle(5, 6, 7, 8)));
-        assertEquals("!rectangle[x=5.000000,y=6.000000,w=7.000000,h=8.000000]", VAL_CONV.convert(new Rectangle2D.Double(5, 6, 7, 8)));
-        assertEquals(new Rectangle2D.Double(5, 6, 7, 8), VAL_REV.convert("!rectangle[x=5,y=6,w=7,h=8]"));
-        assertEquals(new Rectangle(5, 6, 7, 8), TYPED_REV.convert("Rectangle: !rectangle[x=5,y=6,w=7,h=8]").get("Rectangle"));
+        assertEquals("rectangle(5,6,7,8)", AttributeSetCoder.encodeValue(new Rectangle(5, 6, 7, 8)));
+        assertEquals("rectangle2d(5.000000,6.000000,7.000000,8.000000)", AttributeSetCoder.encodeValue(new Rectangle2D.Double(5, 6, 7, 8)));
+        assertEquals(new Rectangle2D.Double(5, 6, 7, 8), AttributeSetCoder.decodeValue("rectangle2d(5,6,7,8) ", Object.class));
+        assertEquals(new Rectangle(5, 6, 7, 8), typedInst.decode("Rectangle: rectangle(5,6,7,8)").get("Rectangle"));
     }
     
     //</editor-fold>
     
-    /**
-     * Test of stringConverter method, of class AttributeSets.
-     */
     @Test
-    public void testStringConverter_0args() {
-        System.out.println("stringConverter");
-        Converter<AttributeSet, String> result = AttributeSets.stringConverter();
+    public void testEncodeDecode1() {
+        System.out.println("testEncodeDecode1");
+        assertEquals("fill:#ffffff", inst.encode(AttributeSet.of("fill", Color.white)));
+        assertEquals(ImmutableMap.of("fill", Color.white), inst.decode("fill:#ffffff").getAttributeMap());
+        assertEquals(ImmutableMap.of("fill", Color.white), inst.decode("fill:#fff").getAttributeMap());
 
-        assertEquals("fill:#ffffff", result.convert(AttributeSet.of("fill", Color.white)));
-        assertEquals(ImmutableMap.of("fill", Color.white), result.reverse().convert("fill:#ffffff").getAttributeMap());
-        assertEquals(ImmutableMap.of("fill", Color.white), result.reverse().convert("fill:#fff").getAttributeMap());
-
-        assertEquals("fill:none", result.convert(AttributeSet.of("fill", null)));
-        assertEquals(nullMap("fill"), result.reverse().convert("fill:none").getAttributeMap());
+        assertEquals("fill:none", inst.encode(AttributeSet.of("fill", null)));
+        assertEquals(nullMap("fill"), inst.decode("fill:none").getAttributeMap());
     }
     
     private static Map<String,Object> nullMap(String key) {
         return Collections.singletonMap(key, null);
     }
 
-    /**
-     * Test of stringConverter method, of class AttributeSets.
-     */
     @Test
-    public void testStringConverter_Map() {
-        System.out.println("stringConverter");
-        Converter<AttributeSet, String> result = AttributeSets.stringConverter(
+    public void testEncodeDecode2() {
+        System.out.println("testEncodeDecode2");
+        AttributeSetCoder result = new AttributeSetCoder(
                 ImmutableMap.<String,Class<?>>of("fill", String.class));
 
-        assertEquals("fill:#ffffff", result.convert(AttributeSet.of("fill", Color.white)));
-        assertEquals(ImmutableMap.of("fill", "#ffffff"), result.reverse().convert("fill:#ffffff").getAttributeMap());
-    }
-
-    /**
-     * Test of valueConverter method, of class AttributeSets.
-     */
-    @Test
-    public void testValueConverter() {
-        System.out.println("valueConverter");
-        Converter<Object, String> result = AttributeSets.valueConverter();
-
-        assertEquals("#ffffff", result.convert(Color.white));
-        assertEquals(Color.white, result.reverse().convert("#ffffff"));
-        
-        assertEquals(null, result.convert(null));
-        assertEquals("none", result.reverse().convert("none"));
-    }
-
-    /**
-     * Test of valueFromString method, of class AttributeSets.
-     */
-    @Test
-    public void testValueFromString() {
-        System.out.println("valueFromString");
-        
-        assertEquals(Color.white, AttributeSets.valueFromString("#ffffff"));
-        assertEquals(null, AttributeSets.valueFromString("none"));
+        assertEquals("fill:#ffffff", result.encode(AttributeSet.of("fill", Color.white)));
+        assertEquals(ImmutableMap.of("fill", "#ffffff"), result.decode("fill:#ffffff").getAttributeMap());
     }
     
 }

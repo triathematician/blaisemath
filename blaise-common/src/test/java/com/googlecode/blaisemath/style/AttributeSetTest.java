@@ -471,24 +471,29 @@ public class AttributeSetTest {
     @Test
     public void testGetPoint_String() {
         System.out.println("getPoint");
-        AttributeSet instance = AttributeSet.of("a", new Point(1, 2), "b", Color.red, "c", null).and("d", "(1,2)");
-        assertEquals(new Point(1, 2), instance.getPoint2D("a"));
+        AttributeSet instance = AttributeSet.of("a", new Point(1, 2), 
+                "b", Color.red, "c", null, "d", "(1,2)");
         assertEquals(null, instance.getPoint2D("b"));
         assertEquals(null, instance.getPoint2D("c"));
-        assertEquals(new Point(1, 2), instance.getPoint2D("d"));
         assertEquals(null, instance.getPoint2D("e"));
+        assertEquals(new Point(1, 2), instance.getPoint("a"));
+        assertEquals(new Point(1, 2), instance.getPoint("d"));
+        assertEquals(new Point(1, 2), instance.getPoint2D("a"));
+        assertEquals(new Point(1, 2), instance.getPoint2D("d"));
     }
 
     @Test
     public void testGetPoint_String_Point2D() {
         System.out.println("getPoint");
-        AttributeSet instance = AttributeSet.of("a", new Point(1, 2), "b", Color.red, "c", null).and("d", "(1,2)");
+        AttributeSet instance = AttributeSet.of("a", new Point(1, 2), "b", Color.red, "c", null, "d", "(1,2)");
         Point def = new Point(3, 4);
-        assertEquals(new Point(1, 2), instance.getPoint2D("a", def));
         assertEquals(def, instance.getPoint2D("b", def));
         assertEquals(def, instance.getPoint2D("c", def));
-        assertEquals(new Point(1, 2), instance.getPoint2D("d", def));
         assertEquals(def, instance.getPoint2D("e", def));
+        assertEquals(new Point(1, 2), instance.getPoint("a", def));
+        assertEquals(new Point(1, 2), instance.getPoint("d", def));
+        assertEquals(new Point(1, 2), instance.getPoint2D("a", def));
+        assertEquals(new Point(1, 2), instance.getPoint2D("d", def));
     }
     
     //</editor-fold>

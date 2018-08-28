@@ -24,6 +24,7 @@ import com.google.common.base.Splitter;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
+import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -40,27 +41,23 @@ public final class RectangleCoder implements StringEncoder<Rectangle>, StringDec
 
     @Override
     public String encode(Rectangle v) {
-        return v == null ? "null" : String.format("rectangle[x=%f,y=%f,w=%f,h=%f]",
-                v.getX(), v.getY(), v.getWidth(), v.getHeight());
+        requireNonNull(v);
+        return String.format("rectangle(%d,%d,%d,%d)", v.x, v.y, v.width, v.height);
     }
 
     @Override
     public Rectangle decode(String v) {
-        if (v == null) {
-            return null;
-        }
-        Matcher m = Pattern.compile("rectangle\\[(.*)\\]").matcher(v.toLowerCase().trim());
-        if (m.find()) {
-            String inner = m.group(1);
-            Map<String,String> kv = Splitter.on(",").trimResults().withKeyValueSeparator("=").split(inner);
+        requireNonNull(v);
+        Matcher m = Pattern.compile("rectangle\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim());
+        if (m.matches()) {
             try {
-                Integer x = Integer.valueOf(kv.get("x"));
-                Integer y = Integer.valueOf(kv.get("y"));
-                Integer w = Integer.valueOf(kv.get("w"));
-                Integer h = Integer.valueOf(kv.get("h"));
-                return new Rectangle(x,y,w,h);
+                Integer x = Integer.valueOf(m.group(1));
+                Integer y = Integer.valueOf(m.group(2));
+                Integer w = Integer.valueOf(m.group(3));
+                Integer h = Integer.valueOf(m.group(4));
+                return new Rectangle(x, y, w, h);
             } catch (NumberFormatException x) {
-                LOG.log(Level.FINEST, "Not a double", x);
+                LOG.log(Level.FINEST, "Not an integer", x);
                 return null;
             }
         } else {

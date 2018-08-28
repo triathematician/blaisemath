@@ -23,6 +23,7 @@ package com.googlecode.blaisemath.util.encode;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import java.awt.geom.Point2D;
+import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -39,22 +40,18 @@ public final class Point2DCoder implements StringEncoder<Point2D>, StringDecoder
 
     @Override
     public String encode(Point2D v) {
-        return v == null ? "null"
-                : String.format("point[%f,%f]", v.getX(), v.getY());
+        requireNonNull(v);
+        return String.format("(%f,%f)", v.getX(), v.getY());
     }
 
     @Override
     public Point2D decode(String v) {
-        if (v == null) {
-            return null;
-        }
-        Matcher m = Pattern.compile("point\\[(.*)\\]").matcher(v.toLowerCase().trim());
-        if (m.find()) {
-            String inner = m.group(1);
-            Iterable<String> kv = Splitter.on(",").trimResults().split(inner);
+        requireNonNull(v);
+        Matcher m = Pattern.compile("\\((.*),(.*)\\)").matcher(v.toLowerCase().trim());
+        if (m.matches()) {
             try {
-                Double x = Double.valueOf(Iterables.get(kv, 0));
-                Double y = Double.valueOf(Iterables.get(kv, 1));
+                Double x = Double.valueOf(m.group(1).trim());
+                Double y = Double.valueOf(m.group(2).trim());
                 return new Point2D.Double(x,y);
             } catch (NumberFormatException x) {
                 LOG.log(Level.FINEST, "Not a double", x);
