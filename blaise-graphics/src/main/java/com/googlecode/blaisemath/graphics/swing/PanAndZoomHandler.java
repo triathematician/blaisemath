@@ -231,10 +231,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
                 (e.getWheelRotation() > 0) ? 1.05 : 0.95);
     }
 
-    //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
-    //
-    // DELEGATE TRANSFORM OPERATIONS
-    //
+    //<editor-fold defaultstate="collapsed" desc="TRANSFORMS">
 
     /**
      * Get current boundaries displayed in component.
@@ -308,9 +305,13 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         res.translate(-scaleFrom.getCenterX(), -scaleFrom.getCenterY());
         return res;
     }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="ZOOM OPERATIONS">
 
     /**
-     * Sets visometry bounds based on the zoom about a given point.
+     * Sets bounds based on the zoom about a given point.
      * The effective zoom point is between current center and mouse position...
      * close to center =%gt; 100% at the given point, close to edge =%gt; 10% at
      * the given point.
@@ -328,33 +329,63 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
                 cx - .5 * factor * wx, cy - .5 * factor * wy, 
                 factor * wx, factor * wy));
     }
-    
-    // ANIMATED ZOOMS
 
     /**
-     * Zooms in for the given component (about the center).
+     * Zooms in for the given component (about the center), animated.
      * @param gc associated component
      * @return timer running the animation
      */
     public static javax.swing.Timer zoomIn(JGraphicComponent gc) {
-        Rectangle2D.Double rect = getLocalBounds(gc);
-        Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
-        return zoomCoordBoxAnimated(gc, 
-                new Point2D.Double(center.x-.25*rect.getWidth(), center.y-.25*rect.getHeight()), 
-                new Point2D.Double(center.x+.25*rect.getWidth(), center.y+.25*rect.getHeight())); 
+        return zoomIn(gc, true);
     }
     
     /**
      * Zooms in for the given component (about the center).
      * @param gc associated component
+     * @param animate if true, result will animate
+     * @return timer running the animation (null if not animating)
+     */
+    public static javax.swing.Timer zoomIn(JGraphicComponent gc, boolean animate) {
+        Rectangle2D.Double rect = getLocalBounds(gc);
+        Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
+        if (animate) {
+            return zoomCoordBoxAnimated(gc, 
+                new Point2D.Double(center.x-.25*rect.getWidth(), center.y-.25*rect.getHeight()), 
+                new Point2D.Double(center.x+.25*rect.getWidth(), center.y+.25*rect.getHeight()));
+        } else {
+            setDesiredLocalBounds(gc, new Rectangle2D.Double(center.x-.25*rect.getWidth(), 
+                    center.y-.25*rect.getHeight(), .5*rect.getWidth(), .5*rect.getHeight()));
+            return null;
+        }
+    }
+
+    /**
+     * Zooms out for the given component (about the center), animated.
+     * @param gc associated component
      * @return timer running the animation
      */
     public static javax.swing.Timer zoomOut(JGraphicComponent gc) {
+        return zoomOut(gc, true);
+    }
+    
+    /**
+     * Zooms out for the given component (about the center).
+     * @param gc associated component
+     * @param animate if true, result will animate
+     * @return timer running the animation
+     */
+    public static javax.swing.Timer zoomOut(JGraphicComponent gc, boolean animate) {
         Rectangle2D.Double rect = getLocalBounds(gc);
         Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
-        return zoomCoordBoxAnimated(gc, 
-                new Point2D.Double(center.x-rect.getWidth(), center.y-rect.getHeight()), 
-                new Point2D.Double(center.x+rect.getWidth(), center.y+rect.getHeight())); 
+        if (animate) {
+            return zoomCoordBoxAnimated(gc, 
+                    new Point2D.Double(center.x-rect.getWidth(), center.y-rect.getHeight()), 
+                    new Point2D.Double(center.x+rect.getWidth(), center.y+rect.getHeight())); 
+        } else {
+            setDesiredLocalBounds(gc, new Rectangle2D.Double(center.x-rect.getWidth(), 
+                    center.y-rect.getHeight(), 2*rect.getWidth(), 2*rect.getHeight()));
+            return null;
+        }
     }
     
     /**

@@ -38,7 +38,7 @@ import java.util.Set;
  * to create/update the graphics.
  * 
  * @author petereb1
- * @param <T>
+ * @param <T> type of object represented by the composite
  */
 @Beta
 public class UpdatingGraphicComposite<T> {
