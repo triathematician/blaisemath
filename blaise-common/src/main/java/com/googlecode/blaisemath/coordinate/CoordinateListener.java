@@ -29,7 +29,7 @@ import com.googlecode.blaisemath.annotation.InvokedFromThread;
  * @param <S> type of object being located
  * @param <C> type of coordinate
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public interface CoordinateListener<S,C> {
 

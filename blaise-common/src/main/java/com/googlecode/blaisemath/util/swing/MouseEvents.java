@@ -30,7 +30,7 @@ import java.awt.event.MouseWheelListener;
 /**
  * Utilities for handling {@link MouseEvent}s.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class MouseEvents {
 

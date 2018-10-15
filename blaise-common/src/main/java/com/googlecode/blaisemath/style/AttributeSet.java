@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.style;
  */
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -33,6 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -40,10 +40,10 @@ import javax.swing.event.EventListenerList;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Provides a map of key-value pairs providing style elements, similar to what
+ * Provides a collection of key-value pairs for style elements, similar to what
  * one finds in CSS style attributes. Values are allowed to be null.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class AttributeSet {
     
@@ -53,8 +53,7 @@ public class AttributeSet {
     public static final AttributeSet EMPTY = ImmutableAttributeSet.copyOf(new AttributeSet());
     
     /** The parent attribute set */
-    @Nullable
-    protected AttributeSet parent = null;
+    protected @Nullable AttributeSet parent = null;
     /** The map of style key/value pairs */
     protected final Map<String,Object> attributeMap = Maps.newHashMap();
     
@@ -66,7 +65,7 @@ public class AttributeSet {
         return "{ " + Joiner.on("; ").withKeyValueSeparator(":").join(attributeMap) + " }";
     }
 
-    //<editor-fold defaultstate="collapsed" desc="FACTORY METHODS">
+    //region FACTORY METHODS
     
     /**
      * Create new attribute set with elements of given map.
@@ -97,14 +96,12 @@ public class AttributeSet {
      */
     public static AttributeSet copyOf(AttributeSet set) {
         AttributeSet res = withParent(set.getParent().orElse(null));
-        for (String k : set.getAttributeMap().keySet()) {
-            res.put(k, copyValue(set.get(k)));
-        }
+        set.getAttributeMap().forEach((k, v) -> res.put(k, copyValue(v)));
         return res;
     }
     
     /** 
-     * Create flat copy of attribute set, with all values copies as well.
+     * Create flat copy of attribute set (including all parent attributes), with all values copies as well.
      * The resulting set has no parent attribute set.
      * @param set to copy
      * @return copy
@@ -143,7 +140,7 @@ public class AttributeSet {
      */
     private static <P> P copyValue(P val) {
         if (val instanceof Point2D) {
-            return (P) ((Point2D)val).clone();
+            return (P) ((Point2D) val).clone();
         } else {
             return val;
         }
@@ -223,12 +220,12 @@ public class AttributeSet {
         return of(k1, v1).and(k2, v2).and(k3, v3).and(k4, v4).and(k5, v5);
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="BUILDER METHODS">
+    //region BUILDER METHODS
     
     /**
-     * Builder pattern for setting a key/value pair
+     * Builder pattern for setting a key/value pair.
      * @param key the key
      * @param val the value
      * @return this object
@@ -266,18 +263,17 @@ public class AttributeSet {
     }
 
     /**
-     * Creates a copy of the attribute set, including all parent attributes
+     * Creates a copy of the attribute set, including all parent attributes.
      * @return copy
      */
     public AttributeSet flatCopy() {
         return flatCopyOf(this);
     }
     
-    //</editor-fold>
+    //endregion
 
-    //<editor-fold defaultstate="collapsed" desc="GENERIC ATTRIBUTE METHODS">
+    //region ATTRIBUTE GETS
     
-    @Nullable
     public Optional<AttributeSet> getParent() {
         return Optional.ofNullable(parent);
     }
@@ -287,7 +283,7 @@ public class AttributeSet {
      * @return attribute keys
      */
     public Set<String> getAttributes() {
-        return attributeMap.keySet();
+        return Sets.newHashSet(attributeMap.keySet());
     }
     
     /**
@@ -296,19 +292,19 @@ public class AttributeSet {
      */
     public Set<String> getAllAttributes() {
         if (parent != null) {
-            return Sets.union(attributeMap.keySet(), parent.getAllAttributes());
+            return Sets.newHashSet(Sets.union(attributeMap.keySet(), parent.getAllAttributes()));
         } else {
-            return getAttributes();
+            return Sets.newHashSet(getAttributes());
         }
     }
     
     /**
-     * Gets a filtered set of attributes.
+     * Gets a filtered set view of attributes.
      * @param filter attribute name filter
      * @return attribute keys
      */
     public Set<String> getAttributes(Predicate<String> filter) {
-        return Sets.filter(getAllAttributes(), filter);
+        return Sets.newHashSet(Sets.filter(getAllAttributes(), filter::test));
     }
 
     /**
@@ -319,9 +315,9 @@ public class AttributeSet {
     public Set<String> getAllAttributes(Class<?> type) {
         Map<String, Object> filtered = Maps.filterValues(attributeMap, Predicates.instanceOf(type));
         if (parent != null) {
-            return Sets.union(filtered.keySet(), parent.getAllAttributes(type));
+            return Sets.newHashSet(Sets.union(filtered.keySet(), parent.getAllAttributes(type)));
         } else {
-            return filtered.keySet();
+            return Sets.newHashSet(filtered.keySet());
         }
     }
     
@@ -349,8 +345,7 @@ public class AttributeSet {
      * @return value of the found attribute, either contained in this set or its parent,
      *      or null if there is none
      */
-    @Nullable
-    public Object get(String key) {
+    public @Nullable Object get(String key) {
         return getOrDefault(key, null);
     }
     
@@ -363,8 +358,7 @@ public class AttributeSet {
      * @return value of the found attribute, either contained in this set or its parent,
      *      or the default value if there is none
      */
-    @Nullable
-    public Object getOrDefault(String key, @Nullable Object def) {
+    public @Nullable Object getOrDefault(String key, @Nullable Object def) {
         if (attributeMap.containsKey(key)) {
             return attributeMap.get(key);
         } else if (parent != null) {
@@ -374,14 +368,17 @@ public class AttributeSet {
         }
     }
 
+    //endregion
+
+    //region ATTRIBUTE MUTATORS
+
     /**
-     * Get the given attribute.
+     * Add the given attribute to this attribute set, returning the old value.
      * @param key the key
      * @param value the attribute value (may be null)
      * @return the old value
      */
-    @Nullable
-    public Object put(String key, @Nullable Object value) {
+    public @Nullable Object put(String key, @Nullable Object value) {
         Object res = attributeMap.put(key, value);
         if (!Objects.equals(res, value)) {
             fireStateChanged();
@@ -403,11 +400,13 @@ public class AttributeSet {
     /**
      * Set all of the attributes in the provided map.
      * @param attr map of attributes to set
-     * @param <T> the type of values in the map
      */
-    public <T> void putAll(Map<String,T> attr) {
+    public void putAll(Map<String, ?> attr) {
+        Map<String, Object> old = getAttributeMap();
         attributeMap.putAll(attr);
-        fireStateChanged();
+        if (!attributeMap.equals(old)) {
+            fireStateChanged();
+        }
     }
     
     /**
@@ -415,7 +414,7 @@ public class AttributeSet {
      * @param key the key
      * @return the removed value, null if none
      */
-    public Object remove(String key) {
+    public @Nullable Object remove(String key) {
         if (attributeMap.containsKey(key)) {
             Object res = attributeMap.remove(key);
             fireStateChanged();
@@ -424,17 +423,26 @@ public class AttributeSet {
         return null;
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="TYPED ACCESSORS">
+    //region TYPED ACCESSORS
 
-    @Nullable
-    public String getString(String key) {
+    /**
+     * Get the string value associated with the key
+     * @param key key
+     * @return string value, or null if there is none
+     */
+    public @Nullable String getString(String key) {
         return getString(key, null);
     }
 
-    @Nullable
-    public String getString(String key, String def) {
+    /**
+     * Get the string value associated with the key.
+     * @param key key
+     * @param def default value
+     * @return string value, or def if there is none
+     */
+    public @Nullable String getString(String key, String def) {
         return AttributeSetCoder.convertValue(get(key), String.class, def);
     }
 
@@ -442,21 +450,20 @@ public class AttributeSet {
      * Get the boolean value associated with the key
      * @param key key
      * @return boolean value, or null if there is none
+     * @throws UnsupportedOperationException if attribute is present but not a boolean
      */
-    @Nullable
-    public Boolean getBoolean(String key) {
+    public @Nullable Boolean getBoolean(String key) {
         return getBoolean(key, null);
     }
-
 
     /**
      * Get the boolean value associated with the key.
      * @param key key
      * @param def default value
      * @return boolean value, or def if there is none
+     * @throws UnsupportedOperationException if attribute is present but not a boolean
      */
-    @Nullable
-    public Boolean getBoolean(String key, @Nullable Boolean def) {
+    public @Nullable Boolean getBoolean(String key, @Nullable Boolean def) {
         return AttributeSetCoder.convertValue(get(key), Boolean.class, def);
     }
     
@@ -464,15 +471,20 @@ public class AttributeSet {
      * Retrieve given attribute as an integer.
      * @param key attribute key
      * @return integer, or null if not present
-     * @throws ClassCastException if attribute is present but not a integer
+     * @throws UnsupportedOperationException if attribute is present but not a integer
      */
-    @Nullable
-    public Integer getInteger(String key) {
+    public @Nullable Integer getInteger(String key) {
         return getInteger(key, null);
     }
 
-    @Nullable
-    public Integer getInteger(String key, @Nullable Integer def) {
+    /**
+     * Get the integer value associated with the key.
+     * @param key key
+     * @param def default value
+     * @return integer value, or def if there is none
+     * @throws UnsupportedOperationException if attribute is present but not an integer
+     */
+    public @Nullable Integer getInteger(String key, @Nullable Integer def) {
         return AttributeSetCoder.convertValue(get(key), Integer.class, def);
     }
 
@@ -480,15 +492,20 @@ public class AttributeSet {
      * Retrieve given attribute as a float.
      * @param key attribute key
      * @return float, or null if not present
-     * @throws ClassCastException if attribute is present but not a float
+     * @throws UnsupportedOperationException if attribute is present but not a float
      */
-    @Nullable
-    public Float getFloat(String key) {
+    public @Nullable Float getFloat(String key) {
         return getFloat(key, null);
     }
 
-    @Nullable
-    public Float getFloat(String key, @Nullable Float def) {
+    /**
+     * Get the float value associated with the key.
+     * @param key key
+     * @param def default value
+     * @return float value, or def if there is none
+     * @throws UnsupportedOperationException if attribute is present but not a float
+     */
+    public @Nullable Float getFloat(String key, @Nullable Float def) {
         return AttributeSetCoder.convertValue(get(key), Float.class, def);
     }
 
@@ -496,15 +513,20 @@ public class AttributeSet {
      * Retrieve given attribute as a double.
      * @param key attribute key
      * @return double, or null if not present
-     * @throws ClassCastException if attribute is present but not a double
+     * @throws UnsupportedOperationException if attribute is present but not a double
      */
-    @Nullable
-    public Double getDouble(String key) {
+    public @Nullable Double getDouble(String key) {
         return getDouble(key, null);
     }
 
-    @Nullable
-    public Double getDouble(String key, @Nullable Double def) {
+    /**
+     * Get the double value associated with the key.
+     * @param key key
+     * @param def default value
+     * @return integer value, or def if there is none
+     * @throws UnsupportedOperationException if attribute is present but not a double
+     */
+    public @Nullable Double getDouble(String key, @Nullable Double def) {
         return AttributeSetCoder.convertValue(get(key), Double.class, def);
     }
     
@@ -512,41 +534,68 @@ public class AttributeSet {
      * Retrieve given attribute as a color.
      * @param key attribute key
      * @return color, or null if not present
-     * @throws ClassCastException if attribute is present but not a color
+     * @throws UnsupportedOperationException if attribute is present but not a color
      */
-    @Nullable
-    public Color getColor(String key) {
+    public @Nullable Color getColor(String key) {
         return getColor(key, null);
     }
-    
-    @Nullable
-    public Color getColor(String key, @Nullable Color def) {
+
+    /**
+     * Get the color value associated with the key.
+     * @param key key
+     * @param def default value
+     * @return color value, or def if there is none
+     * @throws UnsupportedOperationException if attribute is present but not a color
+     */
+    public @Nullable Color getColor(String key, @Nullable Color def) {
         return AttributeSetCoder.convertValue(get(key), Color.class, def);
     }
-    
-    @Nullable
-    public Point getPoint(String key) {
+
+    /**
+     * Retrieve given attribute as a point.
+     * @param key attribute key
+     * @return point, or null if not present
+     * @throws UnsupportedOperationException if attribute is present but not a point
+     */
+    public @Nullable Point getPoint(String key) {
         return getPoint(key, null);
     }
-    
-    @Nullable
-    public Point getPoint(String key, @Nullable Point def) {
+
+    /**
+     * Get the point value associated with the key.
+     * @param key key
+     * @param def default value
+     * @return point value, or def if there is none
+     * @throws UnsupportedOperationException if attribute is present but not a point
+     */
+    public @Nullable Point getPoint(String key, @Nullable Point def) {
         return AttributeSetCoder.convertValue(get(key), Point.class, def);
     }
-    
-    @Nullable
-    public Point2D getPoint2D(String key) {
+
+    /**
+     * Retrieve given attribute as a point.
+     * @param key attribute key
+     * @return point, or null if not present
+     * @throws UnsupportedOperationException if attribute is present but not a point
+     */
+    public @Nullable Point2D getPoint2D(String key) {
         return getPoint2D(key, null);
     }
-    
-    @Nullable
-    public Point2D getPoint2D(String key, @Nullable Point2D def) {
+
+    /**
+     * Get the point value associated with the key.
+     * @param key key
+     * @param def default value
+     * @return point value, or def if there is none
+     * @throws UnsupportedOperationException if attribute is present but not a point
+     */
+    public @Nullable Point2D getPoint2D(String key, @Nullable Point2D def) {
         return AttributeSetCoder.convertValue(get(key), Point2D.class, def);
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
+    //region EVENTS
 
     public void addChangeListener(ChangeListener l) { 
         listenerList.add(ChangeListener.class, l);
@@ -569,6 +618,6 @@ public class AttributeSet {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

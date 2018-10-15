@@ -37,22 +37,17 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.style.Markers;
-import java.awt.Point;
-import java.awt.Shape;
-import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Test;
+
+import java.awt.*;
+import java.util.List;
 
 /**
  *
  * @author Elisha
  */
 public class MarkersTest extends TestCase {
-    
-    public MarkersTest() {
-    }
 
     @Test
     public void testGetAvailableMarkers() {

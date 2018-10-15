@@ -2,7 +2,6 @@ package com.googlecode.blaisemath.style;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-
 /*
  * #%L
  * BlaiseGraphics
@@ -24,10 +23,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 
 /**
- * Provides an attribute set that cannot be changed. (It's parent and values
- * may be able to be changed however.)
+ * Provides an attribute set that throws exceptions if attempting to put or remove values.
+ * (But its parent and values may still be changed directly.)
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 final class ImmutableAttributeSet extends AttributeSet {
 
@@ -49,7 +48,7 @@ final class ImmutableAttributeSet extends AttributeSet {
     }
     
     /**
-     * Makes an immutable copy of the provided attribute set.
+     * Makes an immutable copy of the provided attribute set, with a different parent.
      * @param set the set to copy
      * @param par the parent
      * @return an immutable copy

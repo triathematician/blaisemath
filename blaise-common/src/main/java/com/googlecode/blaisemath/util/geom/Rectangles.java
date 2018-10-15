@@ -26,7 +26,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class for working with rectangles.
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class Rectangles {
     
@@ -39,11 +39,7 @@ public class Rectangles {
      * @param rects rectangles
      * @return smallest box enclosing provided rectangles, null if argument is empty
      */
-    @Nullable
-    public static Rectangle2D boundingBox(Iterable<? extends Rectangle2D> rects) {
-        if (Iterables.isEmpty(rects)) {
-            return null;
-        }
+    public static @Nullable Rectangle2D boundingBox(Iterable<? extends Rectangle2D> rects) {
         Rectangle2D res = null;
         for (Rectangle2D r : rects) {
             res = res == null ? r : res.createUnion(r);

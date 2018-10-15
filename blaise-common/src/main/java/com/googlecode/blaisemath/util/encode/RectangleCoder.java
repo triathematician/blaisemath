@@ -21,6 +21,8 @@ package com.googlecode.blaisemath.util.encode;
  */
 
 import com.google.common.base.Splitter;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
@@ -31,7 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Adapter converting Rectangle2D to/from strings.
+ * Adapter converting Rectangle to/from strings, of the form "rectangle(x,y,wid,ht)". Requires non-null values.
  *
  * @author Elisha Peterson
  */
@@ -46,7 +48,7 @@ public final class RectangleCoder implements StringEncoder<Rectangle>, StringDec
     }
 
     @Override
-    public Rectangle decode(String v) {
+    public @Nullable Rectangle decode(String v) {
         requireNonNull(v);
         Matcher m = Pattern.compile("rectangle\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim());
         if (m.matches()) {

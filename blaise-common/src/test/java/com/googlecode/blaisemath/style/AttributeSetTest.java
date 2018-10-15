@@ -417,6 +417,8 @@ public class AttributeSetTest {
         assertEquals(null, instance.getInteger("c"));
         assertEquals(3, (int) instance.getInteger("d"));
         assertEquals(null, instance.getInteger("e"));
+
+        // TODO - test failure case
     }
 
     @Test
@@ -494,37 +496,6 @@ public class AttributeSetTest {
         assertEquals(new Point(1, 2), instance.getPoint("d", def));
         assertEquals(new Point(1, 2), instance.getPoint2D("a", def));
         assertEquals(new Point(1, 2), instance.getPoint2D("d", def));
-    }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="CHANGE EVENT TESTS">
-
-    /**
-     * Test of addChangeListener method, of class AttributeSet.
-     */
-    @Test
-    public void testAddChangeListener() {
-        System.out.println("addChangeListener");
-        // no test -- boilerplate code
-    }
-
-    /**
-     * Test of removeChangeListener method, of class AttributeSet.
-     */
-    @Test
-    public void testRemoveChangeListener() {
-        System.out.println("removeChangeListener");
-        // no test -- boilerplate code
-    }
-
-    /**
-     * Test of fireStateChanged method, of class AttributeSet.
-     */
-    @Test
-    public void testFireStateChanged() {
-        System.out.println("fireStateChanged");
-        // no test -- boilerplate code
     }
     
     //</editor-fold>

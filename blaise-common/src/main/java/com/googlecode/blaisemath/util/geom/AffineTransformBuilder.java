@@ -24,22 +24,60 @@ import java.awt.geom.AffineTransform;
 
 /**
  * Builder object for {@link AffineTransform}.
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class AffineTransformBuilder {
     
     private final AffineTransform res = new AffineTransform();
 
+    /**
+     * Concatenates this transform with a translation transformation.
+     * @param dx x translation
+     * @param dy y translation
+     * @return builder
+     */
     public AffineTransformBuilder translate(double dx, double dy) {
         res.translate(dx, dy);
         return this;
     }
-    
+
+    /**
+     * Concatenates this transform with a scale transformation.
+     * @param rx x scale
+     * @param ry y scale
+     * @return builder
+     */
     public AffineTransformBuilder scale(double rx, double ry) {
         res.scale(rx, ry);
         return this;
     }
-    
+
+    /**
+     * Concatenates this transform with a rotation transformation.
+     * @param theta rotation amount
+     * @return builder
+     */
+    public AffineTransformBuilder rotate(double theta) {
+        res.rotate(theta);
+        return this;
+    }
+
+    /**
+     * Concatenates this transform with a rotation transformation about a given point.
+     * @param theta rotation amount
+     * @param anchorx anchor location x
+     * @param anchory anchor location y
+     * @return builder
+     */
+    public AffineTransformBuilder rotate(double theta, double anchorx, double anchory) {
+        res.rotate(theta, anchorx, anchory);
+        return this;
+    }
+
+    /**
+     * Return the resulting transform.
+     * @return transform
+     */
     public AffineTransform build() {
         return res;
     }

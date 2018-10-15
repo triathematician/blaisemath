@@ -57,20 +57,21 @@
         <!-- set license attributes for license plugin -->
         <license.organizationName>Elisha Peterson</license.organizationName>
         <license.licenseName>apache_v2</license.licenseName>
+
+        <guava.version>26.0-jre</guava.version>
+        <javafx.version>11</javafx.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>25.1-jre</version>
-            <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.code.findbugs</groupId>
-                    <artifactId>jsr305</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

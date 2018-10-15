@@ -28,7 +28,7 @@ import javax.swing.event.AncestorListener;
 /**
  * Utilities for swing.
  * @see SwingUtilities
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class MoreSwingUtilities {
 

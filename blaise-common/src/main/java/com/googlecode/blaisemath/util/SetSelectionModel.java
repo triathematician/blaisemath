@@ -23,12 +23,14 @@ package com.googlecode.blaisemath.util;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collection;
-import java.util.Collections;
-import static java.util.Objects.requireNonNull;
 import java.util.Set;
+
+import static java.util.Collections.emptySet;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Tracks a set of objects, with convenience methods to adjust the set, and
@@ -45,12 +47,12 @@ public class SetSelectionModel<G> {
 
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    /** Initialize without arguments */
-    public SetSelectionModel() {
-    }
-
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
 
+    /**
+     * Check if selection is empty.
+     * @return true if empty
+     */
     public boolean isEmpty() {
         return selected.isEmpty();
     }
@@ -63,6 +65,10 @@ public class SetSelectionModel<G> {
         return ImmutableSet.copyOf(selected);
     }
 
+    /**
+     * Replace entire selection with argument.
+     * @param selection new selection
+     */
     public void setSelection(Set<G> selection) {
         if (!selection.containsAll(selected) || !selected.containsAll(selection)) {
             Set<G> old = getSelection();
@@ -74,10 +80,17 @@ public class SetSelectionModel<G> {
 
     //</editor-fold>
 
+    /**
+     * Clear the selection.
+     */
     public void clearSelection() {
-        setSelection(Collections.<G>emptySet());
+        setSelection(emptySet());
     }
 
+    /**
+     * Add the given item to the selection.
+     * @param g item to select
+     */
     public void select(G g) {
         if (g != null && !selected.contains(g)) {
             Set<G> old = getSelection();
@@ -86,12 +99,17 @@ public class SetSelectionModel<G> {
         }
     }
 
+    /**
+     * Check if the given item is selected.
+     * @param g item
+     * @return true if selected
+     */
     public boolean isSelected(G g) {
         return selected.contains(g);
     }
 
     /**
-     * Adds all to the current selection.
+     * Adds all arguments to the current selection.
      * @param g elements to add
      */
     public void selectAll(Collection<G> g) {
@@ -103,6 +121,10 @@ public class SetSelectionModel<G> {
         }
     }
 
+    /**
+     * Remove an item from the selection.
+     * @param g item to remove
+     */
     public void deselect(G g) {
         Set<G> old = getSelection();
         if (g != null && selected.remove(g)) {
@@ -110,6 +132,10 @@ public class SetSelectionModel<G> {
         }
     }
 
+    /**
+     * Removes all arguments from the current selection.
+     * @param g elements to remove
+     */
     public void deselectAll(Collection<G> g) {
         requireNonNull(g);
         Set<G> old = getSelection();
@@ -119,7 +145,7 @@ public class SetSelectionModel<G> {
     }
 
     /**
-     * Toggle selection status of g
+     * Toggle selection status of argument.
      * @param g object to toggle
      */
     public void toggleSelection(G g) {

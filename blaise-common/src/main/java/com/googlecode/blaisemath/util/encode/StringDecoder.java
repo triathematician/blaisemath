@@ -20,9 +20,12 @@ package com.googlecode.blaisemath.util.encode;
  * #L%
  */
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Converts an object from a string if possible. Decoders may or may not handle 
  * null/empty strings, and may or may not return null values.
+ * Implementations should use {@link Nullable} annotations to indicate how they handle nulls.
  * 
  * @param <X> type of object to converter
  * @author Elisha Peterson

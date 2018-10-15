@@ -30,6 +30,7 @@ import java.awt.geom.Point2D;
 public class Point2DBean extends Point2D.Double implements CoordinateBean<Point2D> {
 
     public Point2DBean() {
+        super(0, 0);
     }
 
     public Point2DBean(double x, double y) {

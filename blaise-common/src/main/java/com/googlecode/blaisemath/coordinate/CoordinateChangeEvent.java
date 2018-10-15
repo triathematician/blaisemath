@@ -26,20 +26,20 @@ import java.util.Set;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A set of objects whose coordinates have been set, along with a set of objects
- * whose coordinates have been removed. Initializers of this object are responsible
- * for providing collections that are safe to propagate to listeners.
+ * Tracks a change to a set of coordinate locations, in the form of a set of added
+ * locations and a set of removed objects. These collections will be propagated as
+ * received to listeners; this class makes no guarantees of collection safety.
  * 
  * @param <S> type of object owning the coordinates
  * @param <C> coordinate type
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class CoordinateChangeEvent<S,C> extends EventObject {
 
-    /** Added coords */
-    private transient Map<S,C> added = null;
-    /** Removed coords */
-    private transient Set<S> removed = null;
+    /** Added coordinates */
+    private Map<S,C> added = null;
+    /** Removed coordinates */
+    private Set<S> removed = null;
 
     /** 
      * Initialize with given source object
@@ -48,11 +48,8 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
     public CoordinateChangeEvent(Object src) {
         super(src);
     }
-    
-    //<editor-fold defaultstate="collapsed" desc="FACTORY METHODS">
-    //
-    // FACTORY METHODS
-    //
+
+    //region FACTORY METHODS
 
     /** 
      * Creates add event 
@@ -63,7 +60,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @return add event
      */
     public static <S,C> CoordinateChangeEvent<S,C> createAddEvent(Object src, Map<S,C> added) {
-        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
+        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<>(src);
         evt.added = added;
         return evt;
     }
@@ -77,7 +74,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @return remove event
      */
     public static <S,C> CoordinateChangeEvent createRemoveEvent(Object src, Set<S> removed) {
-        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
+        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<>(src);
         evt.removed = removed;
         return evt;
     }
@@ -92,18 +89,18 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @return add/remove event
      */
     public static <S,C> CoordinateChangeEvent<S,C> createAddRemoveEvent(Object src, Map<S,C> added, Set<S> removed) {
-        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C> (src);
+        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<>(src);
         evt.added = added;
         evt.removed = removed;
         return evt;
     }
-    
-    //</editor-fold>
+
+    //endregion
 
     @Override
     public String toString() {
         return String.format("CoordinateChangeEvent[%d added,%d removed,source=%s]",
-                added==null?0:added.size(), removed==null?0:removed.size(), source);
+                added == null ? 0 : added.size(), removed == null ? 0 : removed.size(), source);
     }
 
     /**

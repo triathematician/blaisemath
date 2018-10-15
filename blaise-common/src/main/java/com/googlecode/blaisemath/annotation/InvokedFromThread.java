@@ -48,7 +48,7 @@ import java.lang.annotation.Target;
  * within one of those methods might have the annotation {@code InvokedFromThread("multiple")}
  * or {@code InvokedFromThread("unknown")}.
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.METHOD})

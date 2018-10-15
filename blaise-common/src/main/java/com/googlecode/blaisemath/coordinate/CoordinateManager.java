@@ -82,7 +82,7 @@ public final class CoordinateManager<S, C> {
         this.maxCacheSize = maxCacheSize;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHOD">
+    //region FACTORY METHOD
     
     /**
      * Create and return new instance of coordinate manager.
@@ -95,9 +95,9 @@ public final class CoordinateManager<S, C> {
         return new CoordinateManager<>(maxCacheSize);
     }
     
-    //</editor-fold>
+    //endregion
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES AND QUERIES">
+    //region PROPERTIES/QUERIES
     
     public int getMaxCacheSize() {
         return maxCacheSize;
@@ -140,11 +140,11 @@ public final class CoordinateManager<S, C> {
     /**
      * Tests to see if all provided items are contained in either current
      * locations or cached locations.
-     * @param obj objects to test
+     * @param objs objects to test
      * @return true if all are tracked, false otherwise
      */
-    public boolean locatesAll(Collection<? extends S> obj) {
-        return map.keySet().containsAll(obj);
+    public boolean locatesAll(Collection<? extends S> objs) {
+        return map.keySet().containsAll(objs);
     }
 
     /**
@@ -177,9 +177,9 @@ public final class CoordinateManager<S, C> {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="MUTATORS">
+    //region MUTATORS
 
     /**
      * Adds a single additional location to the manager. Use {@link #putAll(java.util.Map)}
@@ -195,29 +195,29 @@ public final class CoordinateManager<S, C> {
      * Adds additional locations to the manager. Blocks while the map is being
      * updated, since it may change the active and cached object sets.
      * Propagates the updated coordinates to interested listeners (on the invoking thread).
-     * @param coords new coordinates
+     * @param map new coordinates
      */
-    public void putAll(Map<S,? extends C> coords) {
-        Map<S,C> coordCopy = Maps.newHashMap(coords);
+    public void putAll(Map<S,? extends C> map) {
+        Map<S,C> copy = Maps.newHashMap(map);
         synchronized (this) {
-            map.putAll(coordCopy);
-            active.addAll(coordCopy.keySet());
-            inactive.removeAll(coordCopy.keySet());
+            this.map.putAll(copy);
+            active.addAll(copy.keySet());
+            inactive.removeAll(copy.keySet());
         }
-        fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, coordCopy));
+        fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, copy));
     }
 
     /**
      * Replaces the current set of objects with specified objects, and caches the rest.
      * Propagates the updated coordinates to interested listeners (on the invoking thread).
-     * @param coords new coordinates
+     * @param map new coordinates
      */
-    public void setCoordinateMap(Map<S,? extends C> coords) {
-        Map<S,C> coordCopy = Maps.newHashMap(coords);
+    public void setCoordinateMap(Map<S,? extends C> map) {
+        Map<S,C> coordCopy = Maps.newHashMap(map);
         Set<S> toCache;
         synchronized(this) {
-            toCache = Sets.difference(map.keySet(), coordCopy.keySet()).immutableCopy();
-            map.putAll(coordCopy);
+            toCache = Sets.difference(this.map.keySet(), coordCopy.keySet()).immutableCopy();
+            this.map.putAll(coordCopy);
             active = Sets.newConcurrentHashSet(coordCopy.keySet());
             inactive.removeAll(coordCopy.keySet());
             inactive.addAll(toCache);
@@ -258,7 +258,7 @@ public final class CoordinateManager<S, C> {
     }
 
     /**
-     * Call to restore locations from the cache.
+     * Call to restore locations from the cache and make the given objects active again.
      * @param <T> type of object in provided set
      * @param obj objects to restore
      * @return true if cache was changed
@@ -288,9 +288,9 @@ public final class CoordinateManager<S, C> {
         }
     }
     
-    //</editor-fold>
+    //endregion
 
-    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
+    //region EVENTS
 
     /**
      * Fire update, from the thread that invoked the change.
@@ -320,6 +320,6 @@ public final class CoordinateManager<S, C> {
         listeners.remove(cl);
     }
 
-    //</editor-fold>
+    //endregion
 
 }

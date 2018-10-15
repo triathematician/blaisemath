@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import java.awt.Color;
 import static java.util.Objects.requireNonNull;
@@ -29,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  * Provides a number of utilities for working with colors, e.g. creating lighter/darker colors,
  * adjusting the alpha of a color, converting to/from hex strings.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public final class Colors {
     
@@ -68,7 +67,7 @@ public final class Colors {
     }
 
     /**
-     * Transform the alpha component of a color
+     * Transform the alpha component of a color.
      * @param col the color
      * @param a new alpha value
      * @return transformed color

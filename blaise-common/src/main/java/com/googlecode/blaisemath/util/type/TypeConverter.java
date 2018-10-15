@@ -63,6 +63,7 @@ public class TypeConverter {
      * @param targetType target type
      * @param def default value to return if value is null, or unable to convert
      * @return converted value
+     * @throws UnsupportedOperationException if unable to convert
      */
     public static <X> @Nullable X convert(@Nullable Object value, Class<X> targetType,
             @Nullable X def) {
@@ -74,7 +75,7 @@ public class TypeConverter {
             } else if (targetType == String.class) {
                 return (X) Objects.toString(value);
             } else if (value instanceof String) {
-                return (X) convertFromString((String) value, targetType, def);
+                return convertFromString((String) value, targetType, def);
             } else if (Number.class.isAssignableFrom(targetType)) {
                 return (X) convertToNumber(value, (Class) targetType, (Number) def);
             }
@@ -125,7 +126,7 @@ public class TypeConverter {
                 + targetType + " from a string.");
     }
     
-    //<editor-fold defaultstate="collapsed" desc="NUMBERS">
+    //region NUMBERS
     
     /**
      * Convert value to target numeric type, if possible. Returns a default value if unable
@@ -176,6 +177,6 @@ public class TypeConverter {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

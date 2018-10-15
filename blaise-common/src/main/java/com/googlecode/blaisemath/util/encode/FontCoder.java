@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.util.encode;
 import java.awt.Font;
 
 /**
- * Adapter converting fonts to/from strings.
+ * Adapter converting fonts to/from strings. Requires non-null values.
  *
  * @author Elisha Peterson
  */

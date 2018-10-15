@@ -39,7 +39,7 @@ public class ReflectionUtils {
     }
     
     /**
-     * Utility method to lookup a public static method by one of several possible names.
+     * Utility method to lookup a public static method, returning an empty optional if not found.
      * @param type class type
      * @param name method name
      * @param paramTypes method parameters
@@ -58,7 +58,8 @@ public class ReflectionUtils {
     }
     
     /**
-     * Utility method to lookup a public static method by one of several possible names.
+     * Utility method to lookup a public static method by one of several possible names, returning an empty optional if
+     * not found.
      * @param type class type
      * @param names possible names
      * @param paramTypes method parameters
@@ -75,7 +76,7 @@ public class ReflectionUtils {
     }
     
     /**
-     * Utility method to lookup a static method by one of several possible names.
+     * Utility method to lookup a constructor, returning an empty optional if not found.
      * @param type class type
      * @param paramTypes method parameters
      * @return constructor if found

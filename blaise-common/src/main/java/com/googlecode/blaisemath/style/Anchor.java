@@ -23,84 +23,137 @@ package com.googlecode.blaisemath.style;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import static java.lang.Math.PI;
+
 /**
- * Anchor points for a string. Provides 8 compass directions, as well as a
- * central anchor point.
+ * Represents anchor locations and utilities for using them in practice. These anchors can be used for finding points
+ * around a circle or for shifting rectangles so various corners are anchored at a target point.
+ * <p>
+ * For circles, the
+ *
+ *
+ * @author Elisha Peterson
  */
 public enum Anchor {
     
-    CENTER(0, -.5, .5) {
-        @Override
-        public Point2D getOffset(double r) {
-            return new Point2D.Double();
-        }
-    }, 
-    WEST(0, 0, .5),
-    NORTHWEST(0.25 * Math.PI, 0, 1),
-    NORTH(0.5 * Math.PI, -.5, 1),
-    NORTHEAST(0.75 * Math.PI, -1, 1),
-    EAST(Math.PI, -1, .5),
-    SOUTHEAST(1.25 * Math.PI, -1, 0),
-    SOUTH(1.5 * Math.PI, -.5, 0),
-    SOUTHWEST(1.75 * Math.PI, 0, 0);
+    CENTER(0, 0, 0),
+    WEST(PI, -.5, 0),
+    NORTHWEST(-0.75 * PI, -.5, -.5),
+    NORTH(-0.5 * PI, 0, -.5),
+    NORTHEAST(-0.25 * PI, .5, -.5),
+    EAST(0, .5, 0),
+    SOUTHEAST(0.25 * PI, .5, .5),
+    SOUTH(0.5 * PI, 0, .5),
+    SOUTHWEST(0.75 * PI, -.5, .5);
 
     private final double angle;
     private final double xOff;
     private final double yOff;
-    
+
+    /**
+     * Initialize parameters for the anchor point.
+     * @param angle orientation of the anchor relative to the center point (for circles)
+     * @param xOff horizontal offset from rectangle center
+     * @param yOff vertical offset from rectangle center
+     */
     Anchor(double angle, double xOff, double yOff) {
         this.angle = angle; 
         this.xOff = xOff;
         this.yOff = yOff;
     }
 
+    /**
+     * Get the opposite anchor point.
+     * @return opposite
+     */
+    public Anchor opposite() {
+        switch (this) {
+            case CENTER:
+                return CENTER;
+            case WEST:
+                return EAST;
+            case NORTHWEST:
+                return SOUTHEAST;
+            case NORTH:
+                return SOUTH;
+            case NORTHEAST:
+                return SOUTHWEST;
+            case EAST:
+                return WEST;
+            case SOUTHEAST:
+                return NORTHWEST;
+            case SOUTH:
+                return NORTH;
+            case SOUTHWEST:
+                return NORTHEAST;
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
     /** 
-     * Represents the relative angle for the specified anchor.
+     * Represents the relative angle for the specified anchor. This is the location of
+     * the anchor relative to a central point.
      * @return angle of anchor 
      */
-    public double getAngle() { 
+    public double angle() {
         return angle; 
     }
     
     /**
-     * Returns an offset anchor point for a circle of given radius.
+     * Returns the relative offset of an anchor point for a circle of radius r.
      * @param r radius
      * @return offset of anchor point
      */
-    public Point2D getOffset(double r) {
-        return new Point2D.Double(r*Math.cos(angle), r*Math.sin(angle));
+    public Point2D offsetForCircle(double r) {
+        return this == CENTER ? new Point2D.Double() : new Point2D.Double(r * Math.cos(angle), r * Math.sin(angle));
+    }
+
+    /**
+     * Returns the absolute location of an anchor point on a circle of radius r.
+     * @param center center point of circle
+     * @param r radius
+     * @return anchor point location
+     */
+    public Point2D onCircle(Point2D center, double r) {
+        return this == CENTER ? center : new Point2D.Double(center.getX() + r * Math.cos(angle), center.getY() + r * Math.sin(angle));
+    }
+
+    /**
+     * Returns the relative offset of an anchor point for a rectangle of given size. This indicates how much the given anchor
+     * point on the outside of the rectangle is shifted from the center of the rectangle.
+     * @param wid width of rectangle
+     * @param ht height of rectangle
+     * @return offset of anchor point
+     */
+    public Point2D offsetForRectangle(double wid, double ht) {
+        return this == CENTER ? new Point2D.Double() : new Point2D.Double(xOff * wid, yOff * ht);
+    }
+
+    /**
+     * Returns the absolute location of an anchor point on a rectangle of given size.
+     * @param rectangle the rectangle
+     * @return anchor point location
+     */
+    public Point2D onRectangle(Rectangle2D rectangle) {
+        return this == CENTER ? new Point2D.Double(rectangle.getCenterX(), rectangle.getCenterY())
+                : new Point2D.Double(rectangle.getCenterX() + xOff * rectangle.getWidth(), rectangle.getCenterY() + yOff * rectangle.getHeight());
     }
     
     /**
-     * Returns an offset that allows a rectangle to be drawn from the bottom left
-     * rather than a given anchor point. So if you want to draw a rectangle of
-     * size (width, height) anchored at the CENTER, for instance, you have
-     * to add (-.5*wid, .5*ht) to the anchor (x,y) coordinates to get the bottom left
-     * coordinate of the resulting rectangle.
-     * 
+     * Get the rectangle of given size whose corner matching this anchor is pt.
+     *
+     * @param pt the anchor point
      * @param wid width of rectangle
      * @param ht height of rectangle
      * @return offset position
      */
-    public Point2D getRectOffset(double wid, double ht) {
-        return new Point2D.Double(xOff*wid, yOff*ht);
-    }
-    
-    /**
-     * Returns an offset that allows a rectangle to be drawn from the bottom left
-     * rather than a given anchor point. So if you want to draw a rectangle of
-     * size (width, height) anchored at the CENTER, for instance, you have
-     * to add (-.5*wid, .5*ht) to the anchor (x,y) coordinates to get the bottom left
-     * coordinate of the resulting rectangle.
-     * 
-     * @param x anchor x position
-     * @param y anchor y position
-     * @param wid width of rectangle
-     * @param ht height of rectangle
-     * @return offset position
-     */
-    public Rectangle2D anchoredRectangle(double x, double y, double wid, double ht) {
-        return new Rectangle2D.Double(x+xOff*wid, y+yOff*ht, wid, ht);
+    public Rectangle2D rectangleAnchoredAt(Point2D pt, double wid, double ht) {
+        Point2D offset = offsetForRectangle(wid, ht);
+        Point2D center = new Point2D.Double(pt.getX() - offset.getX(), pt.getY() - offset.getY());
+        Rectangle2D res = new Rectangle2D.Double();
+        res.setFrameFromCenter(center.getX(), center.getY(), center.getX() + .5 * wid, center.getY() + .5 * ht);
+        return res;
     }
     
 }

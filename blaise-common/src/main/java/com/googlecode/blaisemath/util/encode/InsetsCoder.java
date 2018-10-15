@@ -20,17 +20,19 @@ package com.googlecode.blaisemath.util.encode;
  * #L%
  */
 
-import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import java.awt.Insets;
-import java.util.Map;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * Adapter converting Insets to/from strings.
+ * Adapter converting insets to/from strings of the form "insets(top,left,bottom,right)". Requires non-null values.
  *
  * @author Elisha Peterson
  */
@@ -40,32 +42,30 @@ public final class InsetsCoder implements StringEncoder<Insets>, StringDecoder<I
 
     @Override
     public String encode(Insets v) {
-        return v == null ? "null"
-                : String.format("insets[t=%d,l=%d,b=%d,r=%d]", 
-                        v.top, v.left, v.bottom, v.right);
+        requireNonNull(v);
+        return String.format("insets(%f,%f,%f,%f)", v.top, v.left, v.bottom, v.right);
     }
 
     @Override
-    public Insets decode(String v) {
+    public @Nullable Insets decode(String v) {
         if (Strings.isNullOrEmpty(v)) {
             return null;
         }
-        Matcher m = Pattern.compile("insets\\[(.*)\\]").matcher(v.toLowerCase().trim());
-        if (m.find()) {
-            String inner = m.group(1);
-            Map<String,String> kv = Splitter.on(",").trimResults().withKeyValueSeparator("=").split(inner);
+        Matcher m = Pattern.compile("insets\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim());
+        if (m.matches()) {
             try {
-                Integer t = Integer.valueOf(kv.get("t"));
-                Integer l = Integer.valueOf(kv.get("l"));
-                Integer b = Integer.valueOf(kv.get("b"));
-                Integer r = Integer.valueOf(kv.get("r"));
+                Integer t = Integer.valueOf(m.group(1));
+                Integer l = Integer.valueOf(m.group(2));
+                Integer b = Integer.valueOf(m.group(3));
+                Integer r = Integer.valueOf(m.group(4));
                 return new Insets(t, l, b, r);
             } catch (NumberFormatException x) {
                 LOG.log(Level.FINEST, "Not an integer", x);
                 return null;
             }
         } else {
-            throw new IllegalArgumentException("Invalid insets: "+v);
+            LOG.log(Level.FINEST, "Not a valid insets", v);
+            return null;
         }
     }
     

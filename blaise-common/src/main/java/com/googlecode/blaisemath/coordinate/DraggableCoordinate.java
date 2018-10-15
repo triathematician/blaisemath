@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  */
 
 /**
- * Interface that can get and set a point in an arbitrary coordinate system.
+ * Marks object methods that are used to get/set coordinates.
  * A third method allows the point to be set based on an initial point, and
  * coordinates for the start and end of a drag gesture.
  * 
@@ -46,7 +46,7 @@ public interface DraggableCoordinate<C> extends CoordinateBean<C> {
      * @param pt the point
      * @return wrapped instance of point as a point bean
      */
-    public static DraggableCoordinate<Point2D> create(final Point2D pt) {
+    static DraggableCoordinate<Point2D> create(final Point2D pt) {
         return new DraggableCoordinate<Point2D>() {
             @Override
             public Point2D getPoint() {

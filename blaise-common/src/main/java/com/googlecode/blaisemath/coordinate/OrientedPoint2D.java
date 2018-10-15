@@ -25,8 +25,8 @@ import java.awt.geom.Point2D;
 import java.util.Objects;
 
 /**
- * A point with an orientation.
- * @author Elisha
+ * A point with an orientation represented as a double.
+ * @author Elisha Peterson
  */
 public class OrientedPoint2D extends Point2DBean {
     
@@ -49,7 +49,7 @@ public class OrientedPoint2D extends Point2DBean {
 
     @Override
     public String toString() {
-        return "OrientedPoint2D["+x+", "+y+"; "+angle+"]";
+        return "OrientedPoint2D[" + x + ", " + y + "; " + angle + "]";
     }
 
     @Override
@@ -67,21 +67,21 @@ public class OrientedPoint2D extends Point2DBean {
     }
     
     /**
-     * Update angle to be in direction of given second point
+     * Builder method, updating angle to be in direction of given second point.
      * @param p2 second point
      * @return this
      */
-    public OrientedPoint2D inDirectionOf(Point2D p2) {
+    public OrientedPoint2D toward(Point2D p2) {
         setAngle(Math.atan2(p2.getY() - getY(), p2.getX() - getX()));
         return this;
     }
     
     /**
-     * Update angle to be in direction of given second point
+     * Builder method, updating angle to be in direction away from given second point.
      * @param p2 second point
      * @return this
      */
-    public OrientedPoint2D inOppositeDirectionOf(Point2D p2) {
+    public OrientedPoint2D awayFrom(Point2D p2) {
         setAngle(Math.atan2(-p2.getY() + getY(), -p2.getX() + getX()));
         return this;
     }

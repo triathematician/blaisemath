@@ -22,7 +22,8 @@ package com.googlecode.blaisemath.style;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import java.awt.Shape;
+
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
@@ -46,26 +47,29 @@ public final class Markers {
     /** Singleton for empty path. */
     private static final GeneralPath EMPTY_PATH = new GeneralPath();
     
-    //<editor-fold defaultstate="collapsed" desc="STATIC INSTANCES">
-    public static final NoShape NONE = new NoShape();
-    public static final CircleShape CIRCLE = new CircleShape();
-    public static final SquareShape SQUARE = new SquareShape();
-    public static final DiamondShape DIAMOND = new DiamondShape();
-    public static final TriangleShape TRIANGLE = new TriangleShape();
-    public static final StarShape STAR = new StarShape();
-    public static final Star7Shape STAR7 = new Star7Shape();
-    public static final Star11Shape STAR11 = new Star11Shape();
-    public static final PlusShape PLUS = new PlusShape();
-    public static final CrossShape CROSS = new CrossShape();
-    public static final CrosshairsShape CROSSHAIRS = new CrosshairsShape();
-    public static final HappyFaceShape HAPPYFACE = new HappyFaceShape();
-    public static final HouseShape HOUSE = new HouseShape();
-    public static final SimpleArrowShape ARROW = new SimpleArrowShape();
-    public static final TrianglePointerShape TRIANGLE_ARROW = new TrianglePointerShape();
-    public static final TriangleFlagShape ARROWHEAD = new TriangleFlagShape();
-    public static final TeardropShape TEARDROP = new TeardropShape();
-    public static final CarShape CAR = new CarShape();
-    //</editor-fold>
+    //region STATIC INSTANCES
+
+    public static final BlankMarker BLANK = new BlankMarker();
+    public static final CircleMarker CIRCLE = new CircleMarker();
+    public static final SquareMarker SQUARE = new SquareMarker();
+    public static final DiamondMarker DIAMOND = new DiamondMarker();
+    public static final TriangleMarker TRIANGLE = new TriangleMarker();
+    public static final StarMarker5 STAR = new StarMarker5();
+    public static final StarMarker7 STAR7 = new StarMarker7();
+    public static final StarMarker11 STAR11 = new StarMarker11();
+    public static final PlusMarker PLUS = new PlusMarker();
+    public static final CrossMarker CROSS = new CrossMarker();
+    public static final TargetMarker TARGET = new TargetMarker();
+    public static final ArrowMarker ARROW = new ArrowMarker();
+    public static final ThickArrowMarker THICK_ARROW = new ThickArrowMarker();
+    public static final ChevronMarker CHEVRON_MARKER = new ChevronMarker();
+    public static final TriangleMarkerForward TRIANGLE_ARROW = new TriangleMarkerForward();
+    public static final ArrowheadMarker ARROWHEAD = new ArrowheadMarker();
+    public static final TeardropMarker TEARDROP = new TeardropMarker();
+    public static final HappyFaceMarker HAPPYFACE = new HappyFaceMarker();
+    public static final HouseMarker HOUSE = new HouseMarker();
+
+    //endregion
     
     /**
      * Utility class
@@ -86,10 +90,9 @@ public final class Markers {
     }
 
     /**
-     * Blank shape, draws nothing
+     * Blank marker.
      */
-    public static class NoShape implements Marker {
-
+    public static class BlankMarker implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
             return EMPTY_PATH;
@@ -97,10 +100,9 @@ public final class Markers {
     }
 
     /**
-     * Circle centered at point
+     * Circle marker.
      */
-    public static class CircleShape implements Marker {
-
+    public static class CircleMarker implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
             return new Ellipse2D.Double(p.getX() - radius, p.getY() - radius, 2 * radius, 2 * radius);
@@ -108,10 +110,9 @@ public final class Markers {
     }
 
     /**
-     * Square
+     * Square marker.
      */
-    public static class SquareShape implements Marker {
-
+    public static class SquareMarker implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
             return new Rectangle2D.Double(
@@ -123,168 +124,282 @@ public final class Markers {
     }
 
     /**
-     * Diamond
+     * Diamond marker.
      */
-    public static class DiamondShape implements Marker {
-
+    public static class DiamondMarker implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp = new GeneralPath();
-            gp.moveTo((float) x, (float) (y - radius));
-            gp.lineTo((float) (x - radius), (float) y);
-            gp.lineTo((float) x, (float) (y + radius));
-            gp.lineTo((float) (x + radius), (float) y);
-            gp.closePath();
-            return gp;
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) x, (float) (y - radius));
+            path.lineTo((float) (x - radius), (float) y);
+            path.lineTo((float) x, (float) (y + radius));
+            path.lineTo((float) (x + radius), (float) y);
+            path.closePath();
+            return path;
         }
     }
 
     /**
-     * Triangle, with peak pointed up
+     * Triangle marker, pointing up.
      */
-    public static class TriangleShape implements Marker {
-
+    public static class TriangleMarker implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp2 = new GeneralPath();
-            gp2.moveTo((float) x, (float) (y - radius));
-            gp2.lineTo((float) (x + radius * Math.cos(Math.PI * 1.16667)), 
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) x, (float) (y - radius));
+            path.lineTo((float) (x + radius * Math.cos(Math.PI * 1.16667)),
                     (float) (y - radius * Math.sin(Math.PI * 1.16667)));
-            gp2.lineTo((float) (x + radius * Math.cos(Math.PI * 1.83333)), 
+            path.lineTo((float) (x + radius * Math.cos(Math.PI * 1.83333)),
                     (float) (y - radius * Math.sin(Math.PI * 1.83333)));
-            gp2.closePath();
-            return gp2;
+            path.closePath();
+            return path;
         }
     }
 
     /**
-     * 5-Pointed Star
+     * Five point star marker.
      */
-    public static class StarShape implements Marker {
-
+    public static class StarMarker5 implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp5 = new GeneralPath();
-            gp5.moveTo((float) x, (float) (y - radius));
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) x, (float) (y - radius));
             for (int i = 0; i < 5; i++) {
                 double theta = Math.PI / 2 + 2 * Math.PI * i / 5;
-                gp5.lineTo((float) (x + radius * Math.cos(theta)), 
+                path.lineTo((float) (x + radius * Math.cos(theta)),
                         (float) (y - radius * Math.sin(theta)));
                 theta += Math.PI / 5;
-                gp5.lineTo((float) (x + radius / Math.sqrt(8) * Math.cos(theta)), 
+                path.lineTo((float) (x + radius / Math.sqrt(8) * Math.cos(theta)),
                         (float) (y - radius / Math.sqrt(8) * Math.sin(theta)));
             }
-            gp5.closePath();
-            return gp5;
+            path.closePath();
+            return path;
         }
     }
 
     /**
-     * 7-Pointed Star
+     * Seven point star marker.
      */
-    public static class Star7Shape implements Marker {
-
+    public static class StarMarker7 implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp6 = new GeneralPath();
-            gp6.moveTo((float) x, (float) (y - radius));
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) x, (float) (y - radius));
             for (int i = 0; i < 7; i++) {
                 double theta = Math.PI / 2 + 2 * Math.PI * i / 7;
-                gp6.lineTo((float) (x + radius * Math.cos(theta)), 
+                path.lineTo((float) (x + radius * Math.cos(theta)),
                         (float) (y - radius * Math.sin(theta)));
                 theta += Math.PI / 7;
-                gp6.lineTo((float) (x + radius / 2 * Math.cos(theta)), 
+                path.lineTo((float) (x + radius / 2 * Math.cos(theta)),
                         (float) (y - radius / 2 * Math.sin(theta)));
             }
-            gp6.closePath();
-            return gp6;
+            path.closePath();
+            return path;
         }
     }
 
     /**
-     * 11-Pointed Star
+     * Eleven point star marker.
      */
-    public static class Star11Shape implements Marker {
-
+    public static class StarMarker11 implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp7 = new GeneralPath();
-            gp7.moveTo((float) x, (float) (y - radius));
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) x, (float) (y - radius));
             for (int i = 0; i < 11; i++) {
                 double theta = Math.PI / 2 + 2 * Math.PI * i / 11;
-                gp7.lineTo((float) (x + radius * Math.cos(theta)), 
+                path.lineTo((float) (x + radius * Math.cos(theta)),
                         (float) (y - radius * Math.sin(theta)));
                 theta += Math.PI / 11;
-                gp7.lineTo((float) (x + radius / 1.5 * Math.cos(theta)), 
+                path.lineTo((float) (x + radius / 1.5 * Math.cos(theta)),
                         (float) (y - radius / 1.5 * Math.sin(theta)));
             }
-            gp7.closePath();
-            return gp7;
+            path.closePath();
+            return path;
         }
     }
 
     /**
-     * A "+" shape
+     * Plus marker.
      */
-    public static class PlusShape implements Marker {
-
+    public static class PlusMarker implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp3 = new GeneralPath();
-            gp3.moveTo((float) x, (float) (y - radius));
-            gp3.lineTo((float) x, (float) (y + radius));
-            gp3.moveTo((float) (x - radius), (float) y);
-            gp3.lineTo((float) (x + radius), (float) y);
-            return gp3;
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) x, (float) (y - radius));
+            path.lineTo((float) x, (float) (y + radius));
+            path.moveTo((float) (x - radius), (float) y);
+            path.lineTo((float) (x + radius), (float) y);
+            return new BasicStroke(radius/5).createStrokedShape(path);
         }
     }
 
     /**
-     * A "x" shape
+     * Cross marker.
      */
-    public static class CrossShape implements Marker {
-
+    public static class CrossMarker implements Marker {
         @Override
         public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp4 = new GeneralPath();
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
             double r2 = 0.7 * radius;
-            gp4.moveTo((float) (x - r2), (float) (y - r2));
-            gp4.lineTo((float) (x + r2), (float) (y + r2));
-            gp4.moveTo((float) (x - r2), (float) (y + r2));
-            gp4.lineTo((float) (x + r2), (float) (y - r2));
-            return gp4;
+            path.moveTo((float) (x - r2), (float) (y - r2));
+            path.lineTo((float) (x + r2), (float) (y + r2));
+            path.moveTo((float) (x - r2), (float) (y + r2));
+            path.lineTo((float) (x + r2), (float) (y - r2));
+            return new BasicStroke(radius/5).createStrokedShape(path);
         }
     }
 
     /**
-     * Cross-hairs (path only, no fill)
+     * Target marker (with circle and crosshairs).
      */
-    public static class CrosshairsShape implements Marker {
+    public static class TargetMarker implements Marker {
+        @Override
+        public Shape create(Point2D p, double angle, float radius) {
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) x, (float) (y - radius));
+            path.lineTo((float) x, (float) (y + radius));
+            path.moveTo((float) (x - radius), (float) y);
+            path.lineTo((float) (x + radius), (float) y);
+            path.append(new Ellipse2D.Double(x - .6 * radius, y - .6 * radius, 1.2 * radius, 1.2 * radius), false);
+            return new BasicStroke(radius/6).createStrokedShape(path);
+        }
+    }
+
+    /**
+     * Arrow marker (->), pointing forward.
+     */
+    public static class ArrowMarker implements Marker {
+        @Override
+        public Shape create(Point2D p, double angle, float radius) {
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) (x + .5 * radius), (float) (y - .5 * radius));
+            path.lineTo((float) (x + radius), (float) y);
+            path.lineTo((float) (x + .5*radius), (float) (y + .5*radius));
+            path.moveTo((float) (x + radius), (float) y);
+            path.lineTo((float) (x - radius), (float) y);
+            Shape wideShape = new BasicStroke(radius/5).createStrokedShape(path);
+            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(wideShape);
+        }
+    }
+
+    /**
+     * Thicker arrow marker (->), pointing forward.
+     */
+    public static class ThickArrowMarker implements Marker {
+        @Override
+        public Shape create(Point2D p, double angle, float radius) {
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) (x + .5 * radius), (float) (y - .5 * radius));
+            path.lineTo((float) (x + radius), (float) y);
+            path.lineTo((float) (x + .5*radius), (float) (y + .5*radius));
+            path.moveTo((float) (x + radius), (float) y);
+            path.lineTo((float) (x - radius), (float) y);
+            Shape wideShape = new BasicStroke(radius/2).createStrokedShape(path);
+            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(wideShape);
+        }
+    }
+
+    /**
+     * Chevron marker (>>), pointing forward.
+     */
+    public static class ChevronMarker implements Marker {
 
         @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
-            GeneralPath gp3 = new GeneralPath();
-            gp3.moveTo((float) x, (float) (y - radius));
-            gp3.lineTo((float) x, (float) (y + radius));
-            gp3.moveTo((float) (x - radius), (float) y);
-            gp3.lineTo((float) (x + radius), (float) y);
-            gp3.append(new Ellipse2D.Double(x - .6 * radius, y - .6 * radius, 1.2 * radius, 1.2 * radius), false);
-            return gp3;
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) (x + .3 * radius), (float) (y - .5 * radius));
+            path.lineTo((float) (x + .8 * radius), (float) y);
+            path.lineTo((float) (x + .3*radius), (float) (y + .5*radius));
+            path.moveTo((float) (x - .7*radius), (float) (y - .5 * radius));
+            path.lineTo((float) (x + .3 * radius), (float) y);
+            path.lineTo((float) (x - .7*radius), (float) (y + .5*radius));
+            Shape wideShape = new BasicStroke(radius/6).createStrokedShape(path);
+            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(wideShape);
         }
     }
 
     /**
-     * Happy face shape
+     * Triangle marker (|>), pointing forward.
      */
-    public static class HappyFaceShape implements Marker {
+    public static class TriangleMarkerForward implements Marker {
+
+        @Override
+        public Shape create(Point2D p, double angle, float radius) {
+            double x = p.getX(), y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) (x + radius), (float) y);
+            path.lineTo((float) (x + radius * Math.cos(Math.PI * 0.6667)),
+                    (float) (y - radius * Math.sin(Math.PI * 0.6667)));
+            path.lineTo((float) (x + radius * Math.cos(Math.PI * 1.3333)),
+                    (float) (y - radius * Math.sin(Math.PI * 1.3333)));
+            path.closePath();
+            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(path);
+        }
+    }
+
+    /**
+     * Arrowhead marker (>), pointing forward.
+     */
+    public static class ArrowheadMarker implements Marker {
+
+        @Override
+        public Shape create(Point2D p, double angle, float radius) {
+            double x = p.getX(), y = p.getY();
+            GeneralPath gp10 = new GeneralPath();
+            gp10.moveTo((float) (x + radius), (float) y);
+            gp10.lineTo((float) (x - radius), (float) (y + radius));
+            gp10.lineTo((float) (x - .5 * radius), (float) y);
+            gp10.lineTo((float) (x - radius), (float) (y - radius));
+            gp10.closePath();
+            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(gp10);
+        }
+    }
+
+    /**
+     * Teardrop marker, pointing forward.
+     */
+    public static class TeardropMarker implements Marker {
+
+        @Override
+        public Shape create(Point2D p, double angle, float radius) {
+            double x = p.getX(), y = p.getY();
+            GeneralPath gp11 = new GeneralPath();
+            gp11.moveTo(-.25f, -.5f);
+            gp11.curveTo(-1f, -.5f, -1f, .5f, -.25f, .5f);
+            gp11.curveTo(.5f, .5f, .5f, 0, 1f, 0);
+            gp11.curveTo(.5f, 0, .5f, -.5f, -.2f, -.5f);
+            gp11.closePath();
+            gp11.transform(new AffineTransform(radius, 0, 0, radius, x, y));
+            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(gp11);
+        }
+    }
+
+    /**
+     * Happy face marker.
+     */
+    public static class HappyFaceMarker implements Marker {
 
         @Override
         public Shape create(Point2D p, double angle, float radius) {
@@ -298,9 +413,9 @@ public final class Markers {
     }
 
     /**
-     * House shape
+     * House-shaped marker.
      */
-    public static class HouseShape implements Marker {
+    public static class HouseMarker implements Marker {
 
         @Override
         public Shape create(Point2D p, double angle, float radius) {
@@ -324,117 +439,4 @@ public final class Markers {
         }
     }
 
-    /**
-     * Simple arrow (path only)
-     */
-    public static class SimpleArrowShape implements Marker {
-
-        @Override
-        public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp = new GeneralPath();
-            gp.moveTo((float) (x + radius * Math.cos(Math.PI * 0.667)), 
-                    (float) (y - radius * Math.sin(Math.PI * 0.6667)));
-            gp.lineTo((float) x, (float) y);
-            gp.moveTo((float) x, (float) y);
-            gp.lineTo((float) (x + radius * Math.cos(Math.PI * 0.667)),
-                    (float) (y + radius * Math.sin(Math.PI * 0.6667)));
-            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(gp);
-        }
-    }
-
-    /**
-     * Triangle shape (pointed to the side)
-     */
-    public static class TrianglePointerShape implements Marker {
-
-        @Override
-        public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp9 = new GeneralPath();
-            gp9.moveTo((float) (x + radius), (float) y);
-            gp9.lineTo((float) (x + radius * Math.cos(Math.PI * 0.6667)), 
-                    (float) (y - radius * Math.sin(Math.PI * 0.6667)));
-            gp9.lineTo((float) (x + radius * Math.cos(Math.PI * 1.3333)), 
-                    (float) (y - radius * Math.sin(Math.PI * 1.3333)));
-            gp9.closePath();
-            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(gp9);
-        }
-    }
-
-    /**
-     * Triangle shape (flag)
-     */
-    public static class TriangleFlagShape implements Marker {
-
-        @Override
-        public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp10 = new GeneralPath();
-            gp10.moveTo((float) (x + radius), (float) y);
-            gp10.lineTo((float) (x - radius), (float) (y + radius));
-            gp10.lineTo((float) (x - .5 * radius), (float) y);
-            gp10.lineTo((float) (x - radius), (float) (y - radius));
-            gp10.closePath();
-            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(gp10);
-        }
-    }
-
-    /**
-     * Teardrop shape
-     */
-    public static class TeardropShape implements Marker {
-
-        @Override
-        public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp11 = new GeneralPath();
-            gp11.moveTo(-.25f, -.5f);
-            gp11.curveTo(-1f, -.5f, -1f, .5f, -.25f, .5f);
-            gp11.curveTo(.5f, .5f, .5f, 0, 1f, 0);
-            gp11.curveTo(.5f, 0, .5f, -.5f, -.2f, -.5f);
-            gp11.closePath();
-            gp11.transform(new AffineTransform(radius, 0, 0, radius, x, y));
-            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(gp11);
-        }
-    }
-
-    /**
-     * Car shape
-     */
-    public static class CarShape implements Marker {
-
-        @Override
-        public Shape create(Point2D p, double angle, float radius) {
-            double x = p.getX(), y = p.getY();
-            GeneralPath gp12 = new GeneralPath();
-            gp12.moveTo(1f, 0);
-            gp12.lineTo(.67f, 0);
-            // top
-            gp12.append(new Arc2D.Double(-.33f, -.5f, 1f, 1f, 0, 180, Arc2D.OPEN), true);
-            // hood
-            gp12.append(new Arc2D.Double(-.83f, 0f, 1f, .67f, 90, 90, Arc2D.OPEN), true); 
-            // bumper
-            gp12.append(new Arc2D.Double(-1f, .33f, .33f, .33f, 90, 90, Arc2D.OPEN), true); 
-            gp12.lineTo(-.7f, .5f);
-            // wheel well
-            gp12.append(new Arc2D.Double(-.7f, .3f, .4f, .4f, 180, -180, Arc2D.OPEN), true); 
-            gp12.lineTo(.3f, .5f);
-            // wheel well
-            gp12.append(new Arc2D.Double(.3f, .3f, .4f, .4f, 180, -180, Arc2D.OPEN), true); 
-            gp12.lineTo(1f, .5f);
-            gp12.closePath();
-            Area a = new Area(gp12);
-
-            // windows
-            a.subtract(new Area(new Arc2D.Double(-.2f, -.4f, .7f, .6f, 90, 90, Arc2D.PIE))); 
-            a.subtract(new Area(new Arc2D.Double(-.05f, -.4f, .6f, .6f, 0, 90, Arc2D.PIE))); 
-
-            // wheels
-            a.add(new Area(new Ellipse2D.Double(-.67f, .33f, .33f, .33f))); 
-            a.add(new Area(new Ellipse2D.Double(.33f, .33f, .33f, .33f)));
-            a.transform(new AffineTransform(-radius, 0, 0, radius, x, y));
-            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(a);
-        }
-    }
 }

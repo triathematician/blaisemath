@@ -22,6 +22,8 @@ package com.googlecode.blaisemath.util.encode;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
@@ -30,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Adapter converting Point2D to/from strings.
+ * Adapter converting Point2D to/from strings of the form "(1.1,2)". Requires non-null values.
  *
  * @author Elisha Peterson
  */
@@ -45,7 +47,7 @@ public final class Point2DCoder implements StringEncoder<Point2D>, StringDecoder
     }
 
     @Override
-    public Point2D decode(String v) {
+    public @Nullable Point2D decode(String v) {
         requireNonNull(v);
         Matcher m = Pattern.compile("\\((.*),(.*)\\)").matcher(v.toLowerCase().trim());
         if (m.matches()) {

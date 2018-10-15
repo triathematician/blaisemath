@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.util.geom;
  * #L%
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Iterables;
 import java.awt.geom.Point2D;
@@ -30,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Utilities for working with points.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class Points {
     
@@ -54,10 +53,9 @@ public class Points {
      * a box of side length 1.)
      * @param pts the points
      * @param inset additional padding to include around the box
-     * @return bounding box
+     * @return bounding box, null if there are no points
      */
-    public static Rectangle2D.@Nullable Double boundingBox(Iterable<? extends Point2D> pts, 
-            double inset) {
+    public static Rectangle2D.@Nullable Double boundingBox(Iterable<? extends Point2D> pts, double inset) {
         double minx = Double.MAX_VALUE;
         double miny = Double.MAX_VALUE;
         double maxx = -Double.MAX_VALUE;

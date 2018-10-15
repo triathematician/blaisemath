@@ -27,10 +27,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Provides a method that can be used to initialize (add actions to) a {@link JPopupMenu}.
- * The initializer will be provided as argument the <i>source</i> object
- * that is creating the menu, the <i>location</i> where it is being shown,
- * an optional <i>focus</i> object describing a more specific target for the menu,
- * and an optional <i>selection</i> of objects.
+ * The initializer will be provided as argument the source object
+ * that is creating the menu, the location where it is being shown,
+ * an optional focus object describing a more specific target for the menu,
+ * and an optional selection of objects.
  *
  * @param <S> focus object type for menu
  * 

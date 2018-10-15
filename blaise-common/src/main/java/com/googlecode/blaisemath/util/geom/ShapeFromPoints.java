@@ -28,9 +28,9 @@ import java.awt.geom.Rectangle2D;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Creates a shape from two mouse positions.
+ * Utility methods for creating shapes from two locations.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 public abstract class ShapeFromPoints {
     
@@ -49,8 +49,7 @@ public abstract class ShapeFromPoints {
      * @param release where it was released
      * @return created shape, or null if either point was null
      */
-    @Nullable
-    public Shape createFromNullable(@Nullable Point2D press, @Nullable Point2D release) {
+    public @Nullable Shape createFromNullable(@Nullable Point2D press, @Nullable Point2D release) {
         return press == null || release == null ? null
                 : create(press, release);
     }
@@ -63,7 +62,7 @@ public abstract class ShapeFromPoints {
         }
     }
     
-    /** Creates circle from two points (center and outside) */  
+    /** Creates circle from two points (center and outside). */
     public static class Circle extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {
@@ -72,7 +71,7 @@ public abstract class ShapeFromPoints {
         }
     }
     
-    /** Creates ellipse from two points (corners of frame) */  
+    /** Creates ellipse from two points (corners of frame). */
     public static class Ellipse extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {
@@ -82,7 +81,7 @@ public abstract class ShapeFromPoints {
         }
     }
     
-    /** Creates ellipse from two points (corners of rectangle) */  
+    /** Creates ellipse from two points (corners of rectangle). */
     public static class Rectangle extends ShapeFromPoints {
         @Override
         public Shape create(Point2D press, Point2D release) {

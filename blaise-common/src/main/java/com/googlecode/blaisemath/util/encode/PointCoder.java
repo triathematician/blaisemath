@@ -21,6 +21,8 @@ package com.googlecode.blaisemath.util.encode;
  */
 
 import com.google.common.base.Splitter;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Point;
 import java.util.List;
 import static java.util.Objects.requireNonNull;
@@ -30,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Adapter converting Point to/from strings.
+ * Adapter converting Point to/from strings of the form "(1,2)". Requires non-null values.
  *
  * @author Elisha Peterson
  */
@@ -45,7 +47,7 @@ public final class PointCoder implements StringEncoder<Point>, StringDecoder<Poi
     }
 
     @Override
-    public Point decode(String v) {
+    public @Nullable Point decode(String v) {
         requireNonNull(v);
         Matcher m = Pattern.compile("\\((.*),(.*)\\)").matcher(v.toLowerCase().trim());
         if (m.matches()) {

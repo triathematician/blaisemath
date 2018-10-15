@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.coordinate;
  */
 
 /**
- * An object that can get and set a point (used to simplify point dragging).
+ * Marks object methods that are used to get/set coordinates.
  *
  * @param <C> the type of point
  * 

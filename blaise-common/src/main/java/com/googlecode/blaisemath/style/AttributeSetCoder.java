@@ -66,7 +66,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *   <li>The attribute name is not used for conversion.</li>
  *   <li>Only values of type Number, String, Color, Marker, and Anchor are supported.</li>
  *   <li>Number, String, and Anchor values are converted in the obvious way.</li>
- *   <li>Colors are converted to #RRGGBB or #AARRGGBB notation, using {@link Colors#stringConverter()}.</li>
+ *   <li>Colors are converted to #RRGGBB or #AARRGGBB notation, using {@link Colors#encode(Color)}.</li>
  *   <li>Marker values are persisted using their class name.</li>
  *   <li>Null values are converted to the string "none".</li>
  * </ul>
@@ -90,6 +90,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDecoder<AttributeSet> {
 
     private static final Logger LOG = Logger.getLogger(AttributeSetCoder.class.getName());
+
+    //region CONFIGS
 
     /** String used to represent null explicitly. */
     private static final String NULL_STRING = "none";
@@ -129,6 +131,8 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
                     .put(Point2D.class, new Point2DCoder()::decode)
                     .put(Rectangle.class, new RectangleCoder()::decode)
                     .put(Rectangle2D.class, new Rectangle2DCoder()::decode);
+
+    //endregion
 
     /** Used in deserialization for custom type mapping */
     private final Map<String, Class<?>> types;
@@ -180,23 +184,23 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
         return res;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="VALUE CONVERSION UTILS">
+    //region VALUE CONVERSION UTILS
     
     /**
      * Converts value from one type to another, with optional default.
-     * @param val value to convert
-     * @param type target type
+     * @param value value to convert
+     * @param targetType target type
      * @param def default value
-     * @return value of target type if possible, else default
+     * @return value of target type if possible, else default; may return null if def is null
      */
     static <X> @Nullable X convertValue(@Nullable Object value, Class<X> targetType,
             @Nullable X def) {
         return TypeConverter.convert(value, targetType, def);
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="ENCODE UTILS">
+    //region ENCODE UTILS
     
     /** Attempt to convert given value to a string and add to target map */
     private static void tryPut(Map<String, String> props, String key, Object value) {
@@ -210,18 +214,18 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
     /**
      * Converts values to strings. 
      * @param val value to encode
-     * @return encoded value
+     * @return encoded value, or null if unable to encode
      */
-    static String encodeValue(Object val) {
+    static @Nullable String encodeValue(Object val) {
         try {
             if (val == null) {
                 return NULL_STRING;
             } else if (CODERS.containsKey(val.getClass())) {
-                return (String) ((Function) CODERS.get(val.getClass())).apply(val);
+                return (String) CODERS.get(val.getClass()).apply(val);
             } else {
                 for (Class c : CODERS.keySet()) {
                     if (c.isAssignableFrom(val.getClass())) {
-                        return (String) ((Function) CODERS.get(c)).apply(val);
+                        return (String) CODERS.get(c).apply(val);
                     }
                 }
             }
@@ -232,18 +236,18 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
         }
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="DECODE UTILS">
+    //region DECODE UTILS
     
     /**
      * Decodes a string value as a target type.
      * @param <X> decoded type
-     * @param x string value
+     * @param val string value
      * @param type decoded type
-     * @return 
+     * @return decoded value, or null if unable to decode
      */
-    static <X> X decodeValue(String val, Class<X> type) {
+    static <X> @Nullable X decodeValue(String val, Class<X> type) {
         requireNonNull(val);
         String trim = val.trim();
         try {
@@ -283,7 +287,7 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
         return null;
     }
     
-    //</editor-fold>
+    //endregion
     
     /** Utility type for storing coders */
     private static class CoderMap extends LinkedHashMap<Class, Function> {

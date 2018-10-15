@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  * 
  * @see javax.swing.Timer
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public abstract class AnimationStep {
     
