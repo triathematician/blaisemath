@@ -33,7 +33,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Renderer for drawing an icon on a canvas.
+ * Renderer for drawing an icon on a canvas. Anchor is used to position the icon relative to a point. The default anchor
+ * is NORTHWEST, with the image drawn to the right/below the point.
  * 
  * @author petereb1
  */
@@ -47,20 +48,16 @@ public class IconRenderer implements Renderer<AnchoredIcon, Graphics2D> {
 
     @Override
     public void render(AnchoredIcon primitive, AttributeSet style, Graphics2D canvas) {
-        Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        Point2D offset = anchor.getRectOffset(primitive.getIconWidth(), primitive.getIconHeight());
-        double dx = primitive.getX() + offset.getX();
-        double dy = primitive.getY() - primitive.getIconHeight() + offset.getY();
-        canvas.translate(dx, dy);
+        Rectangle2D rect = boundingBox(primitive, style);
+        canvas.translate(rect.getX(), rect.getY());
         primitive.getIcon().paintIcon(null, canvas,  0, 0);
-        canvas.translate(-dx, -dy);
+        canvas.translate(-rect.getX(), -rect.getY());
     }
 
     @Override
     public Rectangle2D boundingBox(AnchoredIcon primitive, AttributeSet style) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        return anchor.anchoredRectangle(primitive.getX(), primitive.getY() - primitive.getIconHeight(), 
-                primitive.getIconWidth(), primitive.getIconHeight());
+        return anchor.rectangleAnchoredAt(primitive, primitive.getIconWidth(), primitive.getIconHeight());
     }
 
     @Override

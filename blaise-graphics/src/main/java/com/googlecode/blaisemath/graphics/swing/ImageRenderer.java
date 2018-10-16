@@ -33,7 +33,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Renderer for drawing images on a canvas.
+ * Renderer for drawing images on a canvas. Anchor is used to position the icon relative to a point. The default anchor
+ *  * is NORTHWEST, with the image drawn to the right/below the point.
  * 
  * @author petereb1
  */
@@ -47,20 +48,14 @@ public class ImageRenderer implements Renderer<AnchoredImage, Graphics2D> {
 
     @Override
     public void render(AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
-        Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        Point2D offset = anchor.getRectOffset(primitive.getWidth(), primitive.getHeight());
-        canvas.drawImage(primitive.getImage(), 
-                (int) (primitive.getX() + offset.getX()), 
-                (int) (primitive.getY() - primitive.getHeight() + offset.getY()), 
-                null);
+        Rectangle2D rect = boundingBox(primitive, style);
+        canvas.drawImage(primitive.getImage(), (int) (rect.getX()), (int) (rect.getY()), null);
     }
 
     @Override
     public Rectangle2D boundingBox(AnchoredImage primitive, AttributeSet style) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        return anchor.anchoredRectangle(primitive.getX(),
-                primitive.getY() - primitive.getHeight(), 
-                primitive.getWidth(), primitive.getHeight());
+        return anchor.rectangleAnchoredAt(primitive, primitive.getWidth(), primitive.getHeight());
     }
 
     @Override

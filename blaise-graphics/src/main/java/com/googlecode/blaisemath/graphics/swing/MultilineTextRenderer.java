@@ -43,13 +43,11 @@ import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 
 /**
- * <p>
- *   Draw text on multiple lines, using standard line breaks.
- *   The text is left-aligned, but shifted so that the anchor point is at the
- *   associated location of the text's bounding box.
- * </p>
- * 
- * @author petereb1
+ * Draw text on multiple lines, using line breaks provided with the text. By default, the text is anchored at the upper
+ * left, so that text is drawn to the right and below the anchor point. For alternate anchors, all lines of text are
+ * positioned in the same way, and the text may be centered, left-aligned, or right-aligned, depending on the anchor.
+ *
+ * @author Elisha Peterson
  */
 public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D> {
 
@@ -95,11 +93,12 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         Rectangle2D bounds = boundingBox(text, style);  
         Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());
         assert offset != null;
-        double x0 = text.getX() + offset.getX();
+        double x0 = bounds.getMinX();
         double y0 = bounds.getMaxY();
         for (String line : Lists.reverse(Arrays.asList(lines(text)))) {
             double wid = font.getStringBounds(line, frc).getWidth();
-            double dx = textAnchor.getRectOffset(wid, 0).getX();
+            double dx = textAnchor.offsetForRectangle(bounds.getWidth() - wid, 0).getX()
+                    + 0.5*(bounds.getWidth() - wid);
             canvas.drawString(line, (float)(x0+dx), (float) y0);
             y0 -= lineHeight;
         }
@@ -131,13 +130,10 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         double height = lineHeight*lines.length;
         height -= (lineHeight - font.getSize()*72/Toolkit.getDefaultToolkit().getScreenResolution());
         
-        Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);       
+        Anchor textAnchor = Styles.anchorOf(style, Anchor.NORTHWEST);
         Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());
         assert offset != null;
-        Point2D shift = textAnchor.getRectOffset(width, height);
-        return new Rectangle2D.Double(
-                text.getX() + offset.getX() + shift.getX(), 
-                text.getY() + offset.getY() + shift.getY()-height, 
+        return textAnchor.rectangleAnchoredAt(text.getX() + offset.getX(), text.getY() + offset.getY(),
                 width, height);
     }
     

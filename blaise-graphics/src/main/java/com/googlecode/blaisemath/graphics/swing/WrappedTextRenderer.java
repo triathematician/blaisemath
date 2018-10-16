@@ -52,9 +52,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Draws a string within the boundaries of a given clip. The string is wrapped
- * at word breaks as needed to stay within the clip. It is truncated if necessary,
- * and ellipsis (...) used to indicate truncation.
+ * Draws a string within the boundaries of a given clip. The string is wrapped at word breaks as needed to stay within
+ * the clip. It is truncated if necessary, and ellipsis (...) used to indicate truncation. When providing an anchor with
+ * the style, the anchor positions the text inside the clip path relative to the anchor. So if the text is drawn in
+ * a rectangle and the anchor is CENTER, the text will be drawn at the center of the rectangle; if the anchor is WEST,
+ * the text will be drawn centered vertically and right-aligned next to the right boundary of the rectangle.
  *
  * @author petereb1
  */

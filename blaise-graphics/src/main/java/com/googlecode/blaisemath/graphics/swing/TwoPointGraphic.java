@@ -37,7 +37,7 @@ import java.awt.geom.Point2D;
  * e.g. a segment, arrow, etc. While this class can be instantiated and used,
  * it is intended mostly to provide a convenient superclass.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
 
@@ -76,10 +76,6 @@ public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
         return end;
     }
 
-    //
-    // UPDATING
-    //
-    
     /**
      * Updates the points. This should be called whenever the points change.
      * The functionality here computes and adjusts the angles at the points,
@@ -93,16 +89,14 @@ public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
         if (!(end.getPrimitive() instanceof OrientedPoint2D)) {
             end.setPrimitive(new OrientedPoint2D(end.getPrimitive()));
         }
-        
-        ((OrientedPoint2D)start.getPrimitive()).inOppositeDirectionOf(end.getPrimitive());
-        ((OrientedPoint2D)end.getPrimitive()).inOppositeDirectionOf(start.getPrimitive());
+
+        ((OrientedPoint2D) start.getPrimitive()).awayFrom(end.getPrimitive());
+        ((OrientedPoint2D) end.getPrimitive()).awayFrom(start.getPrimitive());
         fireGraphicChanged();
     }
-    
-    //
-    // EVENT HANDLING
-    //
-    
+
+    //region EVENT HANDLING
+
     public boolean isDragEnabled() {
         return start.isDragEnabled() && end.isDragEnabled();
     }
@@ -120,4 +114,6 @@ public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
             super.graphicChanged(source);
         }
     }
+
+    //endregion
 }

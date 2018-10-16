@@ -99,7 +99,7 @@ public class AnchorTestFrame extends javax.swing.JFrame {
         
         canvas.addGraphic(JGraphics.marker(new OrientedPoint2D(100, 200), 
                 Styles.fillStroke(new Color(255, 128, 128, 64), null).and(Styles.MARKER_RADIUS, 12)));
-        canvas.addGraphic(new PrimitiveGraphic<AnchoredText,Graphics2D>(
+        canvas.addGraphic(new PrimitiveGraphic<>(
                 new AnchoredText(100, 200, "Here is some\nsample text\nthat is wrapped\nonto multiple\nlines"),
                 textStyle,
                 mlRend));
@@ -119,12 +119,7 @@ public class AnchorTestFrame extends javax.swing.JFrame {
         ObjectStyler os = new ObjectStyler();
         LabeledShapeGraphic lsg = new LabeledShapeGraphic("Here is some sample text that will be automatically wrapped onto multiple lines", 
                 new Rectangle(200, 50, 100, 200), os);
-        os.setLabelDelegate(new Function<Object,String>(){
-            @Override
-            public String apply(Object input) {
-                return input+"";
-            }
-        });
+        os.setLabelDelegate((Function<Object, String>) input -> input+"");
         os.setLabelStyleConstant(textStyle);
         lsg.setDragEnabled(true);
         canvas.addGraphic(lsg);
@@ -133,7 +128,7 @@ public class AnchorTestFrame extends javax.swing.JFrame {
         
         RollupPanel rp = new RollupPanel();
         AttributeSetPropertyModel apm = new AttributeSetPropertyModel(textStyle,
-                ImmutableMap.<String,Class<?>>of(Styles.FONT, String.class, Styles.FONT_SIZE, Float.class,
+                ImmutableMap.of(Styles.FONT, String.class, Styles.FONT_SIZE, Float.class,
                         Styles.OFFSET, Point.class));
         rp.add(new MPanel("Font", PropertySheet.forModel(apm)));
         jScrollPane1.setViewportView(rp);

@@ -42,7 +42,8 @@ import java.util.Collections;
 import java.util.logging.Logger;
 
 /**
- * Renders a string of text on a canvas.
+ * Renders a string of text on a canvas. An anchor is used to position the text relative to a point. The default anchor
+ * is SOUTHWEST, with the text drawn to the right/above the point.
  * 
  * @author Elisha
  */
@@ -124,9 +125,9 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);
         Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());
         assert offset != null;
-        return textAnchor.anchoredRectangle(
+        return textAnchor.rectangleAnchoredAt(
                 primitive.getX() + offset.getX(),
-                primitive.getY() + offset.getY()-height,
+                primitive.getY() + offset.getY(),
                 width, height);
     }
     
