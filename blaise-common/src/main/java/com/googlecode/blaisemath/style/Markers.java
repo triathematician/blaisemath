@@ -61,6 +61,7 @@ public final class Markers {
     public static final CrossMarker CROSS = new CrossMarker();
     public static final TargetMarker TARGET = new TargetMarker();
     public static final ArrowMarker ARROW = new ArrowMarker();
+    public static final GapArrowMarker GAP_ARROW = new GapArrowMarker();
     public static final ThickArrowMarker THICK_ARROW = new ThickArrowMarker();
     public static final ChevronMarker CHEVRON_MARKER = new ChevronMarker();
     public static final TriangleMarkerForward TRIANGLE_ARROW = new TriangleMarkerForward();
@@ -242,7 +243,7 @@ public final class Markers {
             path.lineTo((float) x, (float) (y + radius));
             path.moveTo((float) (x - radius), (float) y);
             path.lineTo((float) (x + radius), (float) y);
-            return new BasicStroke(radius/5).createStrokedShape(path);
+            return new Area(new BasicStroke(radius/3).createStrokedShape(path));
         }
     }
 
@@ -260,7 +261,7 @@ public final class Markers {
             path.lineTo((float) (x + r2), (float) (y + r2));
             path.moveTo((float) (x - r2), (float) (y + r2));
             path.lineTo((float) (x + r2), (float) (y - r2));
-            return new BasicStroke(radius/5).createStrokedShape(path);
+            return new Area(new BasicStroke(radius/3).createStrokedShape(path));
         }
     }
 
@@ -278,7 +279,26 @@ public final class Markers {
             path.moveTo((float) (x - radius), (float) y);
             path.lineTo((float) (x + radius), (float) y);
             path.append(new Ellipse2D.Double(x - .6 * radius, y - .6 * radius, 1.2 * radius, 1.2 * radius), false);
-            return new BasicStroke(radius/6).createStrokedShape(path);
+            return new Area(new BasicStroke(radius/6).createStrokedShape(path));
+        }
+    }
+
+    /**
+     * Arrow marker (->), pointing forward.
+     */
+    public static class GapArrowMarker implements Marker {
+        @Override
+        public Shape create(Point2D p, double angle, float radius) {
+            double x = p.getX();
+            double y = p.getY();
+            GeneralPath path = new GeneralPath();
+            path.moveTo((float) (x + .5 * radius), (float) (y - .5 * radius));
+            path.lineTo((float) (x + radius), (float) y);
+            path.lineTo((float) (x + .5*radius), (float) (y + .5*radius));
+            path.moveTo((float) (x + .4*radius), (float) y);
+            path.lineTo((float) (x - radius), (float) y);
+            Shape wideShape = new Area(new BasicStroke(radius/4).createStrokedShape(path));
+            return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(wideShape);
         }
     }
 
@@ -294,9 +314,9 @@ public final class Markers {
             path.moveTo((float) (x + .5 * radius), (float) (y - .5 * radius));
             path.lineTo((float) (x + radius), (float) y);
             path.lineTo((float) (x + .5*radius), (float) (y + .5*radius));
-            path.moveTo((float) (x + radius), (float) y);
+            path.moveTo((float) (x + .8*radius), (float) y);
             path.lineTo((float) (x - radius), (float) y);
-            Shape wideShape = new BasicStroke(radius/5).createStrokedShape(path);
+            Shape wideShape = new Area(new BasicStroke(radius/4).createStrokedShape(path));
             return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(wideShape);
         }
     }
@@ -313,9 +333,9 @@ public final class Markers {
             path.moveTo((float) (x + .5 * radius), (float) (y - .5 * radius));
             path.lineTo((float) (x + radius), (float) y);
             path.lineTo((float) (x + .5*radius), (float) (y + .5*radius));
-            path.moveTo((float) (x + radius), (float) y);
+            path.moveTo((float) (x + .6*radius), (float) y);
             path.lineTo((float) (x - radius), (float) y);
-            Shape wideShape = new BasicStroke(radius/2).createStrokedShape(path);
+            Shape wideShape = new Area(new BasicStroke(radius/2).createStrokedShape(path));
             return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(wideShape);
         }
     }
@@ -331,11 +351,11 @@ public final class Markers {
             GeneralPath path = new GeneralPath();
             path.moveTo((float) (x + .3 * radius), (float) (y - .5 * radius));
             path.lineTo((float) (x + .8 * radius), (float) y);
-            path.lineTo((float) (x + .3*radius), (float) (y + .5*radius));
-            path.moveTo((float) (x - .7*radius), (float) (y - .5 * radius));
-            path.lineTo((float) (x + .3 * radius), (float) y);
-            path.lineTo((float) (x - .7*radius), (float) (y + .5*radius));
-            Shape wideShape = new BasicStroke(radius/6).createStrokedShape(path);
+            path.lineTo((float) (x + .3 * radius), (float) (y + .5 * radius));
+            path.moveTo((float) (x - .7 * radius), (float) (y - .5 * radius));
+            path.lineTo((float) (x - .2 * radius), (float) y);
+            path.lineTo((float) (x - .7 * radius), (float) (y + .5 * radius));
+            Shape wideShape = new Area(new BasicStroke(radius/4).createStrokedShape(path));
             return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(wideShape);
         }
     }

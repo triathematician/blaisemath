@@ -149,8 +149,21 @@ public enum Anchor {
      * @return offset position
      */
     public Rectangle2D rectangleAnchoredAt(Point2D pt, double wid, double ht) {
+        return rectangleAnchoredAt(pt.getX(), pt.getY(), wid, ht);
+    }
+
+    /**
+     * Get the rectangle of given size whose corner matching this anchor is pt.
+     *
+     * @param x anchor x
+     * @param y anchor y
+     * @param wid width of rectangle
+     * @param ht height of rectangle
+     * @return offset position
+     */
+    public Rectangle2D rectangleAnchoredAt(double x, double y, double wid, double ht) {
         Point2D offset = offsetForRectangle(wid, ht);
-        Point2D center = new Point2D.Double(pt.getX() - offset.getX(), pt.getY() - offset.getY());
+        Point2D center = new Point2D.Double(x - offset.getX(), y - offset.getY());
         Rectangle2D res = new Rectangle2D.Double();
         res.setFrameFromCenter(center.getX(), center.getY(), center.getX() + .5 * wid, center.getY() + .5 * ht);
         return res;

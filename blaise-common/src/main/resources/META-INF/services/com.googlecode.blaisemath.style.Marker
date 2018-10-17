@@ -9,6 +9,7 @@ com.googlecode.blaisemath.style.Markers$PlusMarker
 com.googlecode.blaisemath.style.Markers$CrossMarker
 com.googlecode.blaisemath.style.Markers$TargetMarker
 com.googlecode.blaisemath.style.Markers$ArrowMarker
+com.googlecode.blaisemath.style.Markers$GapArrowMarker
 com.googlecode.blaisemath.style.Markers$ThickArrowMarker
 com.googlecode.blaisemath.style.Markers$ChevronMarker
 com.googlecode.blaisemath.style.Markers$TriangleMarkerForward
