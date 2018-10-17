@@ -25,7 +25,7 @@ import java.awt.geom.Point2D;
 
 /**
  * A text string anchored at a particular point.
- * @author Elisha
+ * @author Elisha Peterson
  */
 public final class AnchoredText extends Point2DBean {
     

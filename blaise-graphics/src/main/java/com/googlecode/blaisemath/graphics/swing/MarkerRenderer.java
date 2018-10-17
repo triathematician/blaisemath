@@ -44,7 +44,7 @@ import java.util.logging.Logger;
  * Draws an oriented point on the graphics canvas.
  * See also the <a href="http://www.w3.org/TR/SVG/painting.html#Markers">related SVG documentation</a> on markers.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class MarkerRenderer implements Renderer<Point2D, Graphics2D> {
 

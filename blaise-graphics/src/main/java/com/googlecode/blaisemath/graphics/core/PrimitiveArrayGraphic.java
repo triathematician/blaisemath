@@ -35,7 +35,7 @@ import com.googlecode.blaisemath.style.AttributeSet;
  * @param <O> type of primitive
  * @param <G> type of graphics canvas to render to
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class PrimitiveArrayGraphic<O,G> extends PrimitiveArrayGraphicSupport<O,G> {
    

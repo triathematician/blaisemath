@@ -39,7 +39,7 @@ import javax.swing.JPopupMenu;
 
 /**
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class ContextMenuTestFrame extends javax.swing.JFrame {
 

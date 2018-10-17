@@ -38,7 +38,7 @@ import java.awt.geom.PathIterator;
 /**
  * Draws a path on the screen using a fancy tapered-outline style.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class TaperedPathRenderer extends PathRenderer {
 

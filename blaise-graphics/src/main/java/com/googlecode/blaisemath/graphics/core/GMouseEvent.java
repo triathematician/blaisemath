@@ -37,7 +37,7 @@ import java.awt.geom.Point2D;
  *   This event is not designed for serialization.
  * </p>
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public final class GMouseEvent extends MouseEvent {
     

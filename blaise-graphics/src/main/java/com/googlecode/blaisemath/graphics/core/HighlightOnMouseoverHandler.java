@@ -32,7 +32,7 @@ import com.googlecode.blaisemath.style.StyleHints;
  * <p>
  * Turns on highlight when the mouse is over the graphic, turns off when it leaves.
  * </p>
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class HighlightOnMouseoverHandler extends MouseAdapter {
     

@@ -28,7 +28,7 @@ package com.googlecode.blaisemath.style;
 /**
  * Modifies an {@link AttributeSet} based on a {@link StyleHints} and returns a new {@link AttributeSet}.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public interface StyleModifier {
 

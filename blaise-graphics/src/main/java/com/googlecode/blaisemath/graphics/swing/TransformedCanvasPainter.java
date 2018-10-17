@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 /**
  * Draws on a {@link Graphics2D} using the component's transform.
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public abstract class TransformedCanvasPainter implements CanvasPainter<Graphics2D> {
 

@@ -34,7 +34,7 @@ import java.awt.geom.Rectangle2D;
 
 /**
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class TooltipTestFrame extends javax.swing.JFrame {
 

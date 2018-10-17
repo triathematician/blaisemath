@@ -75,7 +75,7 @@ import javax.swing.event.EventListenerList;
  * 
  * @param <G> type of graphics canvas to render to
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
 

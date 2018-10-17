@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  * Enables pan and zoom of a graphics canvas, by changing the {@link AffineTransform}
  * associated with the canvas.
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public final class PanAndZoomHandler extends MouseAdapter implements CanvasPainter<Graphics2D> {
 

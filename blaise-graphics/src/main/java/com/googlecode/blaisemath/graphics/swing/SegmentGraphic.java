@@ -41,7 +41,7 @@ import java.awt.geom.Point2D;
  *   arrows on one or both ends.
  * </p>
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class SegmentGraphic extends TwoPointGraphic {
 

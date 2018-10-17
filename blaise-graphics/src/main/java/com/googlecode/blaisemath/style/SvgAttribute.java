@@ -28,7 +28,7 @@ package com.googlecode.blaisemath.style;
 /**
  * Marker for attribute names that are SVG-compatible.
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public @interface SvgAttribute {
     

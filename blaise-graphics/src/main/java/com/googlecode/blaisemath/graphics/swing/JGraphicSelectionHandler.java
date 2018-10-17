@@ -51,7 +51,7 @@ import java.util.Set;
  *  Control must be down for any selection capability.
  * </p>
  * @param <G> type of render canvas
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class JGraphicSelectionHandler<G> extends MouseAdapter implements CanvasPainter<Graphics2D> {
 

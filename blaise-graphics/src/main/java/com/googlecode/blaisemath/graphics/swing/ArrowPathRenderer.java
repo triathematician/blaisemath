@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 /**
  * Draws a stroke on the screen, with an arrow at the endpoint.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class ArrowPathRenderer extends PathRenderer {
 

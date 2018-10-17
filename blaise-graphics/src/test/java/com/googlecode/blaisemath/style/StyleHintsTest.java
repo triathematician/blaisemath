@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class StyleHintsTest {
 

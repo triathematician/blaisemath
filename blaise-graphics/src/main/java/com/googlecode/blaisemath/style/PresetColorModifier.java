@@ -28,7 +28,7 @@ import java.awt.Color;
 
 /** 
  * Modifier that adjusts fill/stroke attributes to preset colors.
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class PresetColorModifier implements StyleModifier {
     private Color highlightFill = null;

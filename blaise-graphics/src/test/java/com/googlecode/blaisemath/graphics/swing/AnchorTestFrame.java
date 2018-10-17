@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 elisha.
+ * Copyright 2016 Elisha Peterson.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ import javax.swing.Icon;
 
 /**
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public class AnchorTestFrame extends javax.swing.JFrame {
 

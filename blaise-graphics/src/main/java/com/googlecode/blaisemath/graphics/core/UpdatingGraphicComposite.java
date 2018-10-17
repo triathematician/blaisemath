@@ -37,7 +37,7 @@ import java.util.Set;
  * Encapsulates a set of graphics as a composite, along with elements used
  * to create/update the graphics.
  * 
- * @author petereb1
+ * @author Elisha Peterson
  * @param <T> type of object represented by the composite
  */
 @Beta

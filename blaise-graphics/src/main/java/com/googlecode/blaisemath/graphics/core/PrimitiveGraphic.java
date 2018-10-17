@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * @param <O> type of primitive
  * @param <G> type of graphics canvas to render to
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class PrimitiveGraphic<O,G> extends PrimitiveGraphicSupport<O,G> {
     

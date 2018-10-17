@@ -42,7 +42,7 @@ import javax.swing.JPopupMenu;
  * @param <O> type of primitive
  * @param <G> type of graphics canvas to render to
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class DelegatingPrimitiveGraphic<S,O,G> extends PrimitiveGraphicSupport<O,G> {
    

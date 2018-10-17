@@ -28,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An image anchored at a given location.
- * @author petereb1
+ * @author Elisha Peterson
  */
 public final class AnchoredImage extends Point2DBean {
 

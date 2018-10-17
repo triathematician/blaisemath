@@ -54,7 +54,7 @@ import javax.swing.JPopupMenu;
  * 
  * @param <G> type of graphics canvas to render to
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 @NotThreadSafe
 public class GraphicComposite<G> extends Graphic<G> {

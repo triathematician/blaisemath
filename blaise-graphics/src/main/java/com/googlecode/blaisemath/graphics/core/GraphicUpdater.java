@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 /**
  * Create {@link Graphic} objects for rendering items.
  * @param <E> item type
- * @author petereb1
+ * @author Elisha Peterson
  */
 public interface GraphicUpdater<E> {
 

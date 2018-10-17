@@ -36,7 +36,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * Draws a shape using a stroke (with thickness) and a fill color.
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class ShapeRenderer implements Renderer<Shape, Graphics2D> {  
 

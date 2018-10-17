@@ -36,7 +36,7 @@ import java.awt.geom.Rectangle2D;
  * Renderer for drawing an icon on a canvas. Anchor is used to position the icon relative to a point. The default anchor
  * is NORTHWEST, with the image drawn to the right/below the point.
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class IconRenderer implements Renderer<AnchoredIcon, Graphics2D> {
 

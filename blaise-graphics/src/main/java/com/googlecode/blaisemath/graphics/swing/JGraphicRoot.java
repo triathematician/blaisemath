@@ -59,7 +59,7 @@ import javax.swing.event.PopupMenuListener;
  *      (e.g. for projections from 3D to 2D).
  * </p>
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
 

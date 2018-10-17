@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
 /**
  * Factory class providing convenience methods for easily creating styles.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public final class Styles {
 

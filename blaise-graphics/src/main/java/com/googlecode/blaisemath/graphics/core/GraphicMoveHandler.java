@@ -37,7 +37,7 @@ import java.awt.geom.Point2D;
  * @see CoordinateBean
  * @see DraggableCoordinate
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class GraphicMoveHandler extends GMouseDragHandler {
 

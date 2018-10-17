@@ -53,7 +53,7 @@ import javax.swing.SwingUtilities;
  * @param <E> edge type
  * @param <G> type of graphics canvas to render to
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends GraphicComposite<G> {
 

@@ -36,7 +36,7 @@ import com.googlecode.blaisemath.style.Styles;
 
 /**
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class PanAndZoomTestFrame extends javax.swing.JFrame {
 

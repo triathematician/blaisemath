@@ -39,7 +39,7 @@ import java.awt.geom.Rectangle2D;
  * Draws a shape using a stroke (with thickness) and a fill color.
  * Uses a gradient with a slight color variation to fill the shape.
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class GradientShapeRenderer extends ShapeRenderer {  
 

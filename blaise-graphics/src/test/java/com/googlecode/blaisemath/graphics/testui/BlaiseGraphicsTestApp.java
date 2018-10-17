@@ -222,7 +222,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     public void addDelegatingPointSet() {
         Set<String> list = new HashSet<String>(Arrays.asList(
                 "Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", 
-                "Sequoia", "Asher Matthew Peterson", "Elisha", "Bob the Builder"));
+                "Sequoia", "Asher Matthew Peterson", "Elisha Peterson", "Bob the Builder"));
         Map<String,Point2D> crds = Maps.newLinkedHashMap();
         for (String s : list) {
             crds.put(s, new Point(10*s.length(), 50 + 10*s.indexOf(" ")));

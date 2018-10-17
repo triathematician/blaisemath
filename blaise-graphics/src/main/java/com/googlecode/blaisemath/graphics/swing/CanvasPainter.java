@@ -26,7 +26,7 @@ import java.awt.Component;
  * An object that paints on a graphics canvas.
  * 
  * @param <G> type of component to draw on
- * @author elisha
+ * @author Elisha Peterson
  */
 public interface CanvasPainter<G> {
 

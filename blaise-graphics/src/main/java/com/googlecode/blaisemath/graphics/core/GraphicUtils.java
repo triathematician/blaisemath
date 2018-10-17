@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
 
 /**
  * Utility class for working with {@link Graphic}s.
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class GraphicUtils {
     

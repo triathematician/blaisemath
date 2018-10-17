@@ -28,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Provides methods for translating between graphic coordinate space and
  * window coordinate space.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 public interface TransformedCoordinateSpace {
 

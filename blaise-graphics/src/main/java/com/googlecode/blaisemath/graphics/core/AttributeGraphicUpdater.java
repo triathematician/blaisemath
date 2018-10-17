@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * A graphic updater that operates on a per-item basis, and provides built in
  * functions for setting graphic styles, and for initializing graphic context menus.
  * @param <V> type of object being updated
- * @author petereb1
+ * @author Elisha Peterson
  */
 public abstract class AttributeGraphicUpdater<V> implements GraphicUpdater<V> {
 

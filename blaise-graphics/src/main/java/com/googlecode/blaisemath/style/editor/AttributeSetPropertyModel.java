@@ -47,7 +47,7 @@ import java.util.Map;
  *   This class is not designed for serialization.
  * </p>
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class AttributeSetPropertyModel extends PropertyModelSupport {
     

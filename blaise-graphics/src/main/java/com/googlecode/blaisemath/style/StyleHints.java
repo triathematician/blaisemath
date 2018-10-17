@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  * object is drawn. The {@link StyleContext} is responsible for switching out the
  * default style for an alternate style, as appropriate for these hints.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class StyleHints {
     

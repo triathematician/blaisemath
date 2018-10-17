@@ -30,7 +30,7 @@ import java.awt.Color;
 
 /**
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 class RandomStyles {
     

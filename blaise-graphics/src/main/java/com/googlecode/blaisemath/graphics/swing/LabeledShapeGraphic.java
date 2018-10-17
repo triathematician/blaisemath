@@ -43,7 +43,7 @@ import java.awt.geom.RectangularShape;
  *
  * @param <O> type of item
  *
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,Graphics2D> {
 

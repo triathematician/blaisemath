@@ -42,7 +42,7 @@ import java.awt.geom.Rectangle2D;
  * @param <O> type of object being drawn
  * @param <G> type of graphics canvas to render to
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
     

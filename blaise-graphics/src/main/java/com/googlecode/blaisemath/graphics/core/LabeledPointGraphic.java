@@ -41,7 +41,7 @@ import java.awt.geom.Point2D;
  *
  * @param <O> source object type
  * @param <G> graphics canvas type
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point2D,G> {
     

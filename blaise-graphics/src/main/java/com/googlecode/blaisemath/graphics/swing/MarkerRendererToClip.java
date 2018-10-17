@@ -35,7 +35,7 @@ import java.awt.geom.RectangularShape;
 /**
  * Draws a point along with a ray from the point to the outer edge of the graphics canvas.
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public class MarkerRendererToClip extends MarkerRenderer {
 

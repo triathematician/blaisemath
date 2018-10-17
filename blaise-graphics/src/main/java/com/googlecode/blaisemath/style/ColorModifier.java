@@ -28,7 +28,7 @@ import java.awt.Color;
 
 /** 
  * Modifier that overrides all colors in the source style using the supplied hints. 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class ColorModifier implements StyleModifier {
 

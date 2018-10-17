@@ -25,7 +25,7 @@ import javax.swing.Icon;
 
 /**
  * An icon anchored at a given location.
- * @author petereb1
+ * @author Elisha Peterson
  */
 public final class AnchoredIcon extends Point2DBean {
 

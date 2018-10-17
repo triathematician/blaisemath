@@ -26,7 +26,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class DelegatingEdgeSetGraphicTest {
 

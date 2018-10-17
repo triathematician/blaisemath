@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
  * 
  * @param <S> the type of source object
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class ObjectStyler<S> {
 

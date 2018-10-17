@@ -36,7 +36,7 @@ import java.awt.Shape;
  *   This style draws the specified text along a path, rather than drawing a regular path.
  * </p>
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class TextPathRenderer extends PathRenderer {
 

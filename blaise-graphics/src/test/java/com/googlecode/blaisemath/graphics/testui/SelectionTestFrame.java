@@ -35,7 +35,7 @@ import com.googlecode.blaisemath.style.Styles;
 
 /**
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class SelectionTestFrame extends javax.swing.JFrame {
 

@@ -58,7 +58,7 @@ import java.util.List;
  * a rectangle and the anchor is CENTER, the text will be drawn at the center of the rectangle; if the anchor is WEST,
  * the text will be drawn centered vertically and right-aligned next to the right boundary of the rectangle.
  *
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class WrappedTextRenderer extends TextRenderer {
 

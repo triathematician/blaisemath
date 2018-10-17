@@ -50,7 +50,7 @@ import javax.annotation.Nullable;
  * @param <O> type of object being drawn
  * @param <G> type of graphics canvas to render to
  *
- * @author Elisha
+ * @author Elisha Peterson
  */
 public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     

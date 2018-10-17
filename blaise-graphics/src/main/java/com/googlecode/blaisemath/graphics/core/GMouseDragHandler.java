@@ -34,7 +34,7 @@ import java.awt.geom.Point2D;
  *  Provides hooks for drag mouse gestures. Instead of working with all six mouse methods, subclasses can work with
  *  two or three (dragInitiated, dragInProgress, and optionally dragCompleted).
  * </p>
- * @author elisha
+ * @author Elisha Peterson
  */
 public abstract class GMouseDragHandler extends MouseAdapter {
     

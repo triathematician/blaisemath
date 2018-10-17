@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.style;
 
 /** 
  * Modifier that modifies stroke-width in the supplied style using the supplied hints.
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class StrokeWidthModifier implements StyleModifier {
 

@@ -45,7 +45,7 @@ import javax.swing.Icon;
 /**
  * Factory methods for creating basic java2d-based graphics.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class JGraphics {
     

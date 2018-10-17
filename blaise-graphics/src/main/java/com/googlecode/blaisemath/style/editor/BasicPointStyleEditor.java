@@ -61,7 +61,7 @@ import javax.swing.event.ChangeListener;
  *   This class is not designed for serialization.
  * </p>
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class BasicPointStyleEditor extends JPanel implements Customizer,
         ChangeListener, PropertyChangeListener {
