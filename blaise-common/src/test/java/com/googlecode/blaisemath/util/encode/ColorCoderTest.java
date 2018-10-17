@@ -23,37 +23,38 @@ package com.googlecode.blaisemath.util.encode;
 
 import com.googlecode.blaisemath.util.*;
 import java.awt.Color;
-import junit.framework.TestCase;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  *
  * @author Elisha
  */
-public class ColorCoderTest extends TestCase {
+public class ColorCoderTest {
 
     @Test
     public void testEncode() {
         System.out.println("encode");
         assertNPE(() -> new ColorCoder().encode(null));
-        assertEquals("#ff0000", new ColorCoder().encode(Color.red));
-        assertEquals("#00ff00", new ColorCoder().encode(Color.green));
-        assertEquals("#0000ff", new ColorCoder().encode(Color.blue));
-        assertEquals("#01020304", new ColorCoder().encode(new Color(1,2,3,4)));
+        Assert.assertEquals("#ff0000", new ColorCoder().encode(Color.red));
+        Assert.assertEquals("#00ff00", new ColorCoder().encode(Color.green));
+        Assert.assertEquals("#0000ff", new ColorCoder().encode(Color.blue));
+        Assert.assertEquals("#01020304", new ColorCoder().encode(new Color(1, 2, 3, 4)));
     }
 
     @Test
     public void testDecode() {
         System.out.println("decode");
-        assertEquals(Color.red, new ColorCoder().decode("ff0000"));
-        assertEquals(Color.red, new ColorCoder().decode("#ff0000"));
-        assertEquals(Color.green, new ColorCoder().decode("#00ff00"));
-        assertEquals(Color.blue, new ColorCoder().decode("#0000ff"));
-        assertEquals(new Color(0,0,255,128), new ColorCoder().decode("#0000ff80"));
-        assertEquals(Color.blue, new ColorCoder().decode("#00f"));
-        assertEquals(Colors.decode("#ff0033"), new ColorCoder().decode("#f03"));
-        assertEquals(Color.blue, new ColorCoder().decode("blue"));
-        assertEquals(new Color(218, 165, 32), new ColorCoder().decode("goldenrod"));
+        Assert.assertEquals(Color.red, new ColorCoder().decode("ff0000"));
+        Assert.assertEquals(Color.red, new ColorCoder().decode("#ff0000"));
+        Assert.assertEquals(Color.green, new ColorCoder().decode("#00ff00"));
+        Assert.assertEquals(Color.blue, new ColorCoder().decode("#0000ff"));
+        Assert.assertEquals(new Color(0, 0, 255, 128), new ColorCoder().decode("#0000ff80"));
+        Assert.assertEquals(Color.blue, new ColorCoder().decode("#00f"));
+        Assert.assertEquals(Colors.decode("#ff0033"), new ColorCoder().decode("#f03"));
+        Assert.assertEquals(Color.blue, new ColorCoder().decode("blue"));
+        Assert.assertEquals(new Color(218, 165, 32), new ColorCoder().decode("goldenrod"));
         assertIllegal(() -> new ColorCoder().decode("null"));
         assertIllegal(() -> new ColorCoder().decode("not a color"));
     }
@@ -61,7 +62,7 @@ public class ColorCoderTest extends TestCase {
     private static void assertIllegal(Runnable r) {
         try {
             r.run();
-            fail();
+            Assert.fail();
         } catch (IllegalArgumentException x) {
             // expected
         }
@@ -70,7 +71,7 @@ public class ColorCoderTest extends TestCase {
     private static void assertNPE(Runnable r) {
         try {
             r.run();
-            fail();
+            Assert.fail();
         } catch (NullPointerException x) {
             // expected
         }

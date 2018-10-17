@@ -55,7 +55,7 @@ public class CoordinateChangeEventTest {
     public void testCreateAddEvent() {
         System.out.println("createAddEvent");
         assertEquals("Test", addInst.getSource());
-        assertEquals(null, addInst.getRemoved());
+        assertNull(addInst.getRemoved());
         assertEquals(add, addInst.getAdded());
     }
 
@@ -64,7 +64,7 @@ public class CoordinateChangeEventTest {
         System.out.println("createRemoveEvent");
         assertEquals("Test", removeInst.getSource());
         assertEquals(remove, removeInst.getRemoved());
-        assertEquals(null, removeInst.getAdded());
+        assertNull(removeInst.getAdded());
     }
 
     @Test
@@ -101,13 +101,13 @@ public class CoordinateChangeEventTest {
     public void testGetAdded() {
         System.out.println("getAdded");
         assertEquals(add, addInst.getAdded());
-        assertEquals(null, removeInst.getAdded());
+        assertNull(removeInst.getAdded());
     }
 
     @Test
     public void testGetRemoved() {
         System.out.println("getRemoved");
-        assertEquals(null, addInst.getRemoved());
+        assertNull(addInst.getRemoved());
         assertEquals(remove, removeInst.getRemoved());
     }
     

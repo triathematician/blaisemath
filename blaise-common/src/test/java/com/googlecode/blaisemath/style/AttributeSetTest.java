@@ -23,37 +23,18 @@ package com.googlecode.blaisemath.style;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.geom.Point2D;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.*;
+
+import java.awt.*;
+
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  *
  * @author triat
  */
+@SuppressWarnings({"ConstantConditions", "OptionalGetWithoutIsPresent"})
 public class AttributeSetTest {
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
 
     /**
      * Test of toString method, of class AttributeSet.
@@ -84,7 +65,7 @@ public class AttributeSetTest {
     @Test
     public void testWithParent() {
         System.out.println("withParent");
-        assertEquals(null, AttributeSet.withParent(null).getParent().orElse(null));
+        assertNull(AttributeSet.withParent(null).getParent().orElse(null));
         assertEquals("{ a:1 }", AttributeSet.withParent(AttributeSet.of("a", 1)).getParent().get().toString());
         
         AttributeSet par = AttributeSet.of("key", "val");
@@ -93,7 +74,7 @@ public class AttributeSetTest {
         
         AttributeSet set2 = AttributeSet.withParent(par)
                 .and("key", null);
-        assertEquals(null, set2.get("key"));
+        assertNull(set2.get("key"));
     }
 
     /**
@@ -104,9 +85,9 @@ public class AttributeSetTest {
         System.out.println("copyOf");
         AttributeSet set = AttributeSet.withParent(AttributeSet.of("a", 1)).and("b", 2);
         AttributeSet copy = AttributeSet.copyOf(set);
-        assertFalse(set == copy);
-        assertTrue(set.getAttributeMap().equals(copy.getAttributeMap()));
-        assertTrue(set.getParent().get() == copy.getParent().get());
+        assertNotSame(set, copy);
+        assertEquals(set.getAttributeMap(), copy.getAttributeMap());
+        assertSame(set.getParent().get(), copy.getParent().get());
     }
 
     /**
@@ -227,7 +208,7 @@ public class AttributeSetTest {
         AttributeSet par = AttributeSet.of("b", 2);
         AttributeSet instance = AttributeSet.withParent(par).and("a", 1);
         AttributeSet result = instance.flatCopy();
-        assertEquals(null, result.getParent().orElse(null));
+        assertNull(result.getParent().orElse(null));
         assertEquals(ImmutableSet.of("a", "b"), result.getAttributes());
         assertEquals(ImmutableSet.of("a", "b"), result.getAllAttributes());
     }
@@ -309,8 +290,8 @@ public class AttributeSetTest {
         System.out.println("get");
         AttributeSet as = AttributeSet.of("a", 1, "b", null);
         assertEquals(1, as.get("a"));
-        assertEquals(null, as.get("b"));
-        assertEquals(null, as.get("c"));
+        assertNull(as.get("b"));
+        assertNull(as.get("c"));
     }
 
     /**
@@ -321,9 +302,9 @@ public class AttributeSetTest {
         System.out.println("getOrDefault");
         AttributeSet as = AttributeSet.withParent(AttributeSet.of("a", 5, "d", 1, "c", null))
                 .and("a", null).and("b", 2);
-        assertEquals(null, as.getOrDefault("a", -1));
+        assertNull(as.getOrDefault("a", -1));
         assertEquals(2, as.getOrDefault("b", -1));
-        assertEquals(null, as.getOrDefault("c", -1));
+        assertNull(as.getOrDefault("c", -1));
         assertEquals(1, as.getOrDefault("d", -1));
     }
     
@@ -337,7 +318,7 @@ public class AttributeSetTest {
         AttributeSet as = AttributeSet.of("a", 1);
         assertEquals(1, as.put("a", 2));
         assertEquals(2, as.put("a", null));
-        assertEquals(null, as.get("a"));
+        assertNull(as.get("a"));
         assertTrue(as.contains("a"));
     }
 
@@ -364,7 +345,7 @@ public class AttributeSetTest {
         System.out.println("remove");
         AttributeSet instance = AttributeSet.of("a", 1);
         assertEquals(1, instance.remove("a"));
-        assertEquals(null, instance.get("a"));
+        assertNull(instance.get("a"));
     }
     
     //</editor-fold>
@@ -377,8 +358,8 @@ public class AttributeSetTest {
         AttributeSet instance = AttributeSet.of("a", 1, "b", "2", "c", null);
         assertEquals("1", instance.getString("a"));
         assertEquals("2", instance.getString("b"));
-        assertEquals(null, instance.getString("c"));
-        assertEquals(null, instance.getString("d"));
+        assertNull(instance.getString("c"));
+        assertNull(instance.getString("d"));
     }
 
     @Test
@@ -395,9 +376,9 @@ public class AttributeSetTest {
         AttributeSet instance = AttributeSet.of("a", "true", "b", false, "c", null).and("d", 1);
         assertEquals(true, instance.getBoolean("a"));
         assertEquals(false, instance.getBoolean("b"));
-        assertEquals(null, instance.getBoolean("c"));
-        assertEquals(null, instance.getBoolean("d"));
-        assertEquals(null, instance.getBoolean("e"));
+        assertNull(instance.getBoolean("c"));
+        assertNull(instance.getBoolean("d"));
+        assertNull(instance.getBoolean("e"));
     }
 
     @Test
@@ -414,9 +395,9 @@ public class AttributeSetTest {
         AttributeSet instance = AttributeSet.of("a", "1", "b", 2, "c", null).and("d", 3.0);
         assertEquals(1, (int) instance.getInteger("a"));
         assertEquals(2, (int) instance.getInteger("b"));
-        assertEquals(null, instance.getInteger("c"));
+        assertNull(instance.getInteger("c"));
         assertEquals(3, (int) instance.getInteger("d"));
-        assertEquals(null, instance.getInteger("e"));
+        assertNull(instance.getInteger("e"));
 
         // TODO - test failure case
     }
@@ -435,9 +416,9 @@ public class AttributeSetTest {
         AttributeSet instance = AttributeSet.of("a", "1", "b", 2f, "c", null).and("d", 3);
         assertEquals(new Float(1), instance.getFloat("a"));
         assertEquals(new Float(2), instance.getFloat("b"));
-        assertEquals(null, instance.getFloat("c"));
+        assertNull(instance.getFloat("c"));
         assertEquals(new Float(3), instance.getFloat("d"));
-        assertEquals(null, instance.getFloat("e"));
+        assertNull(instance.getFloat("e"));
     }
 
     @Test
@@ -454,9 +435,9 @@ public class AttributeSetTest {
         AttributeSet instance = AttributeSet.of("a", "red", "b", Color.red, "c", null).and("d", 1);
         assertEquals(Color.red, instance.getColor("a"));
         assertEquals(Color.red, instance.getColor("b"));
-        assertEquals(null, instance.getColor("c"));
-        assertEquals(null, instance.getColor("d"));
-        assertEquals(null, instance.getColor("e"));
+        assertNull(instance.getColor("c"));
+        assertNull(instance.getColor("d"));
+        assertNull(instance.getColor("e"));
     }
 
     @Test
@@ -475,9 +456,9 @@ public class AttributeSetTest {
         System.out.println("getPoint");
         AttributeSet instance = AttributeSet.of("a", new Point(1, 2), 
                 "b", Color.red, "c", null, "d", "(1,2)");
-        assertEquals(null, instance.getPoint2D("b"));
-        assertEquals(null, instance.getPoint2D("c"));
-        assertEquals(null, instance.getPoint2D("e"));
+        assertNull(instance.getPoint2D("b"));
+        assertNull(instance.getPoint2D("c"));
+        assertNull(instance.getPoint2D("e"));
         assertEquals(new Point(1, 2), instance.getPoint("a"));
         assertEquals(new Point(1, 2), instance.getPoint("d"));
         assertEquals(new Point(1, 2), instance.getPoint2D("a"));

@@ -50,10 +50,10 @@ public final class Rectangle2DCoder implements StringEncoder<Rectangle2D>, Strin
         Matcher m = Pattern.compile("rectangle2d\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim());
         if (m.matches()) {
             try {
-                Double x = Double.valueOf(m.group(1));
-                Double y = Double.valueOf(m.group(2));
-                Double w = Double.valueOf(m.group(3));
-                Double h = Double.valueOf(m.group(4));
+                double x = Double.parseDouble(m.group(1));
+                double y = Double.parseDouble(m.group(2));
+                double w = Double.parseDouble(m.group(3));
+                double h = Double.parseDouble(m.group(4));
                 return new Rectangle2D.Double(x, y, w, h);
             } catch (NumberFormatException x) {
                 LOG.log(Level.FINEST, "Not a double", x);

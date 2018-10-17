@@ -22,36 +22,37 @@ package com.googlecode.blaisemath.util.encode;
 
 
 import java.awt.Point;
-import junit.framework.TestCase;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  *
  * @author Elisha
  */
-public class PointCoderTest extends TestCase {
+public class PointCoderTest {
 
     @Test
     public void testEncode() {
         System.out.println("encode");
         assertNPE(() -> new PointCoder().encode(null));
-        assertEquals("(0,0)", new PointCoder().encode(new Point()));
-        assertEquals("(3,4)", new PointCoder().encode(new Point(3, 4)));
-        assertEquals("(-3,4)", new PointCoder().encode(new Point(-3, 4)));
+        Assert.assertEquals("(0,0)", new PointCoder().encode(new Point()));
+        Assert.assertEquals("(3,4)", new PointCoder().encode(new Point(3, 4)));
+        Assert.assertEquals("(-3,4)", new PointCoder().encode(new Point(-3, 4)));
     }
 
     @Test
     public void testDecode() {
         System.out.println("decode");
-        assertEquals(new Point(), new PointCoder().decode("(0, 0)"));
-        assertEquals(new Point(3, 4), new PointCoder().decode("(3,4)"));
-        assertEquals(new Point(-3, 4), new PointCoder().decode(" ( -3 , 4 ) "));
+        Assert.assertEquals(new Point(), new PointCoder().decode("(0, 0)"));
+        Assert.assertEquals(new Point(3, 4), new PointCoder().decode("(3,4)"));
+        Assert.assertEquals(new Point(-3, 4), new PointCoder().decode(" ( -3 , 4 ) "));
     }
     
     private static void assertIllegal(Runnable r) {
         try {
             r.run();
-            fail();
+            Assert.fail();
         } catch (IllegalArgumentException x) {
             // expected
         }
@@ -60,7 +61,7 @@ public class PointCoderTest extends TestCase {
     private static void assertNPE(Runnable r) {
         try {
             r.run();
-            fail();
+            Assert.fail();
         } catch (NullPointerException x) {
             // expected
         }

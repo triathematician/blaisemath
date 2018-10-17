@@ -22,7 +22,6 @@ package com.googlecode.blaisemath.coordinate;
 
 
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -32,11 +31,7 @@ import static org.junit.Assert.*;
  */
 public class CoordinateManagerTest {
 
-    private CoordinateManager inst = CoordinateManager.create(50);
-    
-    @Before
-    public void setUp() {
-    }
+    private final CoordinateManager inst = CoordinateManager.create(50);
 
     @Test
     public void testCreate() {

@@ -101,7 +101,7 @@ public abstract class AnimationStep {
             timer = new javax.swing.Timer(0, this);
             timer.setRepeats(true);
             timer.setCoalesce(true);
-            timer.setDelay((int) period);
+            timer.setDelay(period);
             timer.start();
             return timer;
         }

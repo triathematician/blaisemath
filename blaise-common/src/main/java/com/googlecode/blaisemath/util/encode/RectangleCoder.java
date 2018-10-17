@@ -20,12 +20,10 @@ package com.googlecode.blaisemath.util.encode;
  * #L%
  */
 
-import com.google.common.base.Splitter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
-import java.util.Map;
+
 import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,10 +51,10 @@ public final class RectangleCoder implements StringEncoder<Rectangle>, StringDec
         Matcher m = Pattern.compile("rectangle\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim());
         if (m.matches()) {
             try {
-                Integer x = Integer.valueOf(m.group(1));
-                Integer y = Integer.valueOf(m.group(2));
-                Integer w = Integer.valueOf(m.group(3));
-                Integer h = Integer.valueOf(m.group(4));
+                int x = Integer.parseInt(m.group(1));
+                int y = Integer.parseInt(m.group(2));
+                int w = Integer.parseInt(m.group(3));
+                int h = Integer.parseInt(m.group(4));
                 return new Rectangle(x, y, w, h);
             } catch (NumberFormatException x) {
                 LOG.log(Level.FINEST, "Not an integer", x);

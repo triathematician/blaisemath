@@ -20,8 +20,6 @@ package com.googlecode.blaisemath.util.encode;
  * #L%
  */
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.geom.Point2D;
@@ -52,8 +50,8 @@ public final class Point2DCoder implements StringEncoder<Point2D>, StringDecoder
         Matcher m = Pattern.compile("\\((.*),(.*)\\)").matcher(v.toLowerCase().trim());
         if (m.matches()) {
             try {
-                Double x = Double.valueOf(m.group(1).trim());
-                Double y = Double.valueOf(m.group(2).trim());
+                double x = Double.parseDouble(m.group(1).trim());
+                double y = Double.parseDouble(m.group(2).trim());
                 return new Point2D.Double(x,y);
             } catch (NumberFormatException x) {
                 LOG.log(Level.FINEST, "Not a double", x);

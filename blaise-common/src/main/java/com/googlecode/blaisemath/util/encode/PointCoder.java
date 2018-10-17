@@ -20,11 +20,10 @@ package com.googlecode.blaisemath.util.encode;
  * #L%
  */
 
-import com.google.common.base.Splitter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.Point;
-import java.util.List;
+
 import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;

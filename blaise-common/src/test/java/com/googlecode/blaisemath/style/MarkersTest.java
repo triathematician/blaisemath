@@ -37,7 +37,7 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.*;
@@ -47,16 +47,16 @@ import java.util.List;
  *
  * @author Elisha
  */
-public class MarkersTest extends TestCase {
+public class MarkersTest {
 
     @Test
     public void testGetAvailableMarkers() {
         System.out.println("getAvailableMarkers");
         List<Marker> result = Markers.getAvailableMarkers();
-        assertFalse(result.isEmpty());
+        Assert.assertFalse(result.isEmpty());
         for (Marker m : result) {
             Shape s = m.create(new Point(), .5, 1f);
-            assertNotNull(s);
+            Assert.assertNotNull(s);
         }
     }
     

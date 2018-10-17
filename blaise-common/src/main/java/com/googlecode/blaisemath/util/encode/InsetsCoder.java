@@ -43,7 +43,7 @@ public final class InsetsCoder implements StringEncoder<Insets>, StringDecoder<I
     @Override
     public String encode(Insets v) {
         requireNonNull(v);
-        return String.format("insets(%f,%f,%f,%f)", v.top, v.left, v.bottom, v.right);
+        return String.format("insets(%d,%d,%d,%d)", v.top, v.left, v.bottom, v.right);
     }
 
     @Override
@@ -54,10 +54,10 @@ public final class InsetsCoder implements StringEncoder<Insets>, StringDecoder<I
         Matcher m = Pattern.compile("insets\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim());
         if (m.matches()) {
             try {
-                Integer t = Integer.valueOf(m.group(1));
-                Integer l = Integer.valueOf(m.group(2));
-                Integer b = Integer.valueOf(m.group(3));
-                Integer r = Integer.valueOf(m.group(4));
+                int t = Integer.parseInt(m.group(1));
+                int l = Integer.parseInt(m.group(2));
+                int b = Integer.parseInt(m.group(3));
+                int r = Integer.parseInt(m.group(4));
                 return new Insets(t, l, b, r);
             } catch (NumberFormatException x) {
                 LOG.log(Level.FINEST, "Not an integer", x);

@@ -46,7 +46,7 @@ import static java.util.Collections.emptyMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+
 import static java.util.Objects.requireNonNull;
 import java.util.function.Function;
 import java.util.logging.Level;

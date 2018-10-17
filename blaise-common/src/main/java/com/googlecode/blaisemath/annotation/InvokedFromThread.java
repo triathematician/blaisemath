@@ -1,7 +1,3 @@
-/**
- * InvokedFromThread.java
- * Created on Nov 26, 2014
- */
 package com.googlecode.blaisemath.annotation;
 
 /*

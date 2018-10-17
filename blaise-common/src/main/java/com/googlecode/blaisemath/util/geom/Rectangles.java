@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.util.geom;
  * #L%
  */
 
-import com.google.common.collect.Iterables;
 import java.awt.geom.Rectangle2D;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

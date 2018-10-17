@@ -29,9 +29,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Stream;
+
 import static java.util.stream.Collectors.toMap;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -44,19 +45,19 @@ public class AttributeSetCoderTest {
     
     private final AttributeSetCoder inst = new AttributeSetCoder();
     private final AttributeSetCoder typedInst = new AttributeSetCoder(
-            Arrays.asList(Boolean.class, Integer.class, Float.class, Double.class,
-                    Point.class, Rectangle.class, Font.class, Color.class, Marker.class).stream()
+            Stream.of(Boolean.class, Integer.class, Float.class, Double.class,
+                    Point.class, Rectangle.class, Font.class, Color.class, Marker.class)
                     .collect(toMap(Class::getSimpleName, c -> c)));
     
     @Test
-    public void testEncode() throws Exception {
+    public void testEncode() {
         System.out.println("testEncode");
         
         assertEquals("fill:#ff0000; stroke:#00ff00", inst.encode(AttributeSet.of("fill", Color.red, "stroke", Color.green)));
     }
 
     @Test
-    public void testDecode() throws Exception {
+    public void testDecode() {
         System.out.println("testDecode");
         
         AttributeSet as = inst.decode("fill:  #ff0000 ; stroke :#00ff00;");
@@ -74,7 +75,7 @@ public class AttributeSetCoderTest {
         System.out.println("testConvertNull");
 
         assertEquals("none", AttributeSetCoder.encodeValue(null));
-        assertEquals(null, AttributeSetCoder.decodeValue("none", Object.class));
+        assertNull(AttributeSetCoder.decodeValue("none", Object.class));
         try {
             AttributeSetCoder.decodeValue(null, Object.class);
             fail("Expected NPE");
@@ -181,7 +182,7 @@ public class AttributeSetCoderTest {
     public void testEncodeDecode2() {
         System.out.println("testEncodeDecode2");
         AttributeSetCoder result = new AttributeSetCoder(
-                ImmutableMap.<String,Class<?>>of("fill", String.class));
+                ImmutableMap.of("fill", String.class));
 
         assertEquals("fill:#ffffff", result.encode(AttributeSet.of("fill", Color.white)));
         assertEquals(ImmutableMap.of("fill", "#ffffff"), result.decode("fill:#ffffff").getAttributeMap());
