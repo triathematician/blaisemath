@@ -59,7 +59,7 @@ public abstract class SVGElement {
         this.tag = tag;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -119,6 +119,6 @@ public abstract class SVGElement {
         this.value = value;
     }
     
-    //</editor-fold>
+    //endregion
     
 }

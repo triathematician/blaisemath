@@ -78,7 +78,7 @@ public final class SVGImage extends SVGElement {
         this.imageRef = ref;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -166,7 +166,7 @@ public final class SVGImage extends SVGElement {
         }
     }
     
-    //</editor-fold>
+    //endregion
 
     public static Converter<SVGImage, AnchoredImage> imageConverter() {
         return CONVERTER_INST;

@@ -114,7 +114,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         return new Point2D.Double(Math.random()*canvas1.getWidth(), Math.random()*canvas1.getHeight());
     }
     
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="BASIC">
@@ -230,7 +230,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         JOptionPane.showMessageDialog(getMainFrame(), ed);
     }
     
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="GRAPHICS WITH DELEGATORS">
@@ -351,7 +351,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         root1.addGraphic(gr);
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="COMPOSITES">
     
@@ -397,7 +397,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         root1.addGraphic(ag);
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="COOL STUFF USING SPECIAL STYLES">
     
@@ -426,7 +426,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         root1.addGraphic(ag);        
     }
     
-    //</editor-fold>
+    //endregion
         
     //<editor-fold defaultstate="collapsed" desc="APP CODE">
 
@@ -464,6 +464,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         launch(BlaiseGraphicsTestApp.class, args);
     }
     
-    //</editor-fold>
+    //endregion
     
 }

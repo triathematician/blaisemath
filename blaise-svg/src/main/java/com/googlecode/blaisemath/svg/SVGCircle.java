@@ -61,7 +61,7 @@ public final class SVGCircle extends SVGElement {
         return CONVERTER_INST;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -93,7 +93,7 @@ public final class SVGCircle extends SVGElement {
         this.r = r;
     }
     
-    //</editor-fold>
+    //endregion
 
     
     private static final class CircleConverter extends Converter<SVGCircle, Ellipse2D> {

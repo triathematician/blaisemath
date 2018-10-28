@@ -104,7 +104,7 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         }
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -130,7 +130,7 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         fireGraphicChanged();
     }
     
-    //</editor-fold>
+    //endregion
     
     /** Generate transform used to scale/translate the SVG. Transforms the view box to within the graphic bounds. */
     private AffineTransform transform() {

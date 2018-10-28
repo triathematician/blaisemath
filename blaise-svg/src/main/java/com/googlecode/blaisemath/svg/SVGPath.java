@@ -101,7 +101,7 @@ public final class SVGPath extends SVGElement {
         return new SVGPath(pathString.toString().trim());
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -115,7 +115,7 @@ public final class SVGPath extends SVGElement {
         this.pathStr = checkSvgPathStr(pathStr);
     }
     
-    //</editor-fold>
+    //endregion
     
     public static Converter<SVGPath, Path2D> shapeConverter() {
         return CONVERTER_INST;

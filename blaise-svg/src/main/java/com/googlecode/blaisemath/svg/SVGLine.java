@@ -58,7 +58,7 @@ public final class SVGLine extends SVGElement {
         this.y2 = y2;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -99,7 +99,7 @@ public final class SVGLine extends SVGElement {
         this.y2 = y2;
     }
     
-    //</editor-fold>
+    //endregion
 
     public static Converter<SVGLine, Line2D> shapeConverter() {
         return CONVERTER_INST;

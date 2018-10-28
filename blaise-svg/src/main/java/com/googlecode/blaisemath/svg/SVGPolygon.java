@@ -55,7 +55,7 @@ public final class SVGPolygon extends SVGElement {
         this.ptStr = checkPointString(pts);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -69,7 +69,7 @@ public final class SVGPolygon extends SVGElement {
         this.ptStr = checkPointString(pathStr);
     }
     
-    //</editor-fold>
+    //endregion
     
     public static Converter<SVGPolygon, GeneralPath> shapeConverter() {
         return CONVERTER_INST;

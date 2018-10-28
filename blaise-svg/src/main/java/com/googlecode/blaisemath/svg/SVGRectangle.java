@@ -77,7 +77,7 @@ public final class SVGRectangle extends SVGElement {
         return CONVERTER_INST;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -136,7 +136,7 @@ public final class SVGRectangle extends SVGElement {
         this.ry = ry;
     }
     
-    //</editor-fold>
+    //endregion
 
     /** Handles conversion of rectangle to/from a rectangular shape */
     private static final class RectangleConverter extends Converter<SVGRectangle, RectangularShape> {

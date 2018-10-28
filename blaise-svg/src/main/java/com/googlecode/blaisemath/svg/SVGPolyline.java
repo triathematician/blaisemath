@@ -55,7 +55,7 @@ public final class SVGPolyline extends SVGElement {
         this.ptStr = checkPointString(pts);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -69,7 +69,7 @@ public final class SVGPolyline extends SVGElement {
         this.ptStr = checkPointString(ptStr);
     }
     
-    //</editor-fold>
+    //endregion
     
     public static Converter<SVGPolyline, GeneralPath> shapeConverter() {
         return CONVERTER_INST;
@@ -148,6 +148,6 @@ public final class SVGPolyline extends SVGElement {
         return pathString.toString().trim();
     }
     
-    //</editor-fold>
+    //endregion
 
 }

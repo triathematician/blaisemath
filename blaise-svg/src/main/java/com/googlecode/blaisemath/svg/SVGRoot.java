@@ -55,7 +55,7 @@ public final class SVGRoot extends SVGGroup {
         setStyle(AttributeSet.of("font-family", "sans-serif"));
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     @XmlAttribute
     public String getViewBox() {
@@ -122,7 +122,7 @@ public final class SVGRoot extends SVGGroup {
         setWidth(parseLength(ht));
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
             
@@ -203,6 +203,6 @@ public final class SVGRoot extends SVGGroup {
         SvgIo.write(root, writer);
     }
     
-    //</editor-fold>
+    //endregion
     
 }

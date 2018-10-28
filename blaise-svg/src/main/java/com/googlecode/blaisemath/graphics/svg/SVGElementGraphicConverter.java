@@ -305,6 +305,6 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

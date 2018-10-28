@@ -70,7 +70,7 @@ public class SVGGraphicComponent extends JGraphicComponent {
         return res;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
     //
     // PROPERTIES
     //
@@ -100,6 +100,6 @@ public class SVGGraphicComponent extends JGraphicComponent {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

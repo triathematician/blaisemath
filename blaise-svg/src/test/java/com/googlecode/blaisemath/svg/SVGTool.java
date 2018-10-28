@@ -254,7 +254,7 @@ public class SVGTool extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(SVGTool.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        //endregion
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

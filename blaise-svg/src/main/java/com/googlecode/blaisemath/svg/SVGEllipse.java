@@ -62,7 +62,7 @@ public final class SVGEllipse extends SVGElement {
         return CONVERTER_INST;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -103,7 +103,7 @@ public final class SVGEllipse extends SVGElement {
         this.ry = ry;
     }
     
-    //</editor-fold>
+    //endregion
 
     
     private static final class EllipseConverter extends Converter<SVGEllipse, Ellipse2D> {

@@ -64,7 +64,7 @@ public class SVGGroup extends SVGElement {
         return res;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -82,7 +82,7 @@ public class SVGGroup extends SVGElement {
         this.obj.add(checkNotNull(obj));
     }
     
-    //</editor-fold>
+    //endregion
 
     public SVGElement getObjectById(String id) {
         for (SVGElement ms : obj) {

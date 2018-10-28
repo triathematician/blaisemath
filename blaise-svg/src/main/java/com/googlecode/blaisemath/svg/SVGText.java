@@ -56,7 +56,7 @@ public final class SVGText extends SVGElement {
         this.content = content;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     //
     // PROPERTY PATTERNS
     //
@@ -89,7 +89,7 @@ public final class SVGText extends SVGElement {
         this.content = value;
     }
     
-    //</editor-fold>
+    //endregion
     
     public static Converter<SVGText, AnchoredText> textConverter() {
         return CONVERTER_INST;
