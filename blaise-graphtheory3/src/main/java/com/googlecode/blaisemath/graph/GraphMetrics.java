@@ -152,7 +152,7 @@ public class GraphMetrics {
         return new ContractiveSubsetMetric<N>(baseMetric);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    //region INNER CLASSES
     
     private static class AdditiveSubsetMetric<N extends Number> implements GraphSubsetMetric<N> {
 
@@ -213,5 +213,5 @@ public class GraphMetrics {
 
     }
     
-    //</editor-fold>
+    //endregion
 }

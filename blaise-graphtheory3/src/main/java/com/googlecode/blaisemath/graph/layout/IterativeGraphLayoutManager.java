@@ -88,10 +88,10 @@ public final class IterativeGraphLayoutManager {
         setCoordinateManager(CoordinateManager.create(GraphLayoutManager.NODE_CACHE_SIZE));
     }
     
-    //</editor-fold>
+    //endregion
     
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     public IterativeGraphLayout getLayout() {
         return layout;
@@ -163,7 +163,7 @@ public final class IterativeGraphLayoutManager {
         this.iterPerLoop = iter;
     }
     
-    //</editor-fold>
+    //endregion
 
     /** 
      * Re-initialize the graph layout, resetting iteration, state, and params.
@@ -221,6 +221,6 @@ public final class IterativeGraphLayoutManager {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

@@ -74,7 +74,7 @@ public class RandomBoxLayout implements StaticGraphLayout<BoxLayoutParameters> {
         return result;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    //region INNER CLASSES
     
     /** Parameters associated with circle layout */
     public static class BoxLayoutParameters {
@@ -96,6 +96,6 @@ public class RandomBoxLayout implements StaticGraphLayout<BoxLayoutParameters> {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

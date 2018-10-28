@@ -24,15 +24,11 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.googlecode.blaisemath.util.GAInstrument;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Queues;
@@ -40,7 +36,6 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.googlecode.blaisemath.linear.Matrices;
-import com.googlecode.blaisemath.util.Edge;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
@@ -134,7 +129,7 @@ public class GraphUtils {
         return result.toString().trim();
     }
 
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="COPY/DUPLICATION">
@@ -180,7 +175,7 @@ public class GraphUtils {
         return SparseGraph.createFromEdges(false, graph.nodes(), copyEdges(graph.edges()));
     }
 
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="SUBGRAPHS">
@@ -230,7 +225,7 @@ public class GraphUtils {
         return copySubgraph(parent, cNodes);
     }
     
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="ADJACENCY MATRIX">
@@ -293,7 +288,7 @@ public class GraphUtils {
         return result;
     }
 
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="DEGREE">
@@ -326,7 +321,7 @@ public class GraphUtils {
         return HashMultiset.create(Iterables.transform(graph.nodes(), degreeFunction(graph)));
     }
 
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="GEODESIC & SPANNING TREE METHODS">
@@ -442,7 +437,7 @@ public class GraphUtils {
         return -1;
     }
 
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="NEIGHBORHOOD & COMPONENT">
@@ -633,7 +628,7 @@ public class GraphUtils {
         }
     }
 
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="CONTRACTING ELEMENTS">
@@ -701,6 +696,6 @@ public class GraphUtils {
         return result;
     }
     
-    //</editor-fold>
+    //endregion
     
 }

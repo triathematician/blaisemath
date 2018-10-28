@@ -78,7 +78,7 @@ public final class GraphLayoutManager<V> {
     /** Whether layout is active */
     public static final String P_LAYOUT_ACTIVE = "layoutTaskActive";
     
-    //</editor-fold>
+    //endregion
     
     /** Graph */
     private Graph<V> graph;
@@ -122,7 +122,7 @@ public final class GraphLayoutManager<V> {
         return res;
     }
     
-    //</editor-fold>
+    //endregion
 
 
     // <editor-fold defaultstate="collapsed" desc="PROPERTIES">

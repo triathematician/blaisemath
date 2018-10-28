@@ -177,7 +177,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
         throw new IllegalStateException("Should not be here since sum random is less than total");
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="PARAMETERS CLASS">
     
@@ -237,7 +237,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
                     : EdgeCountGenerator.getInstance().apply(seedParameters);
         }
         
-        //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+        //region PROPERTIES
 
         @Nullable
         public ExtendedGeneratorParameters getSeedGraphParameters() {
@@ -286,10 +286,10 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
                     : Arrays.copyOf(connectProbs, connectProbs.length);
         }
         
-        //</editor-fold>
+        //endregion
 
     }
     
-    //</editor-fold>
+    //endregion
     
 }

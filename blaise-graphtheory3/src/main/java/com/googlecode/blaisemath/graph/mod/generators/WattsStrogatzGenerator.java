@@ -129,7 +129,7 @@ public final class WattsStrogatzGenerator implements GraphGenerator<WattsStrogat
         
     }
     
-    //</editor-fold> 
+    //endregion
 
     
     //<editor-fold defaultstate="collapsed" desc="ALGORITHM AND UTILITY METHODS">
@@ -172,5 +172,5 @@ public final class WattsStrogatzGenerator implements GraphGenerator<WattsStrogat
         return result;
     }
     
-    //</editor-fold>
+    //endregion
 }

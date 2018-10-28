@@ -63,7 +63,7 @@ public class MetricScaler<T extends Number & Comparable> implements Function<Obj
         max = Ordering.natural().max(scores.values()).doubleValue();
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     public Graph getGraph() {
         return graph;
@@ -87,7 +87,7 @@ public class MetricScaler<T extends Number & Comparable> implements Function<Obj
         }
     }
     
-    //</editor-fold>
+    //endregion
 
     @Override
     public AttributeSet apply(Object input) {

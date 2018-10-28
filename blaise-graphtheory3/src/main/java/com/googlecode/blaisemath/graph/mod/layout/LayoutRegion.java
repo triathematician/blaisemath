@@ -61,7 +61,7 @@ class LayoutRegion<C> {
         pts.put(io, iLoc);
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="ADJACENCIES">
 
@@ -73,5 +73,5 @@ class LayoutRegion<C> {
         adj.add(reg);
     }
     
-    //</editor-fold>
+    //endregion
 }

@@ -87,7 +87,7 @@ public abstract class IterativeGraphLayoutState<C> {
         this.resetNodes = resetNodes;
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="LOCATION UPDATES">
     
@@ -127,6 +127,6 @@ public abstract class IterativeGraphLayoutState<C> {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

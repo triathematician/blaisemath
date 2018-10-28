@@ -61,13 +61,13 @@ class IterativeGraphLayoutService extends AbstractScheduledService {
         }, MoreExecutors.newDirectExecutorService());
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
     
     boolean isLayoutActive() {
         return isRunning();
     }
     
-    //</editor-fold>
+    //endregion
 
     @Override
     protected synchronized void runOneIteration() throws Exception {

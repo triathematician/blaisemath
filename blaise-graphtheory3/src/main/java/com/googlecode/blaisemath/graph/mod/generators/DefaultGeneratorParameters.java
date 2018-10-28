@@ -49,7 +49,7 @@ public class DefaultGeneratorParameters {
         setNodeCount(nodes);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     public final boolean isDirected() {
         return directed;
@@ -68,7 +68,7 @@ public class DefaultGeneratorParameters {
         this.nodeCount = nodes;
     }
     
-    //</editor-fold>
+    //endregion
 
     
     //

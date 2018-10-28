@@ -26,9 +26,6 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.Graph;
@@ -40,7 +37,6 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import java.awt.Graphics2D;
@@ -78,13 +74,13 @@ public class GraphComponent extends JGraphicComponent {
         @Override
         public DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> get() {
             DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> res = JGraphics.nodeLink();
-            res.getNodeStyler().setStyleConstant(VisualGraph.DEFAULT_NODE_STYLE);
+            res.getNodeStyler().setStyle(VisualGraph.DEFAULT_NODE_STYLE);
             return res;
         }
     };
 
     /** Manages the visual elements of the underlying graph */
-    protected final transient VisualGraph<Graphics2D> adapter;
+    protected final VisualGraph<Graphics2D> adapter;
 
     /**
      * Construct without a graph
@@ -124,7 +120,7 @@ public class GraphComponent extends JGraphicComponent {
         });
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     /**
      * Return the adapter that contains the graph manager and the graph, responsible for handling the visual appearance.
@@ -134,7 +130,7 @@ public class GraphComponent extends JGraphicComponent {
         return adapter;
     }
     
-    //</editor-fold>
+    //endregion
 
 
     //<editor-fold defaultstate="collapsed" desc="DELEGATING PROPERTIES">
@@ -229,7 +225,7 @@ public class GraphComponent extends JGraphicComponent {
         selector.getSelectionModel().setSelection(newSelection);
     }
 
-    //</editor-fold>
+    //endregion
 
 
     /**

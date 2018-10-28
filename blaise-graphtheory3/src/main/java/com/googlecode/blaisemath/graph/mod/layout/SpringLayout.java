@@ -55,7 +55,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     
     private static final Logger LOG = Logger.getLogger(SpringLayout.class.getName());
     
-    //</editor-fold>
+    //endregion
     
     @Override
     public String toString() {

@@ -44,7 +44,7 @@ public final class ExtendedGeneratorParameters extends DefaultGeneratorParameter
         setEdgeCount(edges);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     public int getEdgeCount() {
         return edgeCount;
@@ -55,7 +55,7 @@ public final class ExtendedGeneratorParameters extends DefaultGeneratorParameter
         this.edgeCount = edges;
     }
     
-    //</editor-fold>
+    //endregion
     
     /**
      * Get the number of edges, limited to the maximum possible based on the current node count.

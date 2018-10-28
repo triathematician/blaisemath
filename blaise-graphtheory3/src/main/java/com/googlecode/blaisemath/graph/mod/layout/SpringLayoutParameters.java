@@ -63,7 +63,7 @@ public class SpringLayoutParameters {
     /** Layout constraints */
     GraphLayoutConstraints constraints = new GraphLayoutConstraints();
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
     //
     // PROPERTIES
     //
@@ -147,6 +147,6 @@ public class SpringLayoutParameters {
         this.constraints = checkNotNull(constraints);
     }
     
-    //</editor-fold>
+    //endregion
     
 }

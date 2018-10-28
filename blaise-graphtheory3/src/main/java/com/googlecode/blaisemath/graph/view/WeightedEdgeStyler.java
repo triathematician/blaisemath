@@ -46,7 +46,7 @@ public class WeightedEdgeStyler<E extends Edge> implements Function<E, Attribute
     /** Edge weights */
     protected Map<E, Float> weights;
     /** The maximum edge weight */
-    protected transient float maxWeight = 0f;
+    protected float maxWeight = 0f;
 
     /**
      * Construct the customizer
@@ -137,6 +137,6 @@ public class WeightedEdgeStyler<E extends Edge> implements Function<E, Attribute
         return new Color(col.getRed(), col.getGreen(), col.getBlue(), alpha);
     }
     
-    //</editor-fold>
+    //endregion
     
 }

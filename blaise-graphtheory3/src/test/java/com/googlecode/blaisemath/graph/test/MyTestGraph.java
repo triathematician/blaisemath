@@ -228,7 +228,7 @@ public final class MyTestGraph implements Graph<String> {
         return edges.remove(edge);
     }
     
-    //</editor-fold>
+    //endregion
     
     //
     // ADJACENCY

@@ -124,7 +124,7 @@ public final class OptimizedGraph<V> implements Graph<V> {
         }
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
     //
     // PROPERTIES
     //
@@ -169,7 +169,7 @@ public final class OptimizedGraph<V> implements Graph<V> {
         return Multimaps.unmodifiableSetMultimap(neighbors);
     }
 
-    //</editor-fold>
+    //endregion
 
     /**
      * Return the node adjacent to a leaf

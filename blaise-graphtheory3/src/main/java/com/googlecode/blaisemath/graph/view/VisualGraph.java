@@ -113,12 +113,12 @@ public class VisualGraph<G> {
             } else {
                 viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
                         layoutManager.getCoordinateManager(), null, null, null);
-                viewGraph.getNodeStyler().setStyleConstant(DEFAULT_NODE_STYLE);
+                viewGraph.getNodeStyler().setStyle(DEFAULT_NODE_STYLE);
             }
 
             // set up default styles, in case the graph isn't visible by default
             if (viewGraph.getNodeStyler().getStyleDelegate() == null) {
-                viewGraph.getNodeStyler().setStyleConstant(DEFAULT_NODE_STYLE);
+                viewGraph.getNodeStyler().setStyle(DEFAULT_NODE_STYLE);
             }
             if (viewGraph.getNodeStyler().getLabelDelegate() == null) {
                 viewGraph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
@@ -127,7 +127,7 @@ public class VisualGraph<G> {
                 viewGraph.getNodeStyler().setTipDelegate(Functions.toStringFunction());
             }
             if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
-                viewGraph.getEdgeStyler().setStyleConstant(DEFAULT_EDGE_STYLE);
+                viewGraph.getEdgeStyler().setStyle(DEFAULT_EDGE_STYLE);
             }
         } else {
             viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
@@ -136,7 +136,7 @@ public class VisualGraph<G> {
     }
 
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
     //
     // PROPERTIES
     //
@@ -240,6 +240,6 @@ public class VisualGraph<G> {
         viewGraph.setEdgeRenderer(renderer);
     }
 
-    //</editor-fold>
+    //endregion
 
 }

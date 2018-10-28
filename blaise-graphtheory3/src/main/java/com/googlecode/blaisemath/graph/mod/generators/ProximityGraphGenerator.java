@@ -111,6 +111,6 @@ public final class ProximityGraphGenerator implements GraphGenerator<ProximityGr
         }
     }
     
-    //</editor-fold>
+    //endregion
 
 }

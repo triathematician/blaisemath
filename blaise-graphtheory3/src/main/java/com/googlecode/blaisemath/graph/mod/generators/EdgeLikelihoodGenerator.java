@@ -100,5 +100,5 @@ public final class EdgeLikelihoodGenerator implements GraphGenerator<EdgeLikelih
         
     }
     
-    //</editor-fold>
+    //endregion
 }

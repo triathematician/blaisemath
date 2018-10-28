@@ -66,7 +66,7 @@ public final class EdgeCountGenerator implements GraphGenerator<ExtendedGenerato
         }
     };
     
-    //</editor-fold>
+    //endregion
 
     private static final EdgeCountGenerator INST = new EdgeCountGenerator();
     

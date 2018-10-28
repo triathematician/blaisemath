@@ -72,7 +72,7 @@ public class GraphAppCanvas extends GraphComponent {
         graph.getNodeStyler().setStyleDelegate(scaler);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     @Override
     public void setGraph(Graph graph) {
@@ -88,7 +88,7 @@ public class GraphAppCanvas extends GraphComponent {
         scaler.setMetric(metric);
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="ACTIONS">    
     
@@ -131,6 +131,6 @@ public class GraphAppCanvas extends GraphComponent {
         super.zoomOut();
     }
     
-    //</editor-fold>
+    //endregion
     
 }

@@ -201,7 +201,7 @@ public final class GraphAppFrameView extends FrameView {
         }
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     public GraphGenerator getSelectedGenerator() {
         return selectedGenerator;
@@ -251,7 +251,7 @@ public final class GraphAppFrameView extends FrameView {
         return iterativeLayoutPanel.getBean();
     }
     
-    //</editor-fold>
+    //endregion
     
     // GRAPH ACTIONS
     

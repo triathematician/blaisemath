@@ -241,7 +241,7 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
         return sum;
     }
     
-    //</editor-fold>
+    //endregion
 
     //<editor-fold defaultstate="collapsed" desc="PARAMETERS CLASS">
     
@@ -267,6 +267,6 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

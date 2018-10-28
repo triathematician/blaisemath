@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.graph.mod.layout;
  */
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
@@ -38,7 +37,6 @@ import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.StaticSpringLayout.StaticSpringLayoutParameters;
-import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.geom.Points;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -47,7 +45,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 
 /**
  * Positions nodes in a graph using a force-based layout technique.
@@ -276,7 +273,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
     }
     
     
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    //region INNER CLASSES
     
     /** Parameters assoicated with the static spring layout. */
     public static class StaticSpringLayoutParameters {
@@ -295,7 +292,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         private double coolEnd = 0.05;    
         private double energyChangeThreshold = distScale*distScale*1e-6;
 
-        //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+        //region PROPERTIES
         //
         // PROPERTIES
         //
@@ -373,9 +370,9 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
             this.coolEnd = coolEnd;
         }
 
-        //</editor-fold>
+        //endregion
         
     }
     
-    //</editor-fold>
+    //endregion
 }

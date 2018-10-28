@@ -57,7 +57,7 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
     /** # of regions away from origin in x and y directions. Region size is determined by the maximum repel distance. */
     private static final int REGION_N = 5;
     
-    //</editor-fold>
+    //endregion
     
     /** Regions used for localizing computation */
     @GuardedBy("this")
@@ -87,7 +87,7 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
         vel.put(io, pt);
     }
     
-    //</editor-fold>
+    //endregion
 
     // <editor-fold defaultstate="collapsed" desc="REGION MANAGEMENT">
 

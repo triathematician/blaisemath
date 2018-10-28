@@ -1,8 +1,3 @@
-/*
- * NodeInGraph.java
- * Created on May 17, 2013
- */
-
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -28,7 +23,6 @@ package com.googlecode.blaisemath.graph;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import javax.annotation.Nullable;
 
 /**
  * Data structure describing a node in a graph. This is a useful way to pass
@@ -57,8 +51,7 @@ public final class NodeInGraph<E> {
         return node;
     }
 
-    @Nullable 
-    public Graph<E> getGraph() {
+    public @Nullable Graph<E> getGraph() {
         return graph;
     }
 }
