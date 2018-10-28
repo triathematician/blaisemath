@@ -161,7 +161,7 @@ public class AttributeSetCoderTest {
         assertEquals(new Rectangle(5, 6, 7, 8), typedInst.decode("Rectangle: rectangle(5,6,7,8)").get("Rectangle"));
     }
     
-    //</editor-fold>
+    //endregion
     
     @Test
     public void testEncodeDecode1() {

@@ -47,7 +47,7 @@ public class SetSelectionModel<G> {
 
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
 
     /**
      * Check if selection is empty.
@@ -78,7 +78,7 @@ public class SetSelectionModel<G> {
         }
     }
 
-    //</editor-fold>
+    //endregion
 
     /**
      * Clear the selection.
@@ -178,6 +178,6 @@ public class SetSelectionModel<G> {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-    //</editor-fold>
+    //endregion
 
 }

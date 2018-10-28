@@ -213,7 +213,7 @@ public class AttributeSetTest {
         assertEquals(ImmutableSet.of("a", "b"), result.getAllAttributes());
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="ACCESSOR TESTS">
 
@@ -308,7 +308,7 @@ public class AttributeSetTest {
         assertEquals(1, as.getOrDefault("d", -1));
     }
     
-    //</editor-fold>
+    //endregion
 
     //<editor-fold defaultstate="collapsed" desc="MUTATOR TESTS">
     
@@ -348,7 +348,7 @@ public class AttributeSetTest {
         assertNull(instance.get("a"));
     }
     
-    //</editor-fold>
+    //endregion
     
     //<editor-fold defaultstate="collapsed" desc="TYPED ACCESSOR TESTS">
 
@@ -479,6 +479,6 @@ public class AttributeSetTest {
         assertEquals(new Point(1, 2), instance.getPoint2D("d", def));
     }
     
-    //</editor-fold>
+    //endregion
     
 }

@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.style;
  */
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.awt.Color;
@@ -57,8 +56,8 @@ public class AttributeSet {
     /** The map of style key/value pairs */
     protected final Map<String,Object> attributeMap = Maps.newHashMap();
     
-    private final transient ChangeEvent changeEvent = new ChangeEvent(this);
-    private final transient EventListenerList listenerList = new EventListenerList();
+    private final ChangeEvent changeEvent = new ChangeEvent(this);
+    private final EventListenerList listenerList = new EventListenerList();
 
     @Override
     public String toString() {
@@ -313,7 +312,7 @@ public class AttributeSet {
      * @return attribute keys
      */
     public Set<String> getAllAttributes(Class<?> type) {
-        Map<String, Object> filtered = Maps.filterValues(attributeMap, Predicates.instanceOf(type));
+        Map<String, Object> filtered = Maps.filterValues(attributeMap, type::isInstance);
         if (parent != null) {
             return Sets.newHashSet(Sets.union(filtered.keySet(), parent.getAllAttributes(type)));
         } else {
