@@ -1,8 +1,3 @@
-/**
- * JGraphicComponent.java
- * Created on Jul 30, 2009
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -14,9 +9,9 @@ package com.googlecode.blaisemath.graphics.swing;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +27,7 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicUtils;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.util.SetSelectionModel;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -45,17 +41,11 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /**
- * <p>
- *   Swing component that collects and draws shapes on a screen.
- *   The shapes and their styles are enclosed within a {@link JGraphicRoot} class,
- *   which also sets up the requisite mouse handling and manages the drawing.
- * </p>
- * <p>
- *   This class is not designed for serialization.
- * </p>
+ * Swing component that collects and draws shapes on a screen.
+ * The shapes and their styles are enclosed within a {@link JGraphicRoot} class,
+ * which also sets up the requisite mouse handling and manages the drawing.
  *
  * @see JGraphicRoot
  *
@@ -63,27 +53,25 @@ import javax.annotation.Nullable;
  */
 public class JGraphicComponent extends javax.swing.JComponent implements TransformedCoordinateSpace {
 
+    public static final String P_TRANSFORM = "transform";
+
     /** The visible shapes. */
-    protected final transient JGraphicRoot root;
+    protected final JGraphicRoot root;
     /** Affine transform applied to graphics canvas before drawing (enables pan and zoom). */
-    @Nullable
-    protected AffineTransform transform = null;
+    protected @Nullable AffineTransform transform = null;
     /** Store inverse transform */
-    @Nullable
-    protected AffineTransform inverseTransform = null;
-    
+    protected @Nullable AffineTransform inverseTransform = null;
+
     /** Underlay painters */
-    protected final transient List<CanvasPainter> underlays = Lists.newArrayList();
+    protected final List<CanvasPainter> underlays = Lists.newArrayList();
     /** Overlay painters */
-    protected final transient List<CanvasPainter> overlays = Lists.newArrayList();
-    
+    protected final List<CanvasPainter> overlays = Lists.newArrayList();
+
     /** Used for selecting graphics */
-    protected final transient JGraphicSelectionHandler selector = new JGraphicSelectionHandler(this);
+    protected final JGraphicSelectionHandler selector = new JGraphicSelectionHandler(this);
 
     /** Whether antialias is enabled */
     protected boolean antialias = true;
-
-    // CONSTRUCTOR
 
     /**
      * Construction of a generic graphics view component.
@@ -103,25 +91,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
         setToolTipText("");
     }
 
-    /**
-     * Return the tooltip associated with the mouse event's point.
-     * This will look for the topmost {@link Graphic} beneath the mouse and return that.
-     * @param event the event with the point for the tooltip
-     * @return tooltip for the point
-     */
-    @Override
-    public String getToolTipText(MouseEvent event) {
-        String ct = root.getTooltip(toGraphicCoordinate(event.getPoint()));
-        return ct != null ? ct 
-                : "".equals(super.getToolTipText()) ? null 
-                : super.getToolTipText();
-    }
-
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
+    //region PROPERTIES
 
     /**
      * Return graphic root managing the shapes to be rendered
@@ -186,15 +156,9 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
         repaint();
     }
 
-    //</editor-fold>
+    //endregion
 
-
-    //<editor-fold defaultstate="collapsed" desc="DELEGATES">
-    //
-    // DELEGATES
-    //
-    
-    
+    //region GRAPHICS MUTATORS
 
     /**
      * Add graphics to the component
@@ -235,54 +199,52 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
         root.clearGraphics();
     }
 
-    //</editor-fold>
+    //endregion
 
-    
-    //<editor-fold defaultstate="collapsed" desc="CANVAS TRANSFORM">
-    
-    @Nullable
+    //region CANVAS TRANSFORM
+
     @Override
-    public AffineTransform getTransform() {
+    public @Nullable AffineTransform getTransform() {
         return transform;
     }
-    
-    @Nullable
+
     @Override
-    public AffineTransform getInverseTransform() {
+    public @Nullable AffineTransform getInverseTransform() {
         return inverseTransform;
     }
-    
+
     /**
-     * Set thee transform used for drawing objects on the canvas.
-     * @param at the transform
+     * Set the transform used for drawing objects on the canvas.
+     * @param at the transform (null for identity transform)
      * @throws IllegalArgumentException if the transform is non-null but not invertible
      */
     @Override
     public void setTransform(@Nullable AffineTransform at) {
-        if (at == null) {
-            transform = null;
-            inverseTransform = null;
-        } else {
-            checkArgument(at.getDeterminant() != 0);
+        checkArgument(at == null || at.getDeterminant() != 0);
+        AffineTransform old = transform;
+        if (old != at) {
             transform = at;
             try {
-                inverseTransform = at.createInverse();
+                inverseTransform = at == null ? null : at.createInverse();
             } catch (NoninvertibleTransformException ex) {
                 throw new IllegalStateException("Already checked that the argument is invertible...", ex);
             }
+            firePropertyChange(P_TRANSFORM, old, at);
+            repaint();
         }
-        repaint();
     }
-    
+
     /**
      * Reset transform to the default.
      */
     public void resetTransform() {
         setTransform(null);
     }
-    
-    //<editor-fold defaultstate="collapsed" desc="ZOOM OPERATIONS">
-    
+
+    //endregion
+
+    //region ZOOM OPERATIONS
+
     /**
      * Set transform to include all components in the graphic tree. Does nothing
      * if there are no graphics. Animates zoom operation.
@@ -296,7 +258,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * area plus insets. The insets are expressed in local coordinates, not window
      * coordinates. Positive insets result in extra space around the graphics.
      * Animates zoom operation.
-     * 
+     *
      * @param outsets additional space to leave around the graphics
      */
     public void zoomToAll(Insets outsets) {
@@ -307,26 +269,26 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * Set transform to include all components in the graphic tree inside display
      * area plus insets. The insets are expressed in local coordinates, not window
      * coordinates. Positive insets result in extra space around the graphics.
-     * 
+     *
      * @param outsets additional space to leave around the graphics
      * @param animate if true, zoom operation will animate
      */
     public void zoomToAll(Insets outsets, boolean animate) {
-        Rectangle2D bounds = getGraphicRoot().boundingBox();
+        Rectangle2D bounds = getGraphicRoot().boundingBox(canvas());
         if (bounds != null && animate) {
             animatedZoomWithOutsets(bounds, outsets);
         } else if (bounds != null) {
             instantZoomWithOutsets(bounds, outsets);
         }
     }
-    
+
     /**
      * Zooms in in to the graphics canvas (animated).
      */
     public void zoomIn() {
         PanAndZoomHandler.zoomIn(this, true);
     }
-    
+
     /**
      * Zooms in in to the graphics canvas.
      * @param animate if true, zoom operation will animate
@@ -334,14 +296,14 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
     public void zoomIn(boolean animate) {
         PanAndZoomHandler.zoomIn(this, animate);
     }
-    
+
     /**
      * Zooms out of the graphics canvas (animated).
      */
     public void zoomOut() {
         PanAndZoomHandler.zoomOut(this, true);
     }
-    
+
     /**
      * Zooms out of the graphics canvas.
      * @param animate if true, zoom operation will animate
@@ -349,7 +311,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
     public void zoomOut(boolean animate) {
         PanAndZoomHandler.zoomOut(this, animate);
     }
-    
+
     /**
      * Set transform to include all selected components. Does nothing if nothing
      * is selected. Zoom is animated.
@@ -363,7 +325,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * area plus insets. The outsets are expressed in local coordinates, not window
      * coordinates. Positive insets result in extra space around the graphics.
      * Zoom is animated.
-     * 
+     *
      * @param locCoordOutsets additional space to leave around the graphics (in local coordinate space)
      */
     public void zoomToSelected(Insets locCoordOutsets) {
@@ -375,19 +337,19 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * area plus insets. The outsets are expressed in local coordinates, not window
      * coordinates. Positive insets result in extra space around the graphics.
      * Zoom is anmiated.
-     * 
+     *
      * @param locCoordOutsets additional space to leave around the graphics (in local coordinate space)
      * @param animate if true, zoom operation will animate
      */
     public void zoomToSelected(Insets locCoordOutsets, boolean animate) {
-        Rectangle2D bounds = GraphicUtils.boundingBox(getSelectionModel().getSelection());
+        Rectangle2D bounds = GraphicUtils.boundingBox(getSelectionModel().getSelection(), canvas());
         if (bounds != null && animate) {
             animatedZoomWithOutsets(bounds, locCoordOutsets);
         } else if (bounds != null) {
             instantZoomWithOutsets(bounds, locCoordOutsets);
         }
     }
-    
+
     /**
      * Utility method to animate the zoom operation to the target local bounds.
      * @param bounds local bounds
@@ -398,11 +360,11 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
         double maxX = Math.max(minX, bounds.getMaxX() + locCoordOutsets.right);
         double minY = bounds.getMinY() - locCoordOutsets.top;
         double maxY = Math.max(minY, bounds.getMaxY() + locCoordOutsets.bottom);
-        PanAndZoomHandler.zoomCoordBoxAnimated(this, 
+        PanAndZoomHandler.zoomCoordBoxAnimated(this,
                 new Point2D.Double(minX, minY),
                 new Point2D.Double(maxX, maxY));
     }
-    
+
     /**
      * Utility method to instantly change the zoom to the target local bounds.
      * @param bounds local bounds
@@ -413,12 +375,28 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
         double maxX = Math.max(minX, bounds.getMaxX() + locCoordOutsets.right);
         double minY = bounds.getMinY() - locCoordOutsets.top;
         double maxY = Math.max(minY, bounds.getMaxY() + locCoordOutsets.bottom);
-        PanAndZoomHandler.setDesiredLocalBounds(this, 
+        PanAndZoomHandler.setDesiredLocalBounds(this,
                 new Rectangle2D.Double(minX, minY, maxX-minX, maxY-minY));
     }
-    
-    //</editor-fold>
-    
+
+    //endregion
+
+    //region GRAPHICS QUERIES
+
+    /**
+     * Return the tooltip associated with the mouse event's point.
+     * This will look for the topmost {@link Graphic} beneath the mouse and return that.
+     * @param event the event with the point for the tooltip
+     * @return tooltip for the point
+     */
+    @Override
+    public String getToolTipText(MouseEvent event) {
+        String ct = root.getTooltip(toGraphicCoordinate(event.getPoint()), null);
+        return ct != null ? ct
+                : "".equals(super.getToolTipText()) ? null
+                : super.getToolTipText();
+    }
+
     /**
      * Convert window point location to graphic root location
      * @param winLoc window location
@@ -428,7 +406,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
     public Point2D toGraphicCoordinate(Point2D winLoc) {
         return inverseTransform == null ? winLoc : inverseTransform.transform(winLoc, null);
     }
-    
+
     /**
      * Convert mouse event to local coordinate space
      * @param winEvent event in windows coordinate space
@@ -438,40 +416,46 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
         Point2D loc = toGraphicCoordinate(winEvent.getPoint());
         return new GMouseEvent(winEvent, loc, null);
     }
-    
+
     /**
      * Return the graphic at the given window location
      * @param winLoc window location
      * @return graphic
      */
-    public Graphic graphicAt(Point winLoc) {
-        return root.graphicAt(toGraphicCoordinate(winLoc));
+    public Graphic<Graphics2D> graphicAt(Point winLoc) {
+        return root.graphicAt(toGraphicCoordinate(winLoc), canvas());
     }
-    
+
     /**
      * Return the functional graphic at the given window location
      * @param winLoc window location
      * @return graphic
      */
     public Graphic functionalGraphicAt(Point winLoc) {
-        return root.mouseGraphicAt(toGraphicCoordinate(winLoc));
+        return root.mouseGraphicAt(toGraphicCoordinate(winLoc), canvas());
     }
-    
+
     /**
      * Return the selectable graphic at the given window location
      * @param winLoc window location
      * @return graphic
      */
     public Graphic selectableGraphicAt(Point winLoc) {
-        return root.selectableGraphicAt(toGraphicCoordinate(winLoc));
+        return root.selectableGraphicAt(toGraphicCoordinate(winLoc), canvas());
     }
-    
-    //</editor-fold>
-    
 
-    //
-    // PAINT METHODS
-    //
+    //endregion
+
+    //region PAINT
+
+    /**
+     * Get instance of canvas to use for style location checking.
+     * @return canvas
+     */
+    Graphics2D canvas() {
+        // TODO
+        return null;
+    }
 
     /**
      * Return modifiable list of overlay painters
@@ -528,9 +512,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * @param canvas the canvas to render to
      */
     protected void renderUnderlay(Graphics2D canvas) {
-        for (CanvasPainter p : underlays) {
-            p.paint(this, canvas);
-        }
+        underlays.forEach(p -> p.paint(this, canvas));
     }
 
     /**
@@ -538,9 +520,9 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * @param canvas the canvas to render to
      */
     protected void renderOverlay(Graphics2D canvas) {
-        for (CanvasPainter p : overlays) {
-            p.paint(this, canvas);
-        }
+        overlays.forEach(p -> p.paint(this, canvas));
     }
+
+    //endregion
 
 }

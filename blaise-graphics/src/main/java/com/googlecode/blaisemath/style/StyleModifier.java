@@ -1,7 +1,3 @@
-/**
- * StyleModifier.java
- * Created Jul 31, 2014
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -24,9 +20,10 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
+import java.util.Set;
 
 /**
- * Modifies an {@link AttributeSet} based on a {@link StyleHints} and returns a new {@link AttributeSet}.
+ * Creates a modified version of a style based on criteria provided as hints.
  * 
  * @author Elisha Peterson
  */
@@ -38,6 +35,6 @@ public interface StyleModifier {
      * @param hints the hints w/ modify instructions
      * @return the modified set
     */
-    AttributeSet apply(AttributeSet style, AttributeSet hints);
+    AttributeSet apply(AttributeSet style, Set<String> hints);
     
 }

@@ -1,7 +1,3 @@
-/**
- * SegmentGraphic.java
- * Created Jan 23, 2011
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -36,10 +32,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 /**
- * <p>
- *   Displays a line segment between two points, with the possibility of adding
- *   arrows on one or both ends.
- * </p>
+ * Displays a line segment between two points, with the possibility of adding
+ * arrows on one or both ends.
  *
  * @author Elisha Peterson
  */
@@ -68,12 +62,10 @@ public class SegmentGraphic extends TwoPointGraphic {
         addGraphic(lineGraphic);        
         super.initGraphics();
         
-        start.setStyle(AttributeSet.of(Styles.MARKER, Markers.CIRCLE,
-                Styles.MARKER_RADIUS, 2, Styles.FILL, Color.black));
+        start.setStyle(Styles.marker(Markers.CIRCLE, Color.black, 2));
         start.setStyleHint(StyleHints.HIDDEN_FUNCTIONAL_HINT, true);
         
-        end.setStyle(Styles.defaultPointStyle().copy()
-                .and(Styles.MARKER, Markers.ARROWHEAD));
+        end.setStyle(Styles.defaultPointStyle().copy().and(Styles.MARKER, Markers.ARROWHEAD));
     }
 
     @Override

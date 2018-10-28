@@ -54,12 +54,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * <p>
- *   GUI form for editing an {@link AttributeSet} for points.
- * </p>
- * <p>
- *   This class is not designed for serialization.
- * </p>
+ * GUI form for editing an {@link AttributeSet} for points.
  *
  * @author Elisha Peterson
  */
@@ -67,16 +62,16 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         ChangeListener, PropertyChangeListener {
 
     /** The style being edited */
-    private transient AttributeSet style = Styles.defaultPointStyle().copy();
+    private AttributeSet style = Styles.defaultPointStyle().copy();
 
     /** Spinner for radius */
     private JSpinner radiusSp = null;
     /** Spinner for stroke */
     private JSpinner strokeSp = null;
     /** Color editor for fill */
-    private transient ColorEditor fillEd = null;
+    private ColorEditor fillEd = null;
     /** Color editor for stroke */
-    private transient ColorEditor strokeEd = null;
+    private ColorEditor strokeEd = null;
     /** Combo box for shapes */
     private JComboBox shapeCombo = null;
 
@@ -143,12 +138,9 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         shapeCombo = new JComboBox(Markers.getAvailableMarkers().toArray());
         add(shapeCombo, gbc);
         shapeCombo.setRenderer(new ShapeListCellRenderer());
-        shapeCombo.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                style.put(Styles.MARKER, (Marker) shapeCombo.getSelectedItem());
-                fireStyleChanged();
-            }
+        shapeCombo.addActionListener(e -> {
+            style.put(Styles.MARKER, (Marker) shapeCombo.getSelectedItem());
+            fireStyleChanged();
         });
 
         setObject(style);
@@ -183,10 +175,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         }
     }
 
-
-    //
-    // EVENT HANDLING
-    //
+    //region EVENTS
     
     private void fireStyleChanged() {
         shapeCombo.repaint();
@@ -217,10 +206,9 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         fireStyleChanged();
     }
 
+    //endregion
 
-    //
-    // INNER CLASSES
-    //
+    //region INNER CLASSES
 
     /** Draws elements of the list using the settings elsewhere. */
     private class ShapeListCellRenderer extends DefaultListCellRenderer {
@@ -229,7 +217,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
             JLabel result = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             result.setToolTipText(value.toString());
             result.setText(null);
-            result.setIcon(new ShapeIcon((Marker)value));
+            result.setIcon(new ShapeIcon((Marker) value));
             return result;
         }
     }
@@ -243,8 +231,8 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
 
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
-            ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
+            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            double xc = c.getWidth() / 2.0, yc = c.getHeight() / 2.0;
             Marker shape1 = (Marker) style.get(Styles.MARKER);
             style.put(Styles.MARKER, shape);
             MarkerRenderer.getInstance().render(new Point2D.Double(xc, yc), style, (Graphics2D) g);
@@ -261,5 +249,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
             return 50;
         }
     }
+
+    //endregion
 
 }

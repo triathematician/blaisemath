@@ -1,7 +1,3 @@
-/*
- * GraphicComponentPanAndZoomHandler.java
- * Created Jun 5, 2013
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -77,13 +73,13 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     /** The component for the mouse handling */
     private final JGraphicComponent component;
     /** Hint box for zooming */
-    private transient Rectangle2D.Double zoomBox;
+    private Rectangle2D.Double zoomBox;
     /** Location mouse was first pressed at. */
-    private transient Point pressedAt = null;
+    private Point pressedAt = null;
     /** Stores keyboard modifiers for mouse. */
-    private transient String mode = null;
+    private String mode = null;
     /** Old bounds for the window. */
-    private transient Rectangle2D oldLocalBounds;
+    private Rectangle2D oldLocalBounds;
 
     /**
      * Initialize with given component. This method is private as the
@@ -107,19 +103,15 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         cpt.getOverlays().add(handler);
     }
     
-    
-
     @Override
     public void paint(Component component, Graphics2D canvas) {
         if (zoomBox != null) {
             ShapeRenderer.getInstance().render(zoomBox, ZOOM_BOX_STYLE, canvas);
         }
     }
-    
-    //
-    // MOUSE OPERATIONS
-    //
-    
+
+    //region MOUSE HANDLING
+
     private void initMouseGesture(MouseEvent e) {
         mode = MouseEvent.getModifiersExText(e.getModifiersEx());
         if (RECTANGLE_RESIZE_MODE.equals(mode) || PAN_MODE.equals(mode) || RESTRICTED_MOVEMENT_MODE.equals(mode)) {
@@ -227,11 +219,12 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         mouseLoc.y = Math.max(mouseLoc.y, bounds.getMinY());
         mouseLoc.y = Math.min(mouseLoc.y, bounds.getMaxY());
 
-        zoomPoint(component, component.toGraphicCoordinate(mouseLoc),
-                (e.getWheelRotation() > 0) ? 1.05 : 0.95);
+        zoomPoint(component, component.toGraphicCoordinate(mouseLoc), e.getWheelRotation() > 0 ? 1.05 : 0.95);
     }
 
-    //<editor-fold defaultstate="collapsed" desc="TRANSFORMS">
+    //endregion
+
+    //region TRANSFORMS
 
     /**
      * Get current boundaries displayed in component.
@@ -262,8 +255,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     @InvokedFromThread("multiple")
     public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle2D rect) {
         Insets insets = comp.getInsets();
-        Rectangle bounds = new Rectangle(insets.left, insets.top,
-                comp.getWidth() - insets.left - insets.right, comp.getHeight() - insets.top - insets.bottom);
+        Rectangle bounds = new Rectangle(insets.left, insets.top, comp.getWidth() - insets.left - insets.right, comp.getHeight() - insets.top - insets.bottom);
         setDesiredLocalBounds(comp, bounds, rect);
     }
     
@@ -277,12 +269,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      */
     @InvokedFromThread("multiple")
     public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle compBounds, final Rectangle2D rect) {
-        MoreSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
-            @Override
-            public void run() {
-                comp.setTransform(scaleRectTransform(compBounds, rect));
-            }
-        });
+        MoreSwingUtilities.invokeOnEventDispatchThread(() -> comp.setTransform(scaleRectTransform(compBounds, rect)));
     }
     
     /**
@@ -306,9 +293,9 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         return res;
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="ZOOM OPERATIONS">
+    //region ZOOM OPERATIONS
 
     /**
      * Sets bounds based on the zoom about a given point.
@@ -472,5 +459,5 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         });
     }
     
-    //</editor-fold> 
+    //endregion
 }

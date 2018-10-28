@@ -41,6 +41,7 @@ import javax.swing.JPopupMenu;
  *
  * @author Elisha Peterson
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ContextMenuTestFrame extends javax.swing.JFrame {
 
     /**
@@ -49,13 +50,11 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
     public ContextMenuTestFrame() {
         initComponents();
         PrimitiveGraphic g1 = JGraphics.shape(new Ellipse2D.Double(50,50,100,100));
-        g1.addContextMenuInitializer(new ContextMenuInitializer<Graphic>(){
-            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-                menu.add(""+point);
-                menu.add(new AbstractAction("press me"){
-                    public void actionPerformed(ActionEvent e) { System.out.println("pressed"); }
-                });
-            }
+        g1.addContextMenuInitializer((menu, src, point, focus, selection) -> {
+            menu.add(""+point);
+            menu.add(new AbstractAction("press me"){
+                public void actionPerformed(ActionEvent e) { System.out.println("pressed"); }
+            });
         });
         g1.setSelectionEnabled(true);
         gc.addGraphic(g1);
@@ -65,14 +64,12 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
         gc.addGraphic(g2);
         
         gc.setSelectionEnabled(true);
-        gc.getGraphicRoot().addContextMenuInitializer(new ContextMenuInitializer<Graphic<Graphics2D>>(){
-            public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
-                menu.setLabel("root label");
-                menu.add((selection == null ? 0 : selection.size()) + " graphics selected");
-                if (menu.getComponentCount() > 0)
-                    menu.addSeparator();
-                menu.add("Root menu option");
-            }
+        gc.getGraphicRoot().addContextMenuInitializer((menu, src, point, focus, selection) -> {
+            menu.setLabel("root label");
+            menu.add((selection == null ? 0 : selection.size()) + " graphics selected");
+            if (menu.getComponentCount() > 0)
+                menu.addSeparator();
+            menu.add("Root menu option");
         });
     }
 
@@ -113,23 +110,13 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ContextMenuTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ContextMenuTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ContextMenuTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | javax.swing.UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
             java.util.logging.Logger.getLogger(ContextMenuTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        //endregion
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ContextMenuTestFrame().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new ContextMenuTestFrame().setVisible(true));
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.googlecode.blaisemath.graphics.swing.JGraphicComponent gc;

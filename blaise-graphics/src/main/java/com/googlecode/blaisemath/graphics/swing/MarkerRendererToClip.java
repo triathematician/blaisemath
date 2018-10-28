@@ -1,7 +1,3 @@
-/*
- * MarkerRendererToClip.java
- * Created Oct 1, 2011
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -44,12 +40,7 @@ public class MarkerRendererToClip extends MarkerRenderer {
     /** Whether to extend in both directions, or just forward */
     protected boolean extendBothDirections = false;
 
-    /** Construct the style */
-    public MarkerRendererToClip() {
-    }
-
-    
-    //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
+    //region BUILDER PATTERNS
 
     /** 
      * Sets ray style and returns pointer to this object. 
@@ -71,19 +62,15 @@ public class MarkerRendererToClip extends MarkerRenderer {
         return this;
     }
 
-    // </editor-fold>
+    //endregion
 
     @Override
     public String toString() {
         return String.format("PointStyleInfinite[rayStyle=%s, extendBoth=%s]", 
                 rayRenderer, extendBothDirections);
     }
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+
+    //region PROPERTIES
 
     public PathRenderer getRayRenderer() {
         return rayRenderer;
@@ -101,27 +88,21 @@ public class MarkerRendererToClip extends MarkerRenderer {
         this.extendBothDirections = extendBoth;
     }
     
-    //</editor-fold>
-    
-    
+    //endregion
+
     @Override
     public void render(Point2D p, AttributeSet style, Graphics2D canvas) {
         double angle = p instanceof OrientedPoint2D ? ((OrientedPoint2D)p).angle : 0;
         Point2D p2 = new Point2D.Double(p.getX() + Math.cos(angle), p.getY() + Math.sin(angle));
         Point2D endpt = boundaryHit(p, p2, canvas.getClipBounds());
         if (extendBothDirections) {
-            Point2D endpt1 = boundaryHit(p2, p, canvas.getClipBounds());
-            rayRenderer.render(new Line2D.Double(endpt1, endpt), style, canvas);
+            Point2D endpoint1 = boundaryHit(p2, p, canvas.getClipBounds());
+            rayRenderer.render(new Line2D.Double(endpoint1, endpt), style, canvas);
         } else {
             rayRenderer.render(new Line2D.Double(p, endpt), style, canvas);
         }
         super.render(p, style, canvas);
     }
-
-
-    //
-    // UTILITY
-    //
 
     /**
      * Returns points at which the ray beginning at p1 and passing through p2 intersects the boundary of the window.
@@ -172,6 +153,5 @@ public class MarkerRendererToClip extends MarkerRenderer {
         }
         return new Point2D.Double(p2.x, p2.y);
     }
-
 
 }

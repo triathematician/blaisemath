@@ -60,10 +60,7 @@ public final class AnchoredImage extends Point2DBean {
         return "AnchoredImage{" + getX() + ',' + getY() + ',' + ref + '}';
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
+    //region PROPERTIES
 
     public String getReference() {
         return ref;
@@ -91,6 +88,6 @@ public final class AnchoredImage extends Point2DBean {
         return originalImage;
     }
     
-    //</editor-fold>
+    //endregion
     
 }

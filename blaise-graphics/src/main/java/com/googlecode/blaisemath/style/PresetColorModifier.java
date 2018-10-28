@@ -1,7 +1,3 @@
-/*
- * PresetColorModifier.java
- * Created May 9, 2013
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -25,6 +21,7 @@ package com.googlecode.blaisemath.style;
  */
 
 import java.awt.Color;
+import java.util.Set;
 
 /** 
  * Modifier that adjusts fill/stroke attributes to preset colors.
@@ -37,7 +34,7 @@ public class PresetColorModifier implements StyleModifier {
     private Color selectStroke = null;
 
     @Override
-    public AttributeSet apply(AttributeSet style, AttributeSet hints) {
+    public AttributeSet apply(AttributeSet style, Set<String> hints) {
         AttributeSet res = style;
         if (hints.contains(StyleHints.HILITE_HINT)) {
             res = AttributeSet.withParent(res).and(Styles.FILL, highlightFill).and(Styles.STROKE, highlightStroke);
@@ -48,10 +45,8 @@ public class PresetColorModifier implements StyleModifier {
         return res;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
+
     public Color getHighlightFill() {
         return highlightFill;
     }
@@ -83,6 +78,7 @@ public class PresetColorModifier implements StyleModifier {
     public void setSelectStroke(Color selectStroke) {
         this.selectStroke = selectStroke;
     }
-    //</editor-fold>
+
+    //endregion
     
 }

@@ -1,7 +1,3 @@
-/**
- * ImageRenderer.java
- * Created on Sep 12, 2014
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -48,24 +44,24 @@ public class ImageRenderer implements Renderer<AnchoredImage, Graphics2D> {
 
     @Override
     public void render(AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
-        Rectangle2D rect = boundingBox(primitive, style);
+        Rectangle2D rect = boundingBox(primitive, style, canvas);
         canvas.drawImage(primitive.getImage(), (int) (rect.getX()), (int) (rect.getY()), null);
     }
 
     @Override
-    public Rectangle2D boundingBox(AnchoredImage primitive, AttributeSet style) {
+    public Rectangle2D boundingBox(AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
         return anchor.rectangleAnchoredAt(primitive, primitive.getWidth(), primitive.getHeight());
     }
 
     @Override
-    public boolean contains(AnchoredImage primitive, AttributeSet style, Point2D point) {
-        return boundingBox(primitive, style).contains(point);
+    public boolean contains(Point2D point, AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
+        return boundingBox(primitive, style, canvas).contains(point);
     }
 
     @Override
-    public boolean intersects(AnchoredImage primitive, AttributeSet style, Rectangle2D rect) {
-        return boundingBox(primitive, style).intersects(rect);
+    public boolean intersects(Rectangle2D rect, AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
+        return boundingBox(primitive, style, canvas).intersects(rect);
     }
 
 }

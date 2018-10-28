@@ -21,6 +21,8 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toCollection;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
@@ -33,16 +35,15 @@ import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.swing.MoreSwingUtilities;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
@@ -58,7 +59,9 @@ import javax.swing.SwingUtilities;
 public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends GraphicComposite<G> {
 
     private static final Logger LOG = Logger.getLogger(DelegatingEdgeSetGraphic.class.getName());
-    public static final String EDGE_RENDERER_PROP = "edgeRenderer";
+
+    public static final String P_EDGE_RENDERER = "edgeRenderer";
+    public static final int DEFAULT_MAX_CACHE_SIZE = 5000;
 
     /** The edges in the graphic. */
     protected final Map<E,DelegatingPrimitiveGraphic<E,Shape,G>> edges = Maps.newHashMap();
@@ -80,7 +83,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
      * Initialize with default coordinate manager.
      */
     public DelegatingEdgeSetGraphic() {
-        this(CoordinateManager.<S,Point2D>create(5000), null);
+        this(CoordinateManager.create(DEFAULT_MAX_CACHE_SIZE), null);
     }
     
     /** 
@@ -88,22 +91,14 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
      * @param mgr manages source object loc
      * @param edgeRenderer edge renderer
      */
-    public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr,
-            Renderer<Shape,G> edgeRenderer) {
-        coordListener = new CoordinateListener<S,Point2D>(){
-            @Override
-            @InvokedFromThread("unknown")
-            public void coordinatesChanged(CoordinateChangeEvent<S,Point2D> evt) {
-                handleCoordinateChange(evt);
-            }
-        };
+    public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr, Renderer<Shape,G> edgeRenderer) {
+        coordListener = evt -> handleCoordinateChange(evt);
         
         setCoordinateManager(mgr);
         setEdgeRenderer(edgeRenderer);
     }
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
+
+    //region EVENTS
     
     @InvokedFromThread("unknown")
     private void handleCoordinateChange(final CoordinateChangeEvent<S,Point2D> evt) {
@@ -118,7 +113,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
         }
         CoordinateChangeEvent evt = updateQueue.poll();
         if (evt != null && evt.getSource() == pointManager) {
-            updateEdgeGraphics(pointManager.getActiveLocationCopy(), Lists.<Graphic<G>>newArrayList(), true);
+            updateEdgeGraphics(pointManager.getActiveLocationCopy(), Lists.newArrayList(), true);
         }
     }
     
@@ -168,13 +163,9 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
         }
     }
 
-    //</editor-fold>
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //endregion
+
+    //region PROPERTIES
     
     public CoordinateManager<S, Point2D> getCoordinateManager() {
         return pointManager;
@@ -192,11 +183,10 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
             this.pointManager = null;
             clearPendingUpdates();
             
-            // lock to ensure that no changes are made until after the listener
-            // has been setup
+            // lock to ensure that no changes are made until after the listener has been setup
             synchronized (mgr) {
                 this.pointManager = mgr;
-                updateEdgeGraphics(mgr.getActiveLocationCopy(), Lists.<Graphic<G>>newArrayList(), false);
+                updateEdgeGraphics(mgr.getActiveLocationCopy(), Lists.newArrayList(), false);
                 this.pointManager.addCoordinateListener(coordListener);
             }
             super.graphicChanged(this);
@@ -217,26 +207,13 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
      * @param newEdges new edges to put
      */
     public final void setEdges(Set<? extends E> newEdges) {
-        Set<E> addMe = Sets.newLinkedHashSet();
-        Set<E> removeMe = Sets.newHashSet();
-        for (E e : newEdges) {
-            if (!edges.containsKey(e)) {
-                addMe.add(e);
-            }
-        }
-        for (E e : edges.keySet()) {
-            if (!newEdges.contains(e)) {
-                removeMe.add(e);
-            }
-        }
+        Set<E> addMe = newEdges.stream().filter(e -> !edges.containsKey(e))
+                .collect(toCollection(Sets::newLinkedHashSet));
+        Set<E> removeMe = edges.keySet().stream().filter(e -> !newEdges.contains(e))
+                .collect(Collectors.toSet());
         if (!removeMe.isEmpty() || !addMe.isEmpty()) {
-            List<Graphic<G>> remove = Lists.newArrayList();
-            for (E e : removeMe) {
-                remove.add(edges.remove(e));
-            }
-            for (E e : addMe) {
-                edges.put(e, null);
-            }
+            List<Graphic<G>> remove = removeMe.stream().map(edges::remove).collect(Collectors.toList());
+            addMe.forEach(e -> edges.put(e, null));
             updateEdgeGraphics(pointManager.getActiveLocationCopy(), remove, true);
         }
     }
@@ -257,17 +234,12 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
     public void setEdgeStyler(ObjectStyler<E> styler) {
         if (this.edgeStyler != styler) {
             this.edgeStyler = styler;
-            for (DelegatingPrimitiveGraphic<E,Shape,G> dsg : edges.values()) {
-                if (dsg != null) {
-                    dsg.setObjectStyler(styler);
-                }
-            }
+            edges.values().stream().filter(Objects::nonNull).forEach(e -> e.setObjectStyler(styler));
             fireGraphicChanged();
         }
     }
 
-    @Nullable 
-    public Renderer<Shape, G> getEdgeRenderer() {
+    public @Nullable Renderer<Shape, G> getEdgeRenderer() {
         return edgeRenderer;
     }
 
@@ -275,23 +247,20 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
         if (this.edgeRenderer != renderer) {
             Object old = this.edgeRenderer;
             this.edgeRenderer = renderer;
-            for (DelegatingPrimitiveGraphic<E,Shape,G> edge : edges.values()) {
-                edge.setRenderer(renderer);
-            }
+            edges.values().forEach(e -> e.setRenderer(renderer));
             fireGraphicChanged();
-            pcs.firePropertyChange(EDGE_RENDERER_PROP, old, renderer);
+            pcs.firePropertyChange(P_EDGE_RENDERER, old, renderer);
         }
     }
     
-    //</editor-fold>
-
+    //endregion
 
     @Override
-    public void initContextMenu(JPopupMenu menu, Graphic<G> src, Point2D point, Object focus, Set selection) {
+    public void initContextMenu(JPopupMenu menu, Graphic<G> src, Point2D point, Object focus, Set<Graphic<G>> selection, G canvas) {
         // provide additional info for context menu
-        Graphic<G> gfc = graphicAt(point);
+        Graphic<G> gfc = graphicAt(point, canvas);
         super.initContextMenu(menu, this, point, 
                 gfc instanceof DelegatingPrimitiveGraphic ? ((DelegatingPrimitiveGraphic)gfc).getSourceObject() : focus, 
-                selection);
+                selection, canvas);
     }
 }

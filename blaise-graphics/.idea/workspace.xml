@@ -1,0 +1,1324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0de0904f-6a22-4730-ad5b-93fe7d63e3ad" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../blaise-graphtheory3/blaise-graphtheory3.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../blaise-svg/blaise-svg.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/style/AttributeSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/style/AttributeSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/util/SetSelectionModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/util/SetSelectionModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-common/src/test/java/com/googlecode/blaisemath/style/AttributeSetCoderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-common/src/test/java/com/googlecode/blaisemath/style/AttributeSetCoderTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-common/src/test/java/com/googlecode/blaisemath/style/AttributeSetTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-common/src/test/java/com/googlecode/blaisemath/style/AttributeSetTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/AttributeGraphicUpdater.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/AttributeGraphicUpdater.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/BasicPointSetGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/BasicPointSetGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingEdgeSetGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingEdgeSetGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingNodeLinkGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingNodeLinkGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPointSetGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPointSetGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPrimitiveArrayGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPrimitiveArrayGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPrimitiveGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPrimitiveGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GMouseDragHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GMouseDragHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GMouseEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GMouseEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/Graphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/Graphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicComposite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicComposite.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicMoveHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicMoveHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicUpdater.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicUpdater.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/HighlightOnMouseoverHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/HighlightOnMouseoverHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/LabeledPointGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/LabeledPointGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveArrayGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveArrayGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveArrayGraphicSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveArrayGraphicSupport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphicSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphicSupport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/UpdatingGraphicComposite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/UpdatingGraphicComposite.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredIcon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredIcon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredText.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredText.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ArrowPathRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ArrowPathRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/GradientShapeRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/GradientShapeRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/IconRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/IconRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ImageRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ImageRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicRoot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicRoot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicSelectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicSelectionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/LabeledShapeGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/LabeledShapeGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MarkerRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MarkerRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MarkerRendererToClip.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MarkerRendererToClip.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MultilineTextRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MultilineTextRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/PanAndZoomHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/PanAndZoomHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/PathRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/PathRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/SegmentGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/SegmentGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ShapeRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ShapeRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TaperedPathRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TaperedPathRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextPathRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextPathRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextStroke.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextStroke.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TwoPointGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TwoPointGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/WrappedTextRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/WrappedTextRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/ColorModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/ColorModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/ObjectStyler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/ObjectStyler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/PresetColorModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/PresetColorModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/Renderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StrokeWidthModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StrokeWidthModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StyleContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StyleContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StyleHints.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StyleHints.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StyleModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StyleModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/Styles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/Styles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/SvgAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/SvgAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/editor/AttributeSetPropertyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/editor/AttributeSetPropertyModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/editor/BasicPointStyleEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/editor/BasicPointStyleEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/editor/MarkerEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/editor/MarkerEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/core/DelegatingEdgeSetGraphicTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/core/DelegatingEdgeSetGraphicTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/core/DelegatingPointSetGraphicTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/core/DelegatingPointSetGraphicTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/core/GraphicCompositeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/core/GraphicCompositeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/swing/AnchorTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/swing/AnchorTestFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/BlaiseGraphicsTestApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/BlaiseGraphicsTestApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/BlaiseGraphicsTestFrameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/BlaiseGraphicsTestFrameView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/ContextMenuTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/ContextMenuTestFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/HelloWorldTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/HelloWorldTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/PanAndZoomTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/PanAndZoomTestFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/SelectionTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/SelectionTestFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/TooltipTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/TooltipTestFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/StyleHintsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/StyleHintsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/StylesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/StylesTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/editor/AttributeSetPropertyModelTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/editor/AttributeSetPropertyModelTestFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/com/googlecode/blaisemath/graphics/testui/resources/BlaiseGraphicsTestApp.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/com/googlecode/blaisemath/graphics/testui/resources/BlaiseGraphicsTestApp.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphMetrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphMetrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/IterativeGraphLayoutState.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/IterativeGraphLayoutState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/NodeInGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/NodeInGraph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/OptimizedGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/OptimizedGraph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/GraphLayoutManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/GraphLayoutManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/IterativeGraphLayoutManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/IterativeGraphLayoutManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/IterativeGraphLayoutService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/IterativeGraphLayoutService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/DefaultGeneratorParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/DefaultGeneratorParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/DegreeDistributionGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/DegreeDistributionGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/EdgeCountGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/EdgeCountGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/EdgeLikelihoodGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/EdgeLikelihoodGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/ExtendedGeneratorParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/ExtendedGeneratorParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/PreferentialAttachmentGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/PreferentialAttachmentGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/ProximityGraphGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/ProximityGraphGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/WattsStrogatzGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/WattsStrogatzGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/LayoutRegion.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/LayoutRegion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/RandomBoxLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/RandomBoxLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/SpringLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/SpringLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/SpringLayoutParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/SpringLayoutParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/SpringLayoutState.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/SpringLayoutState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/StaticSpringLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/StaticSpringLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/GraphComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/GraphComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/VisualGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/VisualGraph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/WeightedEdgeStyler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/WeightedEdgeStyler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/util/GAInstrument.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/util/GAInstrument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/AnimationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/AnimationUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppCanvas.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppCanvas.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppFrameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppFrameView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/MetricScaler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/MetricScaler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/test/MyTestGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/test/MyTestGraph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/graphics/svg/SVGElementGraphicConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/graphics/svg/SVGElementGraphicConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/graphics/svg/SVGGraphic.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/graphics/svg/SVGGraphic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/graphics/svg/SVGGraphicComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/graphics/svg/SVGGraphicComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGCircle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGEllipse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGEllipse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGPath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGPolygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGPolygon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGPolyline.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGPolyline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGRectangle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGRoot.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGRoot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGText.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/main/java/com/googlecode/blaisemath/svg/SVGText.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/test/java/com/googlecode/blaisemath/svg/BlaiseGraphicsTestApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/test/java/com/googlecode/blaisemath/svg/BlaiseGraphicsTestApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-svg/src/test/java/com/googlecode/blaisemath/svg/SVGTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-svg/src/test/java/com/googlecode/blaisemath/svg/SVGTool.java" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path="$PROJECT_DIR$/../blaise-common/target/" />
+    <ignored path="$PROJECT_DIR$/../blaise-graphtheory3/target/" />
+    <ignored path="$PROJECT_DIR$/../blaise-svg/target/" />
+    <ignored path="$PROJECT_DIR$/../../blaise-app/blaise-app/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/blaise_graphics$All_in_blaise_common.ic" NAME="All in blaise-common Coverage Results" MODIFIED="1539778726644" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="39104649">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="GraphGrowthRule" value="1" />
+          <entry key="Marker" value="1" />
+          <entry key="class" value="1" />
+          <entry key="form" value="1" />
+          <entry key="html" value="5" />
+          <entry key="java" value="253" />
+          <entry key="xml" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="CLASS" value="1" />
+          <entry key="GUI_DESIGNER_FORM" value="1" />
+          <entry key="HTML" value="5" />
+          <entry key="JAVA" value="252" />
+          <entry key="SPI" value="2" />
+          <entry key="Scratch" value="1" />
+          <entry key="XML" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="Marker" value="6" />
+          <entry key="java" value="12110" />
+          <entry key="txt" value="235" />
+          <entry key="xml" value="10" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="12110" />
+          <entry key="PLAIN_TEXT" value="235" />
+          <entry key="SPI" value="6" />
+          <entry key="XML" value="10" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/BasicPointSetGraphic.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="241">
+              <caret line="149" column="59" selection-start-line="149" selection-start-column="59" selection-end-line="149" selection-end-column="59" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#3403#3404#0" expanded="true" />
+                <element signature="e#3449#3450#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/BlaiseGraphicsTestApp.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-430">
+              <caret line="225" column="36" selection-start-line="225" selection-start-column="36" selection-end-line="225" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/StyleHintsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="156">
+              <caret line="35" column="31" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveArrayGraphicSupport.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="112" column="19" selection-start-line="112" selection-start-column="19" selection-end-line="112" selection-end-column="19" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicMoveHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="275">
+              <caret line="47" column="49" lean-forward="true" selection-start-line="47" selection-start-column="49" selection-end-line="47" selection-end-column="49" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/coordinate/DraggableCoordinate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphicSupport.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1074">
+              <caret line="174" column="18" selection-start-line="174" selection-start-column="18" selection-end-line="174" selection-end-column="18" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#setDragEnabled#0;class#PrimitiveGraphicSupport#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/ColorModifier.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="32" column="61" selection-start-line="32" selection-start-column="61" selection-end-line="32" selection-end-column="61" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/PresetColorModifier.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-48">
+              <caret line="36" column="60" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicSelectionHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="833">
+              <caret line="119" lean-forward="true" selection-start-line="119" selection-end-line="119" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>xml</find>
+      <find>petereb1</find>
+      <find>Elisha</find>
+      <find>Elisha\b(?! )</find>
+      <find>boundingbox</find>
+      <find>javax.annotation</find>
+      <find>base.predicate</find>
+      <find>import com.google.common.base</find>
+      <find>e</find>
+      <find>functions.</find>
+      <find>foreachordered</find>
+      <find>transient</find>
+      <find>//&lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;PROPERTIES&quot;&gt;</find>
+      <find>//&lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;PROPERTY PATTERNS&quot;&gt;</find>
+      <find>//&lt;/editor-fold&gt;</find>
+      <find>//&lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;INNER CLASSES&quot;&gt;</find>
+      <find>Component</find>
+      <find>canvas</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>Elisha Peterson</replace>
+      <replace>//endregion</replace>
+      <replace>//region INNER CLASSES</replace>
+      <replace>//region PROPERTIES</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>C:\Users\triat\Code\blaisemath\blaise-graphics</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/WeightedEdgeStyler.java" />
+        <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/GraphComponent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicUpdater.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/AttributeGraphicUpdater.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/HighlightOnMouseoverHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/LabeledPointGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveArrayGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveArrayGraphicSupport.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphicSupport.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/UpdatingGraphicComposite.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredIcon.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredImage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredText.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/swing/AnchorTestFrame.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ArrowPathRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/IconRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ImageRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicComponent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicComposite.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/Graphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicRoot.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicSelectionHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/LabeledShapeGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MarkerRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MarkerRendererToClip.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MultilineTextRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/PanAndZoomHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/PathRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/Styles.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StyleContext.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/SegmentGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ShapeRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TwoPointGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/StyledText.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TaperedPathRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextPathRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextStroke.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/WrappedTextRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingEdgeSetGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPointSetGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPrimitiveArrayGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPrimitiveGraphic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StrokeWidthModifier.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/ColorModifier.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/PresetColorModifier.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/BasicPointSetGraphic.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/BlaiseGraphicsTestApp.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/StyleHintsTest.java" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="Profiles" type="6783ec58:MavenProjectsStructure$ProfilesNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="blaise-graphtheory3" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="blaise-graphtheory3" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Dependencies" type="f4be9f2a:MavenProjectsStructure$DependenciesNode" />
+        </path>
+      </expand>
+      <select />
+    </treeState>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="-7" />
+    <option name="width" value="1692" />
+    <option name="height" value="1047" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State />
+          <State>
+            <id>Java</id>
+          </State>
+          <State>
+            <id>Probable bugsJava</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>NullableProblems</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="PackagesPane" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="blaise-graphics" type="b2602c69:ProjectViewProjectNode" />
+              <item name="blaise-common" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="blaise-graphics" type="58d84e3e:PackageViewProjectNode" />
+              <item name="blaise-graphics" type="616d4139:PackageViewModuleNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="58d84e3e:PackageViewProjectNode" />
+              <item name="blaise-graphics" type="616d4139:PackageViewModuleNode" />
+              <item name="com.googlecode.blaisemath.graphics.core" type="1f31426a:PackageElementNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Scope 'Tests'; set:Tests; class com.intellij.psi.search.scope.TestsScope">
+          <expand>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-graphics" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-graphics" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-graphics" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="test" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <subPane subId="Scope 'Problems'; set:Problems; class com.intellij.psi.search.scope.ProblemsScope">
+          <expand>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-common" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-common" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-common" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="test" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-common" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="test" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-common" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="test" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="com.googlecode.blaisemath.style" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-graphics" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-graphics" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-graphics" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-graphics" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="blaise-graphics" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="blaise-graphics" type="2674bda8:ScopeViewTreeModel$GroupNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="main" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="java" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="com.googlecode.blaisemath.style" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SearchEverywhereHistoryKey" value="anchor&#9;FILE&#9;file://C:/Users/triat/Code/blaisemath/blaise-common/src/main/java/com/googlecode/blaisemath/style/Anchor.java" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540748752000" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../blaise-app/blaise-app/pom.xml" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.language" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveInnerDialog.RECENTS_KEY">
+      <recent name="com.googlecode.blaisemath.graphics.swing" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.googlecode.blaisemath.style" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="JUnit.All in blaise-graphics">
+    <configuration name="BlaiseGraphicsTestApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.googlecode.blaisemath.graphics.testui.BlaiseGraphicsTestApp" />
+      <module name="blaise-graphics" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.googlecode.blaisemath.graphics.testui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All Features in: test" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
+      <option name="CUCUMBER_CORE_VERSION" value="3" />
+      <option name="FILE_PATH" value="$PROJECT_DIR$/../blaise-common/src/test" />
+      <option name="MAIN_CLASS_NAME" value="cucumber.api.cli.Main" />
+      <module name="blaise-common" />
+      <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvm3SMFormatter" />
+      <option name="SUGGESTED_NAME" value="All Features in: test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cucumber.api.cli.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in blaise-common (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="blaise-common" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in blaise-common" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="blaise-common" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in blaise-graphics" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="blaise-graphics" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.BlaiseGraphicsTestApp" />
+      <item itemvalue="Cucumber java.All Features in: test" />
+      <item itemvalue="JUnit.All in blaise-common" />
+      <item itemvalue="JUnit.All in blaise-common (1)" />
+      <item itemvalue="JUnit.All in blaise-graphics" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.All in blaise-graphics" />
+        <item itemvalue="JUnit.All in blaise-common (1)" />
+        <item itemvalue="JUnit.All in blaise-common" />
+        <item itemvalue="Cucumber java.All Features in: test" />
+        <item itemvalue="Application.BlaiseGraphicsTestApp" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",SHOW_FIELDS,SHOW_NON_PUBLIC,SHOW_PROPERTIES" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0de0904f-6a22-4730-ad5b-93fe7d63e3ad" name="Default Changelist" comment="" />
+      <created>1539601781284</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1539601781284</updated>
+      <workItem from="1539601785711" duration="14757000" />
+      <workItem from="1540635407940" duration="8172000" />
+      <workItem from="1540737093052" duration="11557000" />
+    </task>
+    <task id="LOCAL-00001" summary="Refactor anchor code; remove xml code; some other code cleanup">
+      <created>1539698441877</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1539698441877</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fixed marker renders">
+      <created>1539778322418</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1539778322418</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Updated author docs">
+      <created>1539778369328</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1539778369328</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Code cleanup">
+      <created>1539779418539</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1539779418539</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="All_in_blaise-common - 2018.10.15 at 07h 17m 59s.xml">
+      <configuration name="All in blaise-common" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_blaise-graphics - 2018.10.15 at 08h 54m 18s.xml">
+      <configuration name="All in blaise-graphics" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_Features_in__test - 2018.10.17 at 08h 18m 09s.xml">
+      <configuration name="All Features in: test" configurationId="CucumberJavaRunConfigurationType" />
+    </history-entry>
+    <history-entry file="All_in_blaise-common - 2018.10.17 at 08h 18m 59s.xml">
+      <configuration name="All in blaise-common" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_blaise-common_(1) - 2018.10.17 at 08h 29m 31s.xml">
+      <configuration name="All in blaise-common (1)" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_blaise-graphics - 2018.10.17 at 08h 29m 41s.xml">
+      <configuration name="All in blaise-graphics" configurationId="JUnit" />
+    </history-entry>
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="34486000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="0" width="1692" height="1047" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.51428574" visible="true" weight="0.24142157" />
+      <window_info id="Structure" order="1" sideWeight="0.4857143" side_tool="true" visible="true" weight="0.24142157" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49632353" weight="0.26396495" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49880764" weight="0.35683298" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39978093" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.22559653" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Inspection Results" order="8" sideWeight="0.49801272" visible="true" weight="0.48698482" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50306374" side_tool="true" visible="true" weight="0.3483023" />
+      <window_info active="true" anchor="bottom" id="Messages" order="10" sideWeight="0.49693626" visible="true" weight="0.3483023" />
+      <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="12" show_stripe_button="false" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Maven Projects" order="5" sideWeight="0.4989429" weight="0.2706645" />
+      <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="right" id="Coverage" order="9" sideWeight="0.5010571" side_tool="true" visible="true" weight="0.2027027" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Refactor anchor code; remove xml code; some other code cleanup" />
+    <MESSAGE value="Fixed marker renders" />
+    <MESSAGE value="Updated author docs" />
+    <MESSAGE value="Code cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code cleanup" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1631#1650#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/AttributeGraphicUpdater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="85" column="52" selection-start-line="85" selection-start-column="46" selection-end-line="85" selection-end-column="52" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicUpdater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="45" column="25" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/UpdatingGraphicComposite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="845">
+          <caret line="61" column="4" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3067#3086#0" />
+            <element signature="method#updateItemGraphics#0;class#UpdatingGraphicComposite#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredIcon.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="57" column="15" selection-start-line="57" selection-start-column="15" selection-end-line="57" selection-end-column="15" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredImage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1185">
+          <caret line="90" column="15" selection-start-line="90" selection-start-column="15" selection-end-line="90" selection-end-column="15" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/AnchoredText.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="884">
+          <caret line="66" column="4" selection-start-line="66" selection-start-column="4" selection-end-line="66" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1411#1430#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/swing/AnchorTestFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="316" column="9" selection-start-line="316" selection-start-column="9" selection-end-line="316" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ArrowPathRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="144" column="13" selection-start-line="144" selection-start-column="13" selection-end-line="144" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/CanvasPainter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ImageRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="46" column="63" selection-start-line="46" selection-start-column="63" selection-end-line="46" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/IconRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="63" column="13" lean-forward="true" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/GradientShapeRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="44" column="5" lean-forward="true" selection-start-line="44" selection-start-column="5" selection-end-line="44" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/Graphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="292" column="112" selection-start-line="292" selection-start-column="112" selection-end-line="292" selection-end-column="112" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicComposite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="307">
+          <caret line="465" column="90" selection-start-line="465" selection-start-column="90" selection-end-line="465" selection-end-column="90" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="488">
+          <caret line="93" column="39" lean-forward="true" selection-start-line="93" selection-start-column="39" selection-end-line="93" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4391#4410#0" />
+            <element signature="e#5219#5234#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="137" column="50" selection-start-line="137" selection-start-column="50" selection-end-line="137" selection-end-column="50" />
+          <folding>
+            <element signature="e#4541#4542#0" expanded="true" />
+            <element signature="e#4592#4593#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/LabeledShapeGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-90">
+          <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1798#1817#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MarkerRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1394">
+          <caret line="86" column="82" selection-start-line="86" selection-start-column="82" selection-end-line="86" selection-end-column="82" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MarkerRendererToClip.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2023">
+          <caret line="155" lean-forward="true" selection-start-line="155" selection-end-line="155" />
+          <folding>
+            <element signature="e#1439#1464#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/MultilineTextRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1360">
+          <caret line="86" column="60" selection-start-line="86" selection-start-column="60" selection-end-line="86" selection-end-column="60" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/PanAndZoomHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1773">
+          <caret line="297" column="4" selection-start-line="297" selection-start-column="4" selection-end-line="297" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4086#4109#0" />
+            <element signature="e#8111#8130#0" />
+            <element signature="e#11650#11674#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/PathRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-459">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StyleContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="95" column="61" selection-start-line="95" selection-start-column="61" selection-end-line="95" selection-end-column="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1883#1884#0" expanded="true" />
+            <element signature="e#1924#1925#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/Styles.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="335">
+          <caret line="505" column="58" lean-forward="true" selection-start-line="505" selection-start-column="58" selection-end-line="505" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/SegmentGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-413">
+          <caret line="39" column="41" lean-forward="true" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/ShapeRenderer.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/StyledText.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TaperedPathRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="505">
+          <caret line="39" column="78" selection-start-line="39" selection-start-column="78" selection-end-line="39" selection-end-column="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextPathRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="884">
+          <caret line="84" column="4" selection-start-line="84" selection-start-column="4" selection-end-line="84" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1537#1554#0" />
+            <element signature="e#2299#2318#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-617">
+          <caret line="51" selection-start-line="51" selection-end-line="51" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TextStroke.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="131">
+          <caret line="36" selection-start-line="36" selection-end-line="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TransformedCanvasPainter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="37">
+          <caret line="33" column="22" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TransformedCoordinateSpace.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29">
+          <caret line="32" column="17" selection-start-line="32" selection-start-column="17" selection-end-line="32" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/TwoPointGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="82" column="58" lean-forward="true" selection-start-line="82" selection-start-column="58" selection-end-line="82" selection-end-column="58" />
+          <folding>
+            <element signature="e#3309#3324#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/WrappedTextRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1836">
+          <caret line="152" column="128" selection-start-line="152" selection-start-column="128" selection-end-line="152" selection-end-column="128" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2306#2331#0" />
+            <element signature="e#2838#2857#0" />
+            <element signature="e#5871#5899#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPointSetGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="276" column="48" lean-forward="true" selection-start-line="276" selection-start-column="48" selection-end-line="276" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingEdgeSetGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="260" column="50" lean-forward="true" selection-start-line="260" selection-start-column="50" selection-end-line="260" selection-end-column="50" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPrimitiveArrayGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="86" column="13" selection-start-line="86" selection-start-column="13" selection-end-line="86" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1774#1793#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/DelegatingPrimitiveGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="91" column="51" selection-start-line="91" selection-start-column="51" selection-end-line="91" selection-end-column="51" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1824#1843#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/StrokeWidthModifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="366">
+          <caret line="31" column="61" selection-start-line="31" selection-start-column="61" selection-end-line="31" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/ColorModifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="32" column="61" selection-start-line="32" selection-start-column="61" selection-end-line="32" selection-end-column="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/style/PresetColorModifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-48">
+          <caret line="36" column="60" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/GraphicMoveHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="47" column="49" lean-forward="true" selection-start-line="47" selection-start-column="49" selection-end-line="47" selection-end-column="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/coordinate/DraggableCoordinate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveGraphicSupport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1074">
+          <caret line="174" column="18" selection-start-line="174" selection-start-column="18" selection-end-line="174" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#setDragEnabled#0;class#PrimitiveGraphicSupport#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/PrimitiveArrayGraphicSupport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="112" column="19" selection-start-line="112" selection-start-column="19" selection-end-line="112" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/swing/JGraphicSelectionHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="833">
+          <caret line="119" lean-forward="true" selection-start-line="119" selection-end-line="119" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/googlecode/blaisemath/graphics/core/BasicPointSetGraphic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="241">
+          <caret line="149" column="59" selection-start-line="149" selection-start-column="59" selection-end-line="149" selection-end-column="59" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3403#3404#0" expanded="true" />
+            <element signature="e#3449#3450#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/graphics/testui/BlaiseGraphicsTestApp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-430">
+          <caret line="225" column="36" selection-start-line="225" selection-start-column="36" selection-end-line="225" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/googlecode/blaisemath/style/StyleHintsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="35" column="31" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

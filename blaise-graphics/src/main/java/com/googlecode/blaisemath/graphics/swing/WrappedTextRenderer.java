@@ -1,8 +1,3 @@
-/*
- * WrappedTextRenderer.java
- * Created on Jan 2, 2013
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -28,16 +23,10 @@ package com.googlecode.blaisemath.graphics.swing;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.style.Anchor;
-import static com.googlecode.blaisemath.style.Anchor.EAST;
-import static com.googlecode.blaisemath.style.Anchor.NORTH;
-import static com.googlecode.blaisemath.style.Anchor.NORTHEAST;
-import static com.googlecode.blaisemath.style.Anchor.NORTHWEST;
-import static com.googlecode.blaisemath.style.Anchor.SOUTH;
-import static com.googlecode.blaisemath.style.Anchor.SOUTHEAST;
-import static com.googlecode.blaisemath.style.Anchor.SOUTHWEST;
-import static com.googlecode.blaisemath.style.Anchor.WEST;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -47,8 +36,9 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -66,16 +56,13 @@ public class WrappedTextRenderer extends TextRenderer {
     protected RectangularShape clipPath;
     /** Insets used for text anchoring. */
     private Insets insets = defaultInsets();
-
-    public WrappedTextRenderer() {
-    }
     
     @Override
     public String toString() {
         return String.format("WrappedTextRenderer[clip=%s]", clipPath);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
+    //region BUILDER PATTERNS
 
     /** 
      * Sets clip and returns pointer to object
@@ -97,13 +84,9 @@ public class WrappedTextRenderer extends TextRenderer {
         return this;
     }
     
-    //</editor-fold>
-    
+    //endregion
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
     
     public RectangularShape getTextBounds() {
         return clipPath;
@@ -121,9 +104,8 @@ public class WrappedTextRenderer extends TextRenderer {
         this.insets = insets;
     }
 
-    //</editor-fold>
-    
-    
+    //endregion
+
     @Override
     public void render(AnchoredText text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
@@ -134,6 +116,20 @@ public class WrappedTextRenderer extends TextRenderer {
         for (StyledText t : lines) {
             TextRenderer.getInstance().render(t.getText(), t.getStyle(), canvas);
         }
+    }
+
+    @Override
+    public Rectangle2D boundingBox(AnchoredText text, AttributeSet style, Graphics2D canvas) {
+        if (Strings.isNullOrEmpty(text.getText())) {
+            return null;
+        }
+        Iterable<StyledText> lines = computeLines(text.getText(), style, clipPath, getInsets(), canvas);
+        Rectangle2D res = null;
+        for (StyledText t : lines) {
+            Rectangle2D box = TextRenderer.getInstance().boundingBox(t.getText(), t.getStyle(), canvas);
+            res = res == null ? box : res.createUnion(box);
+        }
+        return res;
     }
     
     /**
@@ -154,7 +150,12 @@ public class WrappedTextRenderer extends TextRenderer {
      * @param canvas target canvas
      * @return text to render
      */
-    public static Iterable<StyledText> computeLines(String text, AttributeSet style, Shape textBounds, Insets insets, Graphics2D canvas) {
+    public static Iterable<StyledText> computeLines(String text, AttributeSet style, Shape textBounds, Insets insets, @Nullable Graphics2D canvas) {
+        if (canvas == null) {
+            canvas = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).createGraphics();
+            canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        }
+
         Rectangle2D bounds = textBounds.getBounds2D();
         if (textBounds instanceof Ellipse2D) {
             Ellipse2D textClip = new Ellipse2D.Double(
@@ -169,13 +170,15 @@ public class WrappedTextRenderer extends TextRenderer {
         }
     }
 
+    //region COMPUTE LINE BREAKS
+
     private static List<StyledText> computeEllipseLines(String text, AttributeSet style, Ellipse2D ell, Graphics2D canvas) {
         canvas.setFont(Styles.fontOf(style));
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
         
         AttributeSet centeredStyle = AttributeSet.withParent(style).and(Styles.TEXT_ANCHOR, Anchor.CENTER);
         if (bounds.getWidth() < ell.getWidth() - 8 || ell.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
-            return Arrays.asList(new StyledText(new AnchoredText(ell.getCenterX(), ell.getCenterY(), text), centeredStyle));
+            return Collections.singletonList(new StyledText(new AnchoredText(ell.getCenterX(), ell.getCenterY(), text), centeredStyle));
         } else {
             return computeRectangleLines(text, centeredStyle,
                     new Rectangle2D.Double(
@@ -271,7 +274,7 @@ public class WrappedTextRenderer extends TextRenderer {
         FontRenderContext frc = new FontRenderContext(null, true, true);
         Rectangle2D sBounds = font.getStringBounds(string, frc);
 
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         int length = string.length();
         if (length == 0) {
             // do nothing
@@ -328,23 +331,6 @@ public class WrappedTextRenderer extends TextRenderer {
         return lines;
     }
 
-    /** Augments {@link AnchoredText} with style information. */
-    public static class StyledText {
-        private final AnchoredText text;
-        private final AttributeSet style;
+    //endregion
 
-        public StyledText(AnchoredText text, AttributeSet style) {
-            this.text = text;
-            this.style = style;
-        }
-
-        public AnchoredText getText() {
-            return text;
-        }
-
-        public AttributeSet getStyle() {
-            return style;
-        }
-    }
-    
 }

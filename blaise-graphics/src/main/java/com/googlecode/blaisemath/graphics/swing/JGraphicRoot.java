@@ -1,8 +1,3 @@
-/*
- * GraphicRoot.java
- * Created Jan 12, 2011
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -41,24 +36,20 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.util.Set;
-import javax.annotation.Nonnull;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 /**
- * <p>
- *      Manages the entries on a {@link JGraphicComponent}.
- *      The primary additional behavior implemented by {@code GraphicRoot}, beyond that of its parent
- *      {@code GraphicComposite}, is listening to mouse events on the component and
- *      generating {@link GMouseEvent}s from them.
- * </p>
- * <p>
- *      Subclasses might provide additional behavior such as (i) caching the shapes to be drawn
- *      to avoid expensive recomputation, or (ii) sorting the shapes into an alternate draw order
- *      (e.g. for projections from 3D to 2D).
- * </p>
- * 
+ * Manages the entries on a {@link JGraphicComponent}.
+ * The primary additional behavior implemented by {@code GraphicRoot}, beyond that of its parent
+ * {@code GraphicComposite}, is listening to mouse events on the component and
+ * generating {@link GMouseEvent}s from them.
+ * <p/>
+ * Subclasses might provide additional behavior such as (i) caching the shapes to be drawn
+ * to avoid expensive recomputation, or (ii) sorting the shapes into an alternate draw order
+ * (e.g. for projections from 3D to 2D).
+ *
  * @author Elisha Peterson
  */
 public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
@@ -69,12 +60,11 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
     protected final JPopupMenu popup = new JPopupMenu();
     
     /** Provides a pluggable way to generate mouse events */
-    @Nonnull 
     protected GMouseEvent.Factory mouseFactory = new GMouseEvent.Factory();
     /** Current owner of mouse events. Gets first priority for mouse events that occur. */
-    private transient Graphic mouseGraphic = null;
+    private Graphic mouseGraphic = null;
     /** Tracks current mouse location */
-    private transient Point2D mouseLoc = null;
+    private Point2D mouseLoc = null;
 
     /** 
      * Construct a default instance
@@ -98,9 +88,8 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 if (mouseLoc != null) {
                     popup.removeAll();
-                    Set<Graphic<Graphics2D>> selected = owner.isSelectionEnabled() 
-                            ? owner.getSelectionModel().getSelection() : null;
-                    initContextMenu(popup, null, mouseLoc, null, selected);
+                    Set<Graphic<Graphics2D>> selected = owner.isSelectionEnabled() ? owner.getSelectionModel().getSelection() : null;
+                    initContextMenu(popup, null, mouseLoc, null, selected, owner.canvas());
                     if (popup.getComponentCount() == 0) {
                         // cancel popup
                     }
@@ -117,10 +106,7 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
         });
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
 
     @Override
     public void setParent(GraphicComposite p) {
@@ -151,12 +137,9 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
         }
     }
     
-    //</editor-fold>
+    //endregion
 
-
-    //
-    // EVENT HANDLING
-    //
+    //region EVENTS
 
     @Override
     protected void fireGraphicChanged() {
@@ -170,17 +153,9 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
         }
     }
 
-
-    //<editor-fold defaultstate="collapsed" desc="MOUSE HANDLING">
-    //
-    // MOUSE HANDLING
-    // this code handles translation of mouse events on the component
-    //   to mouse events on the graphics
-    //
-
     /**
      * Create GraphicMouseEvent from given event.
-     * @param mouseEvent mouse event
+     * @param e mouse event
      * @return associated graphic mouse event
      */
     private GMouseEvent graphicMouseEvent(MouseEvent e) {
@@ -195,14 +170,15 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
      * Change current owner of mouse events.
      * @param gme graphic mouse event
      * @param keepCurrent whether to maintain current selection even if it's behind another graphic
+     * @param canvas target canvas
      */
-    private void updateMouseGraphic(GMouseEvent gme, boolean keepCurrent) {
+    private void updateMouseGraphic(GMouseEvent gme, boolean keepCurrent, Graphics2D canvas) {
         if (keepCurrent && mouseGraphic != null
                 && GraphicUtils.isFunctional(mouseGraphic)
-                && mouseGraphic.contains(gme.getGraphicLocation())) {
+                && mouseGraphic.contains(gme.getGraphicLocation(), canvas)) {
             return;
         }
-        Graphic nue = mouseGraphicAt(gme.getGraphicLocation());
+        Graphic nue = mouseGraphicAt(gme.getGraphicLocation(), canvas);
         if (!Objects.equal(mouseGraphic, nue)) {
             mouseExit(mouseGraphic, gme);
             mouseGraphic = nue;
@@ -239,7 +215,7 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
         @Override
         public void mouseClicked(MouseEvent e) {
             GMouseEvent gme = graphicMouseEvent(e);
-            updateMouseGraphic(gme, false);
+            updateMouseGraphic(gme, false, owner.canvas());
             if (mouseGraphic != null) {
                 for (MouseListener l : mouseGraphic.getMouseListeners()) {
                     l.mouseClicked(gme);
@@ -254,7 +230,7 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
         public void mouseMoved(MouseEvent e) {
             GMouseEvent gme = graphicMouseEvent(e);
             mouseLoc = gme.getGraphicLocation();
-            updateMouseGraphic(gme, false);
+            updateMouseGraphic(gme, false, owner.canvas());
             if (mouseGraphic != null) {
                 gme.setGraphicSource(mouseGraphic);
                 for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
@@ -269,7 +245,7 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
         @Override
         public void mousePressed(MouseEvent e) {
             GMouseEvent gme = graphicMouseEvent(e);
-            updateMouseGraphic(gme, false);
+            updateMouseGraphic(gme, false, owner.canvas());
             if (mouseGraphic != null) {
                 gme.setGraphicSource(mouseGraphic);
                 for (MouseListener l : mouseGraphic.getMouseListeners()) {
@@ -323,6 +299,6 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
         }
     }
 
-    //</editor-fold>
+    //endregion
 
 }

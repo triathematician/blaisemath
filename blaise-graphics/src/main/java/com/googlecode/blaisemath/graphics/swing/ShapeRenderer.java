@@ -1,8 +1,3 @@
-/*
- * ShapeRenderer.java
- * Created Jan 9, 2011 (based on much earlier code)
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -61,12 +56,12 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         if (Styles.hasStroke(style)) {
             canvas.setColor(Styles.strokeColorOf(style));
             canvas.setStroke(Styles.strokeOf(style));
-            canvas.draw(primitive);
+            PathRenderer.drawPatched(primitive, canvas);
         }
     }
 
     @Override
-    public Rectangle2D boundingBox(Shape primitive, AttributeSet style) {
+    public Rectangle2D boundingBox(Shape primitive, AttributeSet style, Graphics2D canvas) {
         boolean filled = Styles.hasFill(style);
         Shape sh = PathRenderer.strokedShape(primitive, style);
         if (filled && sh != null) {
@@ -81,7 +76,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
     }
 
     @Override
-    public boolean contains(Shape primitive, AttributeSet style, Point2D point) {
+    public boolean contains(Point2D point, Shape primitive, AttributeSet style, Graphics2D canvas) {
         if (Styles.hasFill(style) && primitive.contains(point)) {
             return true;
         } else {
@@ -91,7 +86,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
     }
 
     @Override
-    public boolean intersects(Shape primitive, AttributeSet style, Rectangle2D rect) {
+    public boolean intersects(Rectangle2D rect, Shape primitive, AttributeSet style, Graphics2D canvas) {
         if (Styles.hasFill(style) && primitive.intersects(rect)) {
             return true;            
         } else {

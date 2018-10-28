@@ -41,7 +41,7 @@ public final class AnchoredIcon extends Point2DBean {
         return "AnchoredIcon{" + getX() + ',' + getY() + ',' + getIcon() + '}';
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //region PROPERTIES
     
     public Icon getIcon() {
         return icon;
@@ -55,6 +55,6 @@ public final class AnchoredIcon extends Point2DBean {
         return icon.getIconHeight();
     }
     
-    //</editor-fold>
+    //endregion
     
 }

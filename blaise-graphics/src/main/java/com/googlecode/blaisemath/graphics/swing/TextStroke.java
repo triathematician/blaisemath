@@ -1,18 +1,3 @@
-/*
- Copyright 2006 Jerry Huxtable
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -49,15 +34,14 @@ import java.awt.geom.Point2D;
 /**
  * Stroke that renders text along a path.
  * 
- * @author Jerry Huxtable
  * @author Elisha Peterson
  */
 class TextStroke implements Stroke {
 
-    private String text;
-    private Font font;
-    private boolean stretchToFit = false;
-    private boolean repeat = false;
+    private final String text;
+    private final Font font;
+    private boolean stretchToFit;
+    private boolean repeat;
     private final AffineTransform transform = new AffineTransform();
     private static final float FLATNESS = 1;
 
@@ -82,8 +66,8 @@ class TextStroke implements Stroke {
         float[] points = new float[6];
         float moveX = 0, moveY = 0;
         float lastX = 0, lastY = 0;
-        float thisX = 0, thisY = 0;
-        int type = 0;
+        float thisX, thisY;
+        int type;
         float next = 0;
         int currentChar = 0;
         int length = glyphVector.getNumGlyphs();
@@ -159,8 +143,8 @@ class TextStroke implements Stroke {
         float[] points = new float[6];
         float moveX = 0, moveY = 0;
         float lastX = 0, lastY = 0;
-        float thisX = 0, thisY = 0;
-        int type = 0;
+        float thisX, thisY;
+        int type;
         float total = 0;
 
         while (!it.isDone()) {

@@ -1,7 +1,3 @@
-/*
- * PointBeanDragger.java
- * Created Jan 12, 2011
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -28,9 +24,8 @@ import com.googlecode.blaisemath.coordinate.CoordinateBean;
 import com.googlecode.blaisemath.coordinate.DraggableCoordinate;
 import java.awt.geom.Point2D;
 
-
 /**
- * Implementation of an object dragger using a point property pattern. Maintains
+ * Implementation of an object drag using a point property pattern. Maintains
  * a record of the initial point and the relative movement to set a new point as
  * the object is being dragged.
  *
@@ -43,7 +38,7 @@ public final class GraphicMoveHandler extends GMouseDragHandler {
 
     private final DraggableCoordinate<Point2D> bean;
 
-    private transient Point2D beanStart;
+    private Point2D beanStart;
 
     /**
      * Construct with specified object that can get and set a point

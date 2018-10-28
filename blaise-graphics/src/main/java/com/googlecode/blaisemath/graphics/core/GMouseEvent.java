@@ -1,7 +1,3 @@
-/*
- * GMouseEvent.java
- * Created Jan 12, 2011
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -29,13 +25,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 /**
- * <p>
- *   A mouse event that captures both the point of the event and the source
- *   {@link Graphic} for the event.
- * </p>
- * <p>
- *   This event is not designed for serialization.
- * </p>
+ * A mouse event that captures both the point of the event and the source
+ * {@link Graphic} for the event.
  *
  * @author Elisha Peterson
  */
@@ -44,7 +35,7 @@ public final class GMouseEvent extends MouseEvent {
     /** Source event */
     private final MouseEvent baseEvent;
     /** The graphic associated with the event. */
-    private transient Graphic graphic;
+    private Graphic graphic;
     /** Location of event, in graphic coordinates. */
     private final Point2D loc;
 
@@ -101,7 +92,6 @@ public final class GMouseEvent extends MouseEvent {
         super.consume();
         baseEvent.consume();
     }
-
 
     /**
      * Provides a simple way to generate "graphics" mouse events,

@@ -1,7 +1,3 @@
-/**
- * AttributeSetEditInfo.java
- * Created Sep 18, 2014
- */
 package com.googlecode.blaisemath.style.editor;
 
 /*
@@ -24,7 +20,6 @@ package com.googlecode.blaisemath.style.editor;
  * #L%
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -35,28 +30,22 @@ import java.awt.Component;
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * <p>
- *   Describes editable attributes of an {@link AttributeSet}, along with their types.
- *   This is useful when you want to make sure an attribute set has a given set
- *   of attributes, e.g. when saving/restoring the set, or when editing the attributes
- *   of the set.
- * </p>
- * <p>
- *   This class is not designed for serialization.
- * </p>
- * 
+ * Describes editable attributes of an {@link AttributeSet}, along with their types.
+ * This is useful when you want to make sure an attribute set has a given set
+ * of attributes, e.g. when saving/restoring the set, or when editing the attributes
+ * of the set.
+ *
  * @author Elisha Peterson
  */
 public class AttributeSetPropertyModel extends PropertyModelSupport {
     
     /** List of expected attribute names */
-    private final transient List<String> attributes = Lists.newArrayList();
+    private final List<String> attributes = Lists.newArrayList();
     /** Mapping of expected attribute names and types */
-    private final transient Map<String,Class<?>> typeMap = Maps.newLinkedHashMap();
+    private final Map<String,Class<?>> typeMap = Maps.newLinkedHashMap();
     /** The attribute set for editing */
-    private final transient AttributeSet aSet;
+    private final AttributeSet aSet;
 
     public AttributeSetPropertyModel(AttributeSet aSet, Map<String,Class<?>> typeMap) {
         this.aSet = checkNotNull(aSet);

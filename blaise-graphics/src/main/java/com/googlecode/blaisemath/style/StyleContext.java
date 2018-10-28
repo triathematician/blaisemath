@@ -1,15 +1,4 @@
-/*
- * StyleContext.java
- * Created Jan 22, 2011
- */
 package com.googlecode.blaisemath.style;
-
-import com.google.common.base.Optional;
-import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.collect.Sets;
-import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /*
  * #%L
@@ -31,18 +20,22 @@ import javax.annotation.Nullable;
  * #L%
  */
 
+import com.google.common.collect.Sets;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import java.util.Set;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Arrays.asList;
+
 /**
- * <p>
- *   Maintains multiple types of styles within a single context, and also
- *   contains logic for modifying the style attribute sets based on "hints".
- * </p>
+ * Maintains multiple types of styles within a single context, and also
+ * contains logic for modifying the style attribute sets based on "hints".
  *
  * @author Elisha Peterson
  */
 public final class StyleContext {
     
     /** Parent context. */
-    private final Optional<StyleContext> parent;
+    private final @Nullable StyleContext parent;
     /** Modifiers that apply to the styles in this context. */
     private final Set<StyleModifier> modifiers = Sets.newHashSet();
 
@@ -51,13 +44,10 @@ public final class StyleContext {
     }
 
     public StyleContext(@Nullable StyleContext parent) {
-        this.parent = Optional.fromNullable(parent);
+        this.parent = parent;
     }    
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY/COMPOSITE PATTERNS">
-    //
-    // PROPERTY/COMPOSITE PATTERNS
-    //
+    //region PROPERTIES
     
     /**
      * Get collection of style types supported by this context, not including
@@ -67,16 +57,25 @@ public final class StyleContext {
     public Set<StyleModifier> getModifiers() {
         return modifiers;
     }
-    
+
+    /**
+     * Add new modifier.
+     * @param mod modifer
+     * @return true if changed
+     */
     public boolean addModifier(StyleModifier mod) {
         return modifiers.add(mod);
     }
-    
+    /**
+     * Remove modifier.
+     * @param mod modifer
+     * @return true if removed
+     */
     public boolean removeModifier(StyleModifier mod) {
         return modifiers.remove(mod);
     }
     
-    //</editor-fold>
+    //endregion
     
     /**
      * Get collection of style types supported by this context, including
@@ -84,19 +83,26 @@ public final class StyleContext {
      * @return types
      */
     public Set<StyleModifier> getAllModifiers() {
-        return parent.isPresent() 
-                ? Sets.union(parent.get().getAllModifiers(), modifiers)
-                : modifiers;
+        return parent != null ? Sets.union(parent.getAllModifiers(), modifiers) : modifiers;
     }
-    
+
     /**
      * Applies all modifiers in this context to the given style, returning the result.
      * @param style the style to modify
      * @param hints the hints to apply
      * @return the modified style
      */
-    @Nonnull
-    public AttributeSet applyModifiers(AttributeSet style, AttributeSet hints) {
+    public AttributeSet applyModifiers(AttributeSet style, String... hints) {
+        return applyModifiers(style, Sets.newLinkedHashSet(asList(hints)));
+    }
+
+    /**
+     * Applies all modifiers in this context to the given style, returning the result.
+     * @param style the style to modify
+     * @param hints the hints to apply
+     * @return the modified style
+     */
+    public AttributeSet applyModifiers(AttributeSet style, Set<String> hints) {
         checkNotNull(style);
         AttributeSet res = style;
         for (StyleModifier mod : getAllModifiers()) {

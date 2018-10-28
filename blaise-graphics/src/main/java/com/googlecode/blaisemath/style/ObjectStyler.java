@@ -1,7 +1,3 @@
-/*
- * ObjectStyler.java
- * Created Oct 11, 2011
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -24,14 +20,14 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
+import com.google.common.base.Preconditions;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.base.Predicate;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Provides delegates for draw style, label, label visibility, label style,
@@ -45,36 +41,28 @@ import javax.annotation.Nullable;
  */
 public final class ObjectStyler<S> {
 
+    public static final String P_STYLE_DELEGATE = "styleDelegate";
+    public static final String P_LABEL_FILTER = "labelFilter";
+    public static final String P_LABEL_DELEGATE = "labelDelegate";
+    public static final String P_LABEL_STYLE_DELEGATE = "labelStyleDelegate";
+    public static final String P_TIP_DELEGATE = "tipDelegate";
+
     /** Delegate for point rendering */
-    @Nullable
-    private Function<? super S, AttributeSet> styler = null;
+    private @Nullable Function<? super S, AttributeSet> styler;
 
     /** Show/hide label setting */
-    @Nullable
-    private Predicate<S> labelFilter = null;
+    private @Nullable Predicate<S> labelFilter;
     /** Delegate for point labels (only used if the styler returns a label style) */
-    @Nullable
-    private Function<? super S, String> labeler = null;
+    private @Nullable Function<? super S, String> labeler;
     /** Delegate for point label styles */
-    @Nullable
-    private Function<? super S, AttributeSet> labelStyler = null;
+    private @Nullable Function<? super S, AttributeSet> labelStyler;
 
     /** Delegate for tooltips (with default) */
-    @Nullable 
-    private Function<? super S, String> tipper = new Function<S, String>() {
-        @Override
-        public String apply(S src) { 
-            return src == null ? "null" : src.toString(); 
-        }
-    };
+    private @Nullable Function<? super S, String> tipper = s -> Objects.toString(s, "null");
 
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHODS">
-    //
-    // STATIC FACTORY METHODS
-    //
+
+    //region FACTORY/BUILDER
     
     /**
      * Create new default styler instance.
@@ -82,23 +70,109 @@ public final class ObjectStyler<S> {
      * @return new styler instance
      */
     public static <S> ObjectStyler<S> create() {
-        return new ObjectStyler<S>();
+        return new ObjectStyler<>();
     }
-    
-    //</editor-fold>
-    
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    /**
+     * Sets the current style delegate. If null, will use the default style
+     * provided by the parent.
+     * @param styler used to style object
+     * @return this
+     */
+    public ObjectStyler<S> styleDelegate(@Nullable Function<? super S, AttributeSet> styler) {
+        setStyleDelegate(styler);
+        return this;
+    }
+
+    /**
+     * Sets a single style for all objects.
+     * @param style style to use for all objects
+     * @return this
+     */
+    public ObjectStyler<S> style(AttributeSet style) {
+        setStyle(style);
+        return this;
+    }
+
+    /**
+     * Sets the current label filter.
+     * @param filter the new filter
+     * @return this
+     */
+    public ObjectStyler<S> labelFilter(@Nullable Predicate<S> filter) {
+        setLabelFilter(filter);
+        return this;
+    }
+
+    /**
+     * Sets the current label delegate. If null, uses a default label.
+     * @param labeler the new labeler
+     * @return this
+     */
+    public ObjectStyler<S> labelDelegate(@Nullable Function<? super S, String> labeler) {
+        setLabelDelegate(labeler);
+        return this;
+    }
+
+    /**
+     * Sets a single label for all objects
+     * @param text label text
+     * @return this
+     */
+    public ObjectStyler<S> label(@Nullable String text) {
+        setLabel(text);
+        return this;
+    }
+
+    /**
+     * Sets the current label style delegate. If null, uses a default style.
+     * @param labelStyler the new label styler
+     * @return this
+     */
+    public ObjectStyler<S> labelStyleDelegate(@Nullable Function<? super S, AttributeSet> labelStyler) {
+        setLabelStyleDelegate(labelStyler);
+        return this;
+    }
+
+    /**
+     * Sets a single label style for all objects.
+     * @param style style to use for all objects
+     * @return this
+     */
+    public ObjectStyler<S> labelStyle(AttributeSet style) {
+        setLabelStyle(style);
+        return this;
+    }
+
+    /**
+     * Sets the current tip delegate. If null, uses the default tooltip.
+     * @param tipper generates tips for the object
+     * @return this
+     */
+    public ObjectStyler<S> tipDelegate(@Nullable Function<? super S, String> tipper) {
+        setTipDelegate(tipper);
+        return this;
+    }
+
+    /**
+     * Sets a single tooltip for all objects
+     * @param tooltip tooltip
+     * @return this
+     */
+    public ObjectStyler<S> tip(@Nullable String tooltip) {
+        setTip(tooltip);
+        return this;
+    }
+
+    //endregion
+
+    //region PROPERTIES
 
     /**
      * Returns the current style delegate
      * @return style delegate
      */
-    @Nullable 
-    public Function<? super S, AttributeSet> getStyleDelegate() {
+    public @Nullable Function<? super S, AttributeSet> getStyleDelegate() {
         return styler;
     }
 
@@ -110,28 +184,44 @@ public final class ObjectStyler<S> {
     public void setStyleDelegate(@Nullable Function<? super S, AttributeSet> styler) {
         if (this.styler != styler) {
             this.styler = styler;
-            pcs.firePropertyChange("styleDelegate", null, this.styler);
+            pcs.firePropertyChange(P_STYLE_DELEGATE, null, this.styler);
         }
     }
-    
-    public Predicate<S> getLabelFilter() {
+
+    /**
+     * Sets a single style for all objects.
+     * @param style style to use for all objects
+     */
+    public void setStyle(AttributeSet style) {
+        Preconditions.checkNotNull(style);
+        setStyleDelegate(s -> style);
+    }
+
+    /**
+     * Returns the current label filter
+     * @return label filter
+     */
+    public @Nullable Predicate<S> getLabelFilter() {
         return labelFilter;
     }
-    
-    public void setLabelFilter(Predicate<S> labelFilter) {
-        if (this.labelFilter != labelFilter) {
+
+    /**
+     * Sets the current label filter.
+     * @param filter the new filter
+     */
+    public void setLabelFilter(@Nullable Predicate<S> filter) {
+        if (this.labelFilter != filter) {
             Object old = this.labelFilter;
-            this.labelFilter = labelFilter;
-            pcs.firePropertyChange("labelFilter", old, labelFilter);
+            this.labelFilter = filter;
+            pcs.firePropertyChange(P_LABEL_FILTER, old, filter);
         }
     }
 
     /**
      * Returns the current label delegate
-     * @return  label delegate
+     * @return label delegate
      */
-    @Nullable 
-    public Function<? super S, String> getLabelDelegate() {
+    public @Nullable Function<? super S, String> getLabelDelegate() {
         return labeler;
     }
 
@@ -141,17 +231,25 @@ public final class ObjectStyler<S> {
      */
     public void setLabelDelegate(@Nullable Function<? super S, String> labeler) {
         if (this.labeler != labeler) {
+            Object old = this.labeler;
             this.labeler = labeler;
-            pcs.firePropertyChange("labelDelegate", null, styler);
+            pcs.firePropertyChange(P_LABEL_DELEGATE, old, styler);
         }
+    }
+
+    /**
+     * Sets a single label for all objects
+     * @param text label text
+     */
+    public void setLabel(@Nullable String text) {
+        setLabelDelegate(s -> text);
     }
 
     /**
      * Returns the current label style delegate
      * @return  label style delegate
      */
-    @Nullable 
-    public Function<? super S, AttributeSet> getLabelStyleDelegate() {
+    public @Nullable Function<? super S, AttributeSet> getLabelStyleDelegate() {
         return labelStyler;
     }
 
@@ -161,17 +259,26 @@ public final class ObjectStyler<S> {
      */
     public void setLabelStyleDelegate(@Nullable Function<? super S, AttributeSet> labelStyler) {
         if (this.labelStyler != labelStyler) {
+            Object old = this.labelStyler;
             this.labelStyler = labelStyler;
-            pcs.firePropertyChange("labelStyleDelegate", null, this.labelStyler);
+            pcs.firePropertyChange(P_LABEL_STYLE_DELEGATE, old, this.labelStyler);
         }
+    }
+
+    /**
+     * Sets a single label style for all objects.
+     * @param style style to use for all objects
+     */
+    public void setLabelStyle(AttributeSet style) {
+        Preconditions.checkNotNull(style);
+        setLabelStyleDelegate(s -> style);
     }
 
     /**
      * Returns the current tip delegate
      * @return tip delegate
      */
-    @Nullable 
-    public Function<? super S, String> getTipDelegate() {
+    public @Nullable Function<? super S, String> getTipDelegate() {
         return tipper;
     }
 
@@ -181,23 +288,30 @@ public final class ObjectStyler<S> {
      */
     public void setTipDelegate(@Nullable Function<? super S, String> tipper) {
         if (this.tipper != tipper) {
+            Object old = this.tipper;
             this.tipper = tipper;
-            pcs.firePropertyChange("tipDelegate", null, this.tipper);
+            pcs.firePropertyChange(P_TIP_DELEGATE, old, this.tipper);
         }
     }
+
+    /**
+     * Sets a single tooltip for all objects
+     * @param tooltip tooltip
+     */
+    public void setTip(@Nullable String tooltip) {
+        setTipDelegate(s -> tooltip);
+    }
     
-    //</editor-fold>
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="DELEGATE METHODS">
+    //endregion
+
+    //region DELEGATES
     
     /**
      * Get style for given object.
      * @param src object
      * @return style
      */
-    @Nullable
-    public AttributeSet style(S src) {
+    public @Nullable AttributeSet style(S src) {
         return styler == null ? null : styler.apply(src);
     }
     
@@ -206,10 +320,9 @@ public final class ObjectStyler<S> {
      * @param src object
      * @return label
      */
-    @Nullable
-    public String label(S src) {
+    public @Nullable String label(S src) {
         return labeler == null ? null 
-                : labelFilter == null || labelFilter.apply(src) ? labeler.apply(src)
+                : labelFilter == null || labelFilter.test(src) ? labeler.apply(src)
                 : null;
     }
     
@@ -218,8 +331,8 @@ public final class ObjectStyler<S> {
      * @param src object
      * @return label
      */
-    @Nullable
-    public AttributeSet labelStyle(S src) {
+
+    public @Nullable AttributeSet labelStyle(S src) {
         return labelStyler == null ? null : labelStyler.apply(src);
     }
     
@@ -229,65 +342,31 @@ public final class ObjectStyler<S> {
      * @param def default label to return
      * @return label
      */
-    @Nullable
-    public String tooltip(S src, @Nullable String def) {
+    public @Nullable String tooltip(S src, @Nullable String def) {
         return tipper == null ? def : tipper.apply(src);
     }
-    
-    //</editor-fold>
 
-    
-    //
-    // CONSTANT VALUE SETTERS
-    //
+    //endregion
 
-    /**
-     * Sets a single label for all objects
-     * @param text label text
-     */
-    public void setLabelConstant(@Nullable String text) {
-        setLabelDelegate(Functions.constant(text));
-    }
+    //region EVENTS
 
-    /**
-     * Sets a single style for all objects.
-     * @param style style to use for all objects
-     */
-    public void setStyleConstant(AttributeSet style) {
-        setStyleDelegate(Functions.constant(checkNotNull(style)));
-    }
-
-    /**
-     * Sets a single label style for all objects.
-     * @param style style to use for all objects
-     */
-    public void setLabelStyleConstant(AttributeSet style) {
-        setLabelStyleDelegate(Functions.constant(checkNotNull(style)));
-    }
-
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE HANDLING">
-    //
-    // PROPERTY CHANGE HANDLING
-    //
-
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public final void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public final void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public final void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public final void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 
-    //</editor-fold>
+    //endregion
 
 
 }

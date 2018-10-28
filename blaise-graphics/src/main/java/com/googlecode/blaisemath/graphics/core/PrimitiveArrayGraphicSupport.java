@@ -1,7 +1,3 @@
-/**
- * PrimitiveArrayGraphicSupport.java
- * Created Aug 1, 2014
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -24,21 +20,23 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.RENDERER_PROP;
+import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.P_RENDERER;
+import static java.util.Arrays.asList;
+
+import com.google.common.collect.Iterables;
 import com.googlecode.blaisemath.coordinate.DraggableCoordinate;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
 
 /**
- * <p>
- *  Adds an array of primitive objects and a renderer to a {@link Graphic}. Also
- *  implements default drag functionality that will be supported when the primitive
- *  is either a {@link Point2D} or a {@link DraggableCoordinate}. Attempts to
- *  make other kinds of graphics draggable will result in an exception being thrown.
- * </p>
- * 
+ * Adds an array of primitive objects and a renderer to a {@link Graphic}. Also
+ * implements default drag functionality that will be supported when the primitive
+ * is either a {@link Point2D} or a {@link DraggableCoordinate}. Attempts to
+ * make other kinds of graphics draggable will result in an exception being thrown.
+ *
  * @param <O> type of object being drawn
  * @param <G> type of graphics canvas to render to
  *
@@ -51,10 +49,7 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
     /** Draws the primitive on the graphics canvas */
     protected Renderer<O,G> renderer;
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
 
     /**
      * Return the shape for the graphic.
@@ -73,7 +68,7 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
             Object old = this.primitive;
             this.primitive = primitive;
             fireGraphicChanged();
-            pcs.firePropertyChange(PrimitiveGraphicSupport.PRIMITIVE_PROP, old, primitive);
+            pcs.firePropertyChange(PrimitiveGraphicSupport.P_PRIMITIVE, old, primitive);
         }
     }
     
@@ -96,7 +91,7 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
             Object old = this.primitive[i];
             this.primitive[i] = prim;
             fireGraphicChanged();
-            pcs.fireIndexedPropertyChange(PrimitiveGraphicSupport.PRIMITIVE_PROP, i, old, prim);
+            pcs.fireIndexedPropertyChange(PrimitiveGraphicSupport.P_PRIMITIVE, i, old, prim);
         }
     }
 
@@ -109,23 +104,19 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
             Object old = this.renderer;
             this.renderer = renderer;
             fireGraphicChanged();
-            pcs.firePropertyChange(RENDERER_PROP, old, renderer);
+            pcs.firePropertyChange(P_RENDERER, old, renderer);
         }
     }
     
-    //</editor-fold>
-    
-    //
-    // RENDERING
-    //
+    //endregion
 
-    public int indexOf(Point2D nearby) {
+    public int indexOf(Point2D nearby, G canvas) {
         if (renderer == null) {
             return -1;
         }
         AttributeSet style = renderStyle();
         for (int i = primitive.length-1; i >= 0; i--) {
-            if (renderer.contains(primitive[i], style, nearby)) {
+            if (renderer.contains(nearby, primitive[i], style, canvas)) {
                 return i;
             }
         }
@@ -144,33 +135,23 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
     }
 
     @Override
-    public Rectangle2D boundingBox() {
-        Rectangle2D res = null;
+    public Rectangle2D boundingBox(G canvas) {
         AttributeSet style = renderStyle();
-        for (O o : primitive) {
-            Rectangle2D oBounds = renderer.boundingBox(o, style);
-            res = res == null ? oBounds : res.createUnion(oBounds);
-        }
-        return res;
+        return GraphicUtils.boundingBox(asList(primitive), p -> renderer.boundingBox(p, style, canvas), null);
     }
 
     @Override
-    public boolean contains(Point2D point) {
-        return indexOf(point) != -1;
+    public boolean contains(Point2D point, G canvas) {
+        return indexOf(point, canvas) != -1;
     }
 
     @Override
-    public boolean intersects(Rectangle2D box) {
+    public boolean intersects(Rectangle2D box, G canvas) {
         if (renderer == null) {
             return false;
         }
         AttributeSet style = renderStyle();
-        for (O o : primitive) {
-            if (renderer.intersects(o, style, box)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(primitive).anyMatch(o -> renderer.intersects(box, o, style, canvas));
     }
 
 }

@@ -1,7 +1,3 @@
-/**
- * MarkerRenderer.java
- * Created Jul 31, 2014
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -24,7 +20,6 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Marker;
@@ -40,13 +35,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
-/**
  * Draws an oriented point on the graphics canvas.
  * See also the <a href="http://www.w3.org/TR/SVG/painting.html#Markers">related SVG documentation</a> on markers.
  * 
  * @author Elisha Peterson
  */
 public class MarkerRenderer implements Renderer<Point2D, Graphics2D> {
+
+    private static final Logger LOG = Logger.getLogger(MarkerRenderer.class.getName());
 
     /** Delegate for rendering the shape of the marker */
     protected Renderer<Shape, Graphics2D> shapeRenderer = new ShapeRenderer();
@@ -55,11 +51,8 @@ public class MarkerRenderer implements Renderer<Point2D, Graphics2D> {
         return new MarkerRenderer();
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
-    
+    //region PROPERTIES
+
     public Renderer<Shape, Graphics2D> getShapeRenderer() {
         return shapeRenderer;
     }
@@ -77,13 +70,9 @@ public class MarkerRenderer implements Renderer<Point2D, Graphics2D> {
         if (marker == null) {
             return Markers.CIRCLE.create(primitive, angle, rad);
         } else if (marker instanceof Marker) {
-            return ((Marker)marker).create(primitive, angle, rad);
-        } else if (marker instanceof String) {
-            Logger.getLogger(MarkerRenderer.class.getName()).log(Level.WARNING,
-                    "Invalid marker object string (not supported yet): {0}", marker);
+            return ((Marker) marker).create(primitive, angle, rad);
         } else {
-            Logger.getLogger(MarkerRenderer.class.getName()).log(Level.WARNING,
-                    "Invalid marker object: {0}", marker);
+            LOG.log(Level.WARNING, marker instanceof String ? "Invalid marker object string (not supported yet): {0}" : "Invalid marker object: {0}", marker);
         }
         return null;
     }
@@ -94,18 +83,18 @@ public class MarkerRenderer implements Renderer<Point2D, Graphics2D> {
     }
 
     @Override
-    public Rectangle2D boundingBox(Point2D primitive, AttributeSet style) {
-        return shapeRenderer.boundingBox(getShape(primitive, style), style);
+    public Rectangle2D boundingBox(Point2D primitive, AttributeSet style, Graphics2D canvas) {
+        return shapeRenderer.boundingBox(getShape(primitive, style), style, canvas);
     }
 
     @Override
-    public boolean contains(Point2D primitive, AttributeSet style, Point2D point) {
-        return shapeRenderer.contains(getShape(primitive, style), style, point);
+    public boolean contains(Point2D point, Point2D primitive, AttributeSet style, Graphics2D canvas) {
+        return shapeRenderer.contains(point, getShape(primitive, style), style, canvas);
     }
 
     @Override
-    public boolean intersects(Point2D primitive, AttributeSet style, Rectangle2D rect) {
-        return shapeRenderer.intersects(getShape(primitive, style), style, rect);
+    public boolean intersects(Rectangle2D rect, Point2D primitive, AttributeSet style, Graphics2D canvas) {
+        return shapeRenderer.intersects(rect, getShape(primitive, style), style, canvas);
     }
     
 }

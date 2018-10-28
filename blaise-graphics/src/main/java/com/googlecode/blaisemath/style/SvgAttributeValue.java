@@ -26,6 +26,6 @@ package com.googlecode.blaisemath.style;
  * 
  * @author Elisha Peterson
  */
-public @interface SvgAttribute {
+public @interface SvgAttributeValue {
     
 }

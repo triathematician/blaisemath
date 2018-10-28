@@ -1,7 +1,3 @@
-/*
- * TwoPointGraphicSupport.java
- * Created Oct 1, 2011
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -95,7 +91,7 @@ public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
         fireGraphicChanged();
     }
 
-    //region EVENT HANDLING
+    //region EVENTS
 
     public boolean isDragEnabled() {
         return start.isDragEnabled() && end.isDragEnabled();

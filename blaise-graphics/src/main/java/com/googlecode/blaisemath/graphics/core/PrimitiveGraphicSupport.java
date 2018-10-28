@@ -1,7 +1,3 @@
-/**
- * PrimitiveGraphicSupport.java
- * Created Aug 1, 2014
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -28,25 +24,22 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.coordinate.CoordinateBean;
 import com.googlecode.blaisemath.coordinate.DraggableCoordinate;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import javax.annotation.Nullable;
 
 /**
- * <p>
  *  Adds a primitive object and a renderer to a {@link Graphic}. Also
  *  implements default drag functionality that will be supported when the primitive
  *  is either a {@link Point2D} or a {@link DraggableCoordinate}. Attempts to
  *  make other kinds of graphics draggable will result in an exception being thrown.
- * </p>
- * <p>
  *  Implementations must provide the style used for rendering the primitive.
- * </p>
- * 
+ *
  * @param <O> type of object being drawn
  * @param <G> type of graphics canvas to render to
  *
@@ -54,25 +47,20 @@ import javax.annotation.Nullable;
  */
 public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     
-    public static final String PRIMITIVE_PROP = "primitive";
-    public static final String RENDERER_PROP = "renderer";
+    public static final String P_PRIMITIVE = "primitive";
+    public static final String P_RENDERER = "renderer";
     
     /** What is being drawn */
-    @Nullable
-    protected O primitive;
+    protected @Nullable O primitive;
     /** Draws the primitive on the graphics canvas */
-    @Nullable
-    protected Renderer<O,G> renderer = null;
+    protected @Nullable Renderer<O,G> renderer = null;
     
     /** Whether graphic can be dragged */
     protected boolean dragEnabled = false;
     /** Handles the drag movement */
     protected GMouseDragHandler dragger = null;
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
 
     /**
      * Return the shape for the graphic.
@@ -97,12 +85,11 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
             }
 
             fireGraphicChanged();
-            pcs.firePropertyChange(PRIMITIVE_PROP, old, primitive);
+            pcs.firePropertyChange(P_PRIMITIVE, old, primitive);
         }
     }
 
-    @Nullable 
-    public Renderer<O, G> getRenderer() {
+    public @Nullable Renderer<O, G> getRenderer() {
         return renderer;
     }
 
@@ -111,15 +98,13 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
             Object old = this.renderer;
             this.renderer = renderer;
             fireGraphicChanged();
-            pcs.firePropertyChange(RENDERER_PROP, old, renderer);
+            pcs.firePropertyChange(P_RENDERER, old, renderer);
         }
     }
     
-    //</editor-fold>
-    
-    //
-    // RENDERING
-    //
+    //endregion
+
+    //region RENDERING
     
     @Override
     public void renderTo(G canvas) {
@@ -129,32 +114,27 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     }
 
     @Override
-    public Rectangle2D boundingBox() {
-        return renderer == null || primitive == null ? null 
-                : renderer.boundingBox(primitive, renderStyle());
+    public Rectangle2D boundingBox(G canvas) {
+        return renderer == null || primitive == null ? null : renderer.boundingBox(primitive, renderStyle(), canvas);
     }
 
     @Override
-    public boolean contains(Point2D point) {
-        return renderer != null && primitive != null
-                && renderer.contains(primitive, renderStyle(), point);
+    public boolean contains(Point2D point, G canvas) {
+        return renderer != null && primitive != null && renderer.contains(point, primitive, renderStyle(), canvas);
     }
 
     @Override
-    public boolean intersects(Rectangle2D box) {
-        return renderer != null && primitive != null
-                && renderer.intersects(primitive, renderStyle(), box);
+    public boolean intersects(Rectangle2D box, G canvas) {
+        return renderer != null && primitive != null && renderer.intersects(box, primitive, renderStyle(), canvas);
     }
-    
-    //
-    // DRAGGING
-    //
+
+    //endregion
+
+    //region DRAGGING
 
     public boolean isDragCapable() {
-        return primitive instanceof Point2D
-            || primitive instanceof Shape
-            || (primitive instanceof DraggableCoordinate 
-                && ((CoordinateBean)primitive).getPoint() instanceof Point2D);
+        return primitive instanceof Point2D || primitive instanceof Shape
+            || (primitive instanceof DraggableCoordinate && ((CoordinateBean)primitive).getPoint() instanceof Point2D);
     }
     
     public boolean isDragEnabled() {
@@ -169,10 +149,8 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
                 if (primitive instanceof Shape) {
                     dragger = new ShapeDragHandler();
                 } else {
-                    DraggableCoordinate bean = primitive instanceof DraggableCoordinate 
-                            ? (DraggableCoordinate) primitive
-                        : primitive instanceof Point2D
-                            ? new ProxyPointDraggable()
+                    DraggableCoordinate bean = primitive instanceof DraggableCoordinate ? (DraggableCoordinate) primitive
+                        : primitive instanceof Point2D ? new ProxyPointDraggable()
                         : null;
                     assert bean != null;
                     dragger = new GraphicMoveHandler(bean);
@@ -188,16 +166,16 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
             }
         }
     }
-    
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
-    
+
+    //endregion
+
+    //region INNER CLASSES
+
     /** A draggable point generating events when it's position changes. */
     private class ProxyPointDraggable implements DraggableCoordinate<Point2D> {
         @Override
         public Point2D getPoint() {
-            return (Point2D) primitive; 
+            return (Point2D) primitive;
         }
 
         @Override
@@ -207,13 +185,13 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
 
         @Override
         public void setPoint(Point2D initial, Point2D dragStart, Point2D dragFinish) {
-            ((Point2D)primitive).setLocation(
-                    initial.getX()+dragFinish.getX()-dragStart.getX(),
-                    initial.getY()+dragFinish.getY()-dragStart.getY());
+            ((Point2D) primitive).setLocation(
+                    initial.getX() + dragFinish.getX() - dragStart.getX(),
+                    initial.getY() + dragFinish.getY() - dragStart.getY());
             fireGraphicChanged();
         }
     }
-    
+
     /** A draggable shape generating events when it's position changes. */
     private class ShapeDragHandler extends GMouseDragHandler {
         private Shape initialShape = null;
@@ -244,13 +222,12 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
                 rsh.setFrame(x0+dx, y0+dy, rsh.getWidth(), rsh.getHeight());
             } else if (initialShape instanceof Line2D) {
                 Line2D line = (Line2D) initialShape;
-                setPrimitive((O) new Line2D.Double(x0+dx, y0+dy, 
-                        line.getX2()+dx, line.getY2()+dy));
+                setPrimitive((O) new Line2D.Double(x0 + dx, y0 + dy, line.getX2() + dx, line.getY2() + dy));
             } else {
                 AffineTransform at = new AffineTransform();
                 at.translate(dx, dy);
                 setPrimitive((O) at.createTransformedShape(initialShape));
-            }    
+            }
             fireGraphicChanged();
         }
 
@@ -259,8 +236,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
             mouseDragInProgress(e, start);
         }
     }
-    
-    //</editor-fold>
-    
+
+    //endregion
 
 }

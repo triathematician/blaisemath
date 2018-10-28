@@ -1,8 +1,3 @@
-/**
- * GradientShapeRenderer.java
- * Created Aug 14, 2014
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*

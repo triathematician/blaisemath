@@ -20,19 +20,13 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import org.junit.Test;
 
-/**
- *
- * @author Elisha Peterson
- */
 public class DelegatingEdgeSetGraphicTest {
 
     @Test
     public void testGetCoordinateManager() {
-        System.out.println("getCoordinateManager");
         DelegatingEdgeSetGraphic instance = new DelegatingEdgeSetGraphic();
         CoordinateManager result = instance.getCoordinateManager();
     }

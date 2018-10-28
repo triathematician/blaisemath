@@ -1,8 +1,3 @@
-/*
- * PathStyleTapered.java
- * Created Jan 12, 2011
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -43,9 +38,6 @@ import java.awt.geom.PathIterator;
 public class TaperedPathRenderer extends PathRenderer {
 
     private static final TaperedPathRenderer INST = new TaperedPathRenderer();
-
-    public TaperedPathRenderer() {
-    }
     
     public static Renderer<Shape, Graphics2D> getInstance() {
         return INST;
@@ -74,11 +66,6 @@ public class TaperedPathRenderer extends PathRenderer {
         canvas.setColor(stroke);
         canvas.draw(shape);
     }
-
-    
-    //
-    // STATIC SHAPE METHODS
-    //
     
     /** 
      * Returns path representing a "fancy shape" between points, using Bezier curves.

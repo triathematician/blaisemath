@@ -38,6 +38,7 @@ import com.googlecode.blaisemath.style.Styles;
  *
  * @author Elisha Peterson
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class PanAndZoomTestFrame extends javax.swing.JFrame {
 
     /**
@@ -55,12 +56,7 @@ public class PanAndZoomTestFrame extends javax.swing.JFrame {
         
         // all it takes to add selection capability!
         gc.setSelectionEnabled(true);
-        gc.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println(evt.getPropertyName()+" : "+evt.getNewValue());
-            }
-        });
+        gc.getSelectionModel().addPropertyChangeListener(evt -> System.out.println(evt.getPropertyName()+" : "+evt.getNewValue()));
 
         // init pan and zoom
         PanAndZoomHandler.install(gc);
@@ -103,24 +99,13 @@ public class PanAndZoomTestFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PanAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PanAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PanAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | javax.swing.UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
             java.util.logging.Logger.getLogger(PanAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        //endregion
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new PanAndZoomTestFrame().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new PanAndZoomTestFrame().setVisible(true));
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.googlecode.blaisemath.graphics.swing.JGraphicComponent gc;

@@ -17,7 +17,7 @@
       <module name="blaise-app" target="1.8" />
       <module name="blaise-common" target="1.8" />
       <module name="blaise-graphics" target="1.8" />
-      <module name="blaise-graphtheory3" target="1.6" />
+      <module name="blaise-graphtheory3" target="1.8" />
       <module name="blaise-svg" target="1.8" />
     </bytecodeTargetLevel>
   </component>

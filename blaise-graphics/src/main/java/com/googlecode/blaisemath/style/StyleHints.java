@@ -1,7 +1,3 @@
-/*
- * StyleHints.java
- * Created May 31, 2013
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -26,8 +22,9 @@ package com.googlecode.blaisemath.style;
 
 
 import com.googlecode.blaisemath.util.Colors;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.awt.Color;
-import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * Maintains a collection of visibility hints that can be used to change how an
@@ -61,16 +58,13 @@ public class StyleHints {
      * @param hints the hints to apply
      * @return transformed color
      */
-    @Nullable 
-    public static Color modifyColorsDefault(@Nullable Color color, AttributeSet hints) {
+    public static @Nullable Color modifyColorsDefault(@Nullable Color color, Set<String> hints) {
         if (color == null) {
             return null;
-        } else if (hints.getBoolean(HIDDEN_HINT, false)) {
+        } else if (hints.contains(HIDDEN_HINT)) {
             return Colors.alpha(color, 0);
-        } else if (hints.getBoolean(HILITE_HINT, false)) {
+        } else if (hints.contains(HILITE_HINT)) {
             return Colors.lighterThan(color);
-        } else if (hints.getBoolean(SELECTED_HINT, false)) {
-            return color;
         } else {
             return color;
         }
@@ -82,14 +76,14 @@ public class StyleHints {
      * @param hints the hints to apply
      * @return transformed width
      */
-    public static float modifyStrokeWidthDefault(@Nullable Float width, AttributeSet hints) {
+    public static float modifyStrokeWidthDefault(@Nullable Float width, Set<String> hints) {
         float wid = width == null || width.isNaN() || width.isInfinite() ? 1f : width;
-        if (hints.getBoolean(HIDDEN_HINT, false)) {
+        if (hints.contains(HIDDEN_HINT)) {
             return 0f;
-        } else if (hints.getBoolean(SELECTED_HINT, false)) {
-            return wid+1f;
-        } else if (hints.getBoolean(HILITE_HINT, false)) {
-            return Math.max(wid-1f, wid/2f);
+        } else if (hints.contains(SELECTED_HINT)) {
+            return wid + 1f;
+        } else if (hints.contains(HILITE_HINT)) {
+            return Math.max(wid - 1f, wid / 2f);
         } else {
             return wid;
         }
@@ -100,9 +94,8 @@ public class StyleHints {
      * @param hints hints object
      * @return true if hints contains the hidden hint
      */
-    public static boolean isInvisible(AttributeSet hints) {
-        return hints.getBoolean(HIDDEN_HINT, false)
-                || hints.getBoolean(HIDDEN_FUNCTIONAL_HINT, false);
+    public static boolean isInvisible(Set<String> hints) {
+        return hints.contains(HIDDEN_HINT) || hints.contains(HIDDEN_FUNCTIONAL_HINT);
     }
     
     /**
@@ -110,8 +103,8 @@ public class StyleHints {
      * @param hints hints object
      * @return true if hints contains the hidden hint
      */
-    public static boolean isFunctional(AttributeSet hints) {
-        return !hints.getBoolean(HIDDEN_HINT, false);
+    public static boolean isFunctional(Set<String> hints) {
+        return !hints.contains(HIDDEN_HINT);
     }
     
 }

@@ -34,34 +34,6 @@ public class StylesTest {
     }
 
     @Test
-    public void testHasFill() {
-    }
-
-    @Test
-    public void testHasStroke() {
-    }
-
-    @Test
-    public void testFillColorOf() {
-    }
-
-    @Test
-    public void testStrokeColorOf() {
-    }
-
-    @Test
-    public void testFontOf() {
-    }
-
-    @Test
-    public void testSetFont() {
-    }
-
-    @Test
-    public void testStrokeOf() {
-    }
-
-    @Test
     public void testAnchorOf() {
         assertEquals(Anchor.CENTER, Styles.anchorOf(AttributeSet.of("text-anchor","middle","alignment-baseline","middle"), Anchor.SOUTH));
         assertEquals(Anchor.SOUTH, Styles.anchorOf(AttributeSet.of("text-anchor","x","alignment-baseline","x"), Anchor.SOUTH));
@@ -87,56 +59,4 @@ public class StylesTest {
         assertEquals("baseline", Styles.toAlignBaseline("x"));
     }
 
-    @Test
-    public void testDefaultShapeStyle() {
-    }
-
-    @Test
-    public void testDefaultPathStyle() {
-    }
-
-    @Test
-    public void testDefaultPointStyle() {
-    }
-
-    @Test
-    public void testDefaultTextStyle() {
-    }
-
-    @Test
-    public void testFillStroke_Color_Color() {
-    }
-
-    @Test
-    public void testFillStroke_3args() {
-    }
-
-    @Test
-    public void testStrokeWidth() {
-    }
-
-    @Test
-    public void testText() {
-    }
-
-    @Test
-    public void testMarker() {
-    }
-
-    @Test
-    public void testDefaultColorModifier() {
-    }
-
-    @Test
-    public void testDefaultStrokeModifier() {
-    }
-
-    @Test
-    public void testDefaultStyleContext() {
-    }
-
-    @Test
-    public void testWithHighlight() {
-    }
-    
 }

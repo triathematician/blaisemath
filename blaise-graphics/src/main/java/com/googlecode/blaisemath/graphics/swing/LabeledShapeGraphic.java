@@ -1,8 +1,3 @@
-/*
- * LabeledShapeGraphic.java
- * Created on Oct 15, 2012
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -24,8 +19,6 @@ package com.googlecode.blaisemath.graphics.swing;
  * limitations under the License.
  * #L%
  */
-
-
 
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
@@ -50,18 +43,15 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
     private Renderer<AnchoredText, Graphics2D> textRenderer = new WrappedTextRenderer();
     
     public LabeledShapeGraphic() {
-        this(null, new Rectangle(), new ObjectStyler<O>());
+        this(null, new Rectangle(), new ObjectStyler<>());
     }
 
     public LabeledShapeGraphic(O source, Shape primitive, ObjectStyler<O> styler) {
         super(source, primitive, styler, ShapeRenderer.getInstance());
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
-    
+    //region PROPERTIES
+
     public Renderer<AnchoredText, Graphics2D> getTextRenderer() {
         return textRenderer;
     }
@@ -73,7 +63,7 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
         }
     }
     
-    //</editor-fold>
+    //endregion
     
     @Override
     public void renderTo(Graphics2D canvas) {

@@ -1,7 +1,3 @@
-/**
- * IconRenderer.java
- * Created on Mar 5, 2015
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -48,26 +44,26 @@ public class IconRenderer implements Renderer<AnchoredIcon, Graphics2D> {
 
     @Override
     public void render(AnchoredIcon primitive, AttributeSet style, Graphics2D canvas) {
-        Rectangle2D rect = boundingBox(primitive, style);
+        Rectangle2D rect = boundingBox(primitive, style, canvas);
         canvas.translate(rect.getX(), rect.getY());
         primitive.getIcon().paintIcon(null, canvas,  0, 0);
         canvas.translate(-rect.getX(), -rect.getY());
     }
 
     @Override
-    public Rectangle2D boundingBox(AnchoredIcon primitive, AttributeSet style) {
+    public Rectangle2D boundingBox(AnchoredIcon primitive, AttributeSet style, Graphics2D canvas) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
         return anchor.rectangleAnchoredAt(primitive, primitive.getIconWidth(), primitive.getIconHeight());
     }
 
     @Override
-    public boolean contains(AnchoredIcon primitive, AttributeSet style, Point2D point) {
-        return boundingBox(primitive, style).contains(point);
+    public boolean contains(Point2D point, AnchoredIcon primitive, AttributeSet style, Graphics2D canvas) {
+        return boundingBox(primitive, style, canvas).contains(point);
     }
 
     @Override
-    public boolean intersects(AnchoredIcon primitive, AttributeSet style, Rectangle2D rect) {
-        return boundingBox(primitive, style).intersects(rect);
+    public boolean intersects(Rectangle2D rect, AnchoredIcon primitive, AttributeSet style, Graphics2D canvas) {
+        return boundingBox(primitive, style, canvas).intersects(rect);
     }
 
 }

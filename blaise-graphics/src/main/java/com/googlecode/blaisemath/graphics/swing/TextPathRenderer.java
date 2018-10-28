@@ -1,7 +1,3 @@
-/*
- * TextPathStyle.java
- * Created Dec 2010
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -32,10 +28,8 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 
 /**
- * <p>
- *   This style draws the specified text along a path, rather than drawing a regular path.
- * </p>
- * 
+ * This style draws the specified text along a path, rather than drawing a regular path.
+ *
  * @author Elisha Peterson
  */
 public class TextPathRenderer extends PathRenderer {
@@ -54,11 +48,7 @@ public class TextPathRenderer extends PathRenderer {
                 textStyle, pathText, stretch);
     }
     
-    
-    //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
-    //
-    // BUILDER PATTERNS
-    //
+    //region BUILDERS
     
     /**
      * Set text style and return pointer to object
@@ -90,13 +80,9 @@ public class TextPathRenderer extends PathRenderer {
         return this;
     }    
     
-    //</editor-fold>
+    //endregion
     
-    
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
     
     /**
      * Get style of text
@@ -146,8 +132,7 @@ public class TextPathRenderer extends PathRenderer {
         this.stretch = stretch;
     }
     
-    //</editor-fold>
-    
+    //endregion
 
     @Override
     public void render(Shape primitive, AttributeSet style, Graphics2D canvas) {

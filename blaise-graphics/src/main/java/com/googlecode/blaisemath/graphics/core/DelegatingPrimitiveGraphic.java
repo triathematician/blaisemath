@@ -1,8 +1,3 @@
-/**
- * DelegatingPrimitiveGraphic.java
- * Created Jul 31, 2014
- */
-
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -29,9 +24,10 @@ package com.googlecode.blaisemath.graphics.core;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
 
 /**
@@ -49,8 +45,7 @@ public class DelegatingPrimitiveGraphic<S,O,G> extends PrimitiveGraphicSupport<O
     /** The source object */
     protected S source;
     /** The style set for this graphic */
-    @Nullable
-    protected ObjectStyler<S> styler;
+    protected @Nullable ObjectStyler<S> styler;
 
     public DelegatingPrimitiveGraphic() {
     }
@@ -62,10 +57,7 @@ public class DelegatingPrimitiveGraphic<S,O,G> extends PrimitiveGraphicSupport<O
         setRenderer(renderer);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
 
     @Override
     public AttributeSet getStyle() {
@@ -93,28 +85,22 @@ public class DelegatingPrimitiveGraphic<S,O,G> extends PrimitiveGraphicSupport<O
         }
     }
     
-    //</editor-fold>
-    
-    /**
-     * Update the context menu initializer to use the source object for the focus, rather than the graphic.
-     * @param menu context menu
-     * @param src source for context menu
-     * @param point mouse location
-     * @param focus object of focus (overridden)
-     * @param selection current selection (null's okay)
-     */
+    //endregion
+
     @Override
-    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-        super.initContextMenu(menu, src, point, source, selection);
+    public void initContextMenu(JPopupMenu menu, Graphic<G> src, Point2D point, Object focus, Set<Graphic<G>> selection, G canvas) {
+        // use primitive source for focus parameter
+        super.initContextMenu(menu, src, point, source, selection, canvas);
     }
 
     /**
      * Return the tooltip provided by the object styler.
      * @param p point for tooltip
+     * @param canvas
      * @return tooltip
      */
     @Override
-    public String getTooltip(Point2D p) {
+    public String getTooltip(Point2D p, G canvas) {
         return styler == null ? null : styler.tooltip(source, null);
     }
     

@@ -1,12 +1,4 @@
-/**
- * Renderer.java
- * Created on Jul 2014
- */
 package com.googlecode.blaisemath.style;
-
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import javax.annotation.Nullable;
 
 /*
  * #%L
@@ -28,6 +20,10 @@ import javax.annotation.Nullable;
  * #L%
  */
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Marker for classes that render elements on a graphics context.
@@ -49,27 +45,29 @@ public interface Renderer<S,G> {
      * Get the bounding box for the drawn object
      * @param primitive the object to render
      * @param style the style used for rendering
+     * @param canvas where to render it
      * @return bounding box around the object
      */
-    @Nullable
-    Rectangle2D boundingBox(S primitive, AttributeSet style);
+    @Nullable Rectangle2D boundingBox(S primitive, AttributeSet style, G canvas);
     
     /**
      * Test whether rendered primitive contains the given point.
+     * @param point the point to test
      * @param primitive the object to render
      * @param style the style used for rendering
-     * @param point the point to test
+     * @param canvas where to render it
      * @return true if rendered primitive contains point
      */
-    boolean contains(S primitive, AttributeSet style, Point2D point);
+    boolean contains(Point2D point, S primitive, AttributeSet style, G canvas);
     
     /**
      * Test whether rendered primitive intersects the given rectangle.
+     * @param rect rectangle to test intersection with
      * @param primitive the object to render
      * @param style the style used for rendering
-     * @param rect rectangle to test intersection with
+     * @param canvas where to render it
      * @return true if rendered primitive intersects rectangle
      */
-    boolean intersects(S primitive, AttributeSet style, Rectangle2D rect);
+    boolean intersects(Rectangle2D rect, S primitive, AttributeSet style, G canvas);
     
 }

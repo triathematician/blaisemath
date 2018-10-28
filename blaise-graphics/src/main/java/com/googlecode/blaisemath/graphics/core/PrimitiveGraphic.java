@@ -1,8 +1,3 @@
-/**
- * PrimitiveGraphic.java
- * Created Jul 31, 2014
- */
-
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -28,7 +23,7 @@ package com.googlecode.blaisemath.graphics.core;
 
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A basic graphic object with a style set.
@@ -40,11 +35,10 @@ import javax.annotation.Nullable;
  */
 public class PrimitiveGraphic<O,G> extends PrimitiveGraphicSupport<O,G> {
     
-    public static final String STYLE_PROP = "style";
+    public static final String P_STYLE = "style";
     
     /** The style set for this graphic */
-    @Nullable 
-    protected AttributeSet style = new AttributeSet();
+    protected @Nullable AttributeSet style = new AttributeSet();
 
     public PrimitiveGraphic() {
     }
@@ -60,15 +54,10 @@ public class PrimitiveGraphic<O,G> extends PrimitiveGraphicSupport<O,G> {
         return "PrimitiveGraphic{" + primitive + '}';
     }
        
-    
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
 
     @Override
-    @Nullable 
-    public AttributeSet getStyle() {
+    public @Nullable AttributeSet getStyle() {
         return style;
     }
 
@@ -77,10 +66,10 @@ public class PrimitiveGraphic<O,G> extends PrimitiveGraphicSupport<O,G> {
             Object old = this.style;
             this.style = sty;
             fireGraphicChanged();
-            pcs.firePropertyChange(STYLE_PROP, old, style);
+            pcs.firePropertyChange(P_STYLE, old, style);
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

@@ -1,7 +1,3 @@
-/**
- * AbstractGraphicDragger.java
- * Created Jul 31, 2012
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -30,10 +26,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 /**
- * <p>
- *  Provides hooks for drag mouse gestures. Instead of working with all six mouse methods, subclasses can work with
- *  two or three (dragInitiated, dragInProgress, and optionally dragCompleted).
- * </p>
+ * Provides hooks for drag mouse gestures. Instead of working with all six mouse methods, subclasses can work with
+ * two or three (dragInitiated, dragInProgress, and optionally dragCompleted).
  * @author Elisha Peterson
  */
 public abstract class GMouseDragHandler extends MouseAdapter {

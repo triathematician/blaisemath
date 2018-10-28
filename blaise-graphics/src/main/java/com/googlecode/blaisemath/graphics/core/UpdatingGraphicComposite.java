@@ -20,18 +20,19 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-
 import com.google.common.annotations.Beta;
-import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import static com.googlecode.blaisemath.util.Preconditions.checkNotNull;
-import java.awt.Graphics2D;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Function;
+
+import static com.googlecode.blaisemath.util.Preconditions.checkNotNull;
 
 /**
  * Encapsulates a set of graphics as a composite, along with elements used
@@ -41,25 +42,35 @@ import java.util.Set;
  * @param <T> type of object represented by the composite
  */
 @Beta
-public class UpdatingGraphicComposite<T> {
+public class UpdatingGraphicComposite<T, G> {
 
     /** Contains the graphic elements */
-    private final GraphicComposite<Graphics2D> composite = new GraphicComposite<Graphics2D>();
+    private final GraphicComposite<G> composite = new GraphicComposite<>();
     /** Index for the graphics, based on source object */
-    private final BiMap<T, Graphic<Graphics2D>> index = HashBiMap.create();
+    private final BiMap<T, Graphic<G>> index = HashBiMap.create();
     /** Creates/updates the graphics */
-    private GraphicUpdater<T> updater;
+    private GraphicUpdater<T,G> updater;
 
-    public UpdatingGraphicComposite(GraphicUpdater<T> updater) {
+    public UpdatingGraphicComposite(GraphicUpdater<T, G> updater) {
         this.updater = checkNotNull(updater);
     }
+
+    public static <T, G> UpdatingGraphicComposite<T, G> create(GraphicUpdater<T, G> updater) {
+        return new UpdatingGraphicComposite<>(updater);
+    }
     
-    public static <T> UpdatingGraphicComposite<T> create(GraphicUpdater<T> updater) {
-        return new UpdatingGraphicComposite<T>(updater);
+    //region PROPERTIES
+
+    public GraphicComposite<G> getGraphic() {
+        return composite;
     }
 
-    public void setObjects(Iterable<T> data, Function<T,Rectangle2D> locs) {
-        Set<Graphic<Graphics2D>> toRemove = Sets.newHashSet(composite.getGraphics());
+    public GraphicUpdater<T, G> getUpdater() {
+        return updater;
+    }
+
+    public void setObjects(Iterable<T> data, Function<T, @Nullable Rectangle2D> locs) {
+        Set<Graphic<G>> toRemove = Sets.newHashSet(composite.getGraphics());
         for (T t : data) {
             if (index.containsKey(t)) {
                 toRemove.remove(index.get(t));
@@ -67,9 +78,13 @@ public class UpdatingGraphicComposite<T> {
         }
         composite.removeGraphics(toRemove);
         index.keySet().retainAll(data instanceof Collection ? (Collection) data : Lists.newArrayList(data));
-        
-        for (T obj : data) {
-            Graphic<Graphics2D> existing = index.get(obj);
+
+        updateItemGraphics(locs);
+    }
+
+    private void updateItemGraphics(Function<T, @Nullable Rectangle2D> locs) {
+        for (T obj : index.keySet()) {
+            Graphic<G> existing = index.get(obj);
             Rectangle2D loc = locs.apply(obj);
             if (loc == null && existing != null) {
                 composite.removeGraphic(existing);
@@ -83,37 +98,19 @@ public class UpdatingGraphicComposite<T> {
             }
         }
     }
-    
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
 
-    public GraphicComposite<Graphics2D> getGraphic() {
-        return composite;
-    }
-
-    public GraphicUpdater<T> getUpdater() {
-        return updater;
-    }
-
-    public void setUpdater(GraphicUpdater<T> updater) {
-        this.updater = updater;
-        // TODO rebuild if different
-    }
+    //endregion
     
-    //</editor-fold>
+    //region LOOKUPS
     
-    //<editor-fold defaultstate="collapsed" desc="LOOKUPS">
-    
-    public T objectOf(Graphic<Graphics2D> gfc) {
+    public T objectOf(Graphic<G> gfc) {
         return index.inverse().get(gfc);
     }
 
-    public Graphic<Graphics2D> graphicOf(T obj) {
+    public Graphic<G> graphicOf(T obj) {
         return index.get(obj);
     }
 
-    //</editor-fold>
+    //endregion
     
 }

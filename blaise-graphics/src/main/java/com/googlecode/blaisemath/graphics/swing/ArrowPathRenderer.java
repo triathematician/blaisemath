@@ -1,8 +1,3 @@
-/*
- * PathStyleArrow.java
- * Created Jan 12, 2011
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -45,6 +40,8 @@ import java.util.logging.Logger;
  */
 public class ArrowPathRenderer extends PathRenderer {
 
+    private static final Logger LOG = Logger.getLogger(ArrowPathRenderer.class.getName());
+
     protected ArrowLocation arrowLoc = ArrowLocation.END;
 
     /**
@@ -81,10 +78,7 @@ public class ArrowPathRenderer extends PathRenderer {
     }
     
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
     
     public ArrowLocation getArrowLocation() {
         return arrowLoc;
@@ -97,7 +91,7 @@ public class ArrowPathRenderer extends PathRenderer {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
     
     @Override
@@ -114,6 +108,7 @@ public class ArrowPathRenderer extends PathRenderer {
         
         // arrow heads can only be drawn on certain shapes
         if (!(s instanceof Line2D || s instanceof GeneralPath)) {
+            LOG.log(Level.WARNING, "Unable to draw arrowheads on this shape: {0}", s);
             return;
         }
 
@@ -131,7 +126,7 @@ public class ArrowPathRenderer extends PathRenderer {
                         (float) line.getX2(), (float) line.getY2(), 
                         (float) line.getX1(), (float) line.getY1(), strokeWidth), false);
             }
-        } else if (s instanceof GeneralPath) {
+        } else {
             GeneralPath gp = (GeneralPath) s;
             PathIterator pi = gp.getPathIterator(null);
             float[] cur = new float[6], last = new float[6];
@@ -148,9 +143,6 @@ public class ArrowPathRenderer extends PathRenderer {
                 System.arraycopy(cur, 0, last, 0, 6);
                 pi.next();
             }
-        } else {
-            Logger.getLogger(ArrowPathRenderer.class.getName()).log(Level.WARNING, 
-                    "Unable to draw arrowheads on this shape: {0}", s);
         }
         
         // draw filled arrowhead on top of path
@@ -159,11 +151,6 @@ public class ArrowPathRenderer extends PathRenderer {
         canvas.setStroke(new BasicStroke(strokeWidth));
         canvas.draw(arrowShapes);
     }
-
-    
-    //
-    // STATIC SHAPE METHOD
-    //
     
     /** 
      * Returns path representing an arrow from one point to another.
@@ -190,19 +177,16 @@ public class ArrowPathRenderer extends PathRenderer {
         return gp;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
-    //
-    // INNER CLASSES
-    //
+    //region INNER CLASSES
     
     /** Defines directions for arrowheads */
-    public static enum ArrowLocation {
+    public enum ArrowLocation {
         NONE,
         START,
         END,
-        BOTH;
+        BOTH
     }
     
-    //</editor-fold>
+    //endregion
     
 }

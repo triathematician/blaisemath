@@ -1,7 +1,3 @@
-/**
- * JGraphicUtils.java
- * Created Aug 1, 2014
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -142,6 +138,6 @@ public class JGraphics {
         return new DelegatingNodeLinkGraphic<>(MarkerRenderer.getInstance(), TextRenderer.getInstance(), PathRenderer.getInstance());
     }
     
-    //</editor-fold>
+    //endregion
     
 }

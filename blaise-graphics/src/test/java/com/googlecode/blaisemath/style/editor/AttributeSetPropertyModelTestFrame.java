@@ -46,7 +46,7 @@ public class AttributeSetPropertyModelTestFrame extends javax.swing.JFrame {
         EditorRegistration.registerEditors();
         AttributeSet as = Styles.fillStroke(Color.white, Color.red);
         AttributeSetPropertyModel m = new AttributeSetPropertyModel(as, 
-                ImmutableMap.<String,Class<?>>of(Styles.FILL, Color.class, Styles.STROKE, Color.class));
+                ImmutableMap.of(Styles.FILL, Color.class, Styles.STROKE, Color.class));
         rollupPanel1.add("AS Test", PropertySheet.forModel(m));
         
         jGraphicComponent1.addGraphic(JGraphics.point(new Point(20, 20), as));
@@ -79,11 +79,7 @@ public class AttributeSetPropertyModelTestFrame extends javax.swing.JFrame {
     public static void main(String args[]) {
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AttributeSetPropertyModelTestFrame().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new AttributeSetPropertyModelTestFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

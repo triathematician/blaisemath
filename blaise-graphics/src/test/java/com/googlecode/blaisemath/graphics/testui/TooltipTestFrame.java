@@ -36,6 +36,7 @@ import java.awt.geom.Rectangle2D;
  *
  * @author Elisha Peterson
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class TooltipTestFrame extends javax.swing.JFrame {
 
     /**
@@ -50,7 +51,7 @@ public class TooltipTestFrame extends javax.swing.JFrame {
         PrimitiveGraphic g2 = new PrimitiveGraphic(new Rectangle2D.Double(60,90,100,100), 
                 Styles.defaultShapeStyle(), ShapeRenderer.getInstance()) {
             @Override
-            public String getTooltip(Point2D p) {
+            public String getTooltip(Point2D p, Object canvas) {
                 return ""+p;
             }
         };
@@ -95,23 +96,13 @@ public class TooltipTestFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | javax.swing.UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
             java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        //endregion
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TooltipTestFrame().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new TooltipTestFrame().setVisible(true));
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.googlecode.blaisemath.graphics.swing.JGraphicComponent gc;

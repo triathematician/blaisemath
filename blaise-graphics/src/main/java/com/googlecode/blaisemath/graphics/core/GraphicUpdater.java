@@ -24,15 +24,17 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Rectangle2D;
-import javax.annotation.Nullable;
 
 /**
  * Create {@link Graphic} objects for rendering items.
  * @param <E> item type
+ * @param <G> canvas type
  * @author Elisha Peterson
  */
-public interface GraphicUpdater<E> {
+public interface GraphicUpdater<E, G> {
 
     /**
      * Create or edit graphic object for a specified entity.
@@ -41,7 +43,6 @@ public interface GraphicUpdater<E> {
      * @param existing graphic already associated with the entity (if it exists)
      * @return graphic, possible null
      */
-    @Nullable
-    Graphic update(E e, Rectangle2D bounds, Graphic existing);
+    @Nullable Graphic<G> update(E e, @Nullable Rectangle2D bounds, @Nullable Graphic<G> existing);
 
 }

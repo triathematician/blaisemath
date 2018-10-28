@@ -1,7 +1,3 @@
-/*
- * ColorModifier.java
- * Created May 9, 2013
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -25,6 +21,7 @@ package com.googlecode.blaisemath.style;
  */
 
 import java.awt.Color;
+import java.util.Set;
 
 /** 
  * Modifier that overrides all colors in the source style using the supplied hints. 
@@ -33,7 +30,7 @@ import java.awt.Color;
 public class ColorModifier implements StyleModifier {
 
     @Override
-    public AttributeSet apply(AttributeSet style, AttributeSet hints) {
+    public AttributeSet apply(AttributeSet style, Set<String> hints) {
         AttributeSet res = AttributeSet.withParent(style);
         for (String key : style.getAllAttributes(Color.class)) {
             res.put(key, StyleHints.modifyColorsDefault(style.getColor(key), hints));

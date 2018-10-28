@@ -1,7 +1,3 @@
-/**
- * GraphicHighlighter.java
- * Created Jul 31, 2012
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -29,9 +25,8 @@ import java.awt.event.MouseEvent;
 import com.googlecode.blaisemath.style.StyleHints;
 
 /**
- * <p>
  * Turns on highlight when the mouse is over the graphic, turns off when it leaves.
- * </p>
+ *
  * @author Elisha Peterson
  */
 public final class HighlightOnMouseoverHandler extends MouseAdapter {
@@ -40,7 +35,7 @@ public final class HighlightOnMouseoverHandler extends MouseAdapter {
     public void mouseEntered(MouseEvent e) {
         Graphic g = ((GMouseEvent)e).getGraphicSource();
         if (g.isHighlightEnabled()) {
-            g.getStyleHints().put(StyleHints.HILITE_HINT, true);
+            g.getStyleHints().add(StyleHints.HILITE_HINT);
         }
     }
 

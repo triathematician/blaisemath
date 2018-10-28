@@ -1,7 +1,3 @@
-/**
- * JGraphicSelectionHandler.java
- * Created Aug 1, 2012
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -40,16 +36,12 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.Set;
 
 /**
- * <p>
- *  Mouse handler that enables selection on a composite graphic object.
- *  Control must be down for any selection capability.
- * </p>
+ * Mouse handler that enables selection on a composite graphic object.
+ * Control must be down for any selection capability.
  * @param <G> type of render canvas
  * @author Elisha Peterson
  */
@@ -58,49 +50,39 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
     /** Whether selector is enabled */
     private boolean enabled = true;
     /** Determines which objects can be selected */
-    private final JGraphicComponent component;
+    private final JGraphicComponent owner;
     /** Model of selected items */
-    private final SetSelectionModel<Graphic<Graphics2D>> selection = new SetSelectionModel<Graphic<Graphics2D>>();
+    private final SetSelectionModel<Graphic<Graphics2D>> selection = new SetSelectionModel<>();
     
     /** Style for drawing selection box */
     private AttributeSet selectionBoxStyle = Styles.fillStroke(
             new Color(128,128,255,32), new Color(0,0,128,64));
 
-    private transient Point pressPt;
-    private transient Point dragPt;
-    private transient Rectangle2D.Double selectionBox = null;
+    private Point pressPt;
+    private Point dragPt;
+    private Rectangle2D.Double selectionBox = null;
     
     private static boolean MAC;
 
     /** 
      * Initialize for specified component
-     * @param compt the component for handling 
+     * @param owner the component for handling
      */
-    public JGraphicSelectionHandler(JGraphicComponent compt) {
-        this.component = compt;
+    public JGraphicSelectionHandler(JGraphicComponent owner) {
+        this.owner = owner;
 
         // highlight updates
-        selection.addPropertyChangeListener(new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                Set<Graphic> old = (Set<Graphic>) evt.getOldValue();
-                Set<Graphic> nue = (Set<Graphic>) evt.getNewValue();
-                for (Graphic g : Sets.difference(old, nue)) {
-                    g.getStyleHints().remove(StyleHints.SELECTED_HINT);
-                }
-                for (Graphic g : Sets.difference(nue, old)) {
-                    g.getStyleHints().put(StyleHints.SELECTED_HINT, true);
-                }
-            }
+        selection.addPropertyChangeListener(evt -> {
+            Set<Graphic> old = (Set<Graphic>) evt.getOldValue();
+            Set<Graphic> nue = (Set<Graphic>) evt.getNewValue();
+            Sets.difference(old, nue).forEach(g -> g.getStyleHints().remove(StyleHints.SELECTED_HINT));
+            Sets.difference(nue, old).forEach(g -> g.getStyleHints().add(StyleHints.SELECTED_HINT));
         });
         
         detectMac();
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
+    //region PROPERTIES
 
     public SetSelectionModel<Graphic<Graphics2D>> getSelectionModel() {
         return selection;
@@ -114,7 +96,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         if (this.enabled != enabled) {
             this.enabled = enabled;
             if (!enabled) {
-                selection.setSelection(Collections.<Graphic<Graphics2D>>emptySet());
+                selection.setSelection(Collections.emptySet());
             }
         }
     }
@@ -127,8 +109,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         this.selectionBoxStyle = checkNotNull(style);
     }
 
-    //</editor-fold>
-
+    //endregion
 
     @Override
     public void paint(Component component, Graphics2D canvas) {
@@ -136,38 +117,37 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
             ShapeRenderer.getInstance().render(selectionBox, selectionBoxStyle, canvas);
         }
     }
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="MOUSE GESTURE HANDLERS">
+
+    //region EVENTS
 
     @Override
     public void mouseMoved(MouseEvent e) {
         if (e.isConsumed()) {
             return;
         }
-        Graphic g = component.selectableGraphicAt(e.getPoint());
-        Graphic gAll = component.functionalGraphicAt(e.getPoint());
+        Graphic g = owner.selectableGraphicAt(e.getPoint());
+        Graphic gAll = owner.functionalGraphicAt(e.getPoint());
         if (gAll == null) {
             // reset to default if there is no active mouse graphic
-            component.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+            owner.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         } else if (g != null) {
             // identify selectable graphics when you mouse over them
-            component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            owner.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (!enabled || !(e.getButton()==MouseEvent.BUTTON1) || e.isConsumed()) {
+        if (!enabled || !(e.getButton() == MouseEvent.BUTTON1) || e.isConsumed()) {
             return;
         }
         if (!isSelectionEvent(e)) {
-            selection.setSelection(Collections.<Graphic<Graphics2D>>emptySet());
+            selection.setSelection(Collections.emptySet());
             return;
         }
-        Graphic<Graphics2D> g = component.selectableGraphicAt(e.getPoint());
+        Graphic<Graphics2D> g = owner.selectableGraphicAt(e.getPoint());
         if (g == null) {
-            selection.setSelection(Collections.<Graphic<Graphics2D>>emptySet());
+            selection.setSelection(Collections.emptySet());
         } else if (e.isShiftDown()) {
             selection.deselect(g);
         } else if (e.isAltDown()) {
@@ -209,15 +189,15 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
             return;
         }
         Point releasePt = e.getPoint();
-        if (component.getInverseTransform() == null) {
+        if (owner.getInverseTransform() == null) {
             selectionBox.setFrameFromDiagonal(pressPt, releasePt);
         } else {
             selectionBox.setFrameFromDiagonal(
-                    component.toGraphicCoordinate(pressPt),
-                    component.toGraphicCoordinate(releasePt));
+                    owner.toGraphicCoordinate(pressPt),
+                    owner.toGraphicCoordinate(releasePt));
         }
         if (selectionBox.getWidth() > 0 && selectionBox.getHeight() > 0) {
-            Set<Graphic<Graphics2D>> gg = component.getGraphicRoot().selectableGraphicsIn(selectionBox);
+            Set<Graphic<Graphics2D>> gg = owner.getGraphicRoot().selectableGraphicsIn(selectionBox, owner.canvas());
             if (e.isShiftDown()) {
                 Set<Graphic<Graphics2D>> res = Sets.newHashSet(selection.getSelection());
                 res.removeAll(gg);
@@ -230,13 +210,12 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         selectionBox = null;
         pressPt = null;
         dragPt = null;
-        component.repaint();
+        owner.repaint();
         e.consume();
     }
     
-    //</editor-fold>
+    //endregion
 
-    
     private static void detectMac() {
         String vers = System.getProperty("os.name").toLowerCase();
         MAC = vers.contains("mac");

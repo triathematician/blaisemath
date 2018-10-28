@@ -1,8 +1,3 @@
-/*
- * MultilineTextRenderer.java
- * Created on Jan 2, 2013
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -24,7 +19,6 @@ package com.googlecode.blaisemath.graphics.swing;
  * limitations under the License.
  * #L%
  */
-
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -63,13 +57,13 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
     }
 
     @Override
-    public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
-        return boundingBox(primitive, style).contains(point);
+    public boolean contains(Point2D point, AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+        return boundingBox(primitive, style, canvas).contains(point);
     }
 
     @Override
-    public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
-        return boundingBox(primitive, style).intersects(rect);
+    public boolean intersects(Rectangle2D rect, AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+        return boundingBox(primitive, style, canvas).intersects(rect);
     }
     
     private static String[] lines(AnchoredText text) {
@@ -90,7 +84,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);
         
         double lineHeight = font.getLineMetrics("", frc).getHeight();
-        Rectangle2D bounds = boundingBox(text, style);  
+        Rectangle2D bounds = boundingBox(text, style, canvas);
         Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());
         assert offset != null;
         double x0 = bounds.getMinX();
@@ -105,10 +99,6 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
     }
 
     @Override
-    public Rectangle2D boundingBox(AnchoredText text, AttributeSet style) {
-        return boundingBox(text, style, null);
-    }
-    
     public Rectangle2D boundingBox(AnchoredText text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return null;

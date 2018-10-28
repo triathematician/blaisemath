@@ -1,7 +1,3 @@
-/**
- * MarkerEditor.java
- * Created Oct 2014
- */
 package com.googlecode.blaisemath.style.editor;
 
 /*
@@ -23,7 +19,6 @@ package com.googlecode.blaisemath.style.editor;
  * limitations under the License.
  * #L%
  */
-
 
 import com.googlecode.blaisemath.editor.MPanelEditorSupport;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
@@ -49,7 +44,7 @@ public class MarkerEditor extends MPanelEditorSupport {
     public MarkerEditor() {
         combo = new JComboBox<>();
         combo.setModel(new DefaultComboBoxModel(Markers.getAvailableMarkers().toArray()));
-        combo.setRenderer(new MarkerCellRenderer());
+        combo.setRenderer(new MarkerCellRenderer(16));
     }
 
     @Override
@@ -71,10 +66,17 @@ public class MarkerEditor extends MPanelEditorSupport {
      * Renders markers as icons in a list.
      */
     public static class MarkerCellRenderer extends DefaultListCellRenderer {
+
+        private final int size;
+
+        public MarkerCellRenderer(int sz) {
+            this.size = sz;
+        }
+
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             setText(value.getClass().getSimpleName());
-            setIcon(new MarkerIcon((Marker) value, 16));
+            setIcon(new MarkerIcon((Marker) value, size));
             return this;
         }
     }
@@ -83,6 +85,7 @@ public class MarkerEditor extends MPanelEditorSupport {
      * Renders marker as an icon.
      */
     private static class MarkerIcon implements Icon {
+
         private final AttributeSet style = Styles.fillStroke(Color.white, Color.black, 1f);
         private final int size;
         private final Marker marker;

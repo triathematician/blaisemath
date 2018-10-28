@@ -36,6 +36,7 @@ import org.jdesktop.application.FrameView;
 /**
  * The application's main frame.
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class BlaiseGraphicsTestFrameView extends FrameView {
 
     public BlaiseGraphicsTestFrameView(SingleFrameApplication app) {

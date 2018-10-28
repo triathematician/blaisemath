@@ -1,7 +1,3 @@
-/*
- * Styles.java
- * Created May 9, 2013
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -24,14 +20,16 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
-/** 
+import java.util.Set;
+
+/**
  * Modifier that modifies stroke-width in the supplied style using the supplied hints.
  * @author Elisha Peterson
  */
 public class StrokeWidthModifier implements StyleModifier {
 
     @Override
-    public AttributeSet apply(AttributeSet style, AttributeSet hints) {
+    public AttributeSet apply(AttributeSet style, Set<String> hints) {
         return AttributeSet.withParent(style).and(Styles.STROKE_WIDTH,
                 StyleHints.modifyStrokeWidthDefault(style.getFloat(Styles.STROKE_WIDTH), hints));
     }

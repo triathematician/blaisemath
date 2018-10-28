@@ -55,7 +55,7 @@ import com.googlecode.blaisemath.graphics.swing.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.geom.Points;
-import com.sun.javafx.geom.Edge;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -63,15 +63,13 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
+
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -116,7 +114,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         canvas1.zoomToSelected(new Insets(50, 50, 50, 50));
     }
     
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="BASIC">
@@ -161,13 +159,10 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         final BasicPointSetGraphic bp = new BasicPointSetGraphic(
                 new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
                 this.pointsetStyle, MarkerRenderer.getInstance());
-        bp.addContextMenuInitializer(new ContextMenuInitializer<Graphic<Graphics2D>>(){
-            @Override
-            public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
-                Point2D pt = bp.getPoint(bp.indexOf(point));
-                menu.add(Points.format(pt, 2));
-                menu.add(getContext().getActionMap().get("editPointSetStyle"));
-            }
+        bp.addContextMenuInitializer((ContextMenuInitializer<Graphic<Graphics2D>>) (menu, src, point, focus, selection) -> {
+            Point2D pt = bp.getPoint(bp.indexOf(point, null));
+            menu.add(Points.format(pt, 2));
+            menu.add(getContext().getActionMap().get("editPointSetStyle"));
         });
         root1.addGraphic(bp);
     }
@@ -175,15 +170,11 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void editPointSetStyle() {        
         BasicPointStyleEditor ed = new BasicPointStyleEditor(pointsetStyle);
-        ed.addPropertyChangeListener("style", new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                canvas1.repaint();
-            }
-        });
+        ed.addPropertyChangeListener("style", evt -> canvas1.repaint());
         JOptionPane.showMessageDialog(getMainFrame(), ed);
     }
     
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="GRAPHICS WITH DELEGATORS">
@@ -202,10 +193,10 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         rect.setFrameFromDiagonal(randomPoint(), randomPoint());
         LabeledShapeGraphic gfc = new LabeledShapeGraphic();
         gfc.setPrimitive(rect);
-        gfc.getObjectStyler().setLabelConstant("this is a long label for a rectangle that should get wrapped, "
+        gfc.getObjectStyler().setLabel("this is a long label for a rectangle that should get wrapped, "
                 + "since it needs to be really big so we can adequately test something with a long label\n"
                 + "and new line characters");
-        gfc.getObjectStyler().setLabelStyleConstant(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
+        gfc.getObjectStyler().setLabelStyle(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
         root1.addGraphic(gfc);
     }
     
@@ -213,28 +204,28 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         LabeledShapeGraphic gfc = new LabeledShapeGraphic();
         Random r = new Random();
         gfc.setPrimitive(new Rectangle2D.Double(r.nextInt(100)+100, r.nextInt(100)+100, r.nextInt(20)+5, r.nextInt(20)+5));
-        gfc.getObjectStyler().setLabelConstant(r.nextBoolean() ? "ab" : "a");
-        gfc.getObjectStyler().setLabelStyleConstant(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
+        gfc.getObjectStyler().setLabel(r.nextBoolean() ? "ab" : "a");
+        gfc.getObjectStyler().setLabelStyle(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
         root1.addGraphic(gfc);
     }
         
     @Action
     public void addDelegatingPointSet() {
-        Set<String> list = new HashSet<String>(Arrays.asList(
-                "Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", 
+        Set<String> list = new HashSet<>(Arrays.asList(
+                "Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum",
                 "Sequoia", "Asher Matthew Peterson", "Elisha Peterson", "Bob the Builder"));
         Map<String,Point2D> crds = Maps.newLinkedHashMap();
         for (String s : list) {
             crds.put(s, new Point(10*s.length(), 50 + 10*s.indexOf(" ")));
         }
-        DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<String,Graphics2D>(
+        DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<>(
                 MarkerRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(crds);
         bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
-        bp.getStyler().setLabelStyleConstant(Styles.defaultTextStyle());
+        bp.getStyler().setLabelStyle(Styles.defaultTextStyle());
         bp.getStyler().setStyleDelegate(new Function<String,AttributeSet>(){
-            AttributeSet r = new AttributeSet();
+            final AttributeSet r = new AttributeSet();
             public AttributeSet apply(String src) {
                 int i1 = src.indexOf("a"), i2 = src.indexOf("e"), i3 = src.indexOf("i"), i4 = src.indexOf("o");
                 r.put(Styles.MARKER_RADIUS, i1+5);
@@ -255,13 +246,13 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         for (int i = 1; i <= 10; i++) {
             points2.put(i, randomPoint());
         }
-        final DelegatingPointSetGraphic<Integer,Graphics2D> bp = new DelegatingPointSetGraphic<Integer,Graphics2D>(
+        final DelegatingPointSetGraphic<Integer,Graphics2D> bp = new DelegatingPointSetGraphic<>(
                 MarkerRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(points2);
         bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
         bp.getStyler().setLabelStyleDelegate(new Function<Integer,AttributeSet>(){
-            AttributeSet r = new AttributeSet();
+            final AttributeSet r = new AttributeSet();
             public AttributeSet apply(Integer src) {
                 r.put(Styles.TEXT_ANCHOR, Anchor.CENTER);
                 r.put(Styles.FONT_SIZE, 5+src.floatValue());
@@ -269,7 +260,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             }
         });
         bp.getStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
-            AttributeSet r = new AttributeSet();
+            final AttributeSet r = new AttributeSet();
             public AttributeSet apply(Integer src) {
                 r.put(Styles.MARKER_RADIUS, src+2);
                 r.put(Styles.FILL, new Color((src*10+10) % 255, (src*20+25) % 255, (src*30+50) % 255));
@@ -323,7 +314,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         root1.addGraphic(gr);
     }
     
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="COMPOSITES">
@@ -366,7 +357,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         root1.addGraphic(ag);
     }
     
-    //</editor-fold>
+    //endregion
     
     
     //<editor-fold defaultstate="collapsed" desc="COOL STUFF USING SPECIAL STYLES">
@@ -396,7 +387,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         root1.addGraphic(ag);        
     }
     
-    //</editor-fold>
+    //endregion
     
         
     //<editor-fold defaultstate="collapsed" desc="APP CODE">
@@ -435,7 +426,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         launch(BlaiseGraphicsTestApp.class, args);
     }
     
-    //</editor-fold>
+    //endregion
     
     
 }

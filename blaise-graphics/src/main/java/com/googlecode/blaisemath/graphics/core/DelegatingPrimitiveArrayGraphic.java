@@ -1,8 +1,3 @@
-/**
- * DelegatingPrimitiveArrayGraphic.java
- * Created Jul 31, 2014
- */
-
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -24,7 +19,6 @@ package com.googlecode.blaisemath.graphics.core;
  * limitations under the License.
  * #L%
  */
-
 
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
@@ -60,10 +54,7 @@ public class DelegatingPrimitiveArrayGraphic<S,O,G> extends PrimitiveArrayGraphi
         setRenderer(renderer);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
 
     @Override
     public AttributeSet getStyle() {
@@ -88,19 +79,12 @@ public class DelegatingPrimitiveArrayGraphic<S,O,G> extends PrimitiveArrayGraphi
         sourceGraphicUpdated();
     }
     
-    //</editor-fold>
-    
-    /**
-     * Update the context menu initializer to use the source object for the focus, rather than the graphic.
-     * @param menu context menu
-     * @param src source for context menu
-     * @param point mouse location
-     * @param focus object of focus (overridden)
-     * @param selection current selection (null's okay)
-     */
+    //endregion
+
     @Override
-    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-        super.initContextMenu(menu, src, point, source, selection);
+    public void initContextMenu(JPopupMenu menu, Graphic<G> src, Point2D point, Object focus, Set<Graphic<G>> selection, G canvas) {
+        // switch focus to source object
+        super.initContextMenu(menu, src, point, source, selection, canvas);
     }
     
     /**

@@ -20,43 +20,34 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
-
-
-
-
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.StyleHints;
-import java.awt.Color;
+import com.google.common.collect.Sets;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-/**
- *
- * @author Elisha Peterson
- */
+import java.awt.*;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 public class StyleHintsTest {
 
-    /**
-     * Test of applyHints method, of class StyleModifiers.
-     */
     @Test
     public void testApplyHints() {
-        System.out.println("applyHints");
-        AttributeSet hints = new AttributeSet();
-        
-        assertEquals(new Color(50,0,0,128), StyleHints.modifyColorsDefault(new Color(50,0,0,128), hints));
-        
-        hints.put(StyleHints.HIDDEN_HINT, true);
-        assertEquals(new Color(50,0,0,0), StyleHints.modifyColorsDefault(new Color(50,0,0,128), hints));
-        hints.put(StyleHints.HIDDEN_HINT, false);
-        
-        hints.put(StyleHints.HILITE_HINT, true);
-        assertEquals(new Color(114,64,64,128), StyleHints.modifyColorsDefault(new Color(50,0,0,128), hints));
-        hints.put(StyleHints.HILITE_HINT, false);
-        
-        hints.put(StyleHints.SELECTED_HINT, true);
-        assertEquals(new Color(50,0,0,128), StyleHints.modifyColorsDefault(new Color(50,0,0,128), hints));
-        
+        Set<String> hints = Sets.newHashSet();
+
+        assertEquals(new Color(50, 0, 0, 128), StyleHints.modifyColorsDefault(new Color(50, 0, 0, 128), hints));
+
+        hints.add(StyleHints.HIDDEN_HINT);
+        assertEquals(new Color(50, 0, 0, 0), StyleHints.modifyColorsDefault(new Color(50, 0, 0, 128), hints));
+        hints.remove(StyleHints.HIDDEN_HINT);
+
+        hints.add(StyleHints.HILITE_HINT);
+        assertEquals(new Color(114, 64, 64, 128), StyleHints.modifyColorsDefault(new Color(50, 0, 0, 128), hints));
+        hints.remove(StyleHints.HILITE_HINT);
+
+        hints.add(StyleHints.SELECTED_HINT);
+        assertEquals(new Color(50, 0, 0, 128), StyleHints.modifyColorsDefault(new Color(50, 0, 0, 128), hints));
+
         assertNull(StyleHints.modifyColorsDefault(null, hints));
     }
     

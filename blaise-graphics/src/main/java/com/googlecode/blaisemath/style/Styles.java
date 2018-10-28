@@ -32,15 +32,19 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.google.common.primitives.Floats;
+import com.googlecode.blaisemath.graphics.swing.PathRenderer;
 import static com.googlecode.blaisemath.style.Anchor.*;
 import com.googlecode.blaisemath.util.Colors;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 /**
  * Factory class providing convenience methods for easily creating styles.
@@ -51,12 +55,7 @@ public final class Styles {
 
     private static final Logger LOG = Logger.getLogger(Styles.class.getName());
     
-    //<editor-fold defaultstate="collapsed" desc="STYLE ATTRIBUTE CONSTANTS">
-    
-    public static final String ID = "id";
-    
-    @SvgAttribute
-    public static final String OPACITY = "opacity";
+    //region SVG STYLE ATTRIBUTE CONSTANTS
     
     @SvgAttribute
     public static final String FILL = "fill";
@@ -71,51 +70,70 @@ public final class Styles {
     public static final String STROKE_DASHES = "stroke-dasharray";
     @SvgAttribute
     public static final String STROKE_OPACITY = "stroke-opacity";
-    
-    public static final String MARKER = "marker";
-    public static final String MARKER_RADIUS = "marker-radius";
-    
-    public static final String MARKER_ORIENT = "orient";
+
+    @SvgAttribute
+    public static final String OPACITY = "opacity";
     
     @SvgAttribute
     public static final String FONT = "font-family";
     @SvgAttribute
     public static final String FONT_SIZE = "font-size";
-    private static final int FONT_SIZE_DEFAULT = 12;
     
     /** Denotes weight of text */
     @SvgAttribute
     public static final String FONT_WEIGHT = "font-weight";
+    @SvgAttributeValue
     public static final String FONT_WEIGHT_NORMAL = "normal";
+    @SvgAttributeValue
     public static final String FONT_WEIGHT_BOLD = "bold";
     
     /** Denotes style of text */
     @SvgAttribute
     public static final String FONT_STYLE = "font-style";
+    @SvgAttributeValue
     public static final String FONT_STYLE_NORMAL = "normal";
+    @SvgAttributeValue
     public static final String FONT_STYLE_ITALIC = "italic";
     
     
     /** Denotes anchor of text relative to a point */
     @SvgAttribute
     public static final String TEXT_ANCHOR = "text-anchor";
+    @SvgAttributeValue
     public static final String TEXT_ANCHOR_START = "start";
+    @SvgAttributeValue
     public static final String TEXT_ANCHOR_MIDDLE = "middle";
+    @SvgAttributeValue
     public static final String TEXT_ANCHOR_END = "end";
     
     /** Denotes anchor of text baseline */
     @SvgAttribute
     public static final String ALIGN_BASELINE = "alignment-baseline";
+    @SvgAttributeValue
     public static final String ALIGN_BASELINE_BASELINE = "baseline";
+    @SvgAttributeValue
     public static final String ALIGN_BASELINE_MIDDLE = "middle";
+    @SvgAttributeValue
     public static final String ALIGN_BASELINE_HANGING = "hanging";
+
+    //endregion
+
+    //region CUSTOM STYLE ATTRIBUTE CONSTANTS
+
+    public static final String ID = "id";
+
+    public static final String MARKER = "marker";
+    public static final String MARKER_RADIUS = "marker-radius";
+
+    public static final String MARKER_ORIENT = "orient";
             
     /** Denotes offset from a point */
     public static final String OFFSET = "offset";
     
     /** Tooltip text */
     public static final String TOOLTIP = "tooltip";
-    
+
+    /** Associates text/baseline anchor settings with compass directions. */
     private static final Table<String, String, Anchor> ANCHOR_BASELINE_LOOKUP = HashBasedTable.create();
     static {
         ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_START, ALIGN_BASELINE_BASELINE, SOUTHWEST);
@@ -129,7 +147,12 @@ public final class Styles {
         ANCHOR_BASELINE_LOOKUP.put(TEXT_ANCHOR_END, ALIGN_BASELINE_HANGING, NORTHEAST);
     }
     
-    //</editor-fold>
+    //endregion
+
+    //region DEFAULT STYLE VALUES
+
+    private static final String FONT_DEFAULT = "Dialog";
+    private static final int FONT_SIZE_DEFAULT = 12;
 
     public static final AttributeSet DEFAULT_SHAPE_STYLE = AttributeSet
             .of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f)
@@ -140,21 +163,120 @@ public final class Styles {
             .immutable();
     
     public static final AttributeSet DEFAULT_POINT_STYLE = AttributeSet
-            .of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f)
-            .and(MARKER, Markers.CIRCLE)
-            .and(MARKER_RADIUS, 4)
+            .of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f, MARKER, Markers.CIRCLE, MARKER_RADIUS, 4)
             .immutable();
     
     public static final AttributeSet DEFAULT_TEXT_STYLE = AttributeSet
-            .of(FILL, Color.black, FONT, "Dialog", FONT_SIZE, 12f)
-            .and(TEXT_ANCHOR, Anchor.SOUTHWEST)
+            .of(FILL, Color.black, FONT, FONT_DEFAULT, FONT_SIZE, FONT_SIZE_DEFAULT, TEXT_ANCHOR, Anchor.SOUTHWEST)
             .immutable();
+
+    //endregion
     
     // utility class
     private Styles() {
     }
+
+    //region FACTORY METHODS
+
+    public static AttributeSet defaultShapeStyle() {
+        return DEFAULT_SHAPE_STYLE;
+    }
+
+    public static AttributeSet defaultPathStyle() {
+        return DEFAULT_PATH_STYLE;
+    }
+
+    public static AttributeSet defaultPointStyle() {
+        return DEFAULT_POINT_STYLE;
+    }
+
+    public static AttributeSet defaultTextStyle() {
+        return DEFAULT_TEXT_STYLE;
+    }
+
+    /**
+     * Create a basic shape style with given fill and stroke
+     * @param fill fill color
+     * @param stroke stroke color
+     * @return shape style
+     */
+    public static AttributeSet fillStroke(@Nullable Color fill, @Nullable Color stroke) {
+        return AttributeSet.of(FILL, fill, STROKE, stroke);
+    }
+
+    /**
+     * Create a basic shape style with given fill and stroke
+     * @param fill fill color
+     * @param stroke stroke color
+     * @param width stroke width
+     * @return shape style
+     */
+    public static AttributeSet fillStroke(@Nullable Color fill, @Nullable Color stroke, float width) {
+        return AttributeSet.of(FILL, fill, STROKE, stroke, STROKE_WIDTH, width);
+    }
+
+    /**
+     * Create a path style with a stroke color and width
+     * @param stroke stroke color
+     * @param width stroke width
+     * @return path style
+     */
+    public static AttributeSet strokeWidth(Color stroke, float width) {
+        return AttributeSet.of(STROKE, stroke, STROKE_WIDTH, width);
+    }
+
+    /**
+     * Create a style with given fill, size, and anchor
+     * @param col fill color of text
+     * @param sz font size
+     * @param anchor anchor of text
+     * @return text style
+     */
+    public static AttributeSet text(Color col, float sz, Anchor anchor) {
+        return AttributeSet.of(FILL, col, FONT_SIZE, sz, TEXT_ANCHOR, anchor);
+    }
+
+    /**
+     * Create style for a marker with given radius
+     * @param marker the marker shape
+     * @param fill marker fill
+     * @param rad the radius
+     * @return style
+     */
+    public static AttributeSet marker(Marker marker, Color fill, float rad) {
+        return AttributeSet.of(MARKER, marker, FILL, fill, MARKER_RADIUS, rad);
+    }
+
+    /**
+     * Modifies colors in a style set.
+     * @return color modifier
+     */
+    public static StyleModifier defaultColorModifier() {
+        return new ColorModifier();
+    }
+
+    /**
+     * Modifies stroke widths in a style set.
+     * @return color modifier
+     */
+    public static StyleModifier defaultStrokeModifier() {
+        return new StrokeWidthModifier();
+    }
+
+    /**
+     * Create default style context.
+     * @return a default style context w/ no parent, but with a standard set of styles
+     */
+    public static StyleContext defaultStyleContext() {
+        StyleContext res = new StyleContext();
+        res.addModifier(defaultColorModifier());
+        res.addModifier(defaultStrokeModifier());
+        return res;
+    }
+
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="UTILITY STYLE/JAVA TRANSLATORS">
+    //region TYPED GETTERS
     
     /**
      * Test whether given style has fill parameters: a fill color.
@@ -184,13 +306,10 @@ public final class Styles {
      */
     public static Color fillColorOf(AttributeSet style) {
         Color fill = style.getColor(Styles.FILL);
-        if (style.contains(Styles.OPACITY)) {
-            fill = Colors.alpha(fill, (int) (255*style.getFloat(Styles.OPACITY, 1f)));
-        }
-        if (style.contains(Styles.FILL_OPACITY)) {
-            fill = Colors.alpha(fill, (int) (255*style.getFloat(Styles.FILL_OPACITY, 1f)));
-        }
-        return fill;
+        int alpha = style.contains(Styles.FILL_OPACITY) ? (int) (255*style.getFloat(Styles.FILL_OPACITY, 1f))
+                : style.contains(Styles.OPACITY) ? (int) (255*style.getFloat(Styles.OPACITY, 1f))
+                : -1;
+        return alpha >= 0 && alpha <= 255 ? Colors.alpha(fill, alpha) : fill;
     }
     
     /**
@@ -200,13 +319,10 @@ public final class Styles {
      */
     public static Color strokeColorOf(AttributeSet style) {
         Color stroke = style.getColor(Styles.STROKE);
-        if (style.contains(Styles.OPACITY)) {
-            stroke = Colors.alpha(stroke, (int) (255*style.getFloat(Styles.OPACITY, 1f)));
-        }
-        if (style.contains(Styles.STROKE_OPACITY)) {
-            stroke = Colors.alpha(stroke, (int) (255*style.getFloat(Styles.STROKE_OPACITY, 1f)));
-        }
-        return stroke;
+        int alpha = style.contains(Styles.STROKE_OPACITY) ? (int) (255*style.getFloat(Styles.STROKE_OPACITY, 1f))
+                : style.contains(Styles.OPACITY) ? (int) (255*style.getFloat(Styles.OPACITY, 1f))
+                : -1;
+        return alpha >= 0 && alpha <= 255 ? Colors.alpha(stroke, alpha) : stroke;
     }
     
     /**
@@ -215,7 +331,7 @@ public final class Styles {
      * @return font
      */
     public static Font fontOf(AttributeSet style) {
-        String fontFace = style.getString(Styles.FONT, "Dialog");
+        String fontFace = style.getString(Styles.FONT, FONT_DEFAULT);
         int bold = FONT_WEIGHT_BOLD.equals(style.getString(Styles.FONT_WEIGHT, null)) ? Font.BOLD : 0;
         int italic = FONT_STYLE_ITALIC.equals(style.getString(Styles.FONT_STYLE, null)) ? Font.ITALIC : 0;
         Integer pointSize = style.getInteger(Styles.FONT_SIZE, FONT_SIZE_DEFAULT);
@@ -239,7 +355,12 @@ public final class Styles {
     }
     
     /**
-     * Get stroke from the provided style.
+     * Get stroke from the provided style. For dashed lines, because of a potential
+     * performance issue, it is recommended to use {@link PathRenderer#drawPatched(java.awt.Shape, java.awt.Graphics2D)}
+     * rather than {@link Graphics2D#draw(java.awt.Shape)} if the shape to be drawn
+     * is several magnitudes larger than the canvas (e.g. zoomed in very far).
+     * See https://bugs.openjdk.java.net/browse/JDK-6620013.
+     * 
      * @param style style object
      * @return stroke
      */
@@ -259,8 +380,7 @@ public final class Styles {
                 return new BasicStroke(strokeWidth, BasicStroke.CAP_BUTT, 
                         BasicStroke.JOIN_MITER, 10.0f, fArr, 0.0f);
             } catch (NumberFormatException x) {
-                Logger.getLogger(Styles.class.getName()).log(Level.WARNING,
-                        "Invalid dash pattern: "+dashes, x);
+                LOG.log(Level.WARNING, "Invalid dash pattern: "+dashes, x);
             }
         }
         return new BasicStroke(strokeWidth);
@@ -300,9 +420,9 @@ public final class Styles {
         return def;
     }
     
-    // </editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="ANCHOR CONVERSIONS">
+    //region ANCHOR CONVERSIONS
     
     /**
      * Create an anchor from the given anchor string and baseline string.
@@ -312,11 +432,9 @@ public final class Styles {
      * @return anchor
      */
     public static Anchor toAnchor(@Nullable String textAnchor, @Nullable String alignBaseline) {
-        String ta = textAnchor == null || !(TEXT_ANCHOR_START.equals(textAnchor)
-                || TEXT_ANCHOR_MIDDLE.equals(textAnchor) || TEXT_ANCHOR_END.equals(textAnchor))
+        String ta = !(TEXT_ANCHOR_START.equals(textAnchor) || TEXT_ANCHOR_MIDDLE.equals(textAnchor) || TEXT_ANCHOR_END.equals(textAnchor))
                 ? TEXT_ANCHOR_START : textAnchor;
-        String ab = alignBaseline == null || !(ALIGN_BASELINE_BASELINE.equals(alignBaseline) 
-                || ALIGN_BASELINE_MIDDLE.equals(alignBaseline) || ALIGN_BASELINE_HANGING.equals(alignBaseline))
+        String ab = !(ALIGN_BASELINE_BASELINE.equals(alignBaseline) || ALIGN_BASELINE_MIDDLE.equals(alignBaseline) || ALIGN_BASELINE_HANGING.equals(alignBaseline))
                 ? ALIGN_BASELINE_BASELINE : alignBaseline;
         return anchorFromAttributes(ta, ab, Anchor.SOUTHWEST);
     }
@@ -341,8 +459,7 @@ public final class Styles {
      * @return text-anchor attribute
      */
     public static String toTextAnchor(String anchorName) {
-        return toTextAnchor(isAnchorName(anchorName) ? Anchor.valueOf(anchorName)
-                : Anchor.SOUTHWEST);
+        return toTextAnchor(isAnchorName(anchorName) ? Anchor.valueOf(anchorName) : Anchor.SOUTHWEST);
     }
     
     /**
@@ -365,8 +482,7 @@ public final class Styles {
      * @return alignment-baseline attribute
      */
     public static String toAlignBaseline(String anchorName) {
-        return toAlignBaseline(isAnchorName(anchorName) ? Anchor.valueOf(anchorName)
-                : Anchor.SOUTHWEST);
+        return toAlignBaseline(isAnchorName(anchorName) ? Anchor.valueOf(anchorName) : Anchor.SOUTHWEST);
     }
     
     /**
@@ -375,129 +491,16 @@ public final class Styles {
      * @return true if its a string anchor name
      */
     public static boolean isAnchorName(Object anchor) {
-        if (!(anchor instanceof String)) {
-            return false;
-        }
-        for (Anchor a : Anchor.values()) {
-            if (anchor.equals(a.name())) {
-                return true;
-            }
-        }
-        return false;
+        return anchor instanceof String && Stream.of(Anchor.values()).anyMatch(a -> a.name().equals(anchor));
     }
     
     private static Anchor anchorFromAttributes(String anchor, String baseline, Anchor def) {
-        return ANCHOR_BASELINE_LOOKUP.contains(anchor, baseline) 
-                ? ANCHOR_BASELINE_LOOKUP.get(anchor, baseline)
-                : def;
+        return ANCHOR_BASELINE_LOOKUP.contains(anchor, baseline) ? ANCHOR_BASELINE_LOOKUP.get(anchor, baseline) : def;
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="STYLE SET FACTORY METHODS">
-    
-    public static AttributeSet defaultShapeStyle() {
-        return DEFAULT_SHAPE_STYLE;
-    }
-    
-    public static AttributeSet defaultPathStyle() {
-        return DEFAULT_PATH_STYLE;
-    }
-    
-    public static AttributeSet defaultPointStyle() {
-        return DEFAULT_POINT_STYLE;
-    }
-    
-    public static AttributeSet defaultTextStyle() {
-        return DEFAULT_TEXT_STYLE;
-    }
-   
-    /**
-     * Create a basic shape style with given fill and stroke
-     * @param fill fill color
-     * @param stroke stroke color
-     * @return shape style
-     */
-    public static AttributeSet fillStroke(@Nullable Color fill, @Nullable Color stroke) {
-        return AttributeSet.of(FILL, fill, STROKE, stroke);
-    }
-   
-    /**
-     * Create a basic shape style with given fill and stroke
-     * @param fill fill color
-     * @param stroke stroke color
-     * @param width stroke width
-     * @return shape style
-     */
-    public static AttributeSet fillStroke(@Nullable Color fill, @Nullable Color stroke, float width) {
-        return AttributeSet.of(FILL, fill, STROKE, stroke, STROKE_WIDTH, width);
-    }
-    
-    /**
-     * Create a path style with a stroke color and width
-     * @param stroke stroke color
-     * @param width stroke width
-     * @return path style
-     */
-    public static AttributeSet strokeWidth(Color stroke, float width) {
-        return AttributeSet.of(STROKE, stroke, STROKE_WIDTH, width);
-    }
-
-    /**
-     * Create a style with given fill, size, and anchor
-     * @param col fill color of text
-     * @param sz font size
-     * @param anchor anchor of text
-     * @return text style
-     */
-    public static AttributeSet text(Color col, float sz, Anchor anchor) {
-        return AttributeSet.of(FILL, col, FONT_SIZE, sz, TEXT_ANCHOR, anchor);
-    }
-
-    /**
-     * Create style for a marker with given radius
-     * @param marker the marker shape
-     * @param rad the radius
-     * @return style
-     */
-    public static AttributeSet marker(Marker marker, float rad) {
-        return AttributeSet.of(MARKER, marker, MARKER_RADIUS, rad);
-    }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="MODIFIER & CONTEXT FACTORY METHODS">
-    
-    /**
-     * Modifies colors in a style set.
-     * @return color modifier
-     */
-    public static StyleModifier defaultColorModifier() {
-        return new ColorModifier();
-    }
-    
-    /**
-     * Modifies stroke widths in a style set.
-     * @return color modifier
-     */
-    public static StyleModifier defaultStrokeModifier() {
-        return new StrokeWidthModifier();
-    }
-    
-    /**
-     * Create default style context.
-     * @return a default style context w/ no parent, but with a standard set of styles
-     */
-    public static StyleContext defaultStyleContext() {
-        StyleContext res = new StyleContext();
-        res.addModifier(defaultColorModifier());
-        res.addModifier(defaultStrokeModifier());
-        return res;
-    }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="MODIFIER UTILITIES">
+    //region MODIFIER UTILS
     
     /**
      * Return highlight-modified version of the style set.
@@ -505,8 +508,9 @@ public final class Styles {
      * @return default modified style for highlighting
      */
     public static AttributeSet withHighlight(AttributeSet style) {
-        return defaultStyleContext().applyModifiers(style,
-                AttributeSet.of(StyleHints.HILITE_HINT, true));
+        return defaultStyleContext().applyModifiers(style, StyleHints.HILITE_HINT);
     }
+
+    //endregion
     
 }

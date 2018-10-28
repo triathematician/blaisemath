@@ -1,7 +1,3 @@
-/**
- * GraphicUtils.java
- * Created Jul 11, 2014
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -27,16 +23,19 @@ package com.googlecode.blaisemath.graphics.core;
 
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.base.Predicate;
+
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.util.Comparator;
 import java.util.List;
-import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * Utility class for working with {@link Graphic}s.
@@ -44,52 +43,11 @@ import javax.annotation.Nullable;
  */
 public class GraphicUtils {
     
-    //<editor-fold defaultstate="collapsed" desc="SINGLETONS">
-    
-    /** Filter that can be applied to pass only visible graphics */
-    private static final Predicate<Graphic> VISIBLE_FILTER = new Predicate<Graphic>(){
-        @Override
-        public boolean apply(Graphic input) { 
-            return !StyleHints.isInvisible(input.getStyleHints());
-        }
-    };
-    
-    /** Filter that can be applied to pass only visible graphics */
-    private static final Predicate<Graphic> FUNCTIONAL_FILTER = new Predicate<Graphic>(){
-        @Override
-        public boolean apply(Graphic input) { 
-            return StyleHints.isFunctional(input.getStyleHints());
-        }
-    };
-    
-    /** Comparator for z-order of graphics */
-    private static final Comparator<Graphic> Z_COMPARATOR = new ZOrderComparator();
-    
-    //</editor-fold>
-    
     // utility class
     private GraphicUtils() {
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PREDICATES">
-    
-    /**
-     * Return visibility filter for graphics.
-     * @param <G> type of graphic being filtered
-     * @return visible filter
-     */
-    public static <G extends Graphic> Predicate<G> visibleFilter() {
-        return (Predicate<G>) VISIBLE_FILTER;
-    }
-    
-    /**
-     * Return functional filter for graphics.
-     * @param <G> type of graphic being filtered
-     * @return functional filter
-     */
-    public static <G extends Graphic> Predicate<G> functionalFilter() {
-        return (Predicate<G>) FUNCTIONAL_FILTER;
-    }
+    //region PREDICATES
 
     /**
      * Return true if graphic is currently invisible
@@ -97,7 +55,16 @@ public class GraphicUtils {
      * @return true if hidden
      */
     public static boolean isInvisible(Graphic<?> gr) {
-        return !visibleFilter().apply(gr);
+        return StyleHints.isInvisible(gr.getStyleHints());
+    }
+
+    /**
+     * Return true if graphic is currently invisible
+     * @param gr the graphic
+     * @return true if hidden
+     */
+    public static boolean isVisible(Graphic<?> gr) {
+        return !StyleHints.isInvisible(gr.getStyleHints());
     }
 
     /**
@@ -106,12 +73,12 @@ public class GraphicUtils {
      * @return true if invisible
      */
     public static boolean isFunctional(Graphic<?> gr) {
-        return functionalFilter().apply(gr);
+        return StyleHints.isFunctional(gr.getStyleHints());
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="SELECTORS">
+    //region SELECTORS
     
     /**
      * Search for graphic with the given id in the composite, returning it.
@@ -121,7 +88,7 @@ public class GraphicUtils {
      * @param id what to search for
      * @return the found graphic, or null if none is found
      */
-    public <G> Graphic<G> select(Graphic<G> gr, String id) {
+    public static <G> Graphic<G> select(Graphic<G> gr, String id) {
         checkNotNull(id);
         if (Objects.equal(id, gr.getStyle().getString(Styles.ID, null))) {
             return gr;
@@ -137,17 +104,17 @@ public class GraphicUtils {
         return null;
     }
     
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="COMPARATORS">
-    
+    //endregion
+
+    //region COMPARATORS
+
     /**
      * Return z-order comparator for graphics.
      * @param <G> type of graphic being compared
      * @return comparator
      */
     public static <G extends Graphic> Comparator<G> zOrderComparator() {
-        return (Comparator<G>) Z_COMPARATOR;
+        return (Comparator<G>) new ZOrderComparator();
     }
     
     /**
@@ -160,59 +127,54 @@ public class GraphicUtils {
         return Ordering.from(GraphicUtils.zOrderComparator()).sortedCopy(graphics);
     }
     
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="BOUNDING BOX UTILS">
+    //endregion
+
+    //region BOUNDING BOX UTILS
     
     /**
      * Get the bounding box surrounding the given set of graphics.
      * @param <G> type of graphic canvas
      * @param entries the graphics
+     * @param canvas
      * @return bounding box, or null if the provided iterable is empty
      */
-    @Nullable
-    public static <G> Rectangle2D boundingBox(Iterable<? extends Graphic<G>> entries) {
-        Rectangle2D res = null;
-        for (Graphic<G> en : entries) {
-            Rectangle2D enBox = en.boundingBox();
-            if (enBox != null) {
-                res = res == null ? enBox : res.createUnion(enBox);
-            }
-        }
-        return res;
+    public static <G> @Nullable Rectangle2D boundingBox(Iterable<? extends Graphic<G>> entries, G canvas) {
+        return boundingBox(entries, g -> g.boundingBox(canvas), null);
     }
-    
+
     /**
-     * Get the bounding box surrounding the given set of rectangles.
-     * @param shapes the rectangular shapes
-     * @return bounding box, or null if the provided iterable is empty
+     * Get bounding box from iterable.
+     * @param bounds set of items
+     * @param mapper gets rectangles
+     * @param def to return if result is null
+     * @return bounding box, or def if the provided iterable is empty
      */
-    @Nullable
-    public static Rectangle2D boundingBoxRect(Iterable<? extends RectangularShape> shapes) {
+    public static @Nullable <X> Rectangle2D boundingBox(Iterable<X> bounds, Function<X, Rectangle2D> mapper, @Nullable Rectangle2D def) {
         Rectangle2D res = null;
-        for (RectangularShape sh : shapes) {
-            if (sh != null) {
-                res = res == null ? sh.getBounds2D() : res.createUnion(sh.getBounds2D());
+        for (X x : bounds) {
+            Rectangle2D r = mapper.apply(x);
+            if (r != null) {
+                res = res == null ? r : res.createUnion(r);
             }
         }
-        return res;
+        return res == null ? def : res;
     }
     
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    //endregion
+
+    //region INNER CLASSES
     
     /** Comparator for z order of graphics */
-    private static class ZOrderComparator implements Comparator<Graphic> {
+    private static class ZOrderComparator<G> implements Comparator<Graphic<G>> {
         @Override
-        public int compare(Graphic left, Graphic right) {
+        public int compare(Graphic<G> left, Graphic<G> right) {
             if (left == right) {
                 return 0;
             }
             
             // find the common parent of the two graphics, then compare position relative to that
-            List<Graphic> parLeft = graphicPath(left);
-            List<Graphic> parRight = graphicPath(right);
+            List<Graphic<G>> parLeft = graphicPath(left);
+            List<Graphic<G>> parRight = graphicPath(right);
             int firstDiffer = -1;
             int commonSize = Math.min(parLeft.size(), parRight.size());
             for (int i = 0; i < commonSize; i++) {
@@ -243,9 +205,9 @@ public class GraphicUtils {
             }
         }
 
-        private List<Graphic> graphicPath(Graphic gfc) {
-            List<Graphic> res = Lists.newArrayList();
-            Graphic cur = gfc;
+        private List<Graphic<G>> graphicPath(Graphic<G> gfc) {
+            List<Graphic<G>> res = Lists.newArrayList();
+            Graphic<G> cur = gfc;
             while (cur != null) {
                 res.add(0, cur);
                 cur = cur.getParent();
@@ -254,6 +216,6 @@ public class GraphicUtils {
         }
     }
     
-    //</editor-fold>
+    //endregion
     
 }

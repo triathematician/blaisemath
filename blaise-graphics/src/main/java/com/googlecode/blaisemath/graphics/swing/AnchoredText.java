@@ -53,7 +53,7 @@ public final class AnchoredText extends Point2DBean {
         return "AnchoredText["+x+", "+y+"; "+text+"]";
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //region PROPERTIES
     
     public String getText() {
         return text;
@@ -63,6 +63,6 @@ public final class AnchoredText extends Point2DBean {
         this.text = text;
     }
     
-    //</editor-fold>
+    //endregion
     
 }

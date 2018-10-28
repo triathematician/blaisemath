@@ -1,7 +1,3 @@
-/**
- * LabeledPointGraphic.java
- * Created Aug 21, 2012
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -24,8 +20,6 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-
-
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
@@ -45,22 +39,20 @@ import java.awt.geom.Point2D;
  */
 public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point2D,G> {
     
-    public static final String LABEL_RENDERER_PROP = "labelRenderer";
+    public static final String P_LABEL_RENDERER = "labelRenderer";
 
     private Renderer<AnchoredText,G> textRenderer;
     
     public LabeledPointGraphic() {
-        this(null, new Point(), new ObjectStyler<O>());
+        this(null, new Point(), new ObjectStyler<>());
     }
 
     public LabeledPointGraphic(O source, Point2D primitive, ObjectStyler<O> styler) {
         super(source, primitive, styler, null);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
+
     public Renderer<AnchoredText, G> getLabelRenderer() {
         return textRenderer;
     }
@@ -69,11 +61,11 @@ public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point
         if (this.textRenderer != textRenderer) {
             Object old = this.textRenderer;
             this.textRenderer = textRenderer;
-            pcs.firePropertyChange(LABEL_RENDERER_PROP, old, textRenderer);
+            pcs.firePropertyChange(P_LABEL_RENDERER, old, textRenderer);
         }
     }
     
-    //</editor-fold>
+    //endregion
     
     /**
      * Return label, if its visible.
@@ -81,7 +73,7 @@ public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point
      */
     private String visibleLabel() {
         if (styler.getLabelDelegate() == null || getLabelRenderer() == null
-                || (styler.getLabelFilter() != null && !styler.getLabelFilter().apply(source))) {
+                || (styler.getLabelFilter() != null && !styler.getLabelFilter().test(source))) {
             return null;
         }
         String label = styler.label(source);
@@ -96,11 +88,10 @@ public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point
         if (label != null) {
             AttributeSet style = styler.labelStyle(source);
             if (style != null) {
-                AnchoredText alabel = new AnchoredText(primitive, label);
-                getLabelRenderer().render(alabel, style, canvas);
+                AnchoredText text = new AnchoredText(primitive, label);
+                getLabelRenderer().render(text, style, canvas);
             }
         }
     }
-
 
 }

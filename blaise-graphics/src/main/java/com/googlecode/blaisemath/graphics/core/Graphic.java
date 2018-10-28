@@ -1,7 +1,3 @@
-/**
- * Graphic.java
- * Created Jan 22, 2011
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -25,69 +21,61 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Arrays.asList;
+
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
 /**
- * <p>
  * An object along with style and renderer information allowing it to be drawn
- * on a graphics canvas.
- * </p>
- * <p>
- * Key additional features are:
- * </p>
+ * on a graphics canvas. Key additional features are:
  * <ul>
- * <li>A <em>parent</em> (via get and set methods), which is a
- * {@link GraphicComposite} and provides access to default styles of various
- * types.</li>
- * <li>Visibility settings (via get and set methods). See {@link StyleHints}
- * for the parameters.</li>
+ * <li>A <em>parent</em> (via get and set methods), which is a {@link GraphicComposite} and provides access to
+ * default styles of various types.</li>
+ * <li>Visibility settings (via get and set methods). See {@link StyleHints} for the parameters.</li>
  * <li>Three methods based on a point on the canvas:
  * <ul>
- * <li> {@link #boundingBox()}, providing a box that encloses the graphic</li>
- * <li> {@link #contains(java.awt.geom.Point2D)}, testing whether the entry
- * contains a point</li>
- * <li> {@link #getTooltip(java.awt.geom.Point2D)}, returning the tooltip for a
- * point (or null)</li>
+ * <li> {@link #boundingBox(Object)}, providing a box that encloses the graphic</li>
+ * <li> {@link #contains(Point2D, Object)}, testing whether the entry contains a point</li>
+ * <li> {@link #getTooltip(Point2D, Object)}, returning the tooltip for a point (or null)</li>
  * </ul>
  * </li>
  * </ul>
- * <p>
- *    Implementations must provide the object to be rendered, as well as the
- *    render functionality, and they must implement their own drag functionality.
- * </p>
- * 
+ * Implementations must provide the object to be rendered, as well as the
+ * render functionality, and they must implement their own drag functionality.
+ *
  * @param <G> type of graphics canvas to render to
  *
  * @author Elisha Peterson
  */
-public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
+public abstract class Graphic<G> {
 
-    public static final String SELECTION_ENABLED = "selection-enabled";
-    public static final String TOOLTIP_ENABLED = "tooltip-enabled";
-    public static final String MOUSE_ENABLED = "mouse-enabled";
-    public static final String POPUP_ENABLED = "popupmenu-enabled";
+    public static final String HINT_SELECTION_ENABLED = "selection-enabled";
+    public static final String HINT_TOOLTIP_ENABLED = "tooltip-enabled";
+    public static final String HINT_POPUP_ENABLED = "popupmenu-enabled";
+    public static final String HINT_MOUSE_DISABLED = "mouse-disabled";
     
     /** Stores the parent of this entry */
     protected GraphicComposite<G> parent;
     /** Modifiers that are applied to the style before drawing. */
-    protected AttributeSet styleHints = new AttributeSet();
+    protected Set<String> styleHints = Sets.newLinkedHashSet();
     /** Default text of tooltip */
     protected String defaultTooltip = null;
     /** Context initializers */
@@ -105,25 +93,15 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
      */
     public Graphic() {
         addMouseListener(highlighter);
-        styleHints.addChangeListener(new ChangeListener(){
-            @Override
-            public void stateChanged(ChangeEvent ce) {
-                fireGraphicChanged();
-            }
-        });
     }
 
-    //<editor-fold defaultstate="collapsed" desc="COMPOSITION API">
-    //
-    // COMPOSITION
-    //
+    //region PROPERTIES
 
     /**
      * Return parent of the entry
      * @return parent, possibly null
      */
-    @Nullable 
-    public GraphicComposite getParent() {
+    public final @Nullable GraphicComposite getParent() {
         return parent;
     }
 
@@ -131,177 +109,78 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
      * Set parent of the entry
      * @param p the new parent, possibly null
      */
-    @Nullable
     public void setParent(@Nullable GraphicComposite p) {
         this.parent = p;
     }
 
-    /** Notify interested listeners of a change in the plottable. */
-    protected void fireGraphicChanged() {
-        if (parent != null) {
-            parent.graphicChanged(this);
-        }
-    }
-    
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="STYLE & RENDERING API">
-    //
-    // STYLE & RENDERING
-    //
-
-    /**
-     * Return style attributes of the graphic to be used for rendering.
-     * The result will have all style hints automatically applied. Any attributes
-     * of the parent style are inherited.
-     * 
-     * @return style
-     */
-    public final AttributeSet renderStyle() {
-        AttributeSet renderStyle = getStyle();
-        if (renderStyle == null) {
-            renderStyle = new AttributeSet();
-        }
-        AttributeSet renderHints = getStyleHints();
-        
-        if (parent != null) {
-            AttributeSet parStyle = parent.getStyle();
-            if (parStyle != null && parStyle != renderStyle.getParent().orElse(null)) {
-                renderStyle = renderStyle.flatCopy().immutableWithParent(parStyle);
-            }
-            AttributeSet parStyleHints = parent.getStyleHints();
-            if (parStyleHints != null && renderHints.getParent().orElse(null) != parStyleHints) {
-                renderHints = renderHints.flatCopy().immutableWithParent(parStyleHints);
-            }
-            renderStyle = parent.getStyleContext().applyModifiers(renderStyle, renderHints);
-        }
-        return renderStyle;
-    }
-    
-    /**
-     * Return style set of this graphic
-     * @return graphic style
-     */
-    public abstract AttributeSet getStyle();
-    
     /**
      * Return set of style hints for the graphic.
      * @return style hints
      */
-    public AttributeSet getStyleHints() {
-        return styleHints;
+    public final Set<String> getStyleHints() {
+        return Collections.unmodifiableSet(styleHints);
     }
 
     /**
      * Sets style hints of graphic
      * @param hints new style hints
      */
-    public void setStyleHints(AttributeSet hints) {
-        this.styleHints = hints;
+    public final void setStyleHints(String... hints) {
+        setStyleHints(asList(hints));
+    }
+
+    /**
+     * Sets style hints of graphic
+     * @param hints new style hints
+     */
+    public final void setStyleHints(Iterable<String> hints) {
+        styleHints.clear();
+        Iterables.addAll(styleHints, hints);
         fireGraphicChanged();
     }
-    
+
     /**
      * Set status of a particular visibility hint.
      * @param hint hint
      * @param status status of hint
      */
-    public void setStyleHint(String hint, boolean status) {
-        styleHints.put(hint, status);
+    public final void setStyleHint(String hint, boolean status) {
+        boolean change = status ? styleHints.add(hint) : styleHints.remove(hint);
+        if (change) {
+            fireGraphicChanged();
+        }
     }
-    
-    /**
-     * Draws the primitive on the specified graphics canvas, using current
-     * style.
-     * @param canvas graphics canvas
-     */
-    public abstract void renderTo(G canvas);
-
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="LOCATOR API">
-    //
-    // LOCATOR API
-    //
-    
-    /**
-     * Method that provides the bounding box enclosing the graphic.
-     * @return bounding box
-     */
-    public abstract Rectangle2D boundingBox();
-    
-    /**
-     * Method used to determine whether the graphic receives mouse events
-     * and will be asked to provide a tooltip at the given point. The graphic's
-     * {@link MouseListener}s and {@link MouseMotionListener}s will have the
-     * opportunity to receive events if the graphic is the topmost element
-     * containing the event's point.
-     *
-     * @param point the window point
-     * @return true if the entry contains the point, else false
-     */
-    public abstract boolean contains(Point2D point);
-
-    /**
-     * Checks to see if the graphic intersects the area within specified
-     * rectangle.
-     *
-     * @param box rectangle to check against
-     * @return true if it intersects, false otherwise
-     */
-    public abstract boolean intersects(Rectangle2D box);
-
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="CONTEXT MENU API">
-    //
-    // CONTEXT MENU
-    //
 
     /**
      * Whether graphic supports context menu building
      * @return true if yes
      */
-    public boolean isContextMenuEnabled() {
-        return styleHints.getBoolean(POPUP_ENABLED, false);
+    public final boolean isContextMenuEnabled() {
+        return styleHints.contains(HINT_POPUP_ENABLED);
     }
 
-    public void setContextMenuEnabled(boolean val) {
-        styleHints.put(POPUP_ENABLED, val);
-    }
-    
-    public void clearContextMenuInitializers() {
-        contextMenuInitializers.clear();
-        setContextMenuEnabled(false);
+    public final void setContextMenuEnabled(boolean val) {
+        setStyleHint(HINT_POPUP_ENABLED, val);
     }
 
-    public void addContextMenuInitializer(ContextMenuInitializer<Graphic<G>> init) {
+    public final void addContextMenuInitializer(ContextMenuInitializer<Graphic<G>> init) {
         if (!contextMenuInitializers.contains(init)) {
             contextMenuInitializers.add(init);
             setContextMenuEnabled(true);
         }
     }
 
-    public void removeContextMenuInitializer(ContextMenuInitializer<Graphic<G>> init) {
+    public final void removeContextMenuInitializer(ContextMenuInitializer<Graphic<G>> init) {
         contextMenuInitializers.remove(init);
         if (contextMenuInitializers.isEmpty()) {
             setContextMenuEnabled(false);
         }
     }
 
-    @Override
-    public void initContextMenu(JPopupMenu menu, Graphic<G> src, Point2D point, Object focus, Set selection) {
-        for (ContextMenuInitializer<Graphic<G>> cmi : contextMenuInitializers) {
-            cmi.initContextMenu(menu, src, point, focus, selection);
-        }
+    public final void clearContextMenuInitializers() {
+        contextMenuInitializers.clear();
+        setContextMenuEnabled(false);
     }
-    
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="SELECTION API">
-    //
-    // SELECTION
-    //
 
     /**
      * Return true if graphic can be selected. If this flag is set to true, the
@@ -309,19 +188,19 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
      * or select graphics in box).
      * @return selection flag
      */
-    public boolean isSelectionEnabled() {
-        return styleHints.getBoolean(SELECTION_ENABLED, false);
+    public final boolean isSelectionEnabled() {
+        return styleHints.contains(HINT_SELECTION_ENABLED);
     }
 
-    public void setSelectionEnabled(boolean val) {
-        styleHints.put(SELECTION_ENABLED, val);
+    public final void setSelectionEnabled(boolean val) {
+        setStyleHint(HINT_SELECTION_ENABLED, val);
     }
 
-    public boolean isHighlightEnabled() {
-        return Arrays.asList(eventHandlers.getListenerList()).contains(highlighter);
+    public final boolean isHighlightEnabled() {
+        return asList(eventHandlers.getListenerList()).contains(highlighter);
     }
 
-    public void setHighlightEnabled(boolean val) {
+    public final void setHighlightEnabled(boolean val) {
         if (val != isHighlightEnabled()) {
             if (val) {
                 addMouseListener(highlighter);
@@ -330,33 +209,17 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
             }
         }
     }
-    
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="TOOLTIP API">
-    //
-    // TOOLTIP API
-    //
-    
     /**
      * Return true if tips are enabled/supported
      * @return true if yes
      */
-    public boolean isTooltipEnabled() {
-        return styleHints.getBoolean(TOOLTIP_ENABLED, true);
+    public final boolean isTooltipEnabled() {
+        return styleHints.contains(HINT_TOOLTIP_ENABLED);
     }
 
     public final void setTooltipEnabled(boolean val) {
-        styleHints.put(TOOLTIP_ENABLED, val);
-    }
-
-    /**
-     * Return tooltip for the specified point
-     * @param p the point
-     * @return the tooltip at the specified location (may be null)
-     */
-    public String getTooltip(Point2D p) {
-        return isTooltipEnabled() ? defaultTooltip : null;
+        setStyleHint(HINT_TOOLTIP_ENABLED, val);
     }
 
     /**
@@ -375,59 +238,146 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
         setTooltipEnabled(true);
         this.defaultTooltip = tooltip;
     }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE LISTENING">
-    //
-    // PROPERTY CHANGE LISTENING
-    //
-    
-    public void addPropertyChangeListener(PropertyChangeListener pl) {
-        pcs.addPropertyChangeListener(pl);
-    }
-    
-    public void addPropertyChangeListener(String string, PropertyChangeListener pl) {
-        pcs.addPropertyChangeListener(string, pl);
-    }
-    
-    public void removePropertyChangeListener(PropertyChangeListener pl) {
-        pcs.removePropertyChangeListener(pl);
-    }
-    
-    public void removePropertyChangeListener(String string, PropertyChangeListener pl) {
-        pcs.removePropertyChangeListener(string, pl);
-    }
 
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="MOUSE HANDLING">
-    //
-    // MOUSE HANDLING
-    //
-    
     /**
      * Whether the object should receive mouse events.
      * @return true if yes, false otherwise
      */
-    public boolean isMouseEnabled() {
-        return styleHints.getBoolean(MOUSE_ENABLED, true);
+    public boolean isMouseDisabled() {
+        return styleHints.contains(HINT_MOUSE_DISABLED);
     }
 
-    public void setMouseEnabled(boolean val) {
-        styleHints.put(MOUSE_ENABLED, val);
+    public void setMouseDisabled(boolean val) {
+        setStyleHint(HINT_MOUSE_DISABLED, val);
     }
 
-    public void removeMouseListeners() {
-        for (MouseListener m : getMouseListeners()) {
-            eventHandlers.remove(MouseListener.class, m);
+    //endregion
+
+    //region COMPUTED PROPERTIES and LOOKUPS
+
+    /**
+     * Return style attributes of the graphic to be used for rendering.
+     * The result will have all style hints automatically applied. Any attributes
+     * of the parent style are inherited.
+     *
+     * @return style
+     */
+    public final AttributeSet renderStyle() {
+        AttributeSet renderStyle = getStyle();
+        if (renderStyle == null) {
+            renderStyle = new AttributeSet();
+        }
+        Set<String> renderHints = getStyleHints();
+
+        if (parent != null) {
+            AttributeSet parStyle = parent.getStyle();
+            if (parStyle != null && parStyle != renderStyle.getParent().orElse(null)) {
+                renderStyle = renderStyle.flatCopy().immutableWithParent(parStyle);
+            }
+            Set<String> parStyleHints = parent.getStyleHints();
+            Set<String> useHints = parStyleHints == null ? renderHints : Sets.union(renderHints, parStyleHints);
+            renderStyle = parent.getStyleContext().applyModifiers(renderStyle, useHints);
+        }
+        return renderStyle;
+    }
+
+    /**
+     * Initialize the context menu by adding any actions appropriate for the given parameters.
+     * @param menu context menu
+     * @param src source graphic displaying the context menu
+     * @param point mouse location
+     * @param focus focus graphic
+     * @param selection selected graphics
+     * @param canvas graphics canvas
+     */
+    public void initContextMenu(JPopupMenu menu, Graphic<G> src, Point2D point, Object focus, Set<Graphic<G>> selection, G canvas) {
+        for (ContextMenuInitializer<Graphic<G>> cmi : contextMenuInitializers) {
+            cmi.initContextMenu(menu, src, point, focus, selection);
         }
     }
 
-    public void removeMouseMotionListeners() {
-        for (MouseMotionListener m : getMouseMotionListeners()) {
-            eventHandlers.remove(MouseMotionListener.class, m);
+    /**
+     * Return tooltip for the specified point
+     * @param p the point
+     * @param canvas
+     * @return the tooltip at the specified location (may be null)
+     */
+    public String getTooltip(Point2D p, G canvas) {
+        return isTooltipEnabled() ? defaultTooltip : null;
+    }
+
+    //endregion
+
+    //region ABSTRACT METHODS - STYLE, RENDER, POSITION
+
+    /**
+     * Return style set of this graphic
+     * @return graphic style
+     */
+    public abstract AttributeSet getStyle();
+
+    /**
+     * Draws the primitive on the specified graphics canvas, using current
+     * style.
+     * @param canvas graphics canvas
+     */
+    public abstract void renderTo(G canvas);
+    
+    /**
+     * Method that provides the bounding box enclosing the graphic.
+     * @return bounding box
+     * @param canvas
+     */
+    public abstract Rectangle2D boundingBox(G canvas);
+    
+    /**
+     * Method used to determine whether the graphic receives mouse events
+     * and will be asked to provide a tooltip at the given point. The graphic's
+     * {@link MouseListener}s and {@link MouseMotionListener}s will have the
+     * opportunity to receive events if the graphic is the topmost element
+     * containing the event's point.
+     *
+     * @param point the window point
+     * @param canvas
+     * @return true if the entry contains the point, else false
+     */
+    public abstract boolean contains(Point2D point, G canvas);
+
+    /**
+     * Checks to see if the graphic intersects the area within specified
+     * rectangle.
+     *
+     * @param box rectangle to check against
+     * @param canvas
+     * @return true if it intersects, false otherwise
+     */
+    public abstract boolean intersects(Rectangle2D box, G canvas);
+
+    //endregion
+
+    //region EVENTS
+
+    /** Notify interested listeners of a change in the plottable. */
+    protected void fireGraphicChanged() {
+        if (parent != null) {
+            parent.graphicChanged(this);
         }
+    }
+    
+    public final void addPropertyChangeListener(PropertyChangeListener pl) {
+        pcs.addPropertyChangeListener(pl);
+    }
+    
+    public final void addPropertyChangeListener(String string, PropertyChangeListener pl) {
+        pcs.addPropertyChangeListener(string, pl);
+    }
+    
+    public final void removePropertyChangeListener(PropertyChangeListener pl) {
+        pcs.removePropertyChangeListener(pl);
+    }
+    
+    public final void removePropertyChangeListener(String string, PropertyChangeListener pl) {
+        pcs.removePropertyChangeListener(string, pl);
     }
 
     /**
@@ -443,7 +393,7 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
      * Removes a mouse listener from the graphic
      * @param handler listener
      */
-    public void removeMouseListener(MouseListener handler) {
+    public final void removeMouseListener(MouseListener handler) {
         eventHandlers.remove(MouseListener.class, handler);
     }
 
@@ -451,15 +401,21 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
      * Return list of mouse listeners registered with the graphic
      * @return listeners
      */
-    public MouseListener[] getMouseListeners() {
+    public final MouseListener[] getMouseListeners() {
         return eventHandlers.getListeners(MouseListener.class);
+    }
+
+    public final void removeMouseListeners() {
+        for (MouseListener m : getMouseListeners()) {
+            eventHandlers.remove(MouseListener.class, m);
+        }
     }
 
     /**
      * Adds a mouse motion listener to the graphic
      * @param handler listener
      */
-    public void addMouseMotionListener(MouseMotionListener handler) {
+    public final void addMouseMotionListener(MouseMotionListener handler) {
         checkNotNull(handler);
         eventHandlers.add(MouseMotionListener.class, handler);
     }
@@ -468,7 +424,7 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
      * Removes a mouse motion listener from the graphic
      * @param handler listener
      */
-    public void removeMouseMotionListener(MouseMotionListener handler) {
+    public final void removeMouseMotionListener(MouseMotionListener handler) {
         eventHandlers.remove(MouseMotionListener.class, handler);
     }
 
@@ -476,10 +432,16 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
      * Return list of mouse motion listeners registered with the graphic
      * @return listeners
      */
-    public MouseMotionListener[] getMouseMotionListeners() {
+    public final MouseMotionListener[] getMouseMotionListeners() {
         return eventHandlers.getListeners(MouseMotionListener.class);
     }
 
-    //</editor-fold>
+    public final void removeMouseMotionListeners() {
+        for (MouseMotionListener m : getMouseMotionListeners()) {
+            eventHandlers.remove(MouseMotionListener.class, m);
+        }
+    }
+
+    //endregion
 
 }

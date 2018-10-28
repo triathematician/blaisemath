@@ -20,61 +20,58 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Rectangle2D;
-import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * A graphic updater that operates on a per-item basis, and provides built in
  * functions for setting graphic styles, and for initializing graphic context menus.
- * @param <V> type of object being updated
+ * @param <E> type of object being updated
+ * @param <G> graphics canvas
  * @author Elisha Peterson
  */
-public abstract class AttributeGraphicUpdater<V> implements GraphicUpdater<V> {
+public abstract class AttributeGraphicUpdater<E,G> implements GraphicUpdater<E,G> {
 
     /** Generates attributes from base object. */
-    private Function<V,AttributeSet> attr;
+    private @Nullable Function<E, AttributeSet> attr;
     /** Initializes context menus */
-    private ContextMenuInitializer<V> menu;
+    private ContextMenuInitializer<E> menu;
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
+    //region PROPERTIES
 
-    public Function<V, AttributeSet> getAttributer() {
+    public @Nullable Function<E, AttributeSet> getAttributer() {
         return attr;
     }
 
-    public void setAttributer(Function<V, AttributeSet> attr) {
+    public void setAttributer(@Nullable Function<E, AttributeSet> attr) {
         this.attr = attr;
     }
 
-    public ContextMenuInitializer<V> getMenuInitializer() {
+    public ContextMenuInitializer<E> getMenuInitializer() {
         return menu;
     }
 
-    public void setMenuInitializer(ContextMenuInitializer<V> menu) {
+    public void setMenuInitializer(ContextMenuInitializer<E> menu) {
         this.menu = menu;
     }
         
-    //</editor-fold>
+    //endregion
     
     /**
-     * Create a new graphic for the given object. The
-     * {@link #update(java.lang.Object, java.awt.geom.Rectangle2D, com.googlecode.blaisemath.graphics.core.Graphic)}
+     * Create a new graphic for the given object. The {@link #update(Object, Rectangle2D, Graphic)}
      * method will first create an {@link AttributeSet} associated with the object,
      * provided to this method as the {@code style} parameter, and after creating
      * the graphic will register a {@link ContextMenuInitializer} if set.
-     * 
      * @param e the object represented by the graphic
      * @param attr attributes for the graphic, as created by the attributer function
      * @param bounds desired bounding box for the graphic
      * @return graphic
      */
-    public abstract Graphic create(V e, AttributeSet attr, Rectangle2D bounds);
+    public abstract Graphic<G> create(E e, AttributeSet attr, Rectangle2D bounds);
     
     /**
      * Update an existing graphic for the given object.
@@ -83,10 +80,10 @@ public abstract class AttributeGraphicUpdater<V> implements GraphicUpdater<V> {
      * @param bounds desired bounding box for the graphic
      * @param existing the existing graphic (guaranteed to be non-null)
      */
-    public abstract void update(V e, AttributeSet attr, Rectangle2D bounds, @Nonnull Graphic existing);
+    public abstract void update(E e, AttributeSet attr, Rectangle2D bounds, Graphic existing);
 
     @Override
-    public Graphic update(V e, Rectangle2D bounds, Graphic existing) {
+    public Graphic<G> update(E e, Rectangle2D bounds, Graphic<G> existing) {
         AttributeSet as = attr == null ? new AttributeSet() : attr.apply(e);
         if (existing == null) {
             Graphic gfc = create(e, as, bounds);

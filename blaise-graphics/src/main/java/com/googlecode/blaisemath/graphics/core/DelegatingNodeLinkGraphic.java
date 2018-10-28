@@ -1,7 +1,3 @@
-/**
- * DelegatingPointSetGraphic.java
- * Created Jan 22, 2011
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -29,15 +25,16 @@ import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.graphics.swing.AnchoredText;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nullable;
 
 /**
  * A graph with fully-customizable points, edges, and tooltips. The styles and
- * point values are computed at runtime. Edges are maintained as a set of {@link Edge}s.
+ * point values are computed at runtime. Edges are maintained as a set of {@link EndpointPair}s.
  *
  * @param <S> source object type
  * @param <E> edge type
@@ -47,22 +44,24 @@ import javax.annotation.Nullable;
  */
 public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends GraphicComposite<G> {
     
-    private static final int NODE_CACHE_SIZE = 20000;
+    private static final int DEFAULT_NODE_CACHE_SIZE = 20000;
 
     /** Point graphics */
     private final DelegatingPointSetGraphic<S,G> pointGraphics;
     /** Edge graphics */
     private final DelegatingEdgeSetGraphic<S,E,G> edgeGraphics;
 
+    //region CONSTRUCTORS
+
     /**
-     * Construct with no points
+     * Construct with no points and default renderers.
      */
     public DelegatingNodeLinkGraphic() {
         this(null, null, null);
     }
     
     /**
-     * Construct with no points
+     * Construct with no points.
      * @param nodeRenderer how nodes will be rendered
      * @param labelRenderer how node labels will be rendered
      * @param edgeRenderer how edges will be rendered
@@ -70,11 +69,11 @@ public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends Gr
     public DelegatingNodeLinkGraphic(@Nullable Renderer<Point2D,G> nodeRenderer,
             @Nullable Renderer<AnchoredText, G> labelRenderer,
             @Nullable Renderer<Shape, G> edgeRenderer) {
-        this(CoordinateManager.<S,Point2D>create(NODE_CACHE_SIZE), nodeRenderer, labelRenderer, edgeRenderer);
+        this(CoordinateManager.create(DEFAULT_NODE_CACHE_SIZE), nodeRenderer, labelRenderer, edgeRenderer);
     }
     
     /**
-     * Construct with specified coordinate manager
+     * Construct with specified coordinate manager.
      * @param crdManager in charge of node locations
      * @param nodeRenderer draws the nodes
      * @param labelRenderer draws labels
@@ -84,29 +83,19 @@ public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends Gr
             @Nullable Renderer<Point2D,G> nodeRenderer,
             @Nullable Renderer<AnchoredText, G> labelRenderer,
             @Nullable Renderer<Shape, G> edgeRenderer) {
-        pointGraphics = new DelegatingPointSetGraphic<S,G>(crdManager, nodeRenderer, labelRenderer);
-        edgeGraphics = new DelegatingEdgeSetGraphic<S,E,G>(crdManager, edgeRenderer);
+        pointGraphics = new DelegatingPointSetGraphic<>(crdManager, nodeRenderer, labelRenderer);
+        edgeGraphics = new DelegatingEdgeSetGraphic<>(crdManager, edgeRenderer);
         addGraphic(edgeGraphics);
         addGraphic(pointGraphics);
     }
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+
+    //endregion
+
+    //region DELEGATES - POINTS
 
     public DelegatingPointSetGraphic<S,G> getPointGraphic() {
         return pointGraphics;
     }
-
-    public DelegatingEdgeSetGraphic<S,E,G> getEdgeGraphic() {
-        return edgeGraphics;
-    }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="DELEGATE PROPERTIES - POINT GRAPHICS">
 
     public CoordinateManager<S, Point2D> getCoordinateManager() {
         return pointGraphics.getCoordinateManager();
@@ -124,7 +113,6 @@ public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends Gr
     public Map<S, Point2D> getNodeLocations() {
         return pointGraphics.getCoordinateManager().getActiveLocationCopy();
     }
-    
 
     public void setNodeLocations(Map<S, Point2D> pts) {
         pointGraphics.getCoordinateManager().putAll(pts);
@@ -170,9 +158,13 @@ public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends Gr
         pointGraphics.setPointSelectionEnabled(val);
     }
     
-    //</editor-fold>
+    //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="DELEGATE PROPERTIES - EDGE GRAPHICS">
+    //region DELEGATES - EDGES
+
+    public DelegatingEdgeSetGraphic<S,E,G> getEdgeGraphic() {
+        return edgeGraphics;
+    }
 
     public Set<E> getEdgeSet() {
         return edgeGraphics.getEdges();
@@ -198,6 +190,6 @@ public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends Gr
         edgeGraphics.setEdgeRenderer(renderer);
     }
     
-    //</editor-fold>
+    //endregion
 
 }

@@ -1,7 +1,3 @@
-/**
- * TextRenderer.java
- * Created Jul 31, 2014
- */
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -29,6 +25,8 @@ import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -51,7 +49,6 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
     
     /** Assumed monitor resolution, used in bounding box calculations */
     private static final int DOTS_PER_INCH = 72;
-    
     private static final Logger LOG = Logger.getLogger(TextRenderer.class.getName());
     private static final TextRenderer INST = new TextRenderer();
     
@@ -88,30 +85,19 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
     }
 
     @Override
-    public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
-        Rectangle2D bounds = boundingBox(primitive, style);
+    public boolean contains(Point2D point, AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+        Rectangle2D bounds = boundingBox(primitive, style, canvas);
         return bounds != null && bounds.contains(point);
     }
 
     @Override
-    public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
-        Rectangle2D bounds = boundingBox(primitive, style);
+    public boolean intersects(Rectangle2D rect, AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+        Rectangle2D bounds = boundingBox(primitive, style, canvas);
         return bounds != null && bounds.intersects(rect);
     }
 
     @Override
-    public Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style) {
-        return boundingBox(primitive, style, null);
-    }
-    
-    /**
-     * Get the bounding box for the given text/style to be rendered on the given canvas.
-     * @param primitive text/location
-     * @param style desired style
-     * @param canvas where to render
-     * @return bounding box for the result
-     */
-    public static Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+    public @Nullable Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
         }

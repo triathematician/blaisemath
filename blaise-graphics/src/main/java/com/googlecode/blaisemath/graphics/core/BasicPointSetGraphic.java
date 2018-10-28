@@ -1,7 +1,3 @@
-/**
- * BasicPointSetGraphic.java
- * Created Jan 22, 2011
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -24,14 +20,15 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.geom.Points;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.util.Arrays;
-import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * A collection of points that are treated as a single graphic.
@@ -43,15 +40,10 @@ import javax.annotation.Nullable;
  */
 public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
 
-    public static final String POINT_PROP = "point";
+    public static final String P_POINT = "point";
     
     /** Optional delegate for tooltips */
-    @Nullable 
-    protected Function<Point2D, String> pointTipper = null;
-    
-    //
-    // CONSTRUCTORS
-    //
+    protected @Nullable Function<Point2D, String> pointTipper = null;
 
     /**
      * Construct with no point (defaults to origin)
@@ -86,11 +78,7 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
         return "Point Set";
     }
 
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
+    //region PROPERTIES
 
     @Override
     public void setPrimitive(Point2D[] p) {
@@ -98,7 +86,7 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
             Object old = this.primitive;
             this.primitive = p.clone();
             fireGraphicChanged();
-            pcs.firePropertyChange(POINT_PROP, old, this.primitive);
+            pcs.firePropertyChange(P_POINT, old, this.primitive);
         }
     }
     
@@ -111,7 +99,7 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
             Point2D old = primitive[i];
             primitive[i] = pt;
             fireGraphicChanged();
-            pcs.fireIndexedPropertyChange(POINT_PROP, i, old, primitive[i]);
+            pcs.fireIndexedPropertyChange(P_POINT, i, old, primitive[i]);
         }
     }
 
@@ -119,24 +107,19 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
         return primitive.length;
     }
 
-    public Function<Point2D, String> getPointTipDelegate() {
+    public Function<Point2D, @Nullable String> getPointTipDelegate() {
         return pointTipper;
     }
 
-    public void setPointTipDelegate(Function<Point2D, String> pointTipper) {
+    public void setPointTipDelegate(Function<Point2D, @Nullable String> pointTipper) {
         this.pointTipper = pointTipper;
     }
 
-    //</editor-fold>
-
-
-    //
-    // GRAPHIC METHODS
-    //
+    //endregion
 
     @Override
-    public String getTooltip(Point2D p) {
-        int i = indexOf(p);
+    public String getTooltip(Point2D p, G canvas) {
+        int i = indexOf(p, canvas);
         return i == -1 ? null : getPointTooltip(primitive[i]);
     }
 
@@ -152,21 +135,20 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
                 : pointTipper.apply(pt);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
-    //
-    // INNER CLASSES
-    //
+    //region INNER CLASSES
 
     /** Handles dragging of individual points */
     public class IndexedPointMover extends GMouseDragHandler {
+
         /** Index of point being dragged */
-        private transient int indexStart;
+        private int indexStart;
         /** Location at start of drag */
-        private transient Point2D beanStart;
+        private Point2D beanStart;
 
         @Override
         public void mouseDragInitiated(GMouseEvent e, Point2D start) {
-            indexStart = indexOf(start);
+            // TODO - get canvas reference from somewhere??
+            indexStart = indexOf(start, null);
             if (indexStart != -1) {
                 beanStart = getPrimitive(indexStart);
             }
@@ -176,10 +158,8 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
         public void mouseDragInProgress(GMouseEvent e, Point2D start) {
             if (indexStart != -1) {
                 Point2D dragPos = e.getGraphicLocation();
-                Point2D nueLoc = new Point2D.Double(
-                        beanStart.getX() + dragPos.getX() - start.getX(),
-                        beanStart.getY() + dragPos.getY() - start.getY()
-                );
+                Point2D nueLoc = new Point2D.Double(beanStart.getX() + dragPos.getX() - start.getX(),
+                        beanStart.getY() + dragPos.getY() - start.getY());
                 setPrimitive(indexStart, nueLoc);
             }
         }
@@ -189,8 +169,9 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
             beanStart = null;
             indexStart = -1;
         }
+
     }
     
-    //</editor-fold>
+    //endregion
     
 }

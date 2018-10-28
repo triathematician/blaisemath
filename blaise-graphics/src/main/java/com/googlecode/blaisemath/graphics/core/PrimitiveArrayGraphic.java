@@ -1,8 +1,3 @@
-/**
- * GraphicBasic.java
- * Created Jul 31, 2014
- */
-
 package com.googlecode.blaisemath.graphics.core;
 
 /*
@@ -24,7 +19,6 @@ package com.googlecode.blaisemath.graphics.core;
  * limitations under the License.
  * #L%
  */
-
 
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -51,10 +45,7 @@ public class PrimitiveArrayGraphic<O,G> extends PrimitiveArrayGraphicSupport<O,G
         setRenderer(renderer);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
+    //region PROPERTIES
 
     @Override
     public AttributeSet getStyle() {
@@ -66,6 +57,6 @@ public class PrimitiveArrayGraphic<O,G> extends PrimitiveArrayGraphicSupport<O,G
         fireGraphicChanged();
     }
     
-    //</editor-fold>
+    //endregion
     
 }
