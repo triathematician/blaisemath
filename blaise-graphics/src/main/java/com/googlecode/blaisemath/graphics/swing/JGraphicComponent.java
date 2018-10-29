@@ -336,7 +336,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * Set transform to include all components in the graphic tree inside display
      * area plus insets. The outsets are expressed in local coordinates, not window
      * coordinates. Positive insets result in extra space around the graphics.
-     * Zoom is anmiated.
+     * Zoom is animated.
      *
      * @param locCoordOutsets additional space to leave around the graphics (in local coordinate space)
      * @param animate if true, zoom operation will animate

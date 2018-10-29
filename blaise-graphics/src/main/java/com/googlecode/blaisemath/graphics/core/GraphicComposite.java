@@ -362,7 +362,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** 
      * Return the topmost graphic at specified point, or null if there is none.
      * @param point the window point
-     * @param canvas
+     * @param canvas canvas
      * @return topmost graphic within the composite, or null if there is none
      */
     public Graphic<G> graphicAt(Point2D point, G canvas) {
@@ -405,7 +405,7 @@ public class GraphicComposite<G> extends Graphic<G> {
         // return the first graphic containing the point, in draw order
         for (Graphic<G> en : functionalEntriesInReverse()) {
             if (en.isMouseDisabled()) {
-                // ignore
+                continue;
             } else if (en instanceof GraphicComposite) {
                 Graphic<G> s = ((GraphicComposite<G>) en).mouseGraphicAt(point, canvas);
                 if (s != null) {

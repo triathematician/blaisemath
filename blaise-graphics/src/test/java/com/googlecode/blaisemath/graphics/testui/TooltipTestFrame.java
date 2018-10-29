@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.googlecode.blaisemath.graphics.testui;
 
 /*
@@ -32,10 +28,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-/**
- *
- * @author Elisha Peterson
- */
 @SuppressWarnings("FieldCanBeLocal")
 public class TooltipTestFrame extends javax.swing.JFrame {
 
@@ -49,7 +41,7 @@ public class TooltipTestFrame extends javax.swing.JFrame {
         gc.addGraphic(g1);
         
         PrimitiveGraphic g2 = new PrimitiveGraphic(new Rectangle2D.Double(60,90,100,100), 
-                Styles.defaultShapeStyle(), ShapeRenderer.getInstance()) {
+                Styles.DEFAULT_SHAPE_STYLE, ShapeRenderer.getInstance()) {
             @Override
             public String getTooltip(Point2D p, Object canvas) {
                 return ""+p;
@@ -84,11 +76,6 @@ public class TooltipTestFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -99,9 +86,7 @@ public class TooltipTestFrame extends javax.swing.JFrame {
         } catch (ClassNotFoundException | javax.swing.UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
             java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //endregion
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new TooltipTestFrame().setVisible(true));
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

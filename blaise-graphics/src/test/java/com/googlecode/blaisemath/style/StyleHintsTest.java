@@ -41,9 +41,9 @@ public class StyleHintsTest {
         assertEquals(new Color(50, 0, 0, 0), StyleHints.modifyColorsDefault(new Color(50, 0, 0, 128), hints));
         hints.remove(StyleHints.HIDDEN_HINT);
 
-        hints.add(StyleHints.HILITE_HINT);
+        hints.add(StyleHints.HIGHLIGHT_HINT);
         assertEquals(new Color(114, 64, 64, 128), StyleHints.modifyColorsDefault(new Color(50, 0, 0, 128), hints));
-        hints.remove(StyleHints.HILITE_HINT);
+        hints.remove(StyleHints.HIGHLIGHT_HINT);
 
         hints.add(StyleHints.SELECTED_HINT);
         assertEquals(new Color(50, 0, 0, 128), StyleHints.modifyColorsDefault(new Color(50, 0, 0, 128), hints));

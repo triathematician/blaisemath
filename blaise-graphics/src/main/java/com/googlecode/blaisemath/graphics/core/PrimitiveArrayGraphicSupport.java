@@ -23,7 +23,6 @@ package com.googlecode.blaisemath.graphics.core;
 import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.P_RENDERER;
 import static java.util.Arrays.asList;
 
-import com.google.common.collect.Iterables;
 import com.googlecode.blaisemath.coordinate.DraggableCoordinate;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;

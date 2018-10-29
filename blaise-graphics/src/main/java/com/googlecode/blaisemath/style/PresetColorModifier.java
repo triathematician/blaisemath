@@ -36,7 +36,7 @@ public class PresetColorModifier implements StyleModifier {
     @Override
     public AttributeSet apply(AttributeSet style, Set<String> hints) {
         AttributeSet res = style;
-        if (hints.contains(StyleHints.HILITE_HINT)) {
+        if (hints.contains(StyleHints.HIGHLIGHT_HINT)) {
             res = AttributeSet.withParent(res).and(Styles.FILL, highlightFill).and(Styles.STROKE, highlightStroke);
         }
         if (hints.contains(StyleHints.SELECTED_HINT)) {

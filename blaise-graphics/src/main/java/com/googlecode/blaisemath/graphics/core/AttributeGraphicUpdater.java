@@ -37,18 +37,18 @@ import java.util.function.Function;
 public abstract class AttributeGraphicUpdater<E,G> implements GraphicUpdater<E,G> {
 
     /** Generates attributes from base object. */
-    private @Nullable Function<E, AttributeSet> attr;
+    private @Nullable Function<E, AttributeSet> attributeMap;
     /** Initializes context menus */
     private ContextMenuInitializer<E> menu;
 
     //region PROPERTIES
 
-    public @Nullable Function<E, AttributeSet> getAttributer() {
-        return attr;
+    public @Nullable Function<E, AttributeSet> getAttributeMap() {
+        return attributeMap;
     }
 
-    public void setAttributer(@Nullable Function<E, AttributeSet> attr) {
-        this.attr = attr;
+    public void setAttributeMap(@Nullable Function<E, AttributeSet> attr) {
+        this.attributeMap = attr;
     }
 
     public ContextMenuInitializer<E> getMenuInitializer() {
@@ -67,7 +67,7 @@ public abstract class AttributeGraphicUpdater<E,G> implements GraphicUpdater<E,G
      * provided to this method as the {@code style} parameter, and after creating
      * the graphic will register a {@link ContextMenuInitializer} if set.
      * @param e the object represented by the graphic
-     * @param attr attributes for the graphic, as created by the attributer function
+     * @param attr attributes for the graphic, as created by the attribute function
      * @param bounds desired bounding box for the graphic
      * @return graphic
      */
@@ -76,7 +76,7 @@ public abstract class AttributeGraphicUpdater<E,G> implements GraphicUpdater<E,G
     /**
      * Update an existing graphic for the given object.
      * @param e the object represented by the graphic
-     * @param attr attributes for the graphic, as created by the attributer function
+     * @param attr attributes for the graphic, as created by the attribute function
      * @param bounds desired bounding box for the graphic
      * @param existing the existing graphic (guaranteed to be non-null)
      */
@@ -84,7 +84,7 @@ public abstract class AttributeGraphicUpdater<E,G> implements GraphicUpdater<E,G
 
     @Override
     public Graphic<G> update(E e, Rectangle2D bounds, Graphic<G> existing) {
-        AttributeSet as = attr == null ? new AttributeSet() : attr.apply(e);
+        AttributeSet as = attributeMap == null ? new AttributeSet() : attributeMap.apply(e);
         if (existing == null) {
             Graphic gfc = create(e, as, bounds);
             if (menu != null) {

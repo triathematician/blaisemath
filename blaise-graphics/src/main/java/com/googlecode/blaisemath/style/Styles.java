@@ -178,22 +178,6 @@ public final class Styles {
 
     //region FACTORY METHODS
 
-    public static AttributeSet defaultShapeStyle() {
-        return DEFAULT_SHAPE_STYLE;
-    }
-
-    public static AttributeSet defaultPathStyle() {
-        return DEFAULT_PATH_STYLE;
-    }
-
-    public static AttributeSet defaultPointStyle() {
-        return DEFAULT_POINT_STYLE;
-    }
-
-    public static AttributeSet defaultTextStyle() {
-        return DEFAULT_TEXT_STYLE;
-    }
-
     /**
      * Create a basic shape style with given fill and stroke
      * @param fill fill color
@@ -508,7 +492,7 @@ public final class Styles {
      * @return default modified style for highlighting
      */
     public static AttributeSet withHighlight(AttributeSet style) {
-        return defaultStyleContext().applyModifiers(style, StyleHints.HILITE_HINT);
+        return defaultStyleContext().applyModifiers(style, StyleHints.HIGHLIGHT_HINT);
     }
 
     //endregion

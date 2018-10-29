@@ -106,7 +106,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
                 : canvas.getFontRenderContext();
         double width = font.getStringBounds(primitive.getText(), frc).getWidth();
-        double height = font.getSize()*DOTS_PER_INCH/Toolkit.getDefaultToolkit().getScreenResolution();
+        double height = font.getSize()*DOTS_PER_INCH/(double) Toolkit.getDefaultToolkit().getScreenResolution();
         
         Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);
         Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());

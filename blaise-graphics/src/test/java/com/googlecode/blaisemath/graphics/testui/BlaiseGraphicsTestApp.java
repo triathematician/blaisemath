@@ -1,7 +1,3 @@
-/*
- * BlaiseGraphicsTestApp.java
- */
-
 package com.googlecode.blaisemath.graphics.testui;
 
 /*
@@ -74,16 +70,13 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
-/**
- * The main class of the application.
- */
 public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     JGraphicRoot root1;
     JGraphicComponent canvas1;
-    final AttributeSet pointsetStyle = RandomStyles.point();
+    final AttributeSet pointSetStyle = RandomStyles.point();
     
-    //<editor-fold defaultstate="collapsed" desc="GENERAL">
+    //region GENERAL ACTIONS
     
     @Action
     public void clear1() {
@@ -115,9 +108,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //endregion
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="BASIC">
+
+    //region BASIC GRAPHICS
     
     @Action
     public void addPoint() {        
@@ -158,7 +150,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     public void addPointSet() {      
         final BasicPointSetGraphic bp = new BasicPointSetGraphic(
                 new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
-                this.pointsetStyle, MarkerRenderer.getInstance());
+                this.pointSetStyle, MarkerRenderer.getInstance());
         bp.addContextMenuInitializer((ContextMenuInitializer<Graphic<Graphics2D>>) (menu, src, point, focus, selection) -> {
             Point2D pt = bp.getPoint(bp.indexOf(point, null));
             menu.add(Points.format(pt, 2));
@@ -169,15 +161,14 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void editPointSetStyle() {        
-        BasicPointStyleEditor ed = new BasicPointStyleEditor(pointsetStyle);
+        BasicPointStyleEditor ed = new BasicPointStyleEditor(pointSetStyle);
         ed.addPropertyChangeListener("style", evt -> canvas1.repaint());
         JOptionPane.showMessageDialog(getMainFrame(), ed);
     }
     
     //endregion
     
-    
-    //<editor-fold defaultstate="collapsed" desc="GRAPHICS WITH DELEGATORS">
+    //region GRAPHICS WITH DELEGATION
     
     @Action
     public void addWrappedText() {
@@ -223,7 +214,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         bp.addObjects(crds);
         bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
-        bp.getStyler().setLabelStyle(Styles.defaultTextStyle());
+        bp.getStyler().setLabelStyle(Styles.DEFAULT_TEXT_STYLE);
         bp.getStyler().setStyleDelegate(new Function<String,AttributeSet>(){
             final AttributeSet r = new AttributeSet();
             public AttributeSet apply(String src) {
@@ -299,7 +290,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             Point2D pt = pts.get(src);
             return String.format("(%.1f,%.1f)", pt.getX(), pt.getY());
         });
-        gr.getNodeStyler().setLabelStyleDelegate((Integer src) -> Styles.defaultTextStyle());
+        gr.getNodeStyler().setLabelStyle(Styles.DEFAULT_TEXT_STYLE);
         gr.setEdgeSet(edges);
         gr.getEdgeStyler().setStyleDelegate((EndpointPair<Integer> src) -> {
             Point2D src0 = pts.get(src.nodeU());
@@ -316,8 +307,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     //endregion
     
-    
-    //<editor-fold defaultstate="collapsed" desc="COMPOSITES">
+    //region COMPOSITE GRAPHICS
     
     @Action
     public void addLabeledPoint() {
@@ -358,9 +348,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //endregion
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="COOL STUFF USING SPECIAL STYLES">
+
+    //region SPECIAL STYLES
     
     @Action
     public void addRay() {
@@ -388,9 +377,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //endregion
-    
-        
-    //<editor-fold defaultstate="collapsed" desc="APP CODE">
+
+    //region APP CODE
 
     /**
      * At startup create and show the main frame of the application.
@@ -427,6 +415,5 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //endregion
-    
-    
+
 }

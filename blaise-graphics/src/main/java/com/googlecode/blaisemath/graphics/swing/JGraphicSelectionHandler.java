@@ -217,8 +217,8 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
     //endregion
 
     private static void detectMac() {
-        String vers = System.getProperty("os.name").toLowerCase();
-        MAC = vers.contains("mac");
+        String os = System.getProperty("os.name").toLowerCase();
+        MAC = os.contains("mac");
     }
     
     private static boolean isSelectionEvent(InputEvent e) {

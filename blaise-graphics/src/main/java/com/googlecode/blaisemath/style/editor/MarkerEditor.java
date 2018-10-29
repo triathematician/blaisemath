@@ -97,7 +97,7 @@ public class MarkerEditor extends MPanelEditorSupport {
 
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
-            Shape sh = marker.create(new Point(size/2, size/2), 0, size/2-1);
+            Shape sh = marker.create(new Point(size/2, size/2), 0, size/2f-1);
             ShapeRenderer.getInstance().render(sh, style, (Graphics2D) g);
         }
 

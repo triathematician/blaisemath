@@ -96,7 +96,7 @@ public class DelegatingPrimitiveGraphic<S,O,G> extends PrimitiveGraphicSupport<O
     /**
      * Return the tooltip provided by the object styler.
      * @param p point for tooltip
-     * @param canvas
+     * @param canvas canvas
      * @return tooltip
      */
     @Override

@@ -92,7 +92,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
      * @param edgeRenderer edge renderer
      */
     public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr, Renderer<Shape,G> edgeRenderer) {
-        coordListener = evt -> handleCoordinateChange(evt);
+        coordListener = this::handleCoordinateChange;
         
         setCoordinateManager(mgr);
         setEdgeRenderer(edgeRenderer);
@@ -126,7 +126,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
     }
                 
     @InvokedFromThread("EDT")
-    private void updateEdgeGraphics(Map<S,Point2D> locs, List<Graphic<G>> removeMe, boolean notify) {
+    private void updateEdgeGraphics(Map<S, Point2D> locMap, List<Graphic<G>> removeMe, boolean notify) {
         if (!SwingUtilities.isEventDispatchThread()) {
             LOG.log(Level.WARNING, "updateEdgeGraphics() called from non-EDT");
         }
@@ -135,8 +135,8 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
         List<Graphic<G>> addMe = Lists.newArrayList();
         for (E edge : Sets.newLinkedHashSet(edges.keySet())) {
             DelegatingPrimitiveGraphic<E,Shape,G> dsg = edges.get(edge);
-            Point2D p1 = locs.get(edge.nodeU());
-            Point2D p2 = locs.get(edge.nodeV());
+            Point2D p1 = locMap.get(edge.nodeU());
+            Point2D p2 = locMap.get(edge.nodeV());
             if (p1 == null || p2 == null) {
                 if (dsg != null) {
                     removeMe.add(dsg);

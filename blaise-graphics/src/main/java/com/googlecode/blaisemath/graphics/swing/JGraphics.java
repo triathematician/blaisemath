@@ -52,14 +52,14 @@ public class JGraphics {
     public static final Composite DEFAULT_COMPOSITE 
             = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
 
-    // utilitiy class
+    // utility class
     private JGraphics() {
     }
     
     //<editor-fold defaultstate="collapsed" desc="FACTORY METHODS FOR SWING GRAPHICS">
     
     public static PrimitiveGraphic<Shape,Graphics2D> path(Shape primitive) {
-        return new PrimitiveGraphic<>(primitive, Styles.defaultPathStyle(), PathRenderer.getInstance());
+        return new PrimitiveGraphic<>(primitive, Styles.DEFAULT_PATH_STYLE.copy(), PathRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<Shape,Graphics2D> path(Shape primitive, AttributeSet style) {
@@ -71,7 +71,7 @@ public class JGraphics {
     }
     
     public static PrimitiveGraphic<Shape,Graphics2D> shape(Shape primitive) {
-        return new PrimitiveGraphic<>(primitive, Styles.defaultShapeStyle(), ShapeRenderer.getInstance());
+        return new PrimitiveGraphic<>(primitive, Styles.DEFAULT_SHAPE_STYLE.copy(), ShapeRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<Shape,Graphics2D> shape(Shape primitive, AttributeSet style) {
@@ -83,7 +83,7 @@ public class JGraphics {
     }
     
     public static PrimitiveGraphic<Point2D,Graphics2D> point(Point2D primitive) {
-        return new PrimitiveGraphic<>(primitive, Styles.defaultPointStyle(), MarkerRenderer.getInstance());
+        return new PrimitiveGraphic<>(primitive, Styles.DEFAULT_POINT_STYLE.copy(), MarkerRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<Point2D,Graphics2D> point(Point2D primitive, AttributeSet style) {
@@ -95,7 +95,7 @@ public class JGraphics {
     }
     
     public static PrimitiveGraphic<Point2D,Graphics2D> marker(OrientedPoint2D primitive) {
-        return new PrimitiveGraphic<>(primitive, Styles.defaultPointStyle(), MarkerRenderer.getInstance());
+        return new PrimitiveGraphic<>(primitive, Styles.DEFAULT_POINT_STYLE.copy(), MarkerRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<Point2D,Graphics2D> marker(OrientedPoint2D primitive, AttributeSet style) {
@@ -107,7 +107,7 @@ public class JGraphics {
     }
     
     public static PrimitiveGraphic<AnchoredText,Graphics2D> text(AnchoredText primitive) {
-        return new PrimitiveGraphic<>(primitive, Styles.defaultTextStyle(), TextRenderer.getInstance());
+        return new PrimitiveGraphic<>(primitive, Styles.DEFAULT_TEXT_STYLE.copy(), TextRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<AnchoredText,Graphics2D> text(AnchoredText primitive, AttributeSet style) {
@@ -122,8 +122,8 @@ public class JGraphics {
         return new PrimitiveGraphic<>(primitive, AttributeSet.EMPTY, ImageRenderer.getInstance());
     }
     
-    public static PrimitiveGraphic<AnchoredImage,Graphics2D> image(double x, double y, double wid, double ht, Image image, String refc) {
-        return new PrimitiveGraphic<>(new AnchoredImage(x, y, wid, ht, image, refc), AttributeSet.EMPTY, ImageRenderer.getInstance());
+    public static PrimitiveGraphic<AnchoredImage,Graphics2D> image(double x, double y, double wid, double ht, Image image, String ref) {
+        return new PrimitiveGraphic<>(new AnchoredImage(x, y, wid, ht, image, ref), AttributeSet.EMPTY, ImageRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<AnchoredIcon,Graphics2D> icon(AnchoredIcon icon) {

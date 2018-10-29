@@ -55,7 +55,7 @@ import javax.swing.Icon;
 @SuppressWarnings("FieldCanBeLocal")
 public class AnchorTestFrame extends javax.swing.JFrame {
 
-    private final AttributeSet textStyle = Styles.defaultTextStyle().copy()
+    private final AttributeSet textStyle = Styles.DEFAULT_TEXT_STYLE.copy()
             .and(Styles.OFFSET, new Point());
     
     /**
@@ -188,21 +188,21 @@ public class AnchorTestFrame extends javax.swing.JFrame {
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(evt -> jButton1ActionPerformed(evt));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
         jToolBar1.add(jButton1);
 
         jButton2.setText("Middle");
         jButton2.setFocusable(false);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(evt -> jButton2ActionPerformed(evt));
+        jButton2.addActionListener(this::jButton2ActionPerformed);
         jToolBar1.add(jButton2);
 
         jButton3.setText("End");
         jButton3.setFocusable(false);
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton3.addActionListener(evt -> jButton3ActionPerformed(evt));
+        jButton3.addActionListener(this::jButton3ActionPerformed);
         jToolBar1.add(jButton3);
         jToolBar1.add(jSeparator1);
 
@@ -213,33 +213,33 @@ public class AnchorTestFrame extends javax.swing.JFrame {
         jButton4.setFocusable(false);
         jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton4.addActionListener(evt -> jButton4ActionPerformed(evt));
+        jButton4.addActionListener(this::jButton4ActionPerformed);
         jToolBar1.add(jButton4);
 
         jButton5.setText("Middle");
         jButton5.setFocusable(false);
         jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton5.addActionListener(evt -> jButton5ActionPerformed(evt));
+        jButton5.addActionListener(this::jButton5ActionPerformed);
         jToolBar1.add(jButton5);
 
         jButton6.setText("Hanging");
         jButton6.setFocusable(false);
         jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton6.addActionListener(evt -> jButton6ActionPerformed(evt));
+        jButton6.addActionListener(this::jButton6ActionPerformed);
         jToolBar1.add(jButton6);
         jToolBar1.add(jSeparator2);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(evt -> jComboBox1ActionPerformed(evt));
+        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
         jToolBar1.add(jComboBox1);
 
         jButton7.setText("Clear anchors");
         jButton7.setFocusable(false);
         jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton7.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton7.addActionListener(evt -> jButton7ActionPerformed(evt));
+        jButton7.addActionListener(this::jButton7ActionPerformed);
         jToolBar1.add(jButton7);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);

@@ -48,8 +48,9 @@ public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
      * @param end ending point
      */
     public TwoPointGraphic(Point2D start, Point2D end) {
-        this.start = JGraphics.marker(new OrientedPoint2D(start), Styles.defaultPointStyle());
-        this.end = JGraphics.marker(new OrientedPoint2D(end), Styles.defaultPointStyle());
+        style = Styles.DEFAULT_POINT_STYLE.copy();
+        this.start = JGraphics.marker(new OrientedPoint2D(start), style);
+        this.end = JGraphics.marker(new OrientedPoint2D(end), style);
         
         initGraphics();
         pointsUpdated();

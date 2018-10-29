@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.graphics.core;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.googlecode.blaisemath.style.StyleHints;
@@ -32,7 +31,6 @@ import com.googlecode.blaisemath.style.Styles;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.RectangularShape;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -135,7 +133,7 @@ public class GraphicUtils {
      * Get the bounding box surrounding the given set of graphics.
      * @param <G> type of graphic canvas
      * @param entries the graphics
-     * @param canvas
+     * @param canvas canvas
      * @return bounding box, or null if the provided iterable is empty
      */
     public static <G> @Nullable Rectangle2D boundingBox(Iterable<? extends Graphic<G>> entries, G canvas) {

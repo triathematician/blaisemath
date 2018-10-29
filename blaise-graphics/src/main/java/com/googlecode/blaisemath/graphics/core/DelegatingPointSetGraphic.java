@@ -286,7 +286,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     @InvokedFromThread("unknown")
     private void handleCoordinateChange(final CoordinateChangeEvent evt) {
         updateQueue.add(evt);
-        MoreSwingUtilities.invokeOnEventDispatchThread(() -> processNextCoordinateChangeEvent());
+        MoreSwingUtilities.invokeOnEventDispatchThread(this::processNextCoordinateChangeEvent);
     }
     
     @InvokedFromThread("EDT")

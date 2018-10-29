@@ -3,8 +3,16 @@
     <words>
       <w>blaise</w>
       <w>coord</w>
+      <w>dasharray</w>
+      <w>defaultstate</w>
+      <w>delegators</w>
+      <w>dragger</w>
       <w>initializers</w>
       <w>mutators</w>
+      <w>pluggable</w>
+      <w>popupmenu</w>
+      <w>recomputation</w>
+      <w>renderers</w>
       <w>styler</w>
     </words>
   </dictionary>

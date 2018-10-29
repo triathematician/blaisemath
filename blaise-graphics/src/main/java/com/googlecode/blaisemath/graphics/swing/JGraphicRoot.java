@@ -90,9 +90,6 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
                     popup.removeAll();
                     Set<Graphic<Graphics2D>> selected = owner.isSelectionEnabled() ? owner.getSelectionModel().getSelection() : null;
                     initContextMenu(popup, null, mouseLoc, null, selected, owner.canvas());
-                    if (popup.getComponentCount() == 0) {
-                        // cancel popup
-                    }
                 }
             }
             @Override

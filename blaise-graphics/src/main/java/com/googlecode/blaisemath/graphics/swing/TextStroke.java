@@ -40,8 +40,8 @@ class TextStroke implements Stroke {
 
     private final String text;
     private final Font font;
-    private boolean stretchToFit;
-    private boolean repeat;
+    private final boolean stretchToFit;
+    private final boolean repeat;
     private final AffineTransform transform = new AffineTransform();
     private static final float FLATNESS = 1;
 

@@ -65,7 +65,7 @@ public class SegmentGraphic extends TwoPointGraphic {
         start.setStyle(Styles.marker(Markers.CIRCLE, Color.black, 2));
         start.setStyleHint(StyleHints.HIDDEN_FUNCTIONAL_HINT, true);
         
-        end.setStyle(Styles.defaultPointStyle().copy().and(Styles.MARKER, Markers.ARROWHEAD));
+        end.setStyle(Styles.DEFAULT_POINT_STYLE.copy().and(Styles.MARKER, Markers.ARROWHEAD));
     }
 
     @Override

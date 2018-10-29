@@ -60,7 +60,7 @@ public final class StyleContext {
 
     /**
      * Add new modifier.
-     * @param mod modifer
+     * @param mod modifier
      * @return true if changed
      */
     public boolean addModifier(StyleModifier mod) {
@@ -68,7 +68,7 @@ public final class StyleContext {
     }
     /**
      * Remove modifier.
-     * @param mod modifer
+     * @param mod modifier
      * @return true if removed
      */
     public boolean removeModifier(StyleModifier mod) {

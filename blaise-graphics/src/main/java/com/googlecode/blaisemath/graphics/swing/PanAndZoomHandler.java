@@ -122,8 +122,6 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         } else if (PAN_MODE.equals(mode) || RESTRICTED_MOVEMENT_MODE.equals(mode)) {
             // pan mode
             oldLocalBounds = getLocalBounds(component);
-        } else {
-            // ignore
         }
     }
 
@@ -149,8 +147,6 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
             boolean restrictedMovementMode = RESTRICTED_MOVEMENT_MODE.equals(mouseMods) 
                     || RESTRICTED_MOVEMENT_MODE_ALT.equals(mouseMods);
             mouseDraggedPanMode(e.getPoint(), restrictedMovementMode);
-        } else {
-            // ignore
         }
     }
     
@@ -195,8 +191,6 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
             mouseDragged(e);
             if (pressedAt != null && RECTANGLE_RESIZE_MODE.equals(mode)) {
                 zoomBoxAnimated(component, zoomBox);
-            } else {
-                 // pan mode
             }
         }
         zoomBox = null;
@@ -241,9 +235,9 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         Insets insets = gc.getInsets();
         Rectangle bounds = new Rectangle(insets.left, insets.top,
                 gc.getWidth() - insets.left - insets.right, gc.getHeight() - insets.top - insets.bottom);
-        Point2D cmin = inverse.transform(new Point2D.Double(bounds.getMinX(), bounds.getMinY()), null);
-        Point2D cmax = inverse.transform(new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()), null);
-        return new Rectangle2D.Double(cmin.getX(), cmin.getY(), cmax.getX() - cmin.getX(), cmax.getY() - cmin.getY());
+        Point2D min = inverse.transform(new Point2D.Double(bounds.getMinX(), bounds.getMinY()), null);
+        Point2D max = inverse.transform(new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()), null);
+        return new Rectangle2D.Double(min.getX(), min.getY(), max.getX() - min.getX(), max.getY() - min.getY());
     }
 
     /**
@@ -283,9 +277,9 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
             LOG.log(Level.INFO, "Scaling with zero area rectangles: {0}, {1}. Returning identity transform.", new Object[]{scaleFrom, scaleTo});
             return new AffineTransform();
         }
-        double scalex = scaleFrom.getWidth() / scaleTo.getWidth();
-        double scaley = scaleFrom.getHeight() / scaleTo.getHeight();
-        double scale = Math.max(scalex, scaley);
+        double scaleX = scaleFrom.getWidth() / scaleTo.getWidth();
+        double scaleY = scaleFrom.getHeight() / scaleTo.getHeight();
+        double scale = Math.max(scaleX, scaleY);
         AffineTransform res = new AffineTransform();
         res.translate(scaleTo.getCenterX(), scaleTo.getCenterY());
         res.scale(1 / scale, 1 / scale);
@@ -418,14 +412,13 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     /**
      * Zooms to the boundaries of a particular box.
      * @param gc associated component
-     * @param zoomBoxWinCoords the boundary of the zoom box (in window
-     * coordinates)
+     * @param zoomBoxWindow the boundary of the zoom box (in window coordinates)
      * @return timer running the animation
      */
-    public static javax.swing.Timer zoomBoxAnimated(JGraphicComponent gc, Rectangle2D zoomBoxWinCoords) {
+    public static javax.swing.Timer zoomBoxAnimated(JGraphicComponent gc, Rectangle2D zoomBoxWindow) {
         return zoomCoordBoxAnimated(gc,
-                gc.toGraphicCoordinate(new Point2D.Double(zoomBoxWinCoords.getMinX(), zoomBoxWinCoords.getMinY())),
-                gc.toGraphicCoordinate(new Point2D.Double(zoomBoxWinCoords.getMaxX(), zoomBoxWinCoords.getMaxY())));
+                gc.toGraphicCoordinate(new Point2D.Double(zoomBoxWindow.getMinX(), zoomBoxWindow.getMinY())),
+                gc.toGraphicCoordinate(new Point2D.Double(zoomBoxWindow.getMaxX(), zoomBoxWindow.getMaxY())));
     }
 
     /**

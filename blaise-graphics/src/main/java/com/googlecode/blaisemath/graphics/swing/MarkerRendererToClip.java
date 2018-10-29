@@ -94,12 +94,12 @@ public class MarkerRendererToClip extends MarkerRenderer {
     public void render(Point2D p, AttributeSet style, Graphics2D canvas) {
         double angle = p instanceof OrientedPoint2D ? ((OrientedPoint2D)p).angle : 0;
         Point2D p2 = new Point2D.Double(p.getX() + Math.cos(angle), p.getY() + Math.sin(angle));
-        Point2D endpt = boundaryHit(p, p2, canvas.getClipBounds());
+        Point2D endpoint = boundaryHit(p, p2, canvas.getClipBounds());
         if (extendBothDirections) {
             Point2D endpoint1 = boundaryHit(p2, p, canvas.getClipBounds());
-            rayRenderer.render(new Line2D.Double(endpoint1, endpt), style, canvas);
+            rayRenderer.render(new Line2D.Double(endpoint1, endpoint), style, canvas);
         } else {
-            rayRenderer.render(new Line2D.Double(p, endpt), style, canvas);
+            rayRenderer.render(new Line2D.Double(p, endpoint), style, canvas);
         }
         super.render(p, style, canvas);
     }

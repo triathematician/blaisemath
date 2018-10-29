@@ -75,7 +75,7 @@ public abstract class Graphic<G> {
     /** Stores the parent of this entry */
     protected GraphicComposite<G> parent;
     /** Modifiers that are applied to the style before drawing. */
-    protected Set<String> styleHints = Sets.newLinkedHashSet();
+    protected final Set<String> styleHints = Sets.newLinkedHashSet();
     /** Default text of tooltip */
     protected String defaultTooltip = null;
     /** Context initializers */
@@ -299,7 +299,7 @@ public abstract class Graphic<G> {
     /**
      * Return tooltip for the specified point
      * @param p the point
-     * @param canvas
+     * @param canvas canvas
      * @return the tooltip at the specified location (may be null)
      */
     public String getTooltip(Point2D p, G canvas) {
@@ -326,7 +326,7 @@ public abstract class Graphic<G> {
     /**
      * Method that provides the bounding box enclosing the graphic.
      * @return bounding box
-     * @param canvas
+     * @param canvas canvas
      */
     public abstract Rectangle2D boundingBox(G canvas);
     
@@ -338,7 +338,7 @@ public abstract class Graphic<G> {
      * containing the event's point.
      *
      * @param point the window point
-     * @param canvas
+     * @param canvas canvas
      * @return true if the entry contains the point, else false
      */
     public abstract boolean contains(Point2D point, G canvas);
@@ -348,7 +348,7 @@ public abstract class Graphic<G> {
      * rectangle.
      *
      * @param box rectangle to check against
-     * @param canvas
+     * @param canvas canvas
      * @return true if it intersects, false otherwise
      */
     public abstract boolean intersects(Rectangle2D box, G canvas);
@@ -357,7 +357,7 @@ public abstract class Graphic<G> {
 
     //region EVENTS
 
-    /** Notify interested listeners of a change in the plottable. */
+    /** Notify interested listeners of a change. */
     protected void fireGraphicChanged() {
         if (parent != null) {
             parent.graphicChanged(this);

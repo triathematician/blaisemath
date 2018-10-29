@@ -1,28 +1,4 @@
-/*
- * BasicPointStyleEditor.java
- * Created Aug 28, 2011
- */
 package com.googlecode.blaisemath.style.editor;
-
-/*
- * #%L
- * BlaiseVisometry
- * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
- * --
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
 
 import com.googlecode.blaisemath.editor.ColorEditor;
 import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
@@ -36,8 +12,6 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.beans.Customizer;
 import java.beans.PropertyChangeEvent;
@@ -62,7 +36,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         ChangeListener, PropertyChangeListener {
 
     /** The style being edited */
-    private AttributeSet style = Styles.defaultPointStyle().copy();
+    private AttributeSet style = Styles.DEFAULT_POINT_STYLE.copy();
 
     /** Spinner for radius */
     private JSpinner radiusSp = null;
@@ -139,7 +113,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         add(shapeCombo, gbc);
         shapeCombo.setRenderer(new ShapeListCellRenderer());
         shapeCombo.addActionListener(e -> {
-            style.put(Styles.MARKER, (Marker) shapeCombo.getSelectedItem());
+            style.put(Styles.MARKER, shapeCombo.getSelectedItem());
             fireStyleChanged();
         });
 

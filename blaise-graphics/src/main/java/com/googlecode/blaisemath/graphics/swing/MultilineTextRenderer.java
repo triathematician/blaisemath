@@ -118,7 +118,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         }
         double lineHeight = font.getLineMetrics("", frc).getHeight();
         double height = lineHeight*lines.length;
-        height -= (lineHeight - font.getSize()*72/Toolkit.getDefaultToolkit().getScreenResolution());
+        height -= (lineHeight - font.getSize()*72.0/Toolkit.getDefaultToolkit().getScreenResolution());
         
         Anchor textAnchor = Styles.anchorOf(style, Anchor.NORTHWEST);
         Point2D offset = style.getPoint2D(Styles.OFFSET, new Point());

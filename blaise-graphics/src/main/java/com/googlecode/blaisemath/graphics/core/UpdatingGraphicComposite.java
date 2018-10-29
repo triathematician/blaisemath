@@ -49,7 +49,7 @@ public class UpdatingGraphicComposite<T, G> {
     /** Index for the graphics, based on source object */
     private final BiMap<T, Graphic<G>> index = HashBiMap.create();
     /** Creates/updates the graphics */
-    private GraphicUpdater<T,G> updater;
+    private final GraphicUpdater<T,G> updater;
 
     public UpdatingGraphicComposite(GraphicUpdater<T, G> updater) {
         this.updater = checkNotNull(updater);
@@ -69,7 +69,7 @@ public class UpdatingGraphicComposite<T, G> {
         return updater;
     }
 
-    public void setObjects(Iterable<T> data, Function<T, @Nullable Rectangle2D> locs) {
+    public void setObjects(Iterable<T> data, Function<T, @Nullable Rectangle2D> locMap) {
         Set<Graphic<G>> toRemove = Sets.newHashSet(composite.getGraphics());
         for (T t : data) {
             if (index.containsKey(t)) {
@@ -79,13 +79,13 @@ public class UpdatingGraphicComposite<T, G> {
         composite.removeGraphics(toRemove);
         index.keySet().retainAll(data instanceof Collection ? (Collection) data : Lists.newArrayList(data));
 
-        updateItemGraphics(locs);
+        updateItemGraphics(locMap);
     }
 
-    private void updateItemGraphics(Function<T, @Nullable Rectangle2D> locs) {
+    private void updateItemGraphics(Function<T, @Nullable Rectangle2D> locMap) {
         for (T obj : index.keySet()) {
             Graphic<G> existing = index.get(obj);
-            Rectangle2D loc = locs.apply(obj);
+            Rectangle2D loc = locMap.apply(obj);
             if (loc == null && existing != null) {
                 composite.removeGraphic(existing);
                 index.remove(obj);

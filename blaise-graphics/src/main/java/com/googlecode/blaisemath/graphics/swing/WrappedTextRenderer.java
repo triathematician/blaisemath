@@ -277,7 +277,7 @@ public class WrappedTextRenderer extends TextRenderer {
         List<String> lines = new ArrayList<>();
         int length = string.length();
         if (length == 0) {
-            // do nothing
+            return lines;
         } else if (width < 3*font.getSize()) {
             // if really small, show only first character
             lines.add((length <= 2 ? string.substring(0,length) : string.substring(0,1)+"...").trim());

@@ -42,7 +42,7 @@ public class StyleHints {
     /** Style hint indicating a selected element. */
     public static final String SELECTED_HINT = "selected";
     /** Style hint indicating a highlighted element. */
-    public static final String HILITE_HINT = "hilite";
+    public static final String HIGHLIGHT_HINT = "highlight";
     /** Style hint indicating an outlined element. */
     public static final String OUTLINE_HINT = "outline";
     /** Style hint indicating a low-quality (but fast) rendered element. */
@@ -63,7 +63,7 @@ public class StyleHints {
             return null;
         } else if (hints.contains(HIDDEN_HINT)) {
             return Colors.alpha(color, 0);
-        } else if (hints.contains(HILITE_HINT)) {
+        } else if (hints.contains(HIGHLIGHT_HINT)) {
             return Colors.lighterThan(color);
         } else {
             return color;
@@ -82,7 +82,7 @@ public class StyleHints {
             return 0f;
         } else if (hints.contains(SELECTED_HINT)) {
             return wid + 1f;
-        } else if (hints.contains(HILITE_HINT)) {
+        } else if (hints.contains(HIGHLIGHT_HINT)) {
             return Math.max(wid - 1f, wid / 2f);
         } else {
             return wid;

@@ -29,8 +29,7 @@ import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
 import com.googlecode.blaisemath.style.Styles;
 
 /**
@@ -75,7 +74,7 @@ public class SelectionTestFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(gc, java.awt.BorderLayout.CENTER);
 
-        jLabel1.setText("<html>Test that ctrl+drag creates a selection box, ctrl+click toggles selection, ctrl+shift+drag unselects from box. Test that selected items change appearance.");
+        jLabel1.setText("<html>Test that ctrl+drag creates a selection box, ctrl+click toggles selection, ctrl+shift+drag de-selects box. Test that selected items change appearance.");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
         resultL.setText("Selection: ");
