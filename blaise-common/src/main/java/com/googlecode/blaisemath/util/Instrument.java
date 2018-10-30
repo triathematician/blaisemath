@@ -1,7 +1,3 @@
-/*
- * GAInstrument.java
- * Created on Jun 8, 2012
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -39,9 +35,8 @@ import java.util.Set;
 /**
  * Provides centralized instrumentation for potentially long-executing graph algorithms.
  *
- * @author petereb1
+ * @author Elisha Peterson
  */
-@ThreadSafe
 public class GAInstrument {
 
     private static int id = 0;
