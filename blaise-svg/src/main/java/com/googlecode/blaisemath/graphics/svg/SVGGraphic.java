@@ -229,7 +229,9 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
             Shape oldClip = canvas.getClip();
             canvas.transform(tx);
             Rectangle2D viewBox = viewBox();
-            canvas.setClip(viewBox.createIntersection(transform(oldClip.getBounds2D())));
+            if (oldClip != null) {
+                canvas.setClip(viewBox.createIntersection(transform(oldClip.getBounds2D())));
+            }
             if (RENDER_VIEW_BOX) {
                 canvas.setColor(Color.blue);
                 canvas.draw(viewBox);
