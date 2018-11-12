@@ -45,8 +45,13 @@ import org.xml.sax.XMLFilter;
  */
 class SvgIo {
     
+    private static JAXBContext CONTEXT;
+    
     static JAXBContext context() throws JAXBException {
-        return JAXBContext.newInstance(SVGRoot.class);
+        if (CONTEXT == null) {
+            CONTEXT = JAXBContext.newInstance(SVGRoot.class);
+        }
+        return CONTEXT;
     }
     
     static Unmarshaller unmarshaller() throws JAXBException {
