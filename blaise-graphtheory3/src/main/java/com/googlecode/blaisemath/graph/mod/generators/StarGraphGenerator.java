@@ -1,7 +1,3 @@
-/**
- * StarGraphGenerator.java
- * Created 2012
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,8 +20,9 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+
 import java.util.AbstractList;
 
 /**
@@ -42,7 +39,7 @@ public final class StarGraphGenerator extends AbstractDefaultGraphGenerator {
     public Graph<Integer> apply(DefaultGeneratorParameters parm) {
         final int nodes = parm.getNodeCount();
         if (nodes == 0) {
-            return GraphUtils.emptyGraph();
+            return GraphUtils.emptyGraph(parm.isDirected());
         }
         return DefaultGeneratorParameters.createGraphWithEdges(parm, new AbstractList<Integer[]>() {
             @Override

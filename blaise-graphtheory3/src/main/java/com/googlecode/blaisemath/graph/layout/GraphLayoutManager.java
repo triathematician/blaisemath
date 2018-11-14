@@ -1,8 +1,3 @@
-/*
- * GraphLayoutManager.java
- * Created Jan 29, 2011
- */
-
 package com.googlecode.blaisemath.graph.layout;
 
 /*
@@ -25,16 +20,17 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.PositionalAddingLayout;
-import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -44,30 +40,27 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * <p>
- *   Manages graph layout within a background thread, in situations where the graph
- *   or node locations might be simultaneously modified from other threads.
- *   Executes a graph layout algorithm in a background thread. Uses an
- *   {@link IterativeGraphLayout} algorithm, whose results are supplied to the
- *   {@link CoordinateManager}. This class is not thread-safe, so all of its
- *   methods should be accessed from a single thread. However, coordinate locations can
- *   be accessed or updated in the {@code CoordinateManager} from any thread, since
- *   that class is thread-safe.
- * </p>
+ * Manages graph layout within a background thread, in situations where the graph
+ * or node locations might be simultaneously modified from other threads.
+ * Executes a graph layout algorithm in a background thread. Uses an
+ * {@link IterativeGraphLayout} algorithm, whose results are supplied to the
+ * {@link CoordinateManager}. This class is not thread-safe, so all of its
+ * methods should be accessed from a single thread. However, coordinate locations can
+ * be accessed or updated in the {@code CoordinateManager} from any thread, since
+ * that class is thread-safe.
  *
  * @param <V> type of node in graph
  * @author elisha
  */
-@NotThreadSafe
 public final class GraphLayoutManager<V> {
     
     private static final Logger LOG = Logger.getLogger(GraphLayoutManager.class.getName());
     
-    //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
+    //region CONSTANTS
     
     static final int NODE_CACHE_SIZE = 20000;
 
@@ -102,13 +95,12 @@ public final class GraphLayoutManager<V> {
     /** Handles property change events */
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    
-    //<editor-fold defaultstate="collapsed" desc="CONSTRUCTORS & FACTORIES">
+    //region CONSTRUCTOR and FACTORY
     
     /** Initializes with an empty graph */
     public GraphLayoutManager() {
         iterativeLayoutManager.setCoordinateManager(coordManager);
-        setGraph(GraphUtils.<V>emptyGraph());
+        setGraph(GraphUtils.emptyGraph(false));
     }
     
     /** 
@@ -124,11 +116,7 @@ public final class GraphLayoutManager<V> {
     
     //endregion
 
-
-    // <editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
+    //region PROPERTIES
 
     /**
      * Object used to map locations of points.
@@ -179,15 +167,14 @@ public final class GraphLayoutManager<V> {
      * Get layout algorithm
      * @return current iterative layout algorithm
      */
-    @Nullable
-    public IterativeGraphLayout getLayoutAlgorithm() {
+    public @Nullable IterativeGraphLayout getLayoutAlgorithm() {
         return iterativeLayoutManager.getLayout();
     }
 
     /**
      * Sets up with an iterative graph layout. Cancels any ongoing layout, and does
      * not start a new one.
-     * @param layout the layout algorithmut getLayoutAlgorithm() {
+     * @param layout the layout algorithm
      */
     public void setLayoutAlgorithm(@Nullable IterativeGraphLayout layout) {
         Object old = iterativeLayoutManager.getLayout();
@@ -257,7 +244,7 @@ public final class GraphLayoutManager<V> {
         }
     }
     
-    // </editor-fold>
+    //endregion
 
     /**
      * When the graph is changes, call this method to set up initial positions
@@ -294,21 +281,16 @@ public final class GraphLayoutManager<V> {
 
             // log size mismatches to help with debugging
             int sz = coordManager.getActive().size();
-            boolean check = sz == g.nodeCount();
+            boolean check = sz == g.nodes().size();
             if (!check) {
-                LOG.log(Level.WARNING, 
-                        "Object sizes don''t match: {0} locations, but {1} nodes!", 
-                        new Object[]{sz, g.nodeCount()});
+                LOG.log(Level.WARNING, "Object sizes don''t match: {0} locations, but {1} nodes!",
+                        new Object[]{sz, g.nodes().size()});
             }
         }
     }
-    
 
-    //<editor-fold defaultstate="collapsed" desc="MUTATORS">
-    // 
-    // MUTATORS
-    //
-    
+    //region MUTATORS
+
     /**
      * Update the locations of the specified nodes with the specified values.
      * If an iterative layout is currently active, locations are updated at the
@@ -350,39 +332,26 @@ public final class GraphLayoutManager<V> {
         }
     }
 
-    // </editor-fold>
+    //endregion
 
+    //region EVENTS
 
-    // <editor-fold defaultstate="collapsed" desc="Layout Task">
-    //
-    // LAYOUT TASK
-    //
-
-    // </editor-fold>
-
-
-    // <editor-fold defaultstate="collapsed" desc="Event Handling">
-    //
-    // EVENT HANDLING
-    //
-
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public final void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public final void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public final void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) { 
+    public final void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener); 
     }
 
-    // </editor-fold>
-    
+    //endregion
 
 }

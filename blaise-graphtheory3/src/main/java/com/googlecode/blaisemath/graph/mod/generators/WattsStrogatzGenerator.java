@@ -1,7 +1,3 @@
-/*
- * WattsStrogatzGenerator.java
- * Created Aug 6, 2010
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,17 +20,15 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphGenerator;
 import com.googlecode.blaisemath.graph.mod.generators.WattsStrogatzGenerator.WattsStrogatzParameters;
-import java.util.Random;
+
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Provides methods for generating a Watts-Strogatz Random Graph
@@ -85,9 +79,50 @@ public final class WattsStrogatzGenerator implements GraphGenerator<WattsStrogat
 
         return DefaultGeneratorParameters.createGraphWithEdges(parm, edges);
     }
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="PARAMETERS CLASS">
+
+    //region ALGORITHM
+
+    /**
+     * Randomly rewires the specified edge, by randomly moving one of the edge's
+     * endpoints, provided the resulting edge does not already exist in the set.
+     * @param random random seed
+     * @param edges current list of edges
+     * @param e the edge to rewire
+     * @param n total # of vertices
+     * @return new edge.
+     */
+    private static void randomlyRewire(Random random, List<Integer[]> edges, Integer[] e, int n) {
+        if (n <= 1) {
+            return;
+        }
+        Integer[] potential = new Integer[]{e[0], e[1]};
+        Set<Integer[]> edgeTree = new TreeSet<Integer[]>(EdgeCountGenerator.PAIR_COMPARE_UNDIRECTED);
+        edgeTree.addAll(edges);
+        while (edgeTree.contains(potential)) {
+            if (random.nextBoolean()) {
+                potential = new Integer[]{e[0], randomNot(random, e[0], n)};
+            } else {
+                potential = new Integer[]{randomNot(random, e[1], n), e[1]};
+            }
+        }
+        e[0] = potential[0];
+        e[1] = potential[1];
+    }
+
+    /**
+     * @returns a random value between 0 and n-1, not including exclude
+     */
+    private static int randomNot(Random seed, int exclude, int n) {
+        int result;
+        do {
+            result = seed.nextInt(n);
+        } while (result == exclude);
+        return result;
+    }
+
+    //endregion
+
+    //region PARAMETERS CLASS
     
     /** Parameters for Watts-Strogatz algorithm */
     public static final class WattsStrogatzParameters extends DefaultGeneratorParameters {
@@ -127,49 +162,6 @@ public final class WattsStrogatzGenerator implements GraphGenerator<WattsStrogat
             this.rewire = rewire;
         }
         
-    }
-    
-    //endregion
-
-    
-    //<editor-fold defaultstate="collapsed" desc="ALGORITHM AND UTILITY METHODS">
-    
-    /**
-     * Randomly rewires the specified edge, by randomly moving one of the edge's
-     * endpoints, provided the resulting edge does not already exist in the set.
-     * @param random random seed
-     * @param edges current list of edges
-     * @param e the edge to rewire
-     * @param n total # of vertices
-     * @return new edge.
-     */
-    private static void randomlyRewire(Random random, List<Integer[]> edges, Integer[] e, int n) {
-        if (n <= 1) {
-            return;
-        }
-        Integer[] potential = new Integer[]{e[0], e[1]};
-        Set<Integer[]> edgeTree = new TreeSet<Integer[]>(EdgeCountGenerator.PAIR_COMPARE_UNDIRECTED);
-        edgeTree.addAll(edges);
-        while (edgeTree.contains(potential)) {
-            if (random.nextBoolean()) {
-                potential = new Integer[]{e[0], randomNot(random, e[0], n)};
-            } else {
-                potential = new Integer[]{randomNot(random, e[1], n), e[1]};
-            }
-        }
-        e[0] = potential[0];
-        e[1] = potential[1];
-    }
-
-    /**
-     * @returns a random value between 0 and n-1, not including exclude
-     */
-    private static int randomNot(Random seed, int exclude, int n) {
-        int result;
-        do {
-            result = seed.nextInt(n);
-        } while (result == exclude);
-        return result;
     }
     
     //endregion

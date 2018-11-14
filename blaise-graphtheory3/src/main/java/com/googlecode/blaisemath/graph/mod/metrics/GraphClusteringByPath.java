@@ -20,8 +20,7 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 
 /**
  * Global metric describing the clustering coefficient of the graph; in the

@@ -1,7 +1,3 @@
-/*
- * CooperationMetric.java
- * Created Jul 14, 2010
- */
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -23,11 +19,12 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * limitations under the License.
  * #L%
  */
+
+import com.google.common.graph.Graph;
+import com.google.common.graph.Graphs;
 import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import java.util.HashSet;
 import java.util.Set;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphUtils;
 
 /**
  * Measures difference in team performance with and without a node/subset of
@@ -59,13 +56,13 @@ public class CooperationMetric<N extends Number> implements GraphSubsetMetric<do
 
     @Override
     public <V> double[] getValue(Graph<V> graph, Set<V> nodes) {
-        int n = graph.nodeCount(), m = nodes.size();
+        int n = graph.nodes().size(), m = nodes.size();
         Set<V> all = graph.nodes();
         Set<V> complement = new HashSet<V>(all);
         complement.removeAll(nodes);
         double outcomeAll = n == 0 ? 0.0 : baseM.getValue(graph, all).doubleValue();
         double outcomeAll2 = m == n ? 0.0 : baseM.getValue(graph, complement).doubleValue();
-        double outcomePart = m == n ? 0.0 : baseM.getValue(GraphUtils.copySubgraph(graph, complement), complement).doubleValue();
+        double outcomePart = m == n ? 0.0 : baseM.getValue(Graphs.inducedSubgraph(graph, complement), complement).doubleValue();
         return new double[]{
             // selfish contribution
             outcomeAll - outcomeAll2,

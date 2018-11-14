@@ -1,7 +1,3 @@
-/*
- * OutDegreeCentrality.java
- * Created Nov 4, 2011
- */
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -24,8 +20,7 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
-
+import com.google.common.graph.Graph;
 
 /**
  * Computes out-degree of vertices (only directed graphs).
@@ -39,7 +34,7 @@ public class OutDegreeCentrality extends AbstractGraphNodeMetric<Integer> {
     }
 
     @Override
-    public <V> Integer apply(Graph<V> graph, V vertex) { 
+    public <V> Integer apply(Graph<V> graph, V vertex) {
         return graph.outDegree(vertex); 
     }
 

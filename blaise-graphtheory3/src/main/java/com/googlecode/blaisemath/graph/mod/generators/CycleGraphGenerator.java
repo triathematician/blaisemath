@@ -1,7 +1,3 @@
-/**
- * CycleGraphGenerator.java
- * Created 2012
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,7 +20,8 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
+
 import java.util.AbstractList;
 
 /** 

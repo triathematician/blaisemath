@@ -1,7 +1,3 @@
-/*
- * DegreeCentrality.java
- * Created Nov 4, 2011
- */
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -24,9 +20,8 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
-
 
 /**
  * Computes the second-order degree of a vertex in a graph, i.e. how many vertices are within two hops.
@@ -41,7 +36,7 @@ public class DegreeTwoCentrality extends AbstractGraphNodeMetric<Integer> {
     }
     
     @Override
-    public <V> Integer apply(Graph<V> graph, V vertex) { 
+    public <V> Integer apply(Graph<V> graph, V vertex) {
         return GraphUtils.neighborhood(graph, vertex, 2).size() - 1;
     }
     

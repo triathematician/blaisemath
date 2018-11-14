@@ -1,7 +1,3 @@
-/*
- * GraphComponents.java
- * Created Nov 4, 2011
- */
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -25,10 +21,13 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.google.common.collect.Sets;
+import com.google.common.graph.Graph;
+import com.google.common.graph.Graphs;
+import com.google.errorprone.annotations.Immutable;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * Provides additional knowledge about the components of a graph, which may be
@@ -36,7 +35,7 @@ import javax.annotation.concurrent.Immutable;
  * easily obtained from the basic representation of the graph, this class provides
  * a decoupled cache and access to this info.
  *
- * @author elisha
+ * @author Elisha Peterson
  * 
  * @param <N> node type
  */
@@ -63,7 +62,7 @@ public final class GraphComponents<N> {
         } else {
             this.componentGraphs = Sets.newHashSet();
             for (Set<N> compt : components) {
-                componentGraphs.add(GraphUtils.copySubgraph(graph, compt));
+                componentGraphs.add(Graphs.inducedSubgraph(graph, compt));
             }
         }
     }

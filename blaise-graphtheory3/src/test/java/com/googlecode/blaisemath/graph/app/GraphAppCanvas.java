@@ -1,7 +1,3 @@
-/**
- * GraphAppCanvas.java
- * Created Jan 2016
- */
 package com.googlecode.blaisemath.graph.app;
 
 /*
@@ -25,21 +21,17 @@ package com.googlecode.blaisemath.graph.app;
  */
 
 
-import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.SetSelectionModel;
-import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Set;
 import org.jdesktop.application.Action;
+
+import java.awt.geom.Point2D;
 
 /**
  * Graph component for {@link GraphApp}.
@@ -59,15 +51,12 @@ public class GraphAppCanvas extends GraphComponent {
         graph.setPointSelectionEnabled(true);
         
         graph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
-        graph.getNodeStyler().setLabelStyleDelegate(new Function<Object,AttributeSet>(){
-            @Override
-            public AttributeSet apply(Object input) {
-                double rad = ((Number) scaler.apply(input).get(Styles.MARKER_RADIUS)).doubleValue();
-                Point2D offset = new Point2D.Double(rad, rad);
-                return AttributeSet.createWithParent(Styles.defaultTextStyle())
-                        .and(Styles.FONT_SIZE, 8f)
-                        .and(Styles.OFFSET, offset);
-            }
+        graph.getNodeStyler().setLabelStyleDelegate(input -> {
+            double rad = ((Number) scaler.apply(input).get(Styles.MARKER_RADIUS)).doubleValue();
+            Point2D offset = new Point2D.Double(rad, rad);
+            return AttributeSet.withParent(Styles.DEFAULT_TEXT_STYLE)
+                    .and(Styles.FONT_SIZE, 8f)
+                    .and(Styles.OFFSET, offset);
         });
         graph.getNodeStyler().setStyleDelegate(scaler);
     }
@@ -90,7 +79,7 @@ public class GraphAppCanvas extends GraphComponent {
     
     //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="ACTIONS">    
+    //region ACTIONS
     
     @Action
     public void startLayout() {

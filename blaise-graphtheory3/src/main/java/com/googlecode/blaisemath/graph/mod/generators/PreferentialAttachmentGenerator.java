@@ -1,7 +1,3 @@
-/*
- * PreferentialAttachmentGenerator.java
- * Created May 27, 2010
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,16 +20,18 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphGenerator;
+import com.googlecode.blaisemath.graph.GraphUtils;
+import com.googlecode.blaisemath.graph.mod.generators.PreferentialAttachmentGenerator.PreferentialAttachmentParameters;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphGenerator;
-import com.googlecode.blaisemath.graph.SparseGraph;
-import com.googlecode.blaisemath.graph.mod.generators.PreferentialAttachmentGenerator.PreferentialAttachmentParameters;
-import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides static utility methods for generating graphs using preferential
@@ -62,7 +60,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
         }
     }
 
-    //<editor-fold defaultstate="collapsed" desc="ALGORITHM AND UTILITY METHODS">
+    //region ALGORITHM
     
     /**
      * Common method for preferential attachment algorithm
@@ -78,7 +76,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
         // initialize with values from seed graph
         for (Integer i1 : nodes) {
             for (Integer i2 : nodes) {
-                if (seedGraph.adjacent(i1, i2)) {
+                if (seedGraph.hasEdgeConnecting(i1, i2)) {
                     degreeSum += addEdge(edges, degrees, i1, i2);
                 }
             }
@@ -99,7 +97,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
             }
             degreeSum += addEdge(edges, degrees, cur, weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
         }
-        return SparseGraph.createFromArrayEdges(false, nodes, edges);
+        return GraphUtils.createFromArrayEdges(false, nodes, edges);
     }
 
     /**
@@ -179,7 +177,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
     
     //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="PARAMETERS CLASS">
+    //region PARAMETERS CLASS
     
     /** Parameters for preferential attachment */
     public static final class PreferentialAttachmentParameters extends DefaultGeneratorParameters {
@@ -233,8 +231,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
         }
 
         public Graph<Integer> generateSeedGraph() {
-            return seedGraph != null ? seedGraph
-                    : EdgeCountGenerator.getInstance().apply(seedParameters);
+            return seedGraph != null ? seedGraph : EdgeCountGenerator.getInstance().apply(seedParameters);
         }
         
         //region PROPERTIES
@@ -255,7 +252,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
 
         public void setSeedGraph(@Nullable Graph<Integer> seed) {
             checkNotNull(seed);
-            checkArgument(seed.edgeCount() > 0, "PreferentialAttachment seed must be non-empty: " + seed);
+            checkArgument(seed.edges().size() > 0, "PreferentialAttachment seed must be non-empty: " + seed);
             checkArgument(!seed.isDirected(), "Algorithm not supported for directed graphs: " + seed);
             this.seedGraph = seed;
         }

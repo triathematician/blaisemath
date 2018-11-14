@@ -1,7 +1,3 @@
-/*
- * CliqueCount.java
- * Created Nov 4, 2011
- */
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -24,8 +20,8 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphUtils;
+import com.google.common.graph.Graph;
+import com.google.common.graph.Graphs;
 
 /**
  * Computes the clique count of a particular vertex,
@@ -43,8 +39,8 @@ public class CliqueCount extends AbstractGraphNodeMetric<Integer> {
     }
     
     @Override
-    public <V> Integer apply(Graph<V> graph, V node) { 
-        return GraphUtils.copySubgraph(graph, graph.neighbors(node)).edgeCount();
+    public <V> Integer apply(Graph<V> graph, V node) {
+        return Graphs.inducedSubgraph(graph, graph.adjacentNodes(node)).edges().size();
     }
     
 }

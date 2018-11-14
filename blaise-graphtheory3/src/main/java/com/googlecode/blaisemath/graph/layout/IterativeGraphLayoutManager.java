@@ -1,7 +1,3 @@
-/**
- * IterativeGraphLayoutManager.java
- * Created Jan 16, 2016
- */
 package com.googlecode.blaisemath.graph.layout;
 
 /*
@@ -24,23 +20,20 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
-
 import com.google.common.base.Function;
-import com.googlecode.blaisemath.annotation.InvokedFromThread;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.IterativeGraphLayout;
-import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
-import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
+
 import java.awt.geom.Point2D;
 import java.util.Map;
 
 /**
- * <p>
- *   Manages an iterative graph layout, including its state and parameters.
- *   This class is not thread safe.
- * </p>
+ * Manages an iterative graph layout, including its state and parameters.
+ * This class is not thread safe.
+ *
  * @author elisha
  */
 public final class IterativeGraphLayoutManager {
@@ -48,12 +41,7 @@ public final class IterativeGraphLayoutManager {
     /** Default # iterations per layout step */
     private static final int DEFAULT_ITER_PER_LOOP = 2;
     /** Cooling curve. Determines the cooling parameter at each step, as a product of initial cooling parameter. */
-    private static final Function<Integer,Double> COOLING_CURVE = new Function<Integer,Double>(){
-        @Override
-        public Double apply(Integer x) {
-            return .1 + .9/Math.log10(x+10.0);
-        }
-    };
+    private static final Function<Integer,Double> COOLING_CURVE = x -> .1 + .9/Math.log10(x+10.0);
         
     /** The graph for layouts */
     private Graph graph;
@@ -74,22 +62,11 @@ public final class IterativeGraphLayoutManager {
     
     /** # of iterations per loop */
     private int iterPerLoop = DEFAULT_ITER_PER_LOOP;
-    
-    //<editor-fold defaultstate="collapsed" desc="CONSTRUCTORS">
 
     public IterativeGraphLayoutManager() {
-        this.coordListener = new CoordinateListener(){
-            @InvokedFromThread("unknown")
-            @Override
-            public void coordinatesChanged(CoordinateChangeEvent evt) {
-                requestPositions(((CoordinateManager)evt.getSource()).getActiveLocationCopy(), true);
-            }
-        };
+        this.coordListener = evt -> requestPositions(((CoordinateManager)evt.getSource()).getActiveLocationCopy(), true);
         setCoordinateManager(CoordinateManager.create(GraphLayoutManager.NODE_CACHE_SIZE));
     }
-    
-    //endregion
-    
     
     //region PROPERTIES
 
@@ -213,9 +190,9 @@ public final class IterativeGraphLayoutManager {
         }
     }
     
-    //<editor-fold defaultstate="collapsed" desc="ThreadSafe PROPERTIES">
-    
-    public void requestPositions(Map<?,Point2D.Double> loc, boolean resetNodes) {
+    //region ThreadSafe PROPERTIES
+
+    public void requestPositions(Map<?, Point2D.Double> loc, boolean resetNodes) {
         if (state != null) {
             state.requestPositions(loc, resetNodes);
         }

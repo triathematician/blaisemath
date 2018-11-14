@@ -1,7 +1,3 @@
-/*
- * VisualGraph.java
- * Created Jan 31, 2011
- */
 package com.googlecode.blaisemath.graph.view;
 
 /*
@@ -25,31 +21,28 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 import com.google.common.base.Functions;
-import com.google.common.base.Supplier;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.EndpointPair;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.graphics.swing.AnchoredText;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.graphics.swing.AnchoredText;
-import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.coordinate.CoordinateManager;
-import java.awt.Color;
-import java.awt.Shape;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.awt.*;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 
 /**
- * <p>
- *  Combines a {@link GraphLayoutManager} and a {@link DelegatingNodeLinkGraphic}
- *  to manage a graph and its node locations. The graph is maintained by the manager,
- *  and the visual elements by the graphic.
- * </p>
+ * Combines a {@link GraphLayoutManager} and a {@link DelegatingNodeLinkGraphic}
+ * to manage a graph and its node locations. The graph is maintained by the manager,
+ * and the visual elements by the graphic.
  *
  * @param <G> graphics canvas type
  * @author Elisha Peterson
@@ -65,11 +58,9 @@ public class VisualGraph<G> {
             new Color(0, 128, 0, 128), 1f);
     
     /** Responsible for instantiating the view graph */
-    @Nullable
-    private final Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,G>> viewGraphSupplier;
+    private final @Nullable Supplier<DelegatingNodeLinkGraphic<Object, EndpointPair<Object>,G>> viewGraphSupplier;
     /** Stores the visible graph */
-    @Nullable
-    private DelegatingNodeLinkGraphic<Object,Edge<Object>,G> viewGraph;
+    private @Nullable DelegatingNodeLinkGraphic<Object,EndpointPair<Object>,G> viewGraph;
     
     /** Manages graph and node locations */
     private GraphLayoutManager layoutManager;
@@ -89,15 +80,9 @@ public class VisualGraph<G> {
      * @param manager a GraphLayoutManager with the graph to display
      * @param graphicSupplier optional, provides a way to override default creation of the view graph
      */
-    public VisualGraph(GraphLayoutManager manager,
-            @Nullable Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,G>> graphicSupplier) {
+    public VisualGraph(GraphLayoutManager manager, @Nullable Supplier<DelegatingNodeLinkGraphic<Object, EndpointPair<Object>, G>> graphicSupplier) {
         this.viewGraphSupplier = graphicSupplier;
-        layoutListener = new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                initViewGraph();
-            }
-        };
+        layoutListener = evt -> initViewGraph();
         setLayoutManager(manager);
     }
 
@@ -111,7 +96,7 @@ public class VisualGraph<G> {
             if (viewGraphSupplier != null) {
                 viewGraph = viewGraphSupplier.get();
             } else {
-                viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
+                viewGraph = new DelegatingNodeLinkGraphic<Object,EndpointPair<Object>, G>(
                         layoutManager.getCoordinateManager(), null, null, null);
                 viewGraph.getNodeStyler().setStyle(DEFAULT_NODE_STYLE);
             }
@@ -137,9 +122,6 @@ public class VisualGraph<G> {
 
     
     //region PROPERTIES
-    //
-    // PROPERTIES
-    //
 
     /**
      * Return the GraphLayoutManager with position data
@@ -220,7 +202,7 @@ public class VisualGraph<G> {
      * Return edge styler
      * @return edge styler
      */
-    public ObjectStyler<Edge<Object>> getEdgeStyler() {
+    public ObjectStyler<EndpointPair<Object>> getEdgeStyler() {
         return viewGraph.getEdgeStyler();
     }
 
@@ -228,7 +210,7 @@ public class VisualGraph<G> {
      * Sets edge styler
      * @param styler edge styler
      */
-    public void setEdgeStyler(ObjectStyler<Edge<Object>> styler) {
+    public void setEdgeStyler(ObjectStyler<EndpointPair<Object>> styler) {
         viewGraph.setEdgeStyler(styler);
     }
 

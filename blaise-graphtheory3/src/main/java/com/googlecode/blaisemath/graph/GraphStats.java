@@ -1,7 +1,3 @@
-/*
- * GraphStats.java
- * Created Oct 29, 2011
- */
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -27,16 +23,16 @@ package com.googlecode.blaisemath.graph;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import java.util.Map;
+
+import com.google.common.graph.Graph;
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
 /**
- * <p>
- *   Caches computations of metrics on a graph.
- *   Both {@link GraphNodeMetric}s and {@link GraphMetric}s are captured here. In the
- *   case of {@code GraphNodeMetric}s, the node values are computed along with a
- *   {@link SummaryStatistics} object that describes their values.
- * </p>
- * 
+ * Caches computations of metrics on a graph.
+ * Both {@link GraphNodeMetric}s and {@link GraphMetric}s are captured here. In the
+ * case of {@code GraphNodeMetric}s, the node values are computed along with a
+ * {@link SummaryStatistics} object that describes their values.
+ *
  * @author Elisha Peterson
  */
 public class GraphStats {

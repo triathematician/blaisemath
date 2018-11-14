@@ -37,7 +37,7 @@ import java.util.Set;
  *
  * @author Elisha Peterson
  */
-public class GAInstrument {
+public class Instrument {
 
     private static int id = 0;
     private static final String START = "start";
@@ -50,7 +50,7 @@ public class GAInstrument {
     /** Log events split by algorithm */
     private static final Multimap<String,LogEvent> LOG = LinkedHashMultimap.create();
 
-    private GAInstrument() {
+    private Instrument() {
     }
     
     private static synchronized int nextId() {

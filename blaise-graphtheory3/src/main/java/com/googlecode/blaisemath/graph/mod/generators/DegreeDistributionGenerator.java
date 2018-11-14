@@ -1,7 +1,3 @@
-/*
- * DegreeDistributionGenerator.java
- * Created Aug 6, 2010
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,21 +20,18 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkElementIndex;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphGenerator;
+import com.googlecode.blaisemath.graph.GraphUtils;
+import com.googlecode.blaisemath.graph.mod.generators.DegreeDistributionGenerator.DegreeDistributionParameters;
+
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphGenerator;
-import com.googlecode.blaisemath.graph.SparseGraph;
-import com.googlecode.blaisemath.graph.mod.generators.DegreeDistributionGenerator.DegreeDistributionParameters;
-import java.util.Random;
+
+import static com.google.common.base.Preconditions.checkElementIndex;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides a random-graph model based on a degree sequence. If the
@@ -51,7 +44,7 @@ import java.util.Random;
 public final class DegreeDistributionGenerator implements GraphGenerator<DegreeDistributionParameters,Integer> {
     
     private static final Logger LOG = Logger.getLogger(DegreeDistributionGenerator.class.getName());
-    
+
     @Override
     public String toString() {
         return "Random Graph (fixed Degree Distribution)";
@@ -91,7 +84,7 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
                 i++;
             }
         }
-        return SparseGraph.createFromArrayEdges(true, ExtendedGeneratorParameters.intList(n), edges);
+        return GraphUtils.createFromArrayEdges(true, ExtendedGeneratorParameters.intList(n), edges);
     }
 
     /**
@@ -182,10 +175,10 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
         if (!vxLeft.isEmpty()) {
             LOG.log(Level.WARNING, "Unable to find edges for all vertices. Remaining list={0}", vxLeft);
         }
-        return SparseGraph.createFromArrayEdges(false, ExtendedGeneratorParameters.intList(n), edges);
+        return GraphUtils.createFromArrayEdges(false, ExtendedGeneratorParameters.intList(n), edges);
     }
 
-    //<editor-fold defaultstate="collapsed" desc="UTILITY FUNCTIONS">
+    //region ALGORITHM
     
     /**
      * @return random value in given set
@@ -243,7 +236,7 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
     
     //endregion
 
-    //<editor-fold defaultstate="collapsed" desc="PARAMETERS CLASS">
+    //region PARAMETERS CLASS
     
     /** Parameters associated with a particular degree distribution. */
     public static final class DegreeDistributionParameters {

@@ -1,8 +1,3 @@
-/*
- * SpringLayout.java
- * Created May 13, 2010
- */
-
 package com.googlecode.blaisemath.graph.mod.layout;
 
 /*
@@ -28,35 +23,27 @@ package com.googlecode.blaisemath.graph.mod.layout;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
-import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * <p>
- *   Graph layout modeled after repulsive charges between nodes, and spring
- *   forces between nodes. This class is stateless and therefore thread-safe.
- * </p>
- * 
+ * Graph layout modeled after repulsive charges between nodes, and spring forces between nodes.
+ *
  * @author Elisha Peterson
  */
-@ThreadSafe
 public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters, SpringLayoutState> {
     
-    //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
-    
     private static final Logger LOG = Logger.getLogger(SpringLayout.class.getName());
-    
-    //endregion
-    
+
     @Override
     public String toString() {
         return "Spring layout algorithm";
@@ -75,7 +62,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     @InvokedFromThread("unknown")
     @Override
     public final synchronized <C> double iterate(Graph<C> og, SpringLayoutState state, SpringLayoutParameters params) {
-        Graph<C> g = og.isDirected() ? GraphUtils.copyAsUndirectedSparseGraph(og) : og;
+        Graph<C> g = og.isDirected() ? GraphUtils.copyUndirected(og) : og;
         Set<C> nodes = g.nodes();
         Set<C> pinned = params.getConstraints().getPinnedNodes();
         Set<C> unpinned = Sets.difference(nodes, pinned).immutableCopy();
@@ -142,8 +129,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         }
     }
 
-    
-    // <editor-fold defaultstate="collapsed" desc="STATIC ALGORITHMS">
+    //region STATIC METHODS
 
     /**
      * This method returns a position for a node that doesn't currently have a position.
@@ -155,7 +141,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         double sx = 0;
         double sy = 0;
         int n = 0;
-        for (C o : g.neighbors(node)) {
+        for (C o : g.adjacentNodes(node)) {
             Point2D.Double p = state.getLoc(o);
             if (p != null) {
                 sx += p.x;
@@ -175,12 +161,10 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     /**
      * Adds a global attractive force pushing vertex at specified location toward the origin
      * @param sum vector representing the sum of forces (will be adjusted)
-     * @param io the node of interest
      * @param iLoc location of first vertex
      * @param params algorithm parameters
      */
-    private static <C> void addGlobalForce(Point2D.Double sum, Point2D.Double iLoc, 
-            SpringLayoutParameters params) {
+    private static <C> void addGlobalForce(Point2D.Double sum, Point2D.Double iLoc, SpringLayoutParameters params) {
         double dist = iLoc.distance(0,0);
         if (dist > params.minGlobalForceDist) {
             sum.x += -params.globalC * iLoc.x / dist;
@@ -190,19 +174,17 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
 
     /**
      * Adds all repulsive forces for a particular vertex.
-     * @param g the graph
-     * @param ireg the region for the node
+     * @param region the region for the node
      * @param sum vector representing the sum of forces (will be adjusted)
      * @param io the node of interest
      * @param iLoc location of first vertex
      * @param params algorithm parameters
      */
-    private static <C> void addRepulsiveForces(LayoutRegion<C> ireg, 
-            Point2D.Double sum, C io, Point2D.Double iLoc, 
+    private static <C> void addRepulsiveForces(LayoutRegion<C> region, Point2D.Double sum, C io, Point2D.Double iLoc,
             SpringLayoutParameters params) {
         Point2D.Double jLoc;
         double dist;
-        for (LayoutRegion<C> r : ireg.adjacentRegions()) {
+        for (LayoutRegion<C> r : region.adjacentRegions()) {
             for (Entry<C, Point2D.Double> jEntry : r.entries()) {
                 C jo = jEntry.getKey();
                 if (io != jo) {
@@ -220,15 +202,13 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     /**
      * Adds repulsive force at vertex i1 pointing away from vertex i2.
      * @param sum vector representing the sum of forces (will be adjusted)
-     * @param io the node of interest
      * @param iLoc location of first vertex
-     * @param jo the second node of interest
      * @param jLoc location of second vertex
      * @param dist distance between vertices
      * @param params algorithm parameters
      */
-    private static <C> void addRepulsiveForce(Point2D.Double sum, Point2D.Double iLoc, 
-            Point2D.Double jLoc, double dist, SpringLayoutParameters params) {
+    private static <C> void addRepulsiveForce(Point2D.Double sum, Point2D.Double iLoc, Point2D.Double jLoc, double dist,
+                                              SpringLayoutParameters params) {
         if (iLoc == jLoc) {
             return;
         }
@@ -256,7 +236,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
             SpringLayoutState<C> state, SpringLayoutParameters params) {
         Point2D.Double jLoc;
         double dist;
-        for (C o : g.neighbors(io)) {
+        for (C o : g.adjacentNodes(io)) {
             if (!Objects.equal(o, io)) {
                 jLoc = state.getLoc(o);
                 dist = iLoc.distance(jLoc);
@@ -266,7 +246,6 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     }
 
     /** Adds spring force at vertex i1 pointing to vertex i2.
-     * @param g the graph
      * @param sum vector representing the sum of forces (will be adjusted)
      * @param io the node of interest
      * @param iLoc location of first vertex
@@ -274,8 +253,8 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
      * @param jLoc location of second vertex
      * @param dist distance between vertices
      */
-    private static <C> void addSpringForce(Point2D.Double sum, C io, Point2D.Double iLoc, 
-            C jo, Point2D.Double jLoc, double dist, SpringLayoutParameters params) {
+    private static <C> void addSpringForce(Point2D.Double sum, C io, Point2D.Double iLoc, C jo, Point2D.Double jLoc,
+                                           double dist, SpringLayoutParameters params) {
         if (dist == 0) {
             LOG.log(Level.WARNING, "Distance 0 between {0} and {1}: {2}, {3}", 
                     new Object[]{io, jo, iLoc, jLoc});
@@ -318,13 +297,11 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
      * @param iVel velocity to adjust
      * @param netForce force vector to use
      * @param iDeg node's degree, used to increase damping for high degree nodes
-     * @param maxForce maximum permissible force
+     * @param params layout parameters
      * @return node's energy
      */
-    private static double adjustVelocity(Point2D.Double iVel, Point2D.Double netForce, 
-            double iDeg, SpringLayoutParameters params) {
-        
-        double maxForce = iDeg <= 15 ? params.maxForce 
+    private static double adjustVelocity(Point2D.Double iVel, Point2D.Double netForce, double iDeg, SpringLayoutParameters params) {
+        double maxForce = iDeg <= 15 ? params.maxForce
                 : params.maxForce * (.2 + .8/(iDeg-15));
         
         double fm = netForce.distance(0, 0);
@@ -357,6 +334,6 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         iLoc.y += stepT * iVel.y;
     }
 
-    // </editor-fold>
+    //endregion
 
 }

@@ -1,7 +1,3 @@
-/**
- * AbstractGraphNodeMetric.java
- * Created May 19, 2016
- */
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -24,15 +20,13 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.Map;
 
 /**
- * Gives a name to the metric and provides a default implementation for mapping
- * all values.
+ * Gives a name to the metric and provides a default implementation for mapping all values.
  * 
  * @param <T> metric result type
  * 

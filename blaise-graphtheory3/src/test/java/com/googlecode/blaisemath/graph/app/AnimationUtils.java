@@ -1,7 +1,3 @@
-/**
- * AnimationUtils.java
- * Created Mar 31, 2015
- */
 package com.googlecode.blaisemath.graph.app;
 
 /*
@@ -27,21 +23,23 @@ package com.googlecode.blaisemath.graph.app;
 
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
-import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.getLocalBounds;
-import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.setDesiredLocalBounds;
-import com.googlecode.blaisemath.util.geom.Points;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.util.geom.Points;
 import com.googlecode.blaisemath.util.swing.AnimationStep;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Collections;
 import java.util.Map;
 
+import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.getLocalBounds;
+import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.setDesiredLocalBounds;
+
 /**
- *
+ * Helps generate animations with coordinate manager and graph layout algorithm.
  * @author elisha
  */
 public class AnimationUtils {
@@ -61,8 +59,8 @@ public class AnimationUtils {
      * @param parm layout parameters
      * @param margin margin for setting boundaries of graph component
      */
-    public static <N,P> void animateCoordinateChange(GraphLayoutManager<N> glm, 
-            StaticGraphLayout<P> layout, P parm, @Nullable JGraphicComponent gc, double margin) {
+    public static <N,P> void animateCoordinateChange(GraphLayoutManager<N> glm, StaticGraphLayout<P> layout, P parm,
+                                                     @Nullable JGraphicComponent gc, double margin) {
         Map<N,Point2D.Double> newLocs = layout.layout(glm.getGraph(), glm.getNodeLocationCopy(), parm);
         if (gc == null) {
             animateCoordinateChange(glm.getCoordinateManager(), newLocs);
@@ -104,7 +102,8 @@ public class AnimationUtils {
      * @param gc graphic component, for coordinated zooming
      * @param margin margin for setting boundaries of graph component
      */
-    public static <S> void animateAndZoomCoordinateChange(final CoordinateManager<S,Point2D.Double> cm, final Map<S,Point2D.Double> newLocs, final JGraphicComponent gc, double margin) {
+    public static <S> void animateAndZoomCoordinateChange(final CoordinateManager<S,Point2D.Double> cm, final Map<S,Point2D.Double> newLocs,
+                                                          final JGraphicComponent gc, double margin) {
         Rectangle2D.Double oldBounds = getLocalBounds(gc);
         final double xMin = oldBounds.getMinX();
         final double yMin = oldBounds.getMinY();

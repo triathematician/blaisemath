@@ -20,9 +20,10 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
+import com.google.common.graph.Graphs;
 import com.googlecode.blaisemath.graph.GraphUtils;
+
 import java.util.Set;
 
 /**
@@ -62,9 +63,9 @@ public class GraphClustering extends AbstractGraphMetric<Double> {
         int triangles = 0;
         int triples = 0;
         for (V node : graph.nodes()) {
-            Set<V> g1 = graph.neighbors(node);
+            Set<V> g1 = graph.adjacentNodes(node);
             int dist1 = g1.size();
-            int aDist1 = GraphUtils.copySubgraph(graph, g1).edgeCount();
+            int aDist1 = Graphs.inducedSubgraph(graph, g1).edges().size();
             Set<V> g2 = GraphUtils.neighborhood(graph, node, 2);
             int dist2 = g2.size() - 1 - g1.size();
 

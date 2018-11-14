@@ -21,6 +21,9 @@ package com.googlecode.blaisemath.graph;
  */
 
 
+import com.google.common.graph.Graph;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -40,7 +43,7 @@ public final class NodeInGraph<E> {
     public NodeInGraph(E node, @Nullable Graph<E> graph) {
         this.node = checkNotNull(node);
         this.graph = graph;
-        checkArgument(graph == null || graph.contains(node));
+        checkArgument(graph == null || graph.nodes().contains(node));
     }
 
     public static <E> NodeInGraph<E> create(E node) {

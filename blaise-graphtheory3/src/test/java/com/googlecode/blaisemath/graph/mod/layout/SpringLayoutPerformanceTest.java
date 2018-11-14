@@ -1,8 +1,3 @@
-/*
- * SpringLayoutTest.java
- * Created on Jun 3, 2013
- */
-
 package com.googlecode.blaisemath.graph.mod.layout;
 
 /*
@@ -29,14 +24,15 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.util.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import com.googlecode.blaisemath.graph.mod.layout.StaticSpringLayout.StaticSpringLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
 import com.googlecode.blaisemath.graph.mod.generators.WattsStrogatzGenerator;
 import com.googlecode.blaisemath.graph.mod.generators.WattsStrogatzGenerator.WattsStrogatzParameters;
+import com.googlecode.blaisemath.graph.mod.layout.StaticSpringLayout.StaticSpringLayoutParameters;
+import com.googlecode.blaisemath.util.Instrument;
+
 import java.util.List;
 import java.util.Random;
 
@@ -66,15 +62,15 @@ public class SpringLayoutPerformanceTest {
         
         for (Graph g : graphs) {
             System.out.printf("\nGraph dir=%s, |V|=%s, |E|=%s, #components=%s, degrees=%s\n", 
-                    g.isDirected(), g.nodeCount(), g.edgeCount(), 
+                    g.isDirected(), g.nodes().size(), g.edges().size(),
                     GraphUtils.components(g).size(),
                     nicer(GraphUtils.degreeDistribution(g)));
-            int id = GAInstrument.start("EdgePD", g+"");
+            int id = Instrument.start("EdgePD", g+"");
             sl.layout(g, null, new StaticSpringLayoutParameters());
-            GAInstrument.end(id);
+            Instrument.end(id);
         }
         System.out.println("\n\n");
-        GAInstrument.print(System.out);
+        Instrument.print(System.out);
     }
 
     private static String nicer(Multiset set) {

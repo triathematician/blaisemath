@@ -20,8 +20,7 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 
 /**
  * Global metric describing the # edges in a graph
@@ -35,6 +34,6 @@ public class GraphEdgeCount extends AbstractGraphMetric<Integer> {
 
     @Override
     public Integer apply(Graph graph) {
-        return graph.edgeCount();
+        return graph.edges().size();
     }
 }

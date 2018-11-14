@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -32,13 +27,12 @@ import static com.googlecode.blaisemath.test.AssertUtils.assertCollectionContent
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.google.common.graph.Graph;
+import com.google.common.graph.Graphs;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
 public class SubgraphTest {
 
     public SubgraphTest() {
@@ -57,8 +51,8 @@ public class SubgraphTest {
         EE = new Integer[][] {
             {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21}
         };
-        UNDIRECTED_INSTANCE = GraphUtils.copySubgraph(SparseGraph.createFromArrayEdges(false, Arrays.asList(VV), Arrays.asList(EE)), SUB);
-        DIRECTED_INSTANCE = GraphUtils.copySubgraph(SparseGraph.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE)), SUB);
+        UNDIRECTED_INSTANCE = Graphs.inducedSubgraph(GraphUtils.createFromArrayEdges(false, Arrays.asList(VV), Arrays.asList(EE)), SUB);
+        DIRECTED_INSTANCE = Graphs.inducedSubgraph(GraphUtils.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE)), SUB);
     }
 
     @Test
@@ -71,8 +65,8 @@ public class SubgraphTest {
     @Test
     public void testOrder() {
         System.out.println("order");
-        assertEquals(5, UNDIRECTED_INSTANCE.nodeCount());
-        assertEquals(5, DIRECTED_INSTANCE.nodeCount());
+        assertEquals(5, UNDIRECTED_INSTANCE.nodes().size());
+        assertEquals(5, DIRECTED_INSTANCE.nodes().size());
     }
 
     @Test
@@ -86,13 +80,13 @@ public class SubgraphTest {
     public void testContains() {
         System.out.println("contains");
         for (Integer i : SUB) {
-            assertTrue(UNDIRECTED_INSTANCE.contains(i));
-            assertTrue(DIRECTED_INSTANCE.contains(i));
+            assertTrue(UNDIRECTED_INSTANCE.nodes().contains(i));
+            assertTrue(DIRECTED_INSTANCE.nodes().contains(i));
         }
-        assertFalse(UNDIRECTED_INSTANCE.contains(0));
-        assertFalse(DIRECTED_INSTANCE.contains(0));
-        assertFalse(UNDIRECTED_INSTANCE.contains(3));
-        assertFalse(DIRECTED_INSTANCE.contains(3));
+        assertFalse(UNDIRECTED_INSTANCE.nodes().contains(0));
+        assertFalse(DIRECTED_INSTANCE.nodes().contains(0));
+        assertFalse(UNDIRECTED_INSTANCE.nodes().contains(3));
+        assertFalse(DIRECTED_INSTANCE.nodes().contains(3));
     }
 
     @Test
@@ -105,21 +99,21 @@ public class SubgraphTest {
     @Test
     public void testAdjacent() {
         System.out.println("adjacent");
-        assertTrue(UNDIRECTED_INSTANCE.adjacent(1, 2));
-        assertFalse(UNDIRECTED_INSTANCE.adjacent(1, 5));
-        assertTrue(UNDIRECTED_INSTANCE.adjacent(2, 5));
-        assertTrue(UNDIRECTED_INSTANCE.adjacent(5, 2));
-        assertTrue(UNDIRECTED_INSTANCE.adjacent(6, 6));
-        assertTrue(UNDIRECTED_INSTANCE.adjacent(15, 15));
-        assertFalse(UNDIRECTED_INSTANCE.adjacent(6, 10));
-        assertFalse(UNDIRECTED_INSTANCE.adjacent(0, 2));
-        assertTrue(DIRECTED_INSTANCE.adjacent(1, 2));
-        assertFalse(DIRECTED_INSTANCE.adjacent(1, 5));
-        assertTrue(DIRECTED_INSTANCE.adjacent(2, 5));
-        assertTrue(DIRECTED_INSTANCE.adjacent(5, 2));
-        assertTrue(DIRECTED_INSTANCE.adjacent(6, 6));
-        assertFalse(UNDIRECTED_INSTANCE.adjacent(6, 10));
-        assertTrue(DIRECTED_INSTANCE.adjacent(15, 15));
+        assertTrue(UNDIRECTED_INSTANCE.hasEdgeConnecting(1, 2));
+        assertFalse(UNDIRECTED_INSTANCE.hasEdgeConnecting(1, 5));
+        assertTrue(UNDIRECTED_INSTANCE.hasEdgeConnecting(2, 5));
+        assertTrue(UNDIRECTED_INSTANCE.hasEdgeConnecting(5, 2));
+        assertTrue(UNDIRECTED_INSTANCE.hasEdgeConnecting(6, 6));
+        assertTrue(UNDIRECTED_INSTANCE.hasEdgeConnecting(15, 15));
+        assertFalse(UNDIRECTED_INSTANCE.hasEdgeConnecting(6, 10));
+        assertFalse(UNDIRECTED_INSTANCE.hasEdgeConnecting(0, 2));
+        assertTrue(DIRECTED_INSTANCE.hasEdgeConnecting(1, 2));
+        assertFalse(DIRECTED_INSTANCE.hasEdgeConnecting(1, 5));
+        assertTrue(DIRECTED_INSTANCE.hasEdgeConnecting(2, 5));
+        assertTrue(DIRECTED_INSTANCE.hasEdgeConnecting(5, 2));
+        assertTrue(DIRECTED_INSTANCE.hasEdgeConnecting(6, 6));
+        assertFalse(UNDIRECTED_INSTANCE.hasEdgeConnecting(6, 10));
+        assertTrue(DIRECTED_INSTANCE.hasEdgeConnecting(15, 15));
     }
 
     @Test
@@ -137,23 +131,23 @@ public class SubgraphTest {
     @Test
     public void testNeighbors() {
         System.out.println("neighbors");
-        assertEquals(0, UNDIRECTED_INSTANCE.neighbors(0).size());
-        assertEquals(0, UNDIRECTED_INSTANCE.neighbors(3).size());
-        assertEquals(0, DIRECTED_INSTANCE.neighbors(0).size());
-        assertEquals(0, DIRECTED_INSTANCE.neighbors(3).size());
+        assertEquals(0, UNDIRECTED_INSTANCE.adjacentNodes(0).size());
+        assertEquals(0, UNDIRECTED_INSTANCE.adjacentNodes(3).size());
+        assertEquals(0, DIRECTED_INSTANCE.adjacentNodes(0).size());
+        assertEquals(0, DIRECTED_INSTANCE.adjacentNodes(3).size());
         int[] nodes = {1, 2, 5, 6, 15};
         Object[][] nbrs1 = new Object[][] { {2,6}, {1,5}, {2}, {1,6}, {15} };
         for (int i = 0; i < SUB.size(); i++) {
-            assertCollectionContentsSame(Arrays.asList(nbrs1[i]), UNDIRECTED_INSTANCE.neighbors(nodes[i]));
-            assertCollectionContentsSame(Arrays.asList(nbrs1[i]), DIRECTED_INSTANCE.neighbors(nodes[i]));
+            assertCollectionContentsSame(Arrays.asList(nbrs1[i]), UNDIRECTED_INSTANCE.adjacentNodes(nodes[i]));
+            assertCollectionContentsSame(Arrays.asList(nbrs1[i]), DIRECTED_INSTANCE.adjacentNodes(nodes[i]));
         }
     }
 
     @Test
     public void testEdgeNumber() {
         System.out.println("edgeNumber");
-        assertEquals(5, UNDIRECTED_INSTANCE.edgeCount());
-        assertEquals(6, DIRECTED_INSTANCE.edgeCount());
+        assertEquals(5, UNDIRECTED_INSTANCE.edges().size());
+        assertEquals(6, DIRECTED_INSTANCE.edges().size());
     }
 
 }

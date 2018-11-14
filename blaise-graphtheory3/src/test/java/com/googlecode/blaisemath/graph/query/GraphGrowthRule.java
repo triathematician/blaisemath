@@ -1,7 +1,3 @@
-/*
- * GraphGrowthRule.java
- * Created on Jun 8, 2012
- */
 package com.googlecode.blaisemath.graph.query;
 
 /*
@@ -24,13 +20,14 @@ package com.googlecode.blaisemath.graph.query;
  * #L%
  */
 
+import com.google.common.graph.Graph;
+
 import java.util.Set;
-import com.googlecode.blaisemath.graph.Graph;
 
 /**
  * A "growth rule" to make a (small) subgraph larger.
  *
- * @author petereb1
+ * @author Elisha Peterson
  */
 public interface GraphGrowthRule {
 

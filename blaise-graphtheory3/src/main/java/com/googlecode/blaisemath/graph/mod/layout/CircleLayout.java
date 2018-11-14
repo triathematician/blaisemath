@@ -1,7 +1,3 @@
-/*
- * CircleLayout.java
- * Created 2010
- */
 package com.googlecode.blaisemath.graph.mod.layout;
 
 /*
@@ -24,13 +20,13 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #L%
  */
 
-
 import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.util.Map;
-import javax.annotation.Nullable;
 
 /**
  * Position nodes in a circle.
@@ -58,7 +54,7 @@ public class CircleLayout implements StaticGraphLayout<CircleLayout.CircleLayout
     public Map layout(Graph g, @Nullable Map ic, CircleLayoutParameters parm) {
         double radius = parm.radius;
         Map<Object, Point2D.Double> result = Maps.newHashMap();
-        int size = g.nodeCount();
+        int size = g.nodes().size();
         int i = 0;
         for (Object v : g.nodes()) {
             result.put(v, new Point2D.Double(

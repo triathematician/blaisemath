@@ -1,7 +1,3 @@
-/**
- * EmptyGraphSupplier.java
- * Created 2012
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,7 +20,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import java.util.Collections;
 
 /** 
@@ -39,8 +35,7 @@ public final class EmptyGraphGenerator extends AbstractDefaultGraphGenerator {
 
     @Override
     public Graph<Integer> apply(DefaultGeneratorParameters parm) {
-        return DefaultGeneratorParameters.createGraphWithEdges(parm, 
-                Collections.<Integer[]>emptySet());
+        return DefaultGeneratorParameters.createGraphWithEdges(parm, Collections.emptySet());
     }
     
 }

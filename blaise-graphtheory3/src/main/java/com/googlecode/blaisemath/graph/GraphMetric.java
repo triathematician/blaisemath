@@ -1,8 +1,3 @@
-/*
- * GraphMetric.java
- * Created Aug 6, 2010
- */
-
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -26,7 +21,7 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.google.common.base.Function;
-
+import com.google.common.graph.Graph;
 
 /**
  * Returns a global value associated with a graph.

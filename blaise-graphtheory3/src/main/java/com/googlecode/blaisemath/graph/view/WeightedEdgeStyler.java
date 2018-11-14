@@ -1,7 +1,3 @@
-/*
- * WeightedEdgeStyler.java
- * Created Sep 18, 2011
- */
 package com.googlecode.blaisemath.graph.view;
 
 /*
@@ -25,10 +21,11 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 import com.google.common.base.Function;
+import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.Edge;
-import java.awt.Color;
+
+import java.awt.*;
 import java.util.Map;
 
 /**
@@ -37,7 +34,7 @@ import java.util.Map;
  * @param <E> edge type
  * @author elisha
  */
-public class WeightedEdgeStyler<E extends Edge> implements Function<E, AttributeSet> {
+public class WeightedEdgeStyler<E extends EndpointPair> implements Function<E, AttributeSet> {
     
     private static final float HUE_RANGE = 0.1f;
 
@@ -85,18 +82,18 @@ public class WeightedEdgeStyler<E extends Edge> implements Function<E, Attribute
             Color stroke = parent.getColor(Styles.STROKE);
             Color c = positive ? positiveColor(stroke, relativeWeight)
                     : negativeColor(stroke, relativeWeight);
-            return AttributeSet.createWithParent(parent)
+            return AttributeSet.withParent(parent)
                     .and(Styles.STROKE, c)
                     .and(Styles.STROKE_WIDTH, (float)(2 * relativeWeight));
         } else if (wt instanceof Color) {
-            return AttributeSet.createWithParent(parent)
+            return AttributeSet.withParent(parent)
                     .and(Styles.STROKE, (Color) wt);
         } else {
             return parent;
         }
     }
     
-    //<editor-fold defaultstate="collapsed" desc="STATIC UTILS">
+    //region UTILS
 
     private static Color positiveColor(Color c, double weight) {
         double wt = Math.min(1, Math.max(0, weight));

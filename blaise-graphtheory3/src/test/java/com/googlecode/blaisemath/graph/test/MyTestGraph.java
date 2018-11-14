@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.googlecode.blaisemath.graph.test;
 
 /*
@@ -24,19 +20,12 @@ package com.googlecode.blaisemath.graph.test;
  * #L%
  */
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Table;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.util.Edge;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.*;
+import com.google.common.graph.ElementOrder;
+import com.google.common.graph.EndpointPair;
+import com.google.common.graph.Graph;
+
+import java.util.*;
 
 /**
  * Test graph that supports mutating edges and nodes.
@@ -47,9 +36,9 @@ public final class MyTestGraph implements Graph<String> {
 
     private boolean directed = false;
     private final LinkedHashSet<String> nodes = Sets.newLinkedHashSet();
-    protected final Set<Edge<String>> edges = new LinkedHashSet<Edge<String>>();
-    protected final SetMultimap<String,Edge<String>> edgeIndex = HashMultimap.create();  
-    protected final Table<String, String, Set<Edge<String>>> edgeTable = HashBasedTable.create();  
+    protected final Set<EndpointPair<String>> edges = new LinkedHashSet<EndpointPair<String>>();
+    protected final SetMultimap<String,EndpointPair<String>> edgeIndex = HashMultimap.create();
+    protected final Table<String, String, Set<EndpointPair<String>>> edgeTable = HashBasedTable.create();
     
     public MyTestGraph() {
         nodes.addAll(intList(1, 100));
@@ -100,7 +89,7 @@ public final class MyTestGraph implements Graph<String> {
         for (int i = 0; i < number; i++) {
             String n = randV();
             nodes.remove(n);
-            edges.removeAll(edgesAdjacentTo(n));
+            edges.removeAll(incidentEdges(n));
             edgeTable.rowKeySet().remove(n);
             edgeTable.columnKeySet().remove(n);
         }
@@ -160,7 +149,7 @@ public final class MyTestGraph implements Graph<String> {
         return edges.size();
     }
 
-    public Set<Edge<String>> edges() {
+    public Set<EndpointPair<String>> edges() {
         return edges;
     }
     
@@ -170,36 +159,36 @@ public final class MyTestGraph implements Graph<String> {
 
     // TODO - what is the proper object to lock?
     protected final synchronized void addEdge(String x, String y) {
-        Edge<String> edge = directed ? addDirectedEdge(x, y) : addUndirectedEdge(x, y);
+        EndpointPair<String> edge = directed ? addDirectedEdge(x, y) : addUndirectedEdge(x, y);
         edges.add(edge);
         edgeIndex.put(x, edge);
         edgeIndex.put(y, edge);
     }
     
-    protected Edge<String> addDirectedEdge(String x, String y) {
+    protected EndpointPair<String> addDirectedEdge(String x, String y) {
         if (!edgeTable.contains(x, y)) {
-            edgeTable.put(x, y, new HashSet<Edge<String>>());
+            edgeTable.put(x, y, new HashSet<>());
         }
-        Edge<String> edge = new Edge<String>(x, y);
+        EndpointPair<String> edge =  EndpointPair.ordered(x, y);
         edgeTable.get(x, y).add(edge);
         return edge;
     }
     
-    protected Edge<String> addUndirectedEdge(String x, String y) {
+    protected EndpointPair<String> addUndirectedEdge(String x, String y) {
         if (!edgeTable.contains(x, y)) {
-            edgeTable.put(x, y, new HashSet<Edge<String>>());
+            edgeTable.put(x, y, new HashSet<>());
         }
         if (!edgeTable.contains(y, x)) {
-            edgeTable.put(y, x, new HashSet<Edge<String>>());
+            edgeTable.put(y, x, new HashSet<>());
         }
-        Edge.UndirectedEdge<String> edge = new Edge.UndirectedEdge<String>(x, y);
+        EndpointPair<String> edge = EndpointPair.unordered(x, y);
         edgeTable.get(x, y).add(edge);
         edgeTable.get(y, x).add(edge);
         return edge;
     }
 
     @Override
-    public boolean adjacent(String x, String y) {
+    public boolean hasEdgeConnecting(String x, String y) {
         if (edgeTable.contains(x, y) && !edgeTable.get(x, y).isEmpty()) {
             return true;
         }
@@ -216,7 +205,7 @@ public final class MyTestGraph implements Graph<String> {
      * @return true if edge was found and removed
      */
     protected boolean removeEdge(String v1, String v2) {
-        Edge<String> edge = directed ? new Edge<String>(v1, v2) : new Edge.UndirectedEdge<String>(v1, v2);
+        EndpointPair<String> edge = directed ? EndpointPair.ordered(v1, v2) : EndpointPair.unordered(v1, v2);
         if (edgeTable.contains(v1, v2)) {
             edgeTable.get(v1, v2).remove(edge);
         }
@@ -235,43 +224,54 @@ public final class MyTestGraph implements Graph<String> {
     //
 
     @Override
-    public Collection<Edge<String>> edgesAdjacentTo(String x) {
+    public boolean allowsSelfLoops() {
+        return false;
+    }
+
+    @Override
+    public ElementOrder<String> nodeOrder() {
+        return ElementOrder.insertion();
+    }
+
+    @Override
+    public Set<EndpointPair<String>> incidentEdges(String x) {
         return edgeIndex.get(x);
     }
 
     @Override
-    public Set<String> outNeighbors(String x) {
+    public Set<String> successors(String x) {
         if (!directed) {
-            return neighbors(x);
+            return adjacentNodes(x);
         } else {
             Set<String> result = new HashSet<String>();
-            for (Edge<String> e : edgesAdjacentTo(x)) {
-                if (x.equals(e.getNode1())) {
-                    result.add(e.getNode2());
+            for (EndpointPair<String> e : incidentEdges(x)) {
+                if (x.equals(e.nodeU())) {
+                    result.add(e.nodeV());
                 }
             }
             return result;
         }
     }
 
-    public Set<String> inNeighbors(String x) {
+    public Set<String> predecessors(String x) {
         if (!directed) {
-            return neighbors(x);
+            return adjacentNodes(x);
         } else {
             Set<String> result = new HashSet<String>();
-            for (Edge<String> e : edgesAdjacentTo(x)) {
-                if (x.equals(e.getNode2())) {
-                    result.add(e.getNode1());
+            for (EndpointPair<String> e : incidentEdges(x)) {
+                if (x.equals(e.nodeV())) {
+                    result.add(e.nodeU());
                 }
             }
             return result;
         }
     }
 
-    public Set<String> neighbors(String x) {
+    @Override
+    public Set<String> adjacentNodes(String x) {
         Set<String> result = new HashSet<String>();
-        for (Edge<String> e : edgesAdjacentTo(x)) {
-            result.add(e.opposite(x));
+        for (EndpointPair<String> e : incidentEdges(x)) {
+            result.add(e.adjacentNode(x));
         }
         return result;
     }
@@ -281,8 +281,8 @@ public final class MyTestGraph implements Graph<String> {
             return degree(x);
         } else {
             int result = 0;
-            for (Edge<String> e : edgesAdjacentTo(x)) {
-                if (x.equals(e.getNode1())) {
+            for (EndpointPair<String> e : incidentEdges(x)) {
+                if (x.equals(e.nodeU())) {
                     result++;
                 }
             }
@@ -295,8 +295,8 @@ public final class MyTestGraph implements Graph<String> {
             return degree(x);
         } else {
             int result = 0;
-            for (Edge<String> e : edgesAdjacentTo(x)) {
-                if (x.equals(e.getNode2())) {
+            for (EndpointPair<String> e : incidentEdges(x)) {
+                if (x.equals(e.nodeV())) {
                     result++;
                 }
             }
@@ -306,12 +306,12 @@ public final class MyTestGraph implements Graph<String> {
 
     public int degree(String x) {
         int result = 0;
-        for (Edge<String> e : edgesAdjacentTo(x)) {
+        for (EndpointPair<String> e : incidentEdges(x)) {
             // permit double counting if both vertices of edge are x
-            if (x.equals(e.getNode1())) {
+            if (x.equals(e.nodeU())) {
                 result++;
             }
-            if (x.equals(e.getNode2())) {
+            if (x.equals(e.nodeV())) {
                 result++;
             }
         }

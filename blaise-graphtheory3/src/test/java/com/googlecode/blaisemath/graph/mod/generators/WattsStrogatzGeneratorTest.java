@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,32 +20,28 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.mod.generators.WattsStrogatzGenerator.WattsStrogatzParameters;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class WattsStrogatzGeneratorTest {
     
     @Test
     public void testWattsStrogatzGenerator() {
-        System.out.println("-- WattsStrogatzGeneratorTest --");
         System.out.println("getInstance: MANUALLY CHECK FOR DESIRED OUTPUT");
         Graph<Integer> result1 = new WattsStrogatzGenerator().apply(new WattsStrogatzParameters(false, 10, 2, 0f));
-        assertEquals(10, result1.nodeCount());
-        assertEquals(10, result1.edgeCount());
+        assertEquals(10, result1.nodes().size());
+        assertEquals(10, result1.edges().size());
         for (int i = 0; i < 10; i++) {
-            assertTrue(result1.adjacent(i, (i + 1) % 10));
+            assertTrue(result1.hasEdgeConnecting(i, (i + 1) % 10));
         }
         Graph<Integer> result2 = new WattsStrogatzGenerator().apply(new WattsStrogatzParameters(false, 50, 4, .5f));
         System.out.println(result2);
-        assertEquals(50, result2.nodeCount());
-        assertEquals(100, result2.edgeCount());
+        assertEquals(50, result2.nodes().size());
+        assertEquals(100, result2.edges().size());
     }
     
 }

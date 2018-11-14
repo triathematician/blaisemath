@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -23,38 +19,34 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * limitations under the License.
  * #L%
  */
-import com.googlecode.blaisemath.graph.Graph;
+
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
 import com.googlecode.blaisemath.graph.mod.generators.PreferentialAttachmentGenerator.PreferentialAttachmentParameters;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 public class PreferentialAttachmentGeneratorTest {
 
     @Test
     public void testGetSeededInstance_fixed_add_number() {
-        System.out.println("getSeededInstance (fixed # edges/step): MANUALLY CHECK FOR DESIRED OUTPUT");
-
         Graph<Integer> seed = null;
-        while (seed == null || seed.edgeCount() == 0) {
+        while (seed == null || seed.edges().size() == 0) {
             seed = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 4, .5f));
         }
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         Graph<Integer> pref = new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(seed, 10, 1));
-        System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
-        assertEquals(seed.edgeCount() + (pref.nodeCount() - seed.nodeCount()), pref.edgeCount());
+        System.out.println("    result: " + pref.edges().size() + " edges, " + GraphUtils.printGraph(pref));
+        assertEquals(seed.edges().size() + (pref.nodes().size() - seed.nodes().size()), pref.edges().size());
 
         seed = new CycleGraphGenerator().apply(new DefaultGeneratorParameters(false, 4));
         pref = new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(seed, 10, 2));
         System.out.println("  SEEDED with 4 vertex cycle graph: " + GraphUtils.printGraph(seed));
-        System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
-        System.out.println("    expected " + (seed.edgeCount() + 2 * (pref.nodeCount() - seed.nodeCount())) + " edges or less");
+        System.out.println("    result: " + pref.edges().size() + " edges, " + GraphUtils.printGraph(pref));
+        System.out.println("    expected " + (seed.edges().size() + 2 * (pref.nodes().size() - seed.nodes().size())) + " edges or less");
 
         try {
             new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(
@@ -78,24 +70,22 @@ public class PreferentialAttachmentGeneratorTest {
 
     @Test
     public void testGetSeededInstance_variable_add_number() {
-        System.out.println("getSeededInstance (variable # edges/step): MANUALLY CHECK FOR DESIRED OUTPUT");
-
         Graph<Integer> seed = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 4, .5f));
-        while (seed.edgeCount() == 0) {
+        while (seed.edges().size() == 0) {
             seed = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 4, .5f));
         }
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         float[] probs1 = {.5f, .5f};
         Graph<Integer> pref = new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(seed, 10, probs1));
-        System.out.println("    result (probs .5, .5): " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
-        System.out.println("    expected " + (seed.edgeCount() + probs1[1] * (pref.nodeCount() - seed.nodeCount())) + " edges");
+        System.out.println("    result (probs .5, .5): " + pref.edges().size() + " edges, " + GraphUtils.printGraph(pref));
+        System.out.println("    expected " + (seed.edges().size() + probs1[1] * (pref.nodes().size() - seed.nodes().size())) + " edges");
 
         seed = new CycleGraphGenerator().apply(new DefaultGeneratorParameters(false, 4));
         System.out.println("  SEEDED with 4 vertex cycle graph: " + GraphUtils.printGraph(seed));
         float[] probs2 = {0f, .5f, .25f, .25f};
         pref = new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(seed, 10, probs2));
-        System.out.println("    result (probs 0, .5, .25, .25): " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
-        System.out.println("    expected " + (seed.edgeCount() + (probs2[1] + 2 * probs2[2] + 3 * probs2[3]) * (pref.nodeCount() - seed.nodeCount())) + " edges");
+        System.out.println("    result (probs 0, .5, .25, .25): " + pref.edges().size() + " edges, " + GraphUtils.printGraph(pref));
+        System.out.println("    expected " + (seed.edges().size() + (probs2[1] + 2 * probs2[2] + 3 * probs2[3]) * (pref.nodes().size() - seed.nodes().size())) + " edges");
 
         try {
             new PreferentialAttachmentGenerator().apply(new PreferentialAttachmentParameters(

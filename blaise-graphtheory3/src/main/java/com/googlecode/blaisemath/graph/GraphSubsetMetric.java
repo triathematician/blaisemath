@@ -1,8 +1,3 @@
-/*
- * GraphSubsetMetric.java
- * Created on Oct 26, 2009
- */
-
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -24,6 +19,8 @@ package com.googlecode.blaisemath.graph;
  * limitations under the License.
  * #L%
  */
+
+import com.google.common.graph.Graph;
 
 import java.util.Set;
 

@@ -20,11 +20,11 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class GraphRadius extends AbstractGraphMetric<Integer> {
     }
 
     private static <V> Integer applyTyped(Graph<V> graph) {
-        if (graph.nodeCount() == 0) {
+        if (graph.nodes().size() == 0) {
             return 0;
         }
         int minMaxLength = Integer.MAX_VALUE;

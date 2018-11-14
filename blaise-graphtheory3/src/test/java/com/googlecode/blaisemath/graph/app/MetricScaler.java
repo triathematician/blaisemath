@@ -1,7 +1,3 @@
-/**
- * MetricScaler.java
- * Created Jan 2016
- */
 package com.googlecode.blaisemath.graph.app;
 
 /*
@@ -24,14 +20,14 @@ package com.googlecode.blaisemath.graph.app;
  * #L%
  */
 
-
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+
 import java.util.Map;
 
 /**
@@ -46,7 +42,7 @@ public class MetricScaler<T extends Number & Comparable> implements Function<Obj
     private double min;
     private double max;
     
-    private AttributeSet defStyle = Styles.defaultPointStyle();
+    private AttributeSet defStyle = Styles.DEFAULT_POINT_STYLE.copy();
     private float unkRad = 1f;
     private float minRad = 2f;
     private float maxRad = 10f;
@@ -94,7 +90,7 @@ public class MetricScaler<T extends Number & Comparable> implements Function<Obj
         if (scores.isEmpty()) {
             return defStyle;
         } else {
-            return AttributeSet.createWithParent(defStyle)
+            return AttributeSet.withParent(defStyle)
                     .and(Styles.MARKER_RADIUS, radScale(input));
         }
     }

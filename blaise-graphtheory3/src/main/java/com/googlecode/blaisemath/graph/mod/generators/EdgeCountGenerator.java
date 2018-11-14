@@ -1,7 +1,3 @@
-/**
- * EdgeCountGenerator.java
- * Created Aug 18, 2012
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,8 +20,9 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphGenerator;
+
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -36,34 +33,28 @@ import java.util.TreeSet;
  */
 public final class EdgeCountGenerator implements GraphGenerator<ExtendedGeneratorParameters,Integer> {
     
-    //<editor-fold defaultstate="collapsed" desc="COMPARATOR INSTANCES">
+    //region COMPARATORS
     
     /**
      * Used to sort pairs of integers when order of the two matters.
      */
-    static final Comparator<Integer[]> PAIR_COMPARE = new Comparator<Integer[]>() {
-        @Override
-        public int compare(Integer[] o1, Integer[] o2) {
-            if (o1.length != 2 || o2.length != 2) {
-                throw new IllegalStateException("This object only compares integer pairs.");
-            }
-            return o1[0].equals(o2[0]) ? o1[1] - o2[1] : o1[0] - o2[0];
+    static final Comparator<Integer[]> PAIR_COMPARE = (o1, o2) -> {
+        if (o1.length != 2 || o2.length != 2) {
+            throw new IllegalStateException("This object only compares integer pairs.");
         }
+        return o1[0].equals(o2[0]) ? o1[1] - o2[1] : o1[0] - o2[0];
     };
 
     /**
      * Used to sort pairs of integers when order of the two does not matter.
      */
-    static final Comparator<Integer[]> PAIR_COMPARE_UNDIRECTED = new Comparator<Integer[]>() {
-        @Override
-        public int compare(Integer[] o1, Integer[] o2) {
-            if (o1.length != 2 || o2.length != 2) {
-                throw new IllegalStateException("This object only compares integer pairs.");
-            }
-            int min1 = Math.min(o1[0], o1[1]);
-            int min2 = Math.min(o2[0], o2[1]);
-            return min1 == min2 ? Math.max(o1[0], o1[1]) - Math.max(o2[0], o2[1]) : min1 - min2;
+    static final Comparator<Integer[]> PAIR_COMPARE_UNDIRECTED = (o1, o2) -> {
+        if (o1.length != 2 || o2.length != 2) {
+            throw new IllegalStateException("This object only compares integer pairs.");
         }
+        int min1 = Math.min(o1[0], o1[1]);
+        int min2 = Math.min(o2[0], o2[1]);
+        return min1 == min2 ? Math.max(o1[0], o1[1]) - Math.max(o2[0], o2[1]) : min1 - min2;
     };
     
     //endregion

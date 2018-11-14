@@ -1,7 +1,3 @@
-/**
- * AbstractDefaultGraphGenerator.java
- * Created May 19, 2016
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*

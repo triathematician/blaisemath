@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -25,27 +20,23 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
+import static org.junit.Assert.assertEquals;
+
 public class EdgeCountGeneratorTest {
 
     @Test
     public void testEdgeCountBuilder() {
-        System.out.println("EdgeCountBuilderTest: MANUALLY CHECK FOR DESIRED OUTPUT");
         Graph<Integer> result1 = new EdgeCountGenerator().apply(new ExtendedGeneratorParameters(false, 10, 0));
-        assertEquals(10, result1.nodeCount()); assertEquals(0, result1.edgeCount());
+        assertEquals(10, result1.nodes().size()); assertEquals(0, result1.edges().size());
         result1 = new EdgeCountGenerator().apply(new ExtendedGeneratorParameters(false, 10, 30));
-        assertEquals(10, result1.nodeCount()); assertEquals(30, result1.edgeCount());
+        assertEquals(10, result1.nodes().size()); assertEquals(30, result1.edges().size());
         System.out.println("  UNDIRECTED: " + GraphUtils.printGraph(result1));
         result1 = new EdgeCountGenerator().apply(new ExtendedGeneratorParameters(true, 10, 30));
-        assertEquals(10, result1.nodeCount()); assertEquals(30, result1.edgeCount());
+        assertEquals(10, result1.nodes().size()); assertEquals(30, result1.edges().size());
         System.out.println("  DIRECTED: " + GraphUtils.printGraph(result1));
     }
 

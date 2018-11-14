@@ -1,10 +1,4 @@
-/*
- * GraphGenerator.java
- * Created May 21, 2010
- */
 package com.googlecode.blaisemath.graph;
-
-import com.google.common.base.Function;
 
 /*
  * #%L
@@ -26,15 +20,15 @@ import com.google.common.base.Function;
  * #L%
  */
 
-/**
- * <p>
- *   Generates a graph based on provided settings.
- * </p>
+import com.google.common.base.Function;
+import com.google.common.graph.Graph;
 
-* @param <P> parameters type
+/**
+ * Generates a graph based on provided settings.
+ * @param <P> parameters type
  * @param <N> graph vertex type
  * @author elisha
  */
-public interface GraphGenerator<P,N> extends ParameterFactory<P>, Function<P,Graph<N>> {
+public interface GraphGenerator<P,N> extends ParameterFactory<P>, Function<P, Graph<N>> {
     
 }

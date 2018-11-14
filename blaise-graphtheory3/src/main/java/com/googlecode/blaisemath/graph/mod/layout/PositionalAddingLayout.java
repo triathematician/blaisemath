@@ -1,7 +1,3 @@
-/**
- * PositionalAddingLayout.java
- * Created on Sep 17, 2014
- */
 package com.googlecode.blaisemath.graph.mod.layout;
 
 /*
@@ -25,12 +21,13 @@ package com.googlecode.blaisemath.graph.mod.layout;
  */
 
 import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.util.Map;
-import javax.annotation.Nullable;
 
 /**
  * Positions graph nodes nearby connected nodes. The first layout parameter
@@ -52,9 +49,7 @@ public class PositionalAddingLayout implements StaticGraphLayout<CircleLayoutPar
     }
 
     @Override
-    public <C> Map<C, Point2D.Double> layout(Graph<C> g, 
-            @Nullable Map<C, Point2D.Double> curLocations, 
-            CircleLayoutParameters parm) {
+    public <C> Map<C, Point2D.Double> layout(Graph<C> g, @Nullable Map<C, Point2D.Double> curLocations, CircleLayoutParameters parm) {
         double len = parm.getRadius();
         Map<C, Point2D.Double> res = Maps.newHashMap();
         for (C node : g.nodes()) {
@@ -64,7 +59,7 @@ public class PositionalAddingLayout implements StaticGraphLayout<CircleLayoutPar
                 double sx = 0;
                 double sy = 0;
                 int n = 0;
-                for (C o : g.neighbors(node)) {
+                for (C o : g.adjacentNodes(node)) {
                     Point2D.Double p = curLocations.get(o);
                     if (p != null) {
                         sx += p.x;

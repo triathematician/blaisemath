@@ -20,8 +20,7 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 
 /**
  * Global metric describing the density of the graph (# edges divided by #
@@ -35,9 +34,8 @@ public class GraphDensity extends AbstractGraphMetric<Double> {
 
     @Override
     public Double apply(Graph graph) {
-        int n = graph.nodeCount();
-        return graph.isDirected()
-                ? graph.edgeCount() / (n * (n - 1))
-                : graph.edgeCount() / (n * (n - 1) / 2.0);
+        int n = graph.nodes().size();
+        return graph.isDirected() ? graph.edges().size() / (n * (n - 1))
+                : graph.edges().size() / (n * (n - 1) / 2.0);
     }
 }

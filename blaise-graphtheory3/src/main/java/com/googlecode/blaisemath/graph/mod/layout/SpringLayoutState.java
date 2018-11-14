@@ -1,7 +1,3 @@
-/**
- * SpringLayoutState.java
- * Created Jan 16, 2016
- */
 package com.googlecode.blaisemath.graph.mod.layout;
 
 /*
@@ -24,41 +20,30 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #L%
  */
 
-
 import com.google.common.collect.Lists;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
+
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * <p>
- *   State object for spring layout. This tracks node locations and velocities,
- *   and divides node space up into regions to allow for more efficient
- *   layout calculations.
- * </p>
- * <p>
- *   This class may be safely modified by multiple threads simultaneously.
- * </p>
+ * State object for spring layout. This tracks node locations and velocities,
+ * and divides node space up into regions to allow for more efficient
+ * layout calculations. This class may be safely modified by multiple threads simultaneously.
  * @param <C> graph node type
  * @author elisha
  */
-@ThreadSafe
-public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
-    
-    //<editor-fold defaultstate="collapsed" desc="STATIC CONSTANTS">
+final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
     
     private static final Logger LOG = Logger.getLogger(SpringLayoutState.class.getName());
     
     /** # of regions away from origin in x and y directions. Region size is determined by the maximum repel distance. */
     private static final int REGION_N = 5;
-    
-    //endregion
-    
+
     /** Regions used for localizing computation */
     @GuardedBy("this")
     LayoutRegion<C>[][] regions;
@@ -69,7 +54,7 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
     @GuardedBy("this")
     List<LayoutRegion<C>> allRegions;
     
-    //<editor-fold defaultstate="collapsed" desc="LOCATION UPDATES">
+    //region UPDATERS
     
     Point2D.Double getLoc(C io) {
         return loc.get(io);
@@ -89,7 +74,7 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
     
     //endregion
 
-    // <editor-fold defaultstate="collapsed" desc="REGION MANAGEMENT">
+    //region MANAGING REGIONS
 
     /** Updates the alignment of points to region */
     void updateRegions(double regionSz) {
@@ -162,6 +147,6 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
         }
     }
     
-    // </editor-fold>
+    //endregion
     
 }

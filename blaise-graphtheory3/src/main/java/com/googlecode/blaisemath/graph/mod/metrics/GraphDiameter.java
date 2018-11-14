@@ -20,11 +20,11 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,14 +47,13 @@ public class GraphDiameter extends AbstractGraphMetric<Integer> {
     }
         
     private static <V> Integer applyTyped(Graph<V> graph) {
-        if (graph.nodeCount() == 0) {
+        if (graph.nodes().size() == 0) {
             return 0;
         }
         int maxLength = 0;
-        Map<V, Integer> lengths = new HashMap<V, Integer>();
+        Map<V, Integer> lengths = new HashMap<>();
         for (V node : graph.nodes()) {
-            GraphUtils.breadthFirstSearch(graph, node, HashMultiset.<V>create(),
-                    lengths, new ArrayDeque<V>(), HashMultimap.<V,V>create());
+            GraphUtils.breadthFirstSearch(graph, node, HashMultiset.create(), lengths, new ArrayDeque<>(), HashMultimap.create());
             for (Integer i : lengths.values()) {
                 if (i > maxLength) {
                     maxLength = i;

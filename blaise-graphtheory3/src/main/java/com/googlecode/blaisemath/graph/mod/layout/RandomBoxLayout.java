@@ -1,7 +1,3 @@
-/*
- * RandomBoxLayout.java
- * Created 2010
- */
 package com.googlecode.blaisemath.graph.mod.layout;
 
 /*
@@ -24,21 +20,21 @@ package com.googlecode.blaisemath.graph.mod.layout;
  * #L%
  */
 
-
 import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout.BoxLayoutParameters;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.Random;
-import javax.annotation.Nullable;
 
 /**
  * Position nodes at random locations in a box.
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public class RandomBoxLayout implements StaticGraphLayout<BoxLayoutParameters> {
 

@@ -1,7 +1,3 @@
-/**
- * HopGrowthRule.java
- * Created on Jun 8, 2012
- */
 package com.googlecode.blaisemath.graph.query;
 
 /*
@@ -24,8 +20,9 @@ package com.googlecode.blaisemath.graph.query;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,7 +65,7 @@ public class HopGrowthRule implements GraphGrowthRule {
 
     @Override
     public Set grow(Graph graph, Set seed) {
-        return grow(directed || !graph.isDirected() ? graph : GraphUtils.copyAsUndirectedSparseGraph(graph), seed, n);
+        return grow(directed || !graph.isDirected() ? graph : GraphUtils.copyUndirected(graph), seed, n);
     }
 
     /**
@@ -100,7 +97,7 @@ public class HopGrowthRule implements GraphGrowthRule {
         Set result = new HashSet();
         result.addAll(seed);
         for (Object o : seed) {
-            result.addAll(graph.neighbors(o));
+            result.addAll(graph.adjacentNodes(o));
         }
         return result;
     }

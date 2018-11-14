@@ -1,8 +1,3 @@
- /**
- * StaticSpringLayout.java
- * Created Feb 6, 2011
- */
-
 package com.googlecode.blaisemath.graph.mod.layout;
 
 /*
@@ -30,14 +25,17 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.EndpointPair;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import com.googlecode.blaisemath.graph.layout.IterativeGraphLayoutManager;
 import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.layout.IterativeGraphLayoutManager;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.StaticSpringLayout.StaticSpringLayoutParameters;
 import com.googlecode.blaisemath.util.geom.Points;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
@@ -67,39 +65,29 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
     }
 
     @Override
-    public <C> Map<C, Point2D.Double> layout(
-            Graph<C> originalGraph, 
-            @Nullable Map<C, Point2D.Double> ic, 
+    public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, @Nullable Map<C, Point2D.Double> ic,
             StaticSpringLayoutParameters parm) {
-        LOG.log(Level.FINE, "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
-                    new Object[] { originalGraph.nodeCount(), originalGraph.edgeCount(), 
-                    GraphUtils.components(originalGraph).size(), 
-                    nicer(GraphUtils.degreeDistribution(originalGraph)) 
-                    });
+        LOG.log(Level.FINE, "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n",
+                new Object[]{originalGraph.nodes().size(), originalGraph.edges().size(),
+                        GraphUtils.components(originalGraph).size(),
+                        nicer(GraphUtils.degreeDistribution(originalGraph))});
 
         // reduce graph size for layout
         OptimizedGraph graphForInfo = new OptimizedGraph(false, originalGraph.nodes(), originalGraph.edges());
-        final Set<C> keepNodes = Sets.newHashSet(graphForInfo.getConnectorNodes());
-        keepNodes.addAll(graphForInfo.getCoreNodes());
-        Iterable<Edge<C>> keepEdges = Iterables.filter(graphForInfo.edges(),
-            new Predicate<Edge<C>>(){
-                @Override
-                public boolean apply(Edge<C> input) {
-                    return keepNodes.contains(input.getNode1())
-                            && keepNodes.contains(input.getNode2());
-                }
-            });
+        final Set<C> keepNodes = Sets.newHashSet(graphForInfo.connectorNodes());
+        keepNodes.addAll(graphForInfo.coreNodes());
+        Iterable<EndpointPair<C>> keepEdges = Iterables.filter(graphForInfo.edges(),
+                (EndpointPair<C> input) -> keepNodes.contains(input.nodeU()) && keepNodes.contains(input.nodeV()));
 
-        OptimizedGraph<C> graphForLayout = new OptimizedGraph<C>(false, keepNodes, keepEdges);
+        OptimizedGraph<C> graphForLayout = new OptimizedGraph<>(false, keepNodes, keepEdges);
         LOG.log(Level.FINE, "graphForLayout, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
-                    new Object[] { graphForLayout.nodeCount(), graphForLayout.edgeCount(), 
+                    new Object[] { graphForLayout.nodes().size(), graphForLayout.edges().size(),
                     GraphUtils.components(graphForLayout).size(), 
                     nicer(GraphUtils.degreeDistribution(graphForLayout)) 
                     });
         
         // perform the physics-based layout
-        Map<C,Point2D.Double> initialLocs = INITIAL_LAYOUT.layout(graphForLayout, 
-                null, parm.initialLayoutParams);
+        Map<C,Point2D.Double> initialLocs = INITIAL_LAYOUT.layout(graphForLayout, null, parm.initialLayoutParams);
         
         IterativeGraphLayoutManager mgr = new IterativeGraphLayoutManager();
         mgr.setLayout(new SpringLayout());
@@ -134,7 +122,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         Map<C, Point2D.Double> res = state.getPositionsCopy();
         double distScale = params.getDistScale();
         addLeafNodes(graphForInfo, res, distScale, distScale*parm.leafScale);
-        addIsolates(graphForInfo.getIsolates(), res, distScale, distScale*parm.isolateScale);
+        addIsolates(graphForInfo.isolates(), res, distScale, distScale*parm.isolateScale);
         
         // report and clean up
         LOG.log(Level.FINE, "StaticSpringLayout completed in {0} steps. The final energy "
@@ -152,7 +140,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
      * @param <C> graph node type
      */
     private static <C> void addLeafNodes(OptimizedGraph<C> og, Map<C, Point2D.Double> pos, double distScale, double leafScale) {
-        Set<C> leafs = og.getLeafNodes();
+        Set<C> leafs = og.leafNodes();
         int n = leafs.size();
         if (n > 0) {
             Rectangle2D bounds = Points.boundingBox(pos.values(), distScale);
@@ -167,7 +155,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
                 Set<C> cores = Sets.newHashSet();
                 Set<C> pairs = Sets.newHashSet();
                 for (C o : leafs) {
-                    C nbr = og.getNeighborOfLeaf(o);
+                    C nbr = og.neighborOfLeaf(o);
                     if (leafs.contains(nbr)) {
                         pairs.add(o);
                         pairs.add(nbr);
@@ -176,7 +164,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
                     }
                 }
                 for (C o : cores) {
-                    Set<C> leaves = og.getLeavesAdjacentTo(o);
+                    Set<C> leaves = og.leavesAdjacentTo(o);
                     Point2D.Double ctr = pos.get(o);
                     double r = leafScale;
                     double theta = Math.atan2(ctr.y, ctr.x);
@@ -211,7 +199,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         for (V o : leafs) {
             if (!res.contains(o)) {
                 res.add(o);
-                res.add(og.getNeighborOfLeaf(o));
+                res.add(og.neighborOfLeaf(o));
             }
         }
         return res;

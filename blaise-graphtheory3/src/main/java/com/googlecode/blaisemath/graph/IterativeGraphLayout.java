@@ -1,8 +1,3 @@
-/*
- * IterativeGraphLayout.java
- * Created Jul 9, 2010
- */
-
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -25,13 +20,13 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.graph.Graph;
+
 /**
- * <p>
- *   Performs an iterative 2D layout on a graph, using a given set of parameters.
- *   Implementations should use a state object to track their state and make
- *   any changes from step to step.
- * </p>
- * 
+ * Performs an iterative 2D layout on a graph, using a given set of parameters.
+ * Implementations should use a state object to track their state and make
+ * any changes from step to step.
+ *
  * @param <P> object describing layout parameters
  * @param <S> object describing layout state
  * 
@@ -46,18 +41,15 @@ public interface IterativeGraphLayout<P,S extends IterativeGraphLayoutState> ext
     S createState();
 
     /**
-     * <p>
      * Iterate the energy layout algorithm. The data structure provided to this
      * method should not be changed during iteration. However, the graph's nodes may not be exactly
      * the same as for previous calls to iterate (i.e. some may have been added or removed).
      * If nodes are present for the first time, the algorithm should add in support for
      * those nodes. If nodes have been removed since the last iteration, the algorithm
      * should simply ignore those nodes.
-     * </p>
      * <p>
      * If a request has been placed for new locations, the algorithm should adjust
      * the positions of the requested nodes.
-     * </p>
      *
      * @param <C> graph node type
      * @param graph the graph

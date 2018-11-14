@@ -1,7 +1,3 @@
-/**
- * BasicGeneratorParameters.java
- * Created Mar 28, 2015
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -24,10 +20,10 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-
 import com.google.common.base.Preconditions;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.SparseGraph;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
+
 import java.util.AbstractList;
 import java.util.List;
 
@@ -70,21 +66,14 @@ public class DefaultGeneratorParameters {
     
     //endregion
 
-    
-    //
-    // UTILITY METHODS
-    //
-
     /**
      * Generate graph with given set of edges.
-     * @param parm the parameters
+     * @param parameters the parameters
      * @param edges edges
      * @return created graph
      */
-    public static Graph<Integer> createGraphWithEdges(
-            DefaultGeneratorParameters parm, Iterable<Integer[]> edges) {
-        return SparseGraph.createFromArrayEdges(parm.isDirected(),
-                intList(parm.getNodeCount()), edges);
+    public static Graph<Integer> createGraphWithEdges(DefaultGeneratorParameters parameters, Iterable<Integer[]> edges) {
+        return GraphUtils.createFromArrayEdges(parameters.isDirected(), intList(parameters.getNodeCount()), edges);
     }
 
     /**

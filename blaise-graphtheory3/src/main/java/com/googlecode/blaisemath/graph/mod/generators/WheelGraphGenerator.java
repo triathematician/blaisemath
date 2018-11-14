@@ -1,7 +1,3 @@
-/**
- * WheelGraphGenerator.java
- * Created 2012
- */
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -25,8 +21,9 @@ package com.googlecode.blaisemath.graph.mod.generators;
  */
 
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+
 import java.util.List;
 
 /**
@@ -45,7 +42,7 @@ public final class WheelGraphGenerator extends AbstractDefaultGraphGenerator {
     public Graph<Integer> apply(DefaultGeneratorParameters parm) {
         final int nodes = parm.getNodeCount();
         if (nodes == 0) {
-            return GraphUtils.emptyGraph();
+            return GraphUtils.emptyGraph(parm.isDirected());
         }
         List<Integer[]> edges = Lists.newArrayList();
         for (int i = 1; i < nodes; i++) {

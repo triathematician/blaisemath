@@ -1,8 +1,3 @@
-/*
- * DynamicGraphTestFrame.java
- *
- * Created on Jul 30, 2009, 3:15:03 PM
- */
 package com.googlecode.blaisemath.graph.test;
 
 /*
@@ -25,11 +20,10 @@ package com.googlecode.blaisemath.graph.test;
  * #L%
  */
 
+import com.google.common.graph.Graph;
+import com.google.common.graph.Graphs;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
-import com.googlecode.blaisemath.util.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout;
@@ -39,17 +33,14 @@ import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
 import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.util.RollupPanel;
+
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
-import javax.swing.SwingUtilities;
 
-
-/**
- *
- * @author ae3263
- */
 public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     VisualGraph pga;
@@ -61,13 +52,11 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     MyTestGraph graph = new MyTestGraph();
     Graph<String> graphCopy;
 
-
-    /** Creates new form TestPlaneVisometry */
     public DynamicGraphTestFrame() {
         EditorRegistration.registerEditors();
         initComponents();
 
-        graphCopy = GraphUtils.copyAsSparseGraph(graph);
+        graphCopy = Graphs.copyOf(graph);
         plot.setGraph(graphCopy);
         plot.getAdapter().getViewGraph().setDragEnabled(true);
         plot.getAdapter().getViewGraph().setPointSelectionEnabled(true);
@@ -84,7 +73,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e) {
-                GAInstrument.print(System.out, 50);
+                Instrument.print(System.out, 50);
             }
         });
     }
@@ -286,7 +275,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     private synchronized void updateGraph() {
         SwingUtilities.invokeLater(new Runnable(){
             public void run() {
-                graphCopy = GraphUtils.copyAsSparseGraph(graph);
+                graphCopy = Graphs.copyOf(graph);
                 plot.getLayoutManager().setGraph(graphCopy);
                 plot.getAdapter().getViewGraph().setEdgeSet(graphCopy.edges());
             }

@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -25,16 +20,13 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class CompleteGraphGeneratorTest {
 
     @Test
@@ -46,13 +38,13 @@ public class CompleteGraphGeneratorTest {
                 GraphUtils.printGraph(new CompleteGraphGenerator().apply(new DefaultGeneratorParameters(true,4))));
         Graph result = new CompleteGraphGenerator().apply(new DefaultGeneratorParameters(false,6));
         Graph result2 = new CompleteGraphGenerator().apply(new DefaultGeneratorParameters(true,6));
-        assertEquals(6, result.nodeCount());
-        assertEquals(6, result2.nodeCount());
-        assertEquals(15, result.edgeCount());
-        assertEquals(30, result2.edgeCount());
+        assertEquals(6, result.nodes().size());
+        assertEquals(6, result2.nodes().size());
+        assertEquals(15, result.edges().size());
+        assertEquals(30, result2.edges().size());
         for (int i = 0; i < 6; i++) {
-            assertTrue(result.contains(i));
-            assertTrue(result2.contains(i));
+            assertTrue(result.nodes().contains(i));
+            assertTrue(result2.nodes().contains(i));
         }
     }
 

@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0de0904f-6a22-4730-ad5b-93fe7d63e3ad" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/triat.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/triat.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/util/Instrument.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/util/Instrument.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/blaise-graphtheory3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/blaise-graphtheory3.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/Graph.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphComponents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphGenerator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphMetric.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphMetric.java" afterDir="false" />
@@ -14,14 +12,12 @@
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphNodeMetric.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphNodeMetric.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphStats.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphSubsetMetric.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphSubsetMetric.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphSupport.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/IterativeGraphLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/IterativeGraphLayout.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/IterativeGraphLayoutState.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/IterativeGraphLayoutState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/NodeInGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/NodeInGraph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/NodeSetInGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/NodeSetInGraph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/OptimizedGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/OptimizedGraph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/SparseGraph.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/StaticGraphLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/StaticGraphLayout.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/GraphLayoutConstraints.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/GraphLayoutConstraints.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/GraphLayoutManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/layout/GraphLayoutManager.java" afterDir="false" />
@@ -66,16 +62,11 @@
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/metrics/GraphRadius.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/metrics/GraphRadius.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/metrics/InDegreeCentrality.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/metrics/InDegreeCentrality.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/metrics/OutDegreeCentrality.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/metrics/OutDegreeCentrality.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/metrics/package.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/package.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/GraphComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/GraphComponent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/VisualGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/VisualGraph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/WeightedEdgeStyler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/WeightedEdgeStyler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/view/package.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/util/GAInstrument.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-common/src/main/java/com/googlecode/blaisemath/util/Instrument.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/ContractedGraphTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/ContractedGraphTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/GraphUtilsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/GraphUtilsTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/SparseGraphTest.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/SubgraphTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/SubgraphTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/AnimationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/AnimationUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppCanvas.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppCanvas.java" afterDir="false" />
@@ -117,13 +108,17 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/blaise_graphics$All_in_blaise_graphtheory3.ic" NAME="All in blaise-graphtheory3 Coverage Results" MODIFIED="1540904890528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/blaise_graphics$All_in_blaise_common.ic" NAME="All in blaise-common Coverage Results" MODIFIED="1539778726644" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+  <component name="CoverageViewManager">
+    <option name="myElementSize" value="94" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="39104649">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
           <entry key="project.open.time.18" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.8" value="1" />
@@ -137,7 +132,7 @@
           <entry key="class" value="1" />
           <entry key="form" value="2" />
           <entry key="html" value="8" />
-          <entry key="java" value="459" />
+          <entry key="java" value="464" />
           <entry key="xml" value="9" />
         </counts>
       </usages-collector>
@@ -146,7 +141,7 @@
           <entry key="CLASS" value="1" />
           <entry key="GUI_DESIGNER_FORM" value="2" />
           <entry key="HTML" value="8" />
-          <entry key="JAVA" value="458" />
+          <entry key="JAVA" value="463" />
           <entry key="SPI" value="2" />
           <entry key="Scratch" value="1" />
           <entry key="XML" value="9" />
@@ -156,14 +151,14 @@
         <counts>
           <entry key="Marker" value="6" />
           <entry key="dummy" value="10" />
-          <entry key="java" value="17728" />
+          <entry key="java" value="17733" />
           <entry key="txt" value="235" />
           <entry key="xml" value="37" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="17728" />
+          <entry key="JAVA" value="17733" />
           <entry key="PLAIN_TEXT" value="245" />
           <entry key="SPI" value="6" />
           <entry key="XML" value="37" />
@@ -172,38 +167,7 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppFrameView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="122" column="44" selection-start-line="122" selection-start-column="44" selection-end-line="122" selection-end-column="44" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../blaise-app/blaise-app/src/main/java/com/googlecode/blaisemath/ui/PropertyActionPanel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" selection-start-line="22" selection-end-line="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../../blaise-app/blaise-app/src/main/java/com/googlecode/blaisemath/app/MenuConfig.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="144" column="72" selection-start-line="144" selection-start-column="72" selection-end-line="144" selection-end-column="72" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -284,7 +248,6 @@
         <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/generators/DefaultGeneratorParameters.java" />
         <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/metrics/DecayCentrality.java" />
         <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/OptimizedGraph.java" />
-        <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphUtils.java" />
         <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/mod/layout/StaticSpringLayout.java" />
         <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/SubgraphTest.java" />
         <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/mod/generators/DegreeDistributionGeneratorTest.java" />
@@ -316,6 +279,7 @@
         <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/test/DynamicGraphTestFrame.java" />
         <option value="$PROJECT_DIR$/../../blaise-app/blaise-app/src/main/java/com/googlecode/blaisemath/ui/PropertyActionPanel.java" />
         <option value="$PROJECT_DIR$/../../blaise-app/blaise-app/src/main/java/com/googlecode/blaisemath/app/MenuConfig.java" />
+        <option value="$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphUtils.java" />
       </list>
     </option>
   </component>
@@ -353,8 +317,8 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-7" />
-    <option name="width" value="1276" />
+    <option name="x" value="1273" />
+    <option name="width" value="1294" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -396,12 +360,12 @@
           <expand>
             <path>
               <item name="blaise-graphics" type="58d84e3e:PackageViewProjectNode" />
-              <item name="blaise-app" type="616d4139:PackageViewModuleNode" />
+              <item name="blaise-svg" type="616d4139:PackageViewModuleNode" />
             </path>
             <path>
               <item name="blaise-graphics" type="58d84e3e:PackageViewProjectNode" />
-              <item name="blaise-app" type="616d4139:PackageViewModuleNode" />
-              <item name="com.googlecode.blaisemath.app" type="1f31426a:PackageElementNode" />
+              <item name="blaise-svg" type="616d4139:PackageViewModuleNode" />
+              <item name="com.googlecode.blaisemath.svg" type="1f31426a:PackageElementNode" />
             </path>
           </expand>
           <select />
@@ -487,7 +451,7 @@
     <property name="SearchEverywhereHistoryKey" value="anchor&#9;FILE&#9;file://C:/Users/triat/Code/blaisemath/blaise-common/src/main/java/com/googlecode/blaisemath/style/Anchor.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540904712929" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1541068834050" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../blaise-app/blaise-app/pom.xml" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -517,20 +481,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in blaise-graphics">
-    <configuration name="BlaiseGraphicsTestApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.googlecode.blaisemath.graphics.testui.BlaiseGraphicsTestApp" />
-      <module name="blaise-graphics" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.googlecode.blaisemath.graphics.testui.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.All in blaise-graphtheory3">
     <configuration name="All Features in: test" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
       <option name="CUCUMBER_CORE_VERSION" value="3" />
       <option name="FILE_PATH" value="$PROJECT_DIR$/../blaise-common/src/test" />
@@ -572,20 +523,28 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="All in blaise-graphtheory3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="blaise-graphtheory3" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
-      <item itemvalue="Application.BlaiseGraphicsTestApp" />
       <item itemvalue="Cucumber java.All Features in: test" />
       <item itemvalue="JUnit.All in blaise-common" />
       <item itemvalue="JUnit.All in blaise-common (1)" />
       <item itemvalue="JUnit.All in blaise-graphics" />
+      <item itemvalue="JUnit.All in blaise-graphtheory3" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in blaise-graphtheory3" />
         <item itemvalue="JUnit.All in blaise-graphics" />
         <item itemvalue="JUnit.All in blaise-common (1)" />
         <item itemvalue="JUnit.All in blaise-common" />
         <item itemvalue="Cucumber java.All Features in: test" />
-        <item itemvalue="Application.BlaiseGraphicsTestApp" />
       </list>
     </recent_temporary>
   </component>
@@ -601,7 +560,7 @@
       <updated>1539601781284</updated>
       <workItem from="1539601785711" duration="14757000" />
       <workItem from="1540635407940" duration="8172000" />
-      <workItem from="1540737093052" duration="22726000" />
+      <workItem from="1540737093052" duration="24227000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor anchor code; remove xml code; some other code cleanup">
       <created>1539698441877</created>
@@ -653,9 +612,15 @@
     <history-entry file="All_in_blaise-graphics - 2018.10.17 at 08h 29m 41s.xml">
       <configuration name="All in blaise-graphics" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="All_in_blaise-graphtheory3 - 2018.10.30 at 09h 06m 25s.xml">
+      <configuration name="All in blaise-graphtheory3" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_blaise-graphtheory3 - 2018.10.30 at 09h 08m 19s.xml">
+      <configuration name="All in blaise-graphtheory3" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45655000" />
+    <option name="totallyTimeSpent" value="47156000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -667,11 +632,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1276" height="1047" extended-state="0" />
-    <editor active="true" />
+    <frame x="1273" y="0" width="1294" height="1047" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.67892975" visible="true" weight="0.34868422" />
-      <window_info id="Structure" order="1" sideWeight="0.32107022" side_tool="true" visible="true" weight="0.34868422" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.60131437" visible="true" weight="0.34359807" />
+      <window_info id="Structure" order="1" sideWeight="0.39868566" side_tool="true" visible="true" weight="0.34359807" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -679,7 +643,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49632353" weight="0.26396495" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49880764" weight="0.35683298" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49880764" weight="0.2946331" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39978093" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -687,7 +651,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Inspection Results" order="8" sideWeight="0.49801272" weight="0.2354874" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50306374" side_tool="true" weight="0.3483023" />
-      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49693626" visible="true" weight="0.34501642" />
+      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49693626" weight="0.34501642" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -699,7 +663,7 @@
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Theme Preview" order="8" />
-      <window_info anchor="right" id="Coverage" order="9" sideWeight="0.5010571" side_tool="true" visible="true" weight="0.2027027" />
+      <window_info anchor="right" id="Coverage" order="9" sideWeight="0.5010571" side_tool="true" weight="0.15073529" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -716,13 +680,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Code cleanup" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/25.1-jre/guava-25.1-jre-sources.jar!/com/google/common/graph/ImmutableGraph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="54" column="38" selection-start-line="54" selection-start-column="38" selection-end-line="54" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/25.1-jre/guava-25.1-jre-sources.jar!/com/google/common/graph/EndpointPair.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="245">
@@ -827,13 +784,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/SubgraphTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/mod/generators/DegreeDistributionGeneratorTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -848,16 +798,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="166">
           <caret line="255" column="41" selection-start-line="255" selection-start-column="41" selection-end-line="255" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="170" column="30" selection-start-line="170" selection-start-column="30" selection-end-line="170" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -919,16 +859,6 @@
           <folding>
             <element signature="e#2616#2635#0" />
             <element signature="e#2862#2878#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/GraphUtilsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1292">
-          <caret line="116" column="42" selection-start-line="116" selection-start-column="42" selection-end-line="116" selection-end-column="42" />
-          <folding>
-            <element signature="e#14977#14993#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1167,13 +1097,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppFrameView.java">
+    <entry file="file://$PROJECT_DIR$/../../blaise-app/blaise-app/src/main/java/com/googlecode/blaisemath/app/MenuConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="183">
-          <caret line="122" column="44" selection-start-line="122" selection-start-column="44" selection-end-line="122" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <caret line="144" column="72" selection-start-line="144" selection-start-column="72" selection-end-line="144" selection-end-column="72" />
         </state>
       </provider>
     </entry>
@@ -1184,10 +1111,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../blaise-app/blaise-app/src/main/java/com/googlecode/blaisemath/app/MenuConfig.java">
+    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/app/GraphAppFrameView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="183">
-          <caret line="144" column="72" selection-start-line="144" selection-start-column="72" selection-end-line="144" selection-end-column="72" />
+          <caret line="122" column="44" selection-start-line="122" selection-start-column="44" selection-end-line="122" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/ContractedGraphTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1598">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/SubgraphTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="110" column="36" selection-start-line="110" selection-start-column="36" selection-end-line="110" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/main/java/com/googlecode/blaisemath/graph/GraphUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="62">
+          <caret line="81" column="5" lean-forward="true" selection-start-line="81" selection-start-column="5" selection-end-line="81" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../blaise-graphtheory3/src/test/java/com/googlecode/blaisemath/graph/GraphUtilsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="58" column="51" lean-forward="true" selection-start-line="58" selection-start-column="51" selection-end-line="58" selection-end-column="51" />
         </state>
       </provider>
     </entry>

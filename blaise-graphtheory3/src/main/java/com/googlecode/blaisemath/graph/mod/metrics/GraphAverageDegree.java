@@ -20,8 +20,7 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 
 /**
  * Global metric describing the average degree of the graph.
@@ -35,8 +34,7 @@ public class GraphAverageDegree extends AbstractGraphMetric<Double> {
 
     @Override
     public Double apply(Graph graph) {
-        return graph.isDirected()
-                ? graph.edgeCount() / (double) graph.nodeCount()
-                : 2.0 * graph.edgeCount() / (double) graph.nodeCount();
+        return graph.isDirected() ? graph.edges().size() / (double) graph.nodes().size()
+                : 2.0 * graph.edges().size() / (double) graph.nodes().size();
     }
 }

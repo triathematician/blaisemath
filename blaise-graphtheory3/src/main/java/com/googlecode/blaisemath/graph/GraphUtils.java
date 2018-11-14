@@ -1,6 +1,3 @@
-/**
- * GraphUtils.java Created on Oct 14, 2009
- */
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -23,70 +20,96 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.googlecode.blaisemath.util.GAInstrument;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Queues;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Table;
+import com.google.common.collect.*;
 import com.google.common.collect.Table.Cell;
+import com.google.common.graph.*;
 import com.googlecode.blaisemath.linear.Matrices;
+import com.googlecode.blaisemath.util.Instrument;
+
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Contains several utility methods for creating and analyzing graphs.
  *
+ * @see Graphs
+ *
  * @author Elisha Peterson
  */
 public class GraphUtils {
-    
+
     /** Used to sort graphs in descending order by size */
-    public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = new Comparator<Graph>() {
-        @Override
-        public int compare(Graph o1, Graph o2) {
-            return -(o1.nodeCount() == o2.nodeCount() && o1.edgeCount() == o2.edgeCount() 
-                        ? o1.nodes().toString().compareTo(o2.nodes().toString())
-                    : o1.nodeCount() == o2.nodeCount() 
-                        ? o1.edgeCount() - o2.edgeCount()
-                    : o1.nodeCount() - o2.nodeCount());
-        }
+    public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = (o1, o2) -> {
+        int size1 = o1.nodes().size();
+        int size2 = o2.nodes().size();
+        int edges1 = o1.edges().size();
+        int edges2 = o2.edges().size();
+        return size1 == size2 && edges1 == edges2 ? o2.nodes().toString().compareTo(o1.nodes().toString())
+                : size1 == size2 ? edges2 - edges1
+                : size2 - size1;
     };
 
     // utility class
     private GraphUtils() {
     }
+
+    //region CREATORS
     
     /**
      * Create an empty graph for vertices of appropriate type.
      * @param <V> vertex type
+     * @param directed whether result should be a directed graph
      * @return new empty graph
      */
-    public static <V> SparseGraph<V> emptyGraph() {
-        return SparseGraph.createFromEdges(false, 
-                Collections.<V>emptySet(), Collections.<Edge<V>>emptySet());
+    public static <V> Graph<V> emptyGraph(boolean directed) {
+        return ImmutableGraph.copyOf(directed ? GraphBuilder.directed().build() : GraphBuilder.undirected().build());
     }
 
-    //<editor-fold defaultstate="collapsed" desc="GENERIC PRINT METHODS">
-    //
-    // GENERIC PRINT METHODS
-    //
+    /**
+     * Create a graph using a given list of nodes and edges.
+     * @param <V> vertex type
+     * @param directed whether result should be a directed graph
+     * @param nodes nodes
+     * @param edges edges
+     * @return new graph
+     */
+    public static <V> Graph<V> createFromEdges(boolean directed, Iterable<V> nodes, Iterable<EndpointPair<V>> edges) {
+        MutableGraph<V> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build() : GraphBuilder.undirected().allowsSelfLoops(true).build();
+        nodes.forEach(res::addNode);
+        edges.forEach(e -> res.putEdge(e.nodeU(), e.nodeV()));
+        return res;
+    }
+
+    /**
+     * Create a graph using a given list of nodes and edges
+     * @param <V> vertex type
+     * @param directed whether result should be a directed graph
+     * @param nodes nodes
+     * @param edges edges
+     * @return new empty graph
+     */
+    public static <V> Graph<V> createFromArrayEdges(boolean directed, Iterable<V> nodes, Iterable<V[]> edges) {
+        MutableGraph<V> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build() : GraphBuilder.undirected().allowsSelfLoops(true).build();
+        nodes.forEach(res::addNode);
+        edges.forEach(e -> res.putEdge(e[0], e[1]));
+        return res;
+    }
+
+    /**
+     * Creates an undirected copy of the specified graph.
+     * @param <V> graph node type
+     * @param graph a graph
+     * @return undirected copy with the same collection of edges
+     */
+    public static <V> Graph<V> copyUndirected(Graph<V> graph) {
+        return createFromEdges(false, graph.nodes(), graph.edges());
+    }
+
+    //endregion
+
+    //region PRINTING
+
     /**
      * Returns string representation of specified graph
      * @param graph the graph to print
@@ -110,7 +133,7 @@ public class GraphUtils {
         }
         
         Set<V> nodes = graph.nodes();
-        boolean sortable = Iterables.all(nodes, Predicates.instanceOf(Comparable.class));
+        boolean sortable = nodes.stream().allMatch(n -> n instanceof Comparable);
         if (sortable) {
             nodes = new TreeSet<V>(nodes);
         }
@@ -123,84 +146,15 @@ public class GraphUtils {
             result.append("EDGES:");
             for (V v : nodes) {
                 result.append(" ").append(v).append(": ")
-                        .append(sortable ? new TreeSet(graph.outNeighbors(v)) : graph.outNeighbors(v));
+                        .append(sortable ? new TreeSet(graph.successors(v)) : graph.successors(v));
             }
         }
         return result.toString().trim();
     }
 
     //endregion
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="COPY/DUPLICATION">
-    //
-    // DUPLICATION METHODS
-    //
-    
-    /**
-     * Creates a copy of a set of edges.
-     * @param <V> graph node type
-     * @param edges source edges
-     * @return copy of edges
-     */
-    public static <V> Iterable<Edge<V>> copyEdges(Iterable<? extends Edge<V>> edges) {
-        List<Edge<V>> res = Lists.newArrayList();
-        for (Edge<V> e : edges) {
-            res.add(new Edge<V>(e));
-        }
-        return res;
-    }
-    
-    /**
-     * Creates a copy of the specified graph by iterating through all possible
-     * adjacencies. Also optimizes the underlying representation by choosing
-     * either a sparse graph or a matrix graph representation. If the input
-     * graph has extra properties, such as node labels, they are not included in
-     * the copy.
-     * @param <V> graph node type
-     * @param graph a graph
-     * @return an instance of the graph with the same vertices and edges, but a new copy of it
-     */
-    public static <V> Graph<V> copyAsSparseGraph(Graph<V> graph) {
-        return SparseGraph.createFromEdges(graph.isDirected(), graph.nodes(), copyEdges(graph.edges()));
-    }
 
-    /**
-     * Creates an undirected copy of the specified graph.
-     * @param <V> graph node type
-     * @param graph a graph
-     * @return undirected copy with the same collection of edges
-     */
-    public static <V> Graph<V> copyAsUndirectedSparseGraph(Graph<V> graph) {
-        return SparseGraph.createFromEdges(false, graph.nodes(), copyEdges(graph.edges()));
-    }
-
-    //endregion
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="SUBGRAPHS">
-    //
-    // SUBGRAPHS
-    //
-    
-    /**
-     * Create a subgraph of a parent graph.
-     * @param <V> graph node type
-     * @param parent parent graph
-     * @param nodes nodes of parent to keep
-     * @return new graph
-     */
-    public static <V> Graph<V> copySubgraph(Graph<V> parent, final Set<V> nodes) {
-        Iterable<Edge<V>> filteredEdges = Iterables.filter(parent.edges(),
-            new Predicate<Edge<V>>(){
-                @Override
-                public boolean apply(Edge<V> input) {
-                    return nodes.contains(input.getNode1())
-                            && nodes.contains(input.getNode2());
-                }
-            });
-        return SparseGraph.createFromEdges(parent.isDirected(), nodes, filteredEdges);
-    }
+    //region SUBGRAPHS
     
     /**
      * Extract the core graph from a parent graph, consisting of only nodes
@@ -213,8 +167,8 @@ public class GraphUtils {
         Set<V> cNodes = Sets.newLinkedHashSet();
         if (parent instanceof OptimizedGraph) {
             OptimizedGraph<V> og = (OptimizedGraph<V>) parent;
-            cNodes.addAll(og.getCoreNodes());
-            cNodes.addAll(og.getConnectorNodes());
+            cNodes.addAll(og.coreNodes());
+            cNodes.addAll(og.connectorNodes());
         } else {
             for (V v : parent.nodes()) {
                 if (parent.degree(v) >= 2) {
@@ -222,16 +176,13 @@ public class GraphUtils {
                 }
             }
         }
-        return copySubgraph(parent, cNodes);
+        return Graphs.inducedSubgraph(parent, cNodes);
     }
     
     //endregion
     
-    
-    //<editor-fold defaultstate="collapsed" desc="ADJACENCY MATRIX">
-    //
-    // ADJACENCY MATRIX METHODS
-    //
+    //region ADJACENCY MATRIX METHODS
+
     /**
      * Computes adjacency matrix of a graph
      * @param <V> graph node type
@@ -252,8 +203,8 @@ public class GraphUtils {
         boolean[][] result = new boolean[n][n];
         for (int i1 = 0; i1 < n; i1++) {
             for (int i2 = 0; i2 < n; i2++) {
-                result[i1][i2] = graph.isDirected() ? graph.outNeighbors(order.get(i1)).contains(order.get(i2))
-                        : graph.adjacent(order.get(i1), order.get(i2));
+                result[i1][i2] = graph.isDirected() ? graph.successors(order.get(i1)).contains(order.get(i2))
+                        : graph.hasEdgeConnecting(order.get(i1), order.get(i2));
             }
         }
         return result;
@@ -289,27 +240,8 @@ public class GraphUtils {
     }
 
     //endregion
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="DEGREE">
-    //
-    // DEGREE METHODS
-    //
-    
-    /**
-     * Return function calculating degree of elements in the given graph.
-     * @param <V> graph node type
-     * @param graph graph
-     * @return function providing degree of vertices
-     */
-    public static <V> Function<V,Integer> degreeFunction(final Graph<V> graph) {
-        return new Function<V,Integer>() {
-            @Override
-            public Integer apply(V input) {
-                return graph.degree(input);
-            }
-        };
-    }
+
+    //region DEGREE
 
     /**
      * Computes and returns degree distribution.
@@ -318,16 +250,13 @@ public class GraphUtils {
      * @return map associating degree #s with counts, sorted by degree
      */
     public static <V> Multiset<Integer> degreeDistribution(Graph<V> graph) {
-        return HashMultiset.create(Iterables.transform(graph.nodes(), degreeFunction(graph)));
+        return HashMultiset.create(Iterables.transform(graph.nodes(), graph::degree));
     }
 
     //endregion
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="GEODESIC & SPANNING TREE METHODS">
-    //
-    // GEODESIC & SPANNING TREE METHODS
-    //
+
+    //region GEODESIC & SPANNING TREE METHODS
+
     /**
      * Computes and creates a tree describing geodesic distances from a
      * specified vertex. Choice of geodesic when multiple are possible is
@@ -372,7 +301,7 @@ public class GraphUtils {
             for (V v1 : added.get(added.size() - 2)) {
                 Set<V> toRemove = Sets.newHashSet();
                 for (V v2 : remaining) {
-                    if (graph.adjacent(v1, v2)) {
+                    if (graph.hasEdgeConnecting(v1, v2)) {
                         toRemove.add(v2);
                         added.get(added.size() - 1).add(v2);
                         V[] arr = (V[]) Array.newInstance(v1.getClass(), 2);
@@ -406,7 +335,7 @@ public class GraphUtils {
         if (start.equals(end)) {
             return 0;
         }
-        if (!(graph.contains(start) && graph.contains(end))) {
+        if (!(graph.nodes().contains(start) && graph.nodes().contains(end))) {
             return -1;
         }
 
@@ -422,7 +351,7 @@ public class GraphUtils {
             for (V v1 : verticesAdded.get(verticesAdded.size() - 2)) {
                 Set<V> toRemove = new HashSet<V>();
                 for (V v2 : verticesToAdd) {
-                    if (graph.adjacent(v1, v2)) {
+                    if (graph.hasEdgeConnecting(v1, v2)) {
                         if (v2.equals(end)) {
                             return verticesAdded.size() - 1;
                         }
@@ -439,12 +368,8 @@ public class GraphUtils {
 
     //endregion
     
-    
-    //<editor-fold defaultstate="collapsed" desc="NEIGHBORHOOD & COMPONENT">
-    //
-    // NEIGHBORHOOD & COMPONENT METHODS
-    //
-    
+    //region NEIGHBORHOOD & COMPONENT METHODS
+
     /**
      * Generates ordered set of nodes from an adjacency map
      * @param <V> graph node type
@@ -532,11 +457,7 @@ public class GraphUtils {
      * @return set of connected components
      */
     public static <V> Collection<Set<V>> components(Graph<V> graph) {
-        if (graph instanceof SparseGraph) {
-            return ((SparseGraph<V>) graph).getComponentInfo().getComponents();
-        } else {
-            return components(adjacencies(graph, graph.nodes()));
-        }
+        return components(adjacencies(graph, graph.nodes()));
     }
 
     /**
@@ -557,11 +478,9 @@ public class GraphUtils {
      * @return set of connected component subgraphs
      */
     public static <V> Set<Graph<V>> componentGraphs(Graph<V> graph) {
-        int id = GAInstrument.start("componentGraphs", "" + graph.nodeCount());
-        Set<Graph<V>> result = graph instanceof SparseGraph 
-                ? ((SparseGraph<V>) graph).getComponentInfo().getComponentGraphs()
-                : new GraphComponents<V>(graph, components(graph)).getComponentGraphs();
-        GAInstrument.end(id);
+        int id = Instrument.start("componentGraphs", "" + graph.nodes().size());
+        Set<Graph<V>> result = new GraphComponents<>(graph, components(graph)).getComponentGraphs();
+        Instrument.end(id);
         return result;
 
     }
@@ -576,7 +495,7 @@ public class GraphUtils {
     public static <V> Multimap<V,V> adjacencies(Graph<V> graph, Set<V> nodes) {
         Multimap<V,V> res = LinkedHashMultimap.create();
         for (V v : nodes) {
-            res.putAll(v, Sets.intersection(graph.neighbors(v), nodes));
+            res.putAll(v, Sets.intersection(graph.adjacentNodes(v), nodes));
         }
         return res;
     }
@@ -613,7 +532,7 @@ public class GraphUtils {
         while (!queue.isEmpty()) {
             V v = queue.remove();
             deque.add(v);
-            for (V w : graph.neighbors(v)) {
+            for (V w : graph.adjacentNodes(v)) {
                 // if w is found for the first time in the tree, add it to the queue, and adjust the length
                 if (lengths.get(w) == -1) {
                     queue.add(w);
@@ -630,12 +549,8 @@ public class GraphUtils {
 
     //endregion
     
-    
-    //<editor-fold defaultstate="collapsed" desc="CONTRACTING ELEMENTS">
-    //
-    // CONTRACTED ELEMENTS
-    //
-    
+    //region CONTRACTED ELEMENTS
+
     /**
      * Creates a contracted graph from a parent graph, where all of a specified
      * subset of nodes are contracted to a single node
@@ -646,14 +561,13 @@ public class GraphUtils {
      * @return graph where the specified nodes have been contracted
      */
     public static <V> Graph<V> contractedGraph(Graph<V> graph, Collection<V> contract, V replace) {
-        List<Edge<V>> edges = Lists.newArrayList();
-        for (Edge<V> e : graph.edges()) {
-            Edge<V> edge = new Edge<V>(
-                    contract.contains(e.getNode1()) ? replace : e.getNode1(),
-                    contract.contains(e.getNode2()) ? replace : e.getNode2());
-            edges.add(edge);
+        List<EndpointPair<V>> edges = Lists.newArrayList();
+        for (EndpointPair<V> e : graph.edges()) {
+            V node1 = contract.contains(e.nodeU()) ? replace : e.nodeU();
+            V node2 = contract.contains(e.nodeV()) ? replace : e.nodeV();
+            edges.add(e.isOrdered() ? EndpointPair.ordered(node1, node2) : EndpointPair.unordered(node1, node2));
         }
-        return SparseGraph.createFromEdges(graph.isDirected(), contractedNodeSet(graph.nodes(), contract, replace), edges);
+        return createFromEdges(graph.isDirected(), contractedNodeSet(graph.nodes(), contract, replace), edges);
     }
     
     /**
@@ -695,7 +609,7 @@ public class GraphUtils {
         }
         return result;
     }
-    
+
     //endregion
     
 }

@@ -1,11 +1,4 @@
-/*
- * GraphNodeMetric.java
- * Created on Oct 26, 2009
- */
-
 package com.googlecode.blaisemath.graph;
-
-import java.util.Map;
 
 /*
  * #%L
@@ -26,6 +19,9 @@ import java.util.Map;
  * limitations under the License.
  * #L%
  */
+
+import com.google.common.graph.Graph;
+import java.util.Map;
 
 /**
  * Returns a value for a single node in a graph.

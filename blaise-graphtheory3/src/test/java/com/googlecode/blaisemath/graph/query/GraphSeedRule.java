@@ -1,7 +1,3 @@
-/*
- * GraphSeedRule.java
- * Created on Jul 3, 2012
- */
 package com.googlecode.blaisemath.graph.query;
 
 /*
@@ -24,16 +20,17 @@ package com.googlecode.blaisemath.graph.query;
  * #L%
  */
 
-import com.google.common.base.Function;
+import com.google.common.graph.Graph;
+
 import java.util.Set;
-import com.googlecode.blaisemath.graph.Graph;
+import java.util.function.Function;
 
 /**
  * A "seed rule" to select a (small) portion of a (large) graph for analysis.
  *
  * @author Elisha Peterson
  */
-public interface GraphSeedRule extends Function<Graph,Set> {
+public interface GraphSeedRule extends Function<Graph, Set> {
 
     /**
      * Name of rule for display

@@ -28,7 +28,9 @@ package com.googlecode.blaisemath.graph.view;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.EndpointPair;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
@@ -37,46 +39,39 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
-import java.awt.Graphics2D;
+
+import java.awt.*;
 import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /**
- * <p>
- *   Provides a view of a graph, using a {@link GraphLayoutManager} for positions/layout
- *   and a {@link VisualGraph} for appearance.
- * </p>
- * <p>
- *   The layout manager supports executing
- *   long-running layout algorithms in a background thread, and the visual graph
- *   shares a {@link CoordinateManager} that is used for updating locations from
- *   the layout manager. The coordinate manager is thread-safe.
- * </p>
+ * Provides a view of a graph, using a {@link GraphLayoutManager} for positions/layout and a {@link VisualGraph} for appearance.
+ * The layout manager supports executing long-running layout algorithms in a background thread, and the visual graph
+ * shares a {@link CoordinateManager} that is used for updating locations from the layout manager. The coordinate manager is thread-safe.
  *
  * @author elisha
  */
 public class GraphComponent extends JGraphicComponent {
-    
+
+    public static final Logger LOG = Logger.getLogger(GraphComponent.class.getName());
+
     public static final String MENU_KEY_GRAPH = "graph";
     public static final String MENU_KEY_LINK = "link";
     public static final String MENU_KEY_NODE = "node";
-    
+
     /** This mechanism is used to create the initial view graph for swing components, by setting up appropriate renderers. */
-    private static final Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,Graphics2D>> SWING_GRAPH_SUPPLIER
-            = new Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,Graphics2D>>() {
-        @Override
-        public DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> get() {
-            DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> res = JGraphics.nodeLink();
-            res.getNodeStyler().setStyle(VisualGraph.DEFAULT_NODE_STYLE);
-            return res;
-        }
+    private static final Supplier<DelegatingNodeLinkGraphic<Object, EndpointPair<Object>, Graphics2D>> SWING_GRAPH_SUPPLIER = () -> {
+        DelegatingNodeLinkGraphic<Object, EndpointPair<Object>, Graphics2D> res = JGraphics.nodeLink();
+        res.getNodeStyler().setStyle(VisualGraph.DEFAULT_NODE_STYLE);
+        return res;
     };
 
     /** Manages the visual elements of the underlying graph */
@@ -110,12 +105,9 @@ public class GraphComponent extends JGraphicComponent {
         // enable zoom and drag
         PanAndZoomHandler.install(this);
         // turn off animation if component hierarchy changes
-        addHierarchyListener(new HierarchyListener(){
-            @Override
-            public void hierarchyChanged(HierarchyEvent e) {
-                if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
-                    setLayoutAnimating(false);
-                }
+        addHierarchyListener(e -> {
+            if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
+                setLayoutAnimating(false);
             }
         });
     }
@@ -132,17 +124,13 @@ public class GraphComponent extends JGraphicComponent {
     
     //endregion
 
+    //region DELEGATING PROPERTIES
 
-    //<editor-fold defaultstate="collapsed" desc="DELEGATING PROPERTIES">
-    //
-    // DELEGATING PROPERTIES
-    //
-
-    public ObjectStyler<Edge<Object>> getEdgeStyler() {
+    public ObjectStyler<EndpointPair<Object>> getEdgeStyler() {
         return adapter.getEdgeStyler();
     }
 
-    public void setEdgeStyler(ObjectStyler<Edge<Object>> edgeStyler) {
+    public void setEdgeStyler(ObjectStyler<EndpointPair<Object>> edgeStyler) {
         adapter.setEdgeStyler(edgeStyler);
     }
 
@@ -227,7 +215,6 @@ public class GraphComponent extends JGraphicComponent {
 
     //endregion
 
-
     /**
      * Adds context menu element to specified object
      * @param key either "graph", "node", or "link"
@@ -242,8 +229,7 @@ public class GraphComponent extends JGraphicComponent {
         } else if (MENU_KEY_LINK.equalsIgnoreCase(key)) {
             win.getEdgeGraphic().addContextMenuInitializer(init);
         } else {
-            Logger.getLogger(GraphComponent.class.getName()).log(Level.WARNING,
-                    "Unsupported context menu key: {0}", key);
+            LOG.log(Level.WARNING, "Unsupported context menu key: {0}", key);
         }
     }
 
@@ -261,10 +247,8 @@ public class GraphComponent extends JGraphicComponent {
         } else if (MENU_KEY_LINK.equals(key)) {
             win.getEdgeGraphic().removeContextMenuInitializer(init);
         } else {
-            Logger.getLogger(GraphComponent.class.getName()).log(Level.WARNING,
-                    "Unsupported context menu key: {0}", key);
+            LOG.log(Level.WARNING, "Unsupported context menu key: {0}", key);
         }
     }
-
 
 }

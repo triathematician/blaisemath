@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -25,18 +20,16 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import java.util.Arrays;
-import java.util.Map;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.SparseGraph;
-import static org.junit.Assert.*;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
+import java.util.Arrays;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+
 public class EigenCentralityTest {
 
     static Graph<Integer> TEST2;
@@ -44,9 +37,8 @@ public class EigenCentralityTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        System.out.println("-- EigenCentralityTest --");
         INST = new EigenCentrality();
-        TEST2 = SparseGraph.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6),
+        TEST2 = GraphUtils.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6),
                 Arrays.asList(
                     new Integer[]{1,2},
                     new Integer[]{1,3},
@@ -64,7 +56,6 @@ public class EigenCentralityTest {
 
     @Test
     public void testApply() {
-        System.out.println("testApply");
         assertEquals(.475349771, INST.apply(TEST2, 1), 1e-8);
         assertEquals(.564129165, INST.apply(TEST2, 3), 1e-8);
         assertEquals(.296008301, INST.apply(TEST2, 4), 1e-8);
@@ -72,7 +63,6 @@ public class EigenCentralityTest {
     
     @Test
     public void testApply_All() {
-        System.out.println("testApply_All");
         Map<Integer,Double> vals = INST.apply(TEST2);
         assertEquals(6, vals.size());
         for (int i = 0; i < 6; i++)

@@ -25,12 +25,11 @@ package com.googlecode.blaisemath.graph.test;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
-import com.googlecode.blaisemath.util.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout;
 import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
@@ -60,6 +59,7 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Set;
+import java.util.function.Function;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
@@ -88,48 +88,37 @@ public class GraphTestFrame extends javax.swing.JFrame {
         plot.getAdapter().getViewGraph().setDragEnabled(true);
         plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null, new CircleLayoutParameters(100.0));
         PanAndZoomHandler.zoomBoxAnimated(plot, Points.boundingBox(plot.getLayoutManager().getNodeLocationCopy().values(), 5));
-        plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, AttributeSet>(){
-            public AttributeSet apply(Object o) {
-                Integer i = (Integer) o;
-                return Styles.DEFAULT_POINT_STYLE.copy()
-                        .and(Styles.FILL, Color.lightGray)
-                        .and(Styles.STROKE, Color.gray)
-                        .and(Styles.STROKE_WIDTH, .5f)
-                        .and(Styles.MARKER_RADIUS, 2+Math.sqrt(i));
-            }
-        });
+        plot.getAdapter().getNodeStyler().setStyleDelegate(o -> Styles.DEFAULT_POINT_STYLE.copy()
+                    .and(Styles.FILL, Color.lightGray)
+                    .and(Styles.STROKE, Color.gray)
+                    .and(Styles.STROKE_WIDTH, .5f)
+                    .and(Styles.MARKER_RADIUS, 2+Math.sqrt((Integer) o)));
 
         plot.getAdapter().getNodeStyler().setLabelDelegate(Functions.toStringFunction());
         
-        plot.addContextMenuInitializer("Graph", new ContextMenuInitializer<Graphic>(){
-            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-                if (menu.getComponentCount() > 0) {
-                    menu.addSeparator();
-                }
-                if (focus != null) {
-                    menu.add("Graph Focus: " + focus);
-                }
-                menu.add("Selection: " + (selection == null ? 0 : selection.size()) + " selected items");
+        plot.addContextMenuInitializer("Graph", (menu, src, point, focus, selection) -> {
+            if (menu.getComponentCount() > 0) {
+                menu.addSeparator();
+            }
+            if (focus != null) {
+                menu.add("Graph Focus: " + focus);
+            }
+            menu.add("Selection: " + (selection == null ? 0 : selection.size()) + " selected items");
+        });
+        plot.addContextMenuInitializer("Node", (menu, src, point, focus, selection) -> {
+            if (menu.getComponentCount() > 0) {
+                menu.addSeparator();
+            }
+            if (focus != null) {
+                menu.add("Node: " + focus);
             }
         });
-        plot.addContextMenuInitializer("Node", new ContextMenuInitializer<Graphic>(){
-            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-                if (menu.getComponentCount() > 0) {
-                    menu.addSeparator();
-                }
-                if (focus != null) {
-                    menu.add("Node: " + focus);
-                }
+        plot.addContextMenuInitializer("Link", (menu, src, point, focus, selection) -> {
+            if (menu.getComponentCount() > 0) {
+                menu.addSeparator();
             }
-        });
-        plot.addContextMenuInitializer("Link", new ContextMenuInitializer<Graphic>(){
-            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-                if (menu.getComponentCount() > 0) {
-                    menu.addSeparator();
-                }
-                if (focus != null) {
-                    menu.add("Link: " + focus);
-                }
+            if (focus != null) {
+                menu.add("Link: " + focus);
             }
         });
 
@@ -146,26 +135,20 @@ public class GraphTestFrame extends javax.swing.JFrame {
         addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e) {
-                GAInstrument.print(System.out, 50);
+                Instrument.print(System.out, 50);
             }
         });
         
         // OVERLAY
         
-        plot.getOverlays().add(new CanvasPainter<Graphics2D>(){
-            public void paint(Component component, Graphics2D canvas) {
-                canvas.setColor(Color.black);
-                canvas.drawLine(50, 50, 150, 50);
-                canvas.drawLine(50, 40, 50, 60);
-                canvas.drawLine(150, 40, 150, 60);
-            }
+        plot.getOverlays().add((CanvasPainter<Graphics2D>) (component, canvas) -> {
+            canvas.setColor(Color.black);
+            canvas.drawLine(50, 50, 150, 50);
+            canvas.drawLine(50, 40, 50, 60);
+            canvas.drawLine(150, 40, 150, 60);
         });
         
-        plot.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
-            public void propertyChange(PropertyChangeEvent evt) {
-                selectionL.setText(String.format("<html><b>Selection:</b> %s", evt.getNewValue()));
-            }
-        });
+        plot.getSelectionModel().addPropertyChangeListener(evt -> selectionL.setText(String.format("<html><b>Selection:</b> %s", evt.getNewValue())));
     }
 
     /** This method is called from within the constructor to

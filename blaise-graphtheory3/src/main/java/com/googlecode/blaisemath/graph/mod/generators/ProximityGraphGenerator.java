@@ -1,8 +1,3 @@
-/**
- * ProximityGraphGenerator.java
- * Created Aug 18, 2012
- */
-
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -29,16 +24,16 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
-import com.googlecode.blaisemath.graph.Graph;
+
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphGenerator;
-import com.googlecode.blaisemath.graph.SparseGraph;
+import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.mod.generators.ProximityGraphGenerator.ProximityGraphParameters;
 
 /**
- * <p>
- *  Generates a graph in specified bounding box, where edges are added for points
- *  that are within a certain distance.
- * </p>
+ * Generates a graph in specified bounding box, where edges are added for points
+ * that are within a certain distance.
+ *
  * @author elisha
  */
 public final class ProximityGraphGenerator implements GraphGenerator<ProximityGraphParameters,Point2D.Double> {
@@ -75,10 +70,10 @@ public final class ProximityGraphGenerator implements GraphGenerator<ProximityGr
                 edges.add(new Point2D.Double[]{pts.get(i0), pts.get(i1)});
             }
         }
-        return SparseGraph.createFromArrayEdges(false, pts, edges);
+        return GraphUtils.createFromArrayEdges(false, pts, edges);
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PARAMETERS CLASS">
+    //region PARAMETERS CLASS
     
     /** Parameters for proximity graph. */
     public static final class ProximityGraphParameters extends DefaultGeneratorParameters {

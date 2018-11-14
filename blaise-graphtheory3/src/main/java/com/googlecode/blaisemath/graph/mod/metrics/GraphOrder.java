@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 
 /**
  * Global metric describing the order of the graph.
@@ -35,6 +35,6 @@ public class GraphOrder extends AbstractGraphMetric<Integer> {
 
     @Override
     public Integer apply(Graph graph) {
-        return graph.nodeCount();
+        return graph.nodes().size();
     }
 }

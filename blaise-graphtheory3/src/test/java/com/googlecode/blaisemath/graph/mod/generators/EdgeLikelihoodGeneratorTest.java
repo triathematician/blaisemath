@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -25,31 +20,27 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
+import static org.junit.Assert.assertEquals;
+
 public class EdgeLikelihoodGeneratorTest {
 
     @Test
     public void testEdgeLikelihoodGenerator() {
-        System.out.println("EdgeProbabilityGenerator: MANUALLY CHECK FOR DESIRED OUTPUT");
         Graph<Integer> result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 10, 0f));
-        assertEquals(10, result1.nodeCount()); assertEquals(0, result1.edgeCount());
+        assertEquals(10, result1.nodes().size()); assertEquals(0, result1.edges().size());
         result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(true, 10, 1f));
-        assertEquals(10, result1.nodeCount()); assertEquals(100, result1.edgeCount());
+        assertEquals(10, result1.nodes().size()); assertEquals(100, result1.edges().size());
         result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 10, 1f));
-        assertEquals(10, result1.nodeCount()); assertEquals(45, result1.edgeCount());
+        assertEquals(10, result1.nodes().size()); assertEquals(45, result1.edges().size());
         result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(false, 10, .25f));
-        System.out.println("  UNDIRECTED (.25 probability): " + result1.edgeCount() + " edges, " + GraphUtils.printGraph(result1));
+        System.out.println("  UNDIRECTED (.25 probability): " + result1.edges().size() + " edges, " + GraphUtils.printGraph(result1));
         result1 = new EdgeLikelihoodGenerator().apply(new EdgeLikelihoodParameters(true, 10, .25f));
-        System.out.println("  DIRECTED (.25 probability): " + result1.edgeCount() + " edges, " + GraphUtils.printGraph(result1));
+        System.out.println("  DIRECTED (.25 probability): " + result1.edges().size() + " edges, " + GraphUtils.printGraph(result1));
     }
 
 }

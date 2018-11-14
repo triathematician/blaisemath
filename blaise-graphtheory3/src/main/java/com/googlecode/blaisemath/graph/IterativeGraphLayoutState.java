@@ -26,11 +26,12 @@ package com.googlecode.blaisemath.graph;
 
 
 import com.google.common.collect.Maps;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
+
 import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.concurrent.GuardedBy;
 
 /**
  * <p>

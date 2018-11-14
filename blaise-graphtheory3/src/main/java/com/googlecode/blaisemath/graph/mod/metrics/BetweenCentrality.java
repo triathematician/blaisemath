@@ -1,7 +1,3 @@
-/*
- * BetweenCentrality.java
- * Created Jul 3, 2010
- */
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -32,16 +28,17 @@ import com.google.common.collect.Queues;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import com.googlecode.blaisemath.util.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
+
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.Deque;
 
 /**
- * <p> Provides a metric describing the betweenness centrality of a vertex in a
+ * Provides a metric describing the betweenness centrality of a vertex in a
  * CONNECTED graph. Returns infinity if the graph is not connected. May take a
  * long time for large graphs. </p> <p> Computationally, the centrality measures
- * the probability that a given node lies on a randomly chosen geodesic. </p>
+ * the probability that a given node lies on a randomly chosen geodesic.
  *
  * @author Elisha Peterson
  */
@@ -58,7 +55,7 @@ public class BetweenCentrality extends AbstractGraphNodeMetric<Double> {
 
     @Override
     public <V> Map<V,Double> apply(Graph<V> graph) {
-        int id = GAInstrument.start("BetweenCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
+        int id = Instrument.start("BetweenCentrality.allValues", graph.nodes().size()+" nodes", graph.edges().size()+" edges");
         Map<V, Double> between = new HashMap<V, Double>();
         for (V v : graph.nodes()) {
             between.put(v, 0.0);
@@ -66,7 +63,7 @@ public class BetweenCentrality extends AbstractGraphNodeMetric<Double> {
         for (V start : graph.nodes()) {
             brandes(graph, start, between, graph.isDirected() ? 1.0 : 0.5);
         }
-        GAInstrument.end(id);
+        Instrument.end(id);
         return between;
     }
 

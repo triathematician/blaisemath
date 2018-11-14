@@ -1,8 +1,3 @@
-/**
- * EdgeLikelihoodGenerator.java
- * Created Aug 18, 2012
- */
-
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -25,14 +20,16 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphGenerator;
+import com.googlecode.blaisemath.graph.GraphUtils;
+import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
+
 import java.util.ArrayList;
 import java.util.List;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphGenerator;
-import com.googlecode.blaisemath.graph.SparseGraph;
-import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
 import java.util.Random;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Generate random graph with specified edge probability.
@@ -72,10 +69,10 @@ public final class EdgeLikelihoodGenerator implements GraphGenerator<EdgeLikelih
                 }
             }
         }
-        return SparseGraph.createFromArrayEdges(directed, nn, edges);
+        return GraphUtils.createFromArrayEdges(directed, nn, edges);
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PARAMETERS CLASS">
+    //region PARAMETERS CLASS
     
     /** Parameters for edge probability generator */
     public static final class EdgeLikelihoodParameters extends DefaultGeneratorParameters {

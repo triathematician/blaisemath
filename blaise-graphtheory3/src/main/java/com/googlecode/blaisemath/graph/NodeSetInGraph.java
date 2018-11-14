@@ -1,8 +1,3 @@
-/*
- * NodeSetInGraph.java
- * Created on May 23, 2013
- */
-
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -25,12 +20,13 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.collect.Sets;
+import com.google.common.graph.Graph;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.collect.Sets;
-import java.util.Set;
-import javax.annotation.Nullable;
 
 /**
  * Data structure describing a collection of nodes in a graph. This is a useful way to pass
@@ -61,7 +57,7 @@ public class NodeSetInGraph<E> {
      * @return node set data structure
      */
     public static <E> NodeSetInGraph<E> create(E... nodes) {
-        return new NodeSetInGraph<E>(Sets.newHashSet(nodes), null);
+        return new NodeSetInGraph<>(Sets.newHashSet(nodes), null);
     }
 
     public Set<E> getNodes() {

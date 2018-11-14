@@ -1,7 +1,3 @@
-/**
- * GraphAppFrameView.class
- * Created Mar 2015
- */
 package com.googlecode.blaisemath.graph.app;
 
 /*
@@ -24,31 +20,27 @@ package com.googlecode.blaisemath.graph.app;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.ui.PropertyActionPanel;
 import com.google.common.collect.Multisets;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.app.ApplicationMenuConfig;
-import com.googlecode.blaisemath.app.MenuConfig;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.EnumEditor;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphMetric;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
-import com.googlecode.blaisemath.graph.GraphSubsetMetric;
-import com.googlecode.blaisemath.graph.GraphGenerator;
-import com.googlecode.blaisemath.graph.GraphMetrics;
-import com.googlecode.blaisemath.graph.GraphServices;
-import com.googlecode.blaisemath.graph.IterativeGraphLayout;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.*;
 import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.MarkerEditor;
+import com.googlecode.blaisemath.ui.PropertyActionPanel;
 import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.RollupPanel;
 import com.googlecode.blaisemath.util.SetSelectionModel;
-import java.awt.BorderLayout;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.FrameView;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -58,19 +50,6 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ActionMap;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import org.jdesktop.application.Action;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.FrameView;
 
 /**
  * Main view for {@link GraphApp}.

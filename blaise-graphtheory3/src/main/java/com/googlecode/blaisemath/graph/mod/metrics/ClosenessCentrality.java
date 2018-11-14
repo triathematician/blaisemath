@@ -1,7 +1,3 @@
-/*
- * ClosenessCentrality.java
- * Created Jul 23, 2010
- */
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -28,21 +24,22 @@ import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Maps;
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphMetrics;
+import com.googlecode.blaisemath.graph.GraphUtils;
+import com.googlecode.blaisemath.util.Instrument;
+
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import com.googlecode.blaisemath.util.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphMetrics;
-import com.googlecode.blaisemath.graph.GraphUtils;
-import java.util.ArrayDeque;
 
 /**
- * <p> Implements closeness centrality (Sabidussi 1966), the inverse sum of
+ * Implements closeness centrality (Sabidussi 1966), the inverse sum of
  * distances from one node to other nodes. The same calculation can be used to
  * compute the "eccentricity" of the node, the max distance from this node to
  * any other node, termed <i>graph centrality</i> by Hage/Harary 1995. Instances
- * of both metrics are provided. </p>
+ * of both metrics are provided.
  *
  * @author elisha
  */
@@ -54,7 +51,7 @@ public class ClosenessCentrality extends AbstractGraphNodeMetric<Double> {
 
     @Override
     public <V> Double apply(Graph<V> graph, V node) {
-        int n = graph.nodeCount();
+        int n = graph.nodes().size();
         Map<V, Integer> lengths = new HashMap<V, Integer>();
         GraphUtils.breadthFirstSearch(graph, node, HashMultiset.<V>create(), lengths, 
                 new ArrayDeque<V>(), HashMultimap.<V,V>create());
@@ -68,9 +65,9 @@ public class ClosenessCentrality extends AbstractGraphNodeMetric<Double> {
 
     @Override
     public <V> Map<V,Double> apply(Graph<V> graph) {
-        int id = GAInstrument.start("ClosenessCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
+        int id = Instrument.start("ClosenessCentrality.allValues", graph.nodes().size()+" nodes", graph.edges().size()+" edges");
         Map<V,Double> res = GraphMetrics.applyToComponents(graph, new ApplyConnected<V>());
-        GAInstrument.end(id);
+        Instrument.end(id);
         return res;
     }
 

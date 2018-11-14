@@ -1,7 +1,3 @@
-/*
- * StaticGraphLayout.java
- * Created May 13, 2010
- */
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -24,17 +20,17 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.graph.Graph;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.geom.Point2D;
 import java.util.Map;
-import javax.annotation.Nullable;
 
 /**
- * <p>
- *   Performs a 2D layout on a graph, using a given set of parameters.
- *   Initial conditions may be provided directly to the algorithm, but anything
- *   else impacting the layout should go into the parameters object.
- * </p>
- * 
+ * Performs a 2D layout on a graph, using a given set of parameters.
+ * Initial conditions may be provided directly to the algorithm, but anything
+ * else impacting the layout should go into the parameters object.
+ *
  * @param <P> object describing layout parameters
  * 
  * @author Elisha Peterson
@@ -49,8 +45,6 @@ public interface StaticGraphLayout<P> extends ParameterFactory<P> {
      * @param parameters parameters for the layout, e.g. radius
      * @return a mapping of points to vertices
      */
-    <C> Map<C, Point2D.Double> layout(Graph<C> g, 
-            @Nullable Map<C, Point2D.Double> ic, 
-            P parameters);
+    <C> Map<C, Point2D.Double> layout(Graph<C> g, @Nullable Map<C, Point2D.Double> ic, P parameters);
     
 }

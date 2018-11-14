@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.googlecode.blaisemath.graph.mod.generators;
 
 /*
@@ -25,26 +20,24 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import java.util.Arrays;
-import com.googlecode.blaisemath.graph.Graph;
+import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 public class DegreeDistributionGeneratorTest {
     
     @Test
     public void testGetDirectedInstance() {
-        System.out.println("getDirectedInstance");
         int sum = 1+7+3+2+1;
         int[] expected = new int[]{1,7,3,2,1};
         Graph<Integer> result = DegreeDistributionGenerator.generateDirected(expected);
         System.out.println("graph: " + GraphUtils.printGraph(result));
-        assertEquals(sum, result.nodeCount());
+        assertEquals(sum, result.nodes().size());
         int[] foundDegrees = new int[5];
         Arrays.fill(foundDegrees, 0);
         for (Integer i : result.nodes()) {
@@ -57,16 +50,20 @@ public class DegreeDistributionGeneratorTest {
 
     @Test
     public void testGetUndirectedInstance() {
-        System.out.println("getUndirectedInstance");
-        try { DegreeDistributionGenerator.generateUndirected(new int[]{1,7,3,2,1}); fail("Shouldn't be able to use odd degree sum."); } catch (IllegalArgumentException ex) {}
-        int[] expected = new int[]{1,7,3,3,1};
+        try {
+            DegreeDistributionGenerator.generateUndirected(new int[]{1, 7, 3, 2, 1});
+            fail("Shouldn't be able to use odd degree sum.");
+        } catch (IllegalArgumentException ex) {
+        }
+        int[] expected = new int[]{1, 7, 3, 3, 1};
         int sum = 1+7+3+3+1;
         Graph<Integer> result = DegreeDistributionGenerator.generateUndirected(expected);
-        assertEquals(sum, result.nodeCount());
+        assertEquals(sum, result.nodes().size());
         int[] left = new int[5];
         System.arraycopy(expected, 0, left, 0, 5);
-        for (Integer i : result.nodes())
+        for (Integer i : result.nodes()) {
             left[result.degree(i)]--;
+        }
         System.out.println("  Unable to test this directly, but this array should be about 0: " + java.util.Arrays.toString(left));
     }
 

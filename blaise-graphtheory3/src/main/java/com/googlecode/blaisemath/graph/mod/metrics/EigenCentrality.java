@@ -1,8 +1,3 @@
-/*
- * EigenCentrality.java
- * Created Jul 12, 2010
- */
-
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -32,8 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.googlecode.blaisemath.util.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
+
+import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.linear.Matrices;
 
@@ -57,7 +53,7 @@ public class EigenCentrality extends AbstractGraphNodeMetric<Double> {
 
     @Override
     public <V> Map<V,Double> apply(Graph<V> graph) {
-        int id = GAInstrument.start("EigenCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
+        int id = Instrument.start("EigenCentrality.allValues", graph.nodes().size()+" nodes", graph.edges().size()+" edges");
 
         // computes eigenvalue centrality via repeated powers of the adjacency matrix
         // (this finds the largest-magnitude eigenvector)
@@ -94,7 +90,7 @@ public class EigenCentrality extends AbstractGraphNodeMetric<Double> {
         for (int i = 0; i < div.length; i++) {
             div[i] = vecf2[i] / vecf1[i];
         }
-        GAInstrument.middle(id, "EigenCentrality.allValues", "eigenvalues="+Arrays.toString(div));
+        Instrument.middle(id, "EigenCentrality.allValues", "eigenvalues="+Arrays.toString(div));
 
         Matrices.normalize(vecf2);
         for (int i = 0; i < n-1; i++) {
@@ -110,7 +106,7 @@ public class EigenCentrality extends AbstractGraphNodeMetric<Double> {
         for (int i = 0; i < div.length; i++) {
             result.put(nodes.get(i), sign*vecf2[i]);
         }
-        GAInstrument.end(id);
+        Instrument.end(id);
         return result;
     }
 
