@@ -68,6 +68,35 @@ public enum Anchor {
     }
     
     /**
+     * Get the opposite anchor point.
+     * @return opposite
+     */
+    public Anchor opposite() {
+        switch (this) {
+            case CENTER:
+                return CENTER;
+            case WEST:
+                return EAST;
+            case NORTHWEST:
+                return SOUTHEAST;
+            case NORTH:
+                return SOUTH;
+            case NORTHEAST:
+                return SOUTHWEST;
+            case EAST:
+                return WEST;
+            case SOUTHEAST:
+                return NORTHWEST;
+            case SOUTH:
+                return NORTH;
+            case SOUTHWEST:
+                return NORTHEAST;
+            default:
+                throw new IllegalStateException();
+        }
+    }
+    
+    /**
      * Returns an offset anchor point for a circle of given radius.
      * @param r radius
      * @return offset of anchor point

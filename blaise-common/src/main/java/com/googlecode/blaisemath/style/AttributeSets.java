@@ -31,7 +31,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Joiner.MapJoiner;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Splitter;
-import com.google.common.base.Splitter.MapSplitter;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.xml.FontAdapter;
@@ -43,6 +42,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,16 +86,21 @@ import javax.annotation.Nullable;
  */
 public final class AttributeSets {
 
+    private static final Logger LOG = Logger.getLogger(AttributeSets.class.getName());
+    
     /** String used to represent null explicitly. */
     private static final String NULL_STRING = "none";
-    
     
     private static final AttributeSetConverter CONVERTER_INST = new AttributeSetConverter();
     private static final AttributeValueConverter VALUE_CONVERTER_INST = new AttributeValueConverter();
 
-    private static final MapSplitter KEYVAL_SPLITTER = Splitter.on(";")
-            .omitEmptyStrings().trimResults()
-            .withKeyValueSeparator(Splitter.on(":").trimResults());
+    /** Splits key-value pairs in a string to decode */
+    private static final Splitter DECODER_PAIR_SPLITTER = Splitter.on(";")
+            .omitEmptyStrings().trimResults();
+    /** Splits key from value */
+    private static final Splitter DECODER_KEY_SPLITTER = Splitter.on(":")
+            .omitEmptyStrings().trimResults();
+    
     private static final MapJoiner KEYVAL_JOINER = Joiner.on("; ")
             .withKeyValueSeparator(":");
 
@@ -164,18 +169,18 @@ public final class AttributeSets {
                 return new AttributeSet();
             }
             AttributeSet res = new AttributeSet();
-            Map<String, String> vals = KEYVAL_SPLITTER.split(str);
-            for (String key : vals.keySet()) {
-                String sval = vals.get(key);
-                Object val;
-                if (types != null && types.containsKey(key)) {
-                    val = new AttributeValueConverter(types.get(key)).reverse().convert(sval);
-                } else {
-                    val = VALUE_CONVERTER_INST.reverse().convert(sval);
+            List<String> pairs = DECODER_PAIR_SPLITTER.splitToList(str);
+            for (String p : pairs) {
+                List<String> kv = DECODER_KEY_SPLITTER.splitToList(p);
+                if (kv.size() != 2) {
+                    LOG.log(Level.WARNING, "Invalid attribute string: {0}", str);
+                    return res;
                 }
-                if (NULL_STRING.equals(val)) {
-                    val = null;
-                }
+                String key = kv.get(0);
+                String sval = kv.get(1);
+                Object val = NULL_STRING.equals(sval) ? null
+                        : types != null && types.containsKey(key) ? new AttributeValueConverter(types.get(key)).reverse().convert(sval)
+                        : VALUE_CONVERTER_INST.reverse().convert(sval);
                 res.put(key, val);
             }
             return res;
