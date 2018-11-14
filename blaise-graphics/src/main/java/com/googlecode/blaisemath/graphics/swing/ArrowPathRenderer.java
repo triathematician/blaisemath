@@ -157,7 +157,7 @@ public class ArrowPathRenderer extends PathRenderer {
         canvas.setColor(stroke);
         canvas.fill(arrowShapes);
         canvas.setStroke(new BasicStroke(strokeWidth));
-        canvas.draw(arrowShapes);
+        PathRenderer.drawPatched(arrowShapes, canvas);
     }
 
     

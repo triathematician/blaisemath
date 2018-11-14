@@ -61,7 +61,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         if (Styles.hasStroke(style)) {
             canvas.setColor(Styles.strokeColorOf(style));
             canvas.setStroke(Styles.strokeOf(style));
-            canvas.draw(primitive);
+            PathRenderer.drawPatched(primitive, canvas);
         }
     }
 

@@ -261,19 +261,18 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      */
     @Override
     public void setTransform(@Nullable AffineTransform at) {
-        if (at == null) {
-            transform = null;
-            inverseTransform = null;
-        } else {
-            checkArgument(at.getDeterminant() != 0);
+        checkArgument(at == null || at.getDeterminant() != 0);
+        AffineTransform old = transform;
+        if (old != at) {
             transform = at;
             try {
-                inverseTransform = at.createInverse();
+                inverseTransform = at == null ? null : at.createInverse();
             } catch (NoninvertibleTransformException ex) {
                 throw new IllegalStateException("Already checked that the argument is invertible...", ex);
             }
+            firePropertyChange("transform", old, at);
+            repaint();
         }
-        repaint();
     }
     
     /**
