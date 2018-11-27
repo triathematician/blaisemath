@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
  * #%L
@@ -20,98 +20,22 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.google.common.base.Function;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multiset;
+import com.google.common.annotations.Beta;
 import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
- * Utility class for working with {@link GraphMetric}, {@link GraphNodeMetric},
- * and {@link GraphSubsetMetric} instances.
+ * Utility class for working with {@link GraphSubsetMetric} instances.
  *
  * @author elisha
  */
-public class GraphMetrics {
-    
+@Beta
+public class SubsetMetrics {
+
     // utility class
-    private GraphMetrics() {
-    }
-
-    /**
-     * Returns function computing metric value for each node in the given graph.
-     * @param <N> node type
-     * @param <T> value type
-     * @param graph the graph
-     * @param metric metric used to generate values
-     * @return function computing values
-     */
-    public static <N,T> Function<N,T> asFunction(final Graph<N> graph, final GraphNodeMetric<T> metric) {
-        return node -> metric.apply(graph, node);
-    }
-    
-    /**
-     * Returns metric values associated with ndoes in the graph.
-     * @param <N> node type
-     * @param <T> value type
-     * @param graph the graph
-     * @param metric metric used to generate values
-     * @return distribution of values
-     */
-    public static <N,T> Map<N,T> computeValues(Graph<N> graph, GraphNodeMetric<T> metric) {
-        return Maps.asMap(graph.nodes(), asFunction(graph, metric));
-    }
-
-    /**
-     * Applies a metric that operates on connected graphs only to graphs with multiple
-     * components, by weighting the result based on the component size.
-     * @param <V> graph vertex type
-     * @param graph graph
-     * @param connectedGraphMetric a function that computes values for connected graphs
-     * @return result
-     */
-    public static <V> Map<V, Double> applyToComponents(Graph<V> graph, Function<Graph<V>, Map<V, Double>> connectedGraphMetric) {
-        int n = graph.nodes().size();
-        if (n == 0) {
-            return Collections.emptyMap();
-        } else if (n == 1) {
-            return Collections.singletonMap((V) graph.nodes().toArray()[0], 0.0);
-        }
-
-        Set<Graph<V>> components = GraphUtils.componentGraphs(graph);
-        Map<V, Double> values = new HashMap<>();
-        for (Graph<V> c : components) {
-            if (c.nodes().size() == 1) {
-                values.put(c.nodes().iterator().next(), 0.0);
-            } else {
-                values.putAll(connectedGraphMetric.apply(c));
-            }
-        }
-        for (Graph<V> c : components) {
-            double multiplier = c.nodes().size() / (double) n;
-            for (V v : c.nodes()) {
-                values.put(v, multiplier * values.get(v));
-            }
-        }
-        return values;
-    }
-
-    /**
-     * Returns distribution of the values of a particular metric
-     * @param <N> node type
-     * @param <T> metric result type
-     * @param graph the graph
-     * @param metric metric used to generate values
-     * @return distribution of values
-     */
-    public static <N,T> Multiset<T> computeDistribution(Graph<N> graph, GraphNodeMetric<T> metric) {
-        return HashMultiset.create(Iterables.transform(graph.nodes(), asFunction(graph, metric)));
+    private SubsetMetrics() {
     }
     
     /**
@@ -138,7 +62,8 @@ public class GraphMetrics {
     }
     
     //region INNER CLASSES
-    
+
+    @Beta
     private static class AdditiveSubsetMetric<N extends Number> implements GraphSubsetMetric<N> {
 
         GraphNodeMetric<N> baseMetric;
@@ -172,6 +97,7 @@ public class GraphMetrics {
         }
     }
 
+    @Beta
     private static class ContractiveSubsetMetric<N> implements GraphSubsetMetric<N> {
 
         GraphNodeMetric<N> baseMetric;

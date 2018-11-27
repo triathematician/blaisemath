@@ -36,7 +36,7 @@ public class ClosenessCentralityTest {
     static ClosenessCentrality INST1;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
         TEST2 = GraphUtils.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6,7),
                 Arrays.asList(
                     new Integer[]{1,2},
@@ -61,10 +61,10 @@ public class ClosenessCentralityTest {
 
     @Test
     public void testApply_All() {
-        Map<Integer,Double> vals = INST1.apply(TEST2);
-        assertEquals(7, vals.size());
+        Map<Integer,Double> values = INST1.apply(TEST2);
+        assertEquals(7, values.size());
         for (int i = 0; i < 7; i++) {
-            assertEquals(INST1.apply(TEST2, i+1), vals.get(i+1), 1e-10);
+            assertEquals(INST1.apply(TEST2, i+1), values.get(i+1), 1e-10);
         }
     }
 

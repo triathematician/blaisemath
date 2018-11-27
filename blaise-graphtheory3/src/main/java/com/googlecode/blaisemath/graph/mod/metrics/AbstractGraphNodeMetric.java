@@ -21,16 +21,18 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphMetrics;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
+
 import java.util.Map;
 
+import static java.util.stream.Collectors.toMap;
+
 /**
- * Gives a name to the metric and provides a default implementation for mapping all values.
+ * Partial implementation of a node metric that gives a name to the metric and provides a default implementation for
+ * mapping all values.
  * 
  * @param <T> metric result type
- * 
- * @author elisha
+ *
+ * @author Elisha Peterson
  */
 public abstract class AbstractGraphNodeMetric<T> implements GraphNodeMetric<T> {
    
@@ -47,7 +49,7 @@ public abstract class AbstractGraphNodeMetric<T> implements GraphNodeMetric<T> {
 
     @Override
     public <N> Map<N, T> apply(Graph<N> graph) {
-        return GraphMetrics.computeValues(graph, this);
+        return graph.nodes().stream().collect(toMap(n -> n, n -> apply(graph, n)));
     }
     
 }

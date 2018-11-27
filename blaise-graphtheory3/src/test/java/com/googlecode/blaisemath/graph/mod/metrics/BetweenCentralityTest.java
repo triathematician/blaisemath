@@ -36,7 +36,7 @@ public class BetweenCentralityTest {
     static BetweenCentrality INST1;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
         TEST2 = GraphUtils.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6,7),
                 Arrays.asList(
                     new Integer[]{1,2},
@@ -61,14 +61,14 @@ public class BetweenCentralityTest {
 
     @Test
     public void testApply_All() {
-        Map<Integer,Double> vals = INST1.apply(TEST2);
-        assertEquals(1.0, vals.get(1), 1e-6);
-        assertEquals(1.5, vals.get(2), 1e-6);
-        assertEquals(6.5, vals.get(3), 1e-6);
-        assertEquals(9.0, vals.get(4), 1e-6);
-        assertEquals(5.0, vals.get(5), 1e-6);
-        assertEquals(0.0, vals.get(6), 1e-6);
-        assertEquals(0.0, vals.get(7), 1e-6);
+        Map<Integer,Double> values = INST1.apply(TEST2);
+        assertEquals(1.0, values.get(1), 1e-6);
+        assertEquals(1.5, values.get(2), 1e-6);
+        assertEquals(6.5, values.get(3), 1e-6);
+        assertEquals(9.0, values.get(4), 1e-6);
+        assertEquals(5.0, values.get(5), 1e-6);
+        assertEquals(0.0, values.get(6), 1e-6);
+        assertEquals(0.0, values.get(7), 1e-6);
     }
 
 }

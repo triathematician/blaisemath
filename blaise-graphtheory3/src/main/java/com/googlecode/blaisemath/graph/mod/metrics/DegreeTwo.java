@@ -24,18 +24,20 @@ import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 
 /**
- * Number of components in the graph.
- * @author elisha
+ * Computes the second-order degree of a vertex in a graph, i.e. how many vertices are within two hops.
+ * Does not include the vertex itself.
+ *
+ * @author Elisha Peterson
  */
-public class GraphComponentCount extends AbstractGraphMetric<Integer> {
-
-    public GraphComponentCount() {
-        super("Component count", "Number of connected components in the graph.", true);
+public class DegreeTwo extends AbstractGraphNodeMetric<Integer> {
+    
+    public DegreeTwo() {
+        super("Neighborhood size (radius 2)");
     }
-
+    
     @Override
-    public Integer apply(Graph graph) {
-        return GraphUtils.components(graph).size();
+    public <V> Integer apply(Graph<V> graph, V vertex) {
+        return GraphUtils.neighborhood(graph, vertex, 2).size() - 1;
     }
-
+    
 }

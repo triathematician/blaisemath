@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
  * #%L
@@ -22,25 +22,20 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.graph.Graph;
 
-import java.util.Set;
-
 /**
- * Returns a value associated with a subset of nodes in a graph.
- * @param <N> the type of value returned
- * 
+ * Computes out-degree of vertices (only directed graphs).
+ *
  * @author Elisha Peterson
  */
-public interface GraphSubsetMetric<N> {
+public class OutDegree extends AbstractGraphNodeMetric<Integer> {
+    
+    public OutDegree() {
+        super("Out-degree");
+    }
 
-    /**
-     * Computes the value of the metric for the given graph and nodes.
-     * @param <V> graph node type
-     * @param graph the graph
-     * @param nodes a collection of nodes in the graph
-     * @return value of the metric
-     * @throws IllegalArgumentException if the value cannot be computed for
-     *      specified graph (e.g. graph is null, or graph is directed, but the
-     *      metric only applies to undirected graphs)
-     */
-    <V> N getValue(Graph<V> graph, Set<V> nodes);
+    @Override
+    public <V> Integer apply(Graph<V> graph, V vertex) {
+        return graph.outDegree(vertex); 
+    }
+
 }

@@ -20,20 +20,18 @@ package com.googlecode.blaisemath.graph.query;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.util.Instrument;
 
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Graph query that operates with a "seedRule graph" and a "growRule rule".
  *
  * @author Elisha Peterson
  */
-public class GraphSeedGrowthQuery implements Function<Graph, Set> {
-
-    private static final String EXEC_ALGO_NAME = GraphSeedGrowthQuery.class.getName()+"#execute";
+@Beta
+public class GraphSeedGrowthQuery implements GraphSeedRule {
 
     private final GraphSeedRule seedRule;
     private final GraphGrowthRule growRule;
@@ -49,13 +47,13 @@ public class GraphSeedGrowthQuery implements Function<Graph, Set> {
     }
 
     @Override
-    public Set apply(Graph graph) {
-        int id = Instrument.start(EXEC_ALGO_NAME);
-        Set seedNodes = seedRule.apply(graph);
-        Instrument.middle(id, "seeded");
-        Set result = growRule.grow(graph, seedNodes);
-        Instrument.end(id);
-        return result;
+    public String getName() {
+        return seedRule + " + " + growRule;
+    }
+
+    @Override
+    public <N> Set<N> apply(Graph<N> graph) {
+        return growRule.grow(graph, seedRule.apply(graph));
     }
 
 }

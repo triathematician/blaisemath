@@ -20,6 +20,7 @@ package com.googlecode.blaisemath.graph.query;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 
@@ -27,10 +28,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Construct larger graph by hops.
+ * Expands subset of a graph by adding connected nodes, looking out a specified number of hops.
+ *
  * @author Elisha Peterson
  */
+@Beta
 public class HopGrowthRule implements GraphGrowthRule {
+
     private int n;
     private boolean directed;
 
@@ -46,6 +50,8 @@ public class HopGrowthRule implements GraphGrowthRule {
     public String getName() {
         return n + "-Hop";
     }
+
+    //region PROPERTIES
 
     public int getN() {
         return n;
@@ -63,23 +69,26 @@ public class HopGrowthRule implements GraphGrowthRule {
         this.directed = directed;
     }
 
+    //endregion
+
     @Override
-    public Set grow(Graph graph, Set seed) {
+    public <N> Set<N> grow(Graph<N> graph, Set<N> seed) {
         return grow(directed || !graph.isDirected() ? graph : GraphUtils.copyUndirected(graph), seed, n);
     }
 
     /**
-     * Grows the seed set by n hops
+     * Grows the seed set by n hops.
+     * @param <N> node type
      * @param graph graph
      * @param seed seed nodes
      * @param n # of steps to grow
      * @return nodes in grown set
      */
-    public Set grow(Graph graph, Set seed, int n) {
+    public static <N> Set<N> grow(Graph<N> graph, Set<N> seed, int n) {
         if (n == 0) {
             return seed;
         }
-        Set grown = grow1(graph, seed);
+        Set<N> grown = grow1(graph, seed);
         if (grown.containsAll(seed) && seed.containsAll(grown)) {
             return seed;
         } else {
@@ -88,17 +97,15 @@ public class HopGrowthRule implements GraphGrowthRule {
     }
 
     /**
-     * Grows the seed set by 1 hop
+     * Grows the seed set by 1 hop.
      * @param graph graph
      * @param seed seed nodes
      * @return nodes in grown set
      */
-    public Set grow1(Graph graph, Set seed) {
-        Set result = new HashSet();
+    public static <N> Set grow1(Graph<N> graph, Set<N> seed) {
+        Set<N> result = new HashSet<>();
         result.addAll(seed);
-        for (Object o : seed) {
-            result.addAll(graph.adjacentNodes(o));
-        }
+        seed.forEach(o -> result.addAll(graph.adjacentNodes(o)));
         return result;
     }
     

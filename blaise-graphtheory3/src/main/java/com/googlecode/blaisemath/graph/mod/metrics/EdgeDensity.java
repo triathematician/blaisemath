@@ -23,13 +23,14 @@ package com.googlecode.blaisemath.graph.mod.metrics;
 import com.google.common.graph.Graph;
 
 /**
- * Global metric describing the density of the graph (# edges divided by #
- * @author elisha
+ * Global metric describing the density of the graph (# edges divided by # possible).
+ *
+ * @author Elisha Peterson
  */
-public class GraphDensity extends AbstractGraphMetric<Double> {
+public class EdgeDensity extends AbstractGraphMetric<Double> {
 
-    public GraphDensity() {
-        super("Link density", "Number of edges in the graph divided by the total number possible.", true);
+    public EdgeDensity() {
+        super("Edge density", "Number of edges in the graph divided by the total number possible.", true);
     }
 
     @Override

@@ -38,6 +38,7 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.util.function.Supplier;
 
+import static com.googlecode.blaisemath.graph.layout.GraphLayoutManager.P_GRAPH;
 
 /**
  * Combines a {@link GraphLayoutManager} and a {@link DelegatingNodeLinkGraphic}
@@ -86,6 +87,8 @@ public class VisualGraph<G> {
         setLayoutManager(manager);
     }
 
+    //region INITIALIZATION
+
     /**
      * Initializes view graph for the graph in the graph manager. This includes
      * setting up any styling appropriate for the graph, as well as updating
@@ -120,28 +123,49 @@ public class VisualGraph<G> {
         viewGraph.setEdgeSet(layoutManager.getGraph().edges());
     }
 
-    
+    //endregion
+
     //region PROPERTIES
 
     /**
-     * Return the GraphLayoutManager with position data
-     * @return GraphLayoutManager
+     * Return the graphic used for display.
+     * @return the graphic
+     */
+    public DelegatingNodeLinkGraphic getViewGraph() {
+        return viewGraph;
+    }
+
+    /**
+     * Return the layout manager responsible for updating positions.
+     * @return layout manager
      */
     public GraphLayoutManager getLayoutManager() {
         return layoutManager;
     }
 
+    /**
+     * Change the layout manager responsible for updating positions.
+     * @param manager layout manager
+     */
     public final void setLayoutManager(GraphLayoutManager manager) {
         if (this.layoutManager != manager) {
             if (this.layoutManager != null) {
-                this.layoutManager.removePropertyChangeListener(GraphLayoutManager.P_GRAPH, layoutListener);
+                this.layoutManager.removePropertyChangeListener(P_GRAPH, layoutListener);
             }
             this.layoutManager = manager;
             initViewGraph();
-            this.layoutManager.addPropertyChangeListener(GraphLayoutManager.P_GRAPH, layoutListener);
+            this.layoutManager.addPropertyChangeListener(P_GRAPH, layoutListener);
         }
     }
 
+    //endregion
+
+    //region DELEGATE PROPERTIES
+
+    /**
+     * Return the coordinate manager responsible for node locations.
+     * @return coordinate manager
+     */
     public CoordinateManager getCoordinateManager() {
         return layoutManager.getCoordinateManager();
     }
@@ -163,15 +187,7 @@ public class VisualGraph<G> {
     }
 
     /**
-     * Return the VPointGraph for display
-     * @return the VPointGraph
-     */
-    public DelegatingNodeLinkGraphic getViewGraph() {
-        return viewGraph;
-    }
-
-    /**
-     * Return node styler
+     * Return node styler.
      * @return styler
      */
     public ObjectStyler<Object> getNodeStyler() {
@@ -179,27 +195,47 @@ public class VisualGraph<G> {
     }
 
     /**
-     * Return node styler
+     * Set node styler.
      * @param styler object styler for nodes
      */
     public void setNodeStyler(ObjectStyler<Object> styler) {
         viewGraph.setNodeStyler(styler);
     }
 
+    /**
+     * Return node renderer.
+     * @return renderer
+     */
     public Renderer<Point2D, G> getNodeRenderer() {
         return viewGraph.getNodeRenderer();
     }
 
+    /**
+     * Set node renderer.
+     * @param renderer new renderer
+     */
     public void setNodeRenderer(Renderer<Point2D, G> renderer) {
         viewGraph.setNodeRenderer(renderer);
     }
 
+    /**
+     * Return label renderer.
+     * @return renderer
+     */
     public Renderer<AnchoredText, G> getLabelRenderer() {
         return viewGraph.getLabelRenderer();
     }
-    
+
     /**
-     * Return edge styler
+     * Set label renderer.
+     * @param renderer new renderer
+     */
+    public void setLabelRenderer(Renderer<AnchoredText, G> renderer) {
+        viewGraph.setLabelRenderer(renderer);
+    }
+
+    /**
+     * Return edge styler.
      * @return edge styler
      */
     public ObjectStyler<EndpointPair<Object>> getEdgeStyler() {
@@ -207,17 +243,25 @@ public class VisualGraph<G> {
     }
 
     /**
-     * Sets edge styler
+     * Set edge styler.
      * @param styler edge styler
      */
     public void setEdgeStyler(ObjectStyler<EndpointPair<Object>> styler) {
         viewGraph.setEdgeStyler(styler);
     }
 
+    /**
+     * Return edge renderer.
+     * @return renderer
+     */
     public Renderer<Shape, G> getEdgeRenderer() {
         return viewGraph.getEdgeRenderer();
     }
 
+    /**
+     * Set edge renderer.
+     * @param renderer new renderer
+     */
     public final void setEdgeRenderer(Renderer<Shape, G> renderer) {
         viewGraph.setEdgeRenderer(renderer);
     }

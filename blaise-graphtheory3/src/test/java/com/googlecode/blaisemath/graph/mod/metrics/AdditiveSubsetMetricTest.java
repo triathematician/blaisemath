@@ -21,8 +21,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphMetrics;
-import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,7 +37,7 @@ public class AdditiveSubsetMetricTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        INST = GraphMetrics.additiveSubsetMetric(new DegreeCentrality());
+        INST = SubsetMetrics.additiveSubsetMetric(new Degree());
         TEST2 = GraphUtils.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6,7),
                 Arrays.asList(
                     new Integer[]{1,2},

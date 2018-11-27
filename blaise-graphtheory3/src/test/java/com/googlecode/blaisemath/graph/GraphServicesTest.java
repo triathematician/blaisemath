@@ -38,6 +38,10 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.base.Joiner;
 import java.util.List;
+
+import com.googlecode.blaisemath.graph.mod.metrics.GraphMetric;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphSubsetMetric;
 import org.junit.Test;
 
 /**

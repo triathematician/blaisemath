@@ -20,21 +20,22 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-
 import com.google.common.graph.Graph;
 
 /**
- * Global metric describing the order of the graph.
- * @author elisha
+ * Global metric describing the average degree of the graph.
+ *
+ * @author Elisha Peterson
  */
-public class GraphOrder extends AbstractGraphMetric<Integer> {
+public class AverageDegree extends AbstractGraphMetric<Double> {
 
-    public GraphOrder() {
-        super("Node count", "Number of vertices in the graph.", true);
+    public AverageDegree() {
+        super("Average degree", "Average degree of vertices in the graph. Uses average indegree/outdegree for a directed graph.", true);
     }
 
     @Override
-    public Integer apply(Graph graph) {
-        return graph.nodes().size();
+    public Double apply(Graph graph) {
+        return graph.isDirected() ? graph.edges().size() / (double) graph.nodes().size()
+                : 2.0 * graph.edges().size() / (double) graph.nodes().size();
     }
 }

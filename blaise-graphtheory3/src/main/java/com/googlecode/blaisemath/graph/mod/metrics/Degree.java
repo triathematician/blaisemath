@@ -23,19 +23,19 @@ package com.googlecode.blaisemath.graph.mod.metrics;
 import com.google.common.graph.Graph;
 
 /**
- * Computes out-degree of vertices (only directed graphs).
+ * Node degree as a metric.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
-public class OutDegreeCentrality extends AbstractGraphNodeMetric<Integer> {
+public class Degree extends AbstractGraphNodeMetric<Integer> {
     
-    public OutDegreeCentrality() {
-        super("Out-degree");
+    public Degree() {
+        super("Degree");
     }
-
+    
     @Override
     public <V> Integer apply(Graph<V> graph, V vertex) {
-        return graph.outDegree(vertex); 
+        return graph.degree(vertex); 
     }
-
+    
 }

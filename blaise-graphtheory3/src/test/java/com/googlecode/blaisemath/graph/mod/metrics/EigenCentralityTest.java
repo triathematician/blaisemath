@@ -36,7 +36,7 @@ public class EigenCentralityTest {
     static EigenCentrality INST;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
         INST = new EigenCentrality();
         TEST2 = GraphUtils.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6),
                 Arrays.asList(
@@ -63,10 +63,10 @@ public class EigenCentralityTest {
     
     @Test
     public void testApply_All() {
-        Map<Integer,Double> vals = INST.apply(TEST2);
-        assertEquals(6, vals.size());
+        Map<Integer,Double> values = INST.apply(TEST2);
+        assertEquals(6, values.size());
         for (int i = 0; i < 6; i++)
-            assertEquals(INST.apply(TEST2, i+1), vals.get(i+1));
+            assertEquals(INST.apply(TEST2, i+1), values.get(i+1));
     }
 
 }

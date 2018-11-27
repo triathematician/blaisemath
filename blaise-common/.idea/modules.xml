@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../blaise-app/blaise-app/blaise-app.iml" filepath="$PROJECT_DIR$/../../blaise-app/blaise-app/blaise-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/blaise-common.iml" filepath="$PROJECT_DIR$/blaise-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../blaise-graphics/blaise-graphics.iml" filepath="$PROJECT_DIR$/../blaise-graphics/blaise-graphics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../blaise-graphtheory3/blaise-graphtheory3.iml" filepath="$PROJECT_DIR$/../blaise-graphtheory3/blaise-graphtheory3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../blaise-svg/blaise-svg.iml" filepath="$PROJECT_DIR$/../blaise-svg/blaise-svg.iml" />
     </modules>
   </component>
 </project>

@@ -20,30 +20,33 @@ package com.googlecode.blaisemath.graph.query;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.google.common.graph.Graph;
 
 import java.util.Set;
 
 /**
- * A "growth rule" to make a (small) subgraph larger.
+ * A "growth rule" that operates on a subset of vertices in a graph and produces a new set of vertices.
  *
  * @author Elisha Peterson
  */
+@Beta
 public interface GraphGrowthRule {
 
     /**
-     * Name of rule for display
+     * Name of rule for display.
      * @return name
      */
     String getName();
 
     /**
-     * Grows a subset of a graph based on some rule. While the resulting set is
-     * generally expected to be a superset of the input set, this is not enforced.
+     * "Grows" a subset of nodes on a graph according to this rule. May also shrink or modify the set of nodes in
+     * some other way.
+     * @param <N> node type
      * @param graph the entire graph
      * @param seed the seed input set, a subset of nodes of the graph
      * @return larger subset of the graph
      */
-    Set grow(Graph graph, Set seed);
+    <N> Set<N> grow(Graph<N> graph, Set<N> seed);
 
 }

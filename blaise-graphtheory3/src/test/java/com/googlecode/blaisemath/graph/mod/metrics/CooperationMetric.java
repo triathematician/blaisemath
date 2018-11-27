@@ -20,9 +20,10 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.google.common.graph.Graph;
 import com.google.common.graph.Graphs;
-import com.googlecode.blaisemath.graph.GraphSubsetMetric;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,12 +31,13 @@ import java.util.Set;
  * Measures difference in team performance with and without a node/subset of
  * nodes. Result contains several values: first is selfish contribution, second
  * is altruistic; third is entire team value, fourth is partial assessment
- * value, fifth is partial team value
+ * value, fifth is partial team value.
  *
  * @param <N> metric result type
  *
  * @author Elisha Peterson
  */
+@Beta
 public class CooperationMetric<N extends Number> implements GraphSubsetMetric<double[]> {
 
     GraphSubsetMetric<N> baseM;
@@ -58,7 +60,7 @@ public class CooperationMetric<N extends Number> implements GraphSubsetMetric<do
     public <V> double[] getValue(Graph<V> graph, Set<V> nodes) {
         int n = graph.nodes().size(), m = nodes.size();
         Set<V> all = graph.nodes();
-        Set<V> complement = new HashSet<V>(all);
+        Set<V> complement = new HashSet<>(all);
         complement.removeAll(nodes);
         double outcomeAll = n == 0 ? 0.0 : baseM.getValue(graph, all).doubleValue();
         double outcomeAll2 = m == n ? 0.0 : baseM.getValue(graph, complement).doubleValue();

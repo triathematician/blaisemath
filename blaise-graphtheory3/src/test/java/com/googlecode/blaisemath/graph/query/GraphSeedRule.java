@@ -20,22 +20,31 @@ package com.googlecode.blaisemath.graph.query;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.google.common.graph.Graph;
 
 import java.util.Set;
-import java.util.function.Function;
 
 /**
- * A "seed rule" to select a (small) portion of a (large) graph for analysis.
+ * A rule that selects a subset of nodes in a graph.
  *
  * @author Elisha Peterson
  */
-public interface GraphSeedRule extends Function<Graph, Set> {
+@Beta
+public interface GraphSeedRule {
 
     /**
-     * Name of rule for display
+     * Name of rule for display.
      * @return name
      */
     String getName();
+
+    /**
+     * Compute the seed nodes for the given graph.
+     * @param <N> node type
+     * @param graph graph
+     * @return seed nodes
+     */
+    <N> Set<N> apply(Graph<N> graph);
 
 }

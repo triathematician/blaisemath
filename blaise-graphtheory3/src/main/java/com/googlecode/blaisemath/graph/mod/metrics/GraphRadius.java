@@ -22,6 +22,7 @@ package com.googlecode.blaisemath.graph.mod.metrics;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Ordering;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 
@@ -33,35 +34,25 @@ import java.util.Map;
  * Global metric describes the radius of the graph, or the largest diameter of
  * one of its subcomponents.
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public class GraphRadius extends AbstractGraphMetric<Integer> {
 
     public GraphRadius() {
-        super("Graph radius", "Radius of the graph (minimum number r such that all vertices are within r links of a particular vertex).", true);
+        super("Graph radius", "Radius of the graph (minimum number r such that all nodes are within r links of a particular vertex).", true);
     }
 
     @Override
     public Integer apply(Graph graph) {
-        return applyTyped(graph);
-    }
-
-    private static <V> Integer applyTyped(Graph<V> graph) {
-        if (graph.nodes().size() == 0) {
+        if (graph.nodes().isEmpty()) {
             return 0;
         }
         int minMaxLength = Integer.MAX_VALUE;
-        Map<V, Integer> lengths = new HashMap<V, Integer>();
-        for (V node : graph.nodes()) {
+        Map<Object, Integer> lengths = new HashMap<>();
+        for (Object node : graph.nodes()) {
             int maxLength = 0;
-            GraphUtils.breadthFirstSearch(graph, node,
-                    HashMultiset.<V>create(), lengths,
-                    new ArrayDeque<V>(), HashMultimap.<V,V>create());
-            for (Integer i : lengths.values()) {
-                if (i > maxLength) {
-                    maxLength = i;
-                }
-            }
+            GraphUtils.breadthFirstSearch(graph, node, HashMultiset.create(), lengths, new ArrayDeque<>(), HashMultimap.create());
+            maxLength = Math.max(maxLength, Ordering.natural().max(lengths.values()));
             if (maxLength > 0) {
                 minMaxLength = Math.min(maxLength, minMaxLength);
             }

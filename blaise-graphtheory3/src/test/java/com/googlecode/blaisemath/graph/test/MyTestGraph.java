@@ -26,6 +26,9 @@ import com.google.common.graph.EndpointPair;
 import com.google.common.graph.Graph;
 
 import java.util.*;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Test graph that supports mutating edges and nodes.
@@ -37,27 +40,18 @@ public final class MyTestGraph implements Graph<String> {
     private boolean directed = false;
     private final LinkedHashSet<String> nodes = Sets.newLinkedHashSet();
     protected final Set<EndpointPair<String>> edges = new LinkedHashSet<EndpointPair<String>>();
-    protected final SetMultimap<String,EndpointPair<String>> edgeIndex = HashMultimap.create();
+    protected final SetMultimap<String, EndpointPair<String>> edgeIndex = HashMultimap.create();
     protected final Table<String, String, Set<EndpointPair<String>>> edgeTable = HashBasedTable.create();
-    
+
     public MyTestGraph() {
         nodes.addAll(intList(1, 100));
         for (int i = 0; i < 100; i++) {
-            connect(randV(), randV());
+            connect(randomVertex(), randomVertex());
         }
     }
     
     private static List<String> intList(int i0, int i1) {
-        List<String> res = Lists.newArrayList();
-        for (int i = i0; i <= i1; i++) {
-            res.add(Integer.toString(i));
-        }
-        return res;
-    }
-
-    String randV() {
-        int idx = (int) (nodes.size() * Math.random());
-        return nodes.toArray(new String[0])[idx];
+        return IntStream.rangeClosed(i0, i1).mapToObj(Integer::toString).collect(toList());
     }
 
     public void connect(String v1, String v2) {
@@ -68,18 +62,10 @@ public final class MyTestGraph implements Graph<String> {
         removeEdge(v1, v2);
     }
 
-    private int nextAvailableVx() {
-        int i = 1;
-        while (nodes.contains("" + i)) {
-            i++;
-        }
-        return i;
-    }
-
     public void addVertices(int number) {
         int added = 0;
         while (added < number) {
-            nodes.add("" + nextAvailableVx());
+            nodes.add("" + nextAvailableVertex());
             added++;
         }
         check();
@@ -87,7 +73,7 @@ public final class MyTestGraph implements Graph<String> {
 
     public void removeVertices(int number) {
         for (int i = 0; i < number; i++) {
-            String n = randV();
+            String n = randomVertex();
             nodes.remove(n);
             edges.removeAll(incidentEdges(n));
             edgeTable.rowKeySet().remove(n);
@@ -98,26 +84,38 @@ public final class MyTestGraph implements Graph<String> {
 
     public void addEdges(int number) {
         for (int i = 0; i < number; i++) {
-            connect(randV(), randV());
+            connect(randomVertex(), randomVertex());
         }
     }
 
     public void removeEdges(int number) {
         for (int i = 0; i < number; i++) {
-            disconnect(randV(), randV());
+            disconnect(randomVertex(), randomVertex());
         }
     }
 
     public void rewire(int lost, int gained) {
         int e0 = edgeCount();
         for (int i = 0; i < lost; i++) {
-            removeEdge(randV(), randV());
+            removeEdge(randomVertex(), randomVertex());
         }
         for (int i = 0; i < gained; i++) {
-            addEdge(randV(), randV());
+            addEdge(randomVertex(), randomVertex());
         }
         check();
-//        System.out.printf("rewire -%d +%d with %d edges at end (%d added)\n", lost, gained, edgeCount(), edgeCount()-e0);
+    }
+
+    String randomVertex() {
+        int idx = (int) (nodes.size() * Math.random());
+        return nodes.toArray(new String[0])[idx];
+    }
+
+    private int nextAvailableVertex() {
+        int i = 1;
+        while (nodes.contains("" + i)) {
+            i++;
+        }
+        return i;
     }
 
     private void check() {
@@ -153,11 +151,8 @@ public final class MyTestGraph implements Graph<String> {
         return edges;
     }
     
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="add/remove Edge helpers">
+    //region MUTATORS
 
-    // TODO - what is the proper object to lock?
     protected final synchronized void addEdge(String x, String y) {
         EndpointPair<String> edge = directed ? addDirectedEdge(x, y) : addUndirectedEdge(x, y);
         edges.add(edge);
@@ -218,10 +213,6 @@ public final class MyTestGraph implements Graph<String> {
     }
     
     //endregion
-    
-    //
-    // ADJACENCY
-    //
 
     @Override
     public boolean allowsSelfLoops() {

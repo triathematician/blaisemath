@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
@@ -25,21 +20,18 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.mod.metrics.DecayCentrality;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 public class DecayCentralityTest {
 
     static DecayCentrality INSTANCE0, INSTANCE5, INSTANCE1;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
         System.out.println("-- DecayCentralityTest --");
         INSTANCE0 = new DecayCentrality(0);
         INSTANCE5 = new DecayCentrality(0.5);

@@ -27,6 +27,10 @@ import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.EnumEditor;
 import com.googlecode.blaisemath.graph.*;
 import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphMetric;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphMetrics;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Marker;
@@ -285,7 +289,7 @@ public final class GraphAppFrameView extends FrameView {
         GraphNodeMetric<?> gs = (GraphNodeMetric<?>) event.getSource();
         Graph g = graphCanvas.getGraph();
         graphCanvas.setMetric(gs);
-        statusLabel.setText(gs+" = "+Multisets.copyHighestCountFirst(GraphMetrics.computeDistribution(g, gs)));
+        statusLabel.setText(gs+" = "+Multisets.copyHighestCountFirst(GraphMetrics.distribution(g, gs)));
     }
     
     @Action

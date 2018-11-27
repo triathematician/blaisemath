@@ -30,8 +30,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Provides a metric describing the decay centrality of a vertex in a graph.
  * This computation can be slow for large graphs since it uses all vertices in a
- * component. The computation depends on a single <i>decay
- * parameter</i>... a node at distance 1 contributes this parameter, at distance
+ * component. The computation depends on a single decay
+ * parameter... a node at distance 1 contributes this parameter, at distance
  * 2 the parameter squared, and so on. As the parameter approaches 1, the
  * metric's value approaches the size of the node's component. As the parameter
  * approaches 0, the metric's value also approaches the parameter times the size
@@ -64,8 +64,10 @@ public class DecayCentrality extends AbstractGraphNodeMetric<Double> {
         return "DecayCentrality (" + parameter + ")";
     }
 
+    //region PROPERTIES
+
     /**
-     * Get decay parameter
+     * Get decay parameter.
      * @return value of decay parameter
      */
     public double getParameter() {
@@ -82,14 +84,12 @@ public class DecayCentrality extends AbstractGraphNodeMetric<Double> {
         parameter = newValue;
     }
 
+    //endregion
+
     @Override
     public <V> Double apply(Graph<V> graph, V vertex) {
         Map<V, Integer> nvg = GraphUtils.geodesicTree(graph, vertex);
-        double total = 0.0;
-        for (V v : nvg.keySet()) {
-            total += Math.pow(parameter, nvg.get(v));
-        }
-        return total;
+        return nvg.values().stream().mapToDouble(i -> Math.pow(parameter, i)).sum();
     }
     
 }

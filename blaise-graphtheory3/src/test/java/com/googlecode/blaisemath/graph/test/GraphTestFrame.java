@@ -1,8 +1,3 @@
-/*
- * TestPlaneVisometry.java
- *
- * Created on Jul 30, 2009, 3:15:03 PM
- */
 package com.googlecode.blaisemath.graph.test;
 
 /*
@@ -29,39 +24,29 @@ import com.google.common.base.Functions;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
-import com.googlecode.blaisemath.util.Instrument;
-import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;
-import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout;
-import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
+import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
+import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout;
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout.BoxLayoutParameters;
+import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
 import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.graphics.swing.CanvasPainter;
-import com.googlecode.blaisemath.util.geom.Points;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.util.RollupPanel;
-import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics2D;
+import com.googlecode.blaisemath.util.geom.Points;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Set;
-import java.util.function.Function;
-import javax.swing.JLabel;
-import javax.swing.JPopupMenu;
 
 /**
  *
@@ -251,19 +236,18 @@ public class GraphTestFrame extends javax.swing.JFrame {
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
         double d = SpringLayoutParameters.DEFAULT_DIST_SCALE*2;
-        plot.getLayoutManager().applyLayout(RandomBoxLayout.getInstance(), null,
-                new BoxLayoutParameters(new Rectangle2D.Double(-d, -d, 2*d, 2*d)));
+        plot.getLayoutManager().applyLayout(RandomBoxLayout.getInstance(), null, new BoxLayoutParameters(new Rectangle2D.Double(-d, -d, 2*d, 2*d)));
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null,
-                new CircleLayoutParameters(SpringLayoutParameters.DEFAULT_DIST_SCALE*2));
+        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null, new CircleLayoutParameters(SpringLayoutParameters.DEFAULT_DIST_SCALE*2));
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
-        if (energyLayout == null)
+        if (energyLayout == null) {
             energyLayout = new SpringLayout();
+        }
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().iterateLayout();
@@ -271,8 +255,9 @@ public class GraphTestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_energyIBActionPerformed
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
-        if (energyLayout == null)
+        if (energyLayout == null) {
             energyLayout = new SpringLayout();
+        }
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().setLayoutTaskActive(true);
@@ -286,12 +271,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                new GraphTestFrame().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new GraphTestFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import org.junit.Test;
 
@@ -31,9 +30,12 @@ import java.util.HashSet;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class CooperationSubsetMetricTest {
+public class SubsetMetricsTest {
 
-    static Graph<Integer> TEST2 = GraphUtils.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6,7),
+    static CooperationMetric METRIC1 = new CooperationMetric(SubsetMetrics.additiveSubsetMetric(new Degree()));
+    static GraphSubsetMetric METRIC2 = SubsetMetrics.contractiveSubsetMetric(new Degree());
+
+    static Graph<Integer> TEST_GRAPH = GraphUtils.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6,7),
                 Arrays.asList(
                     new Integer[]{1,2},
                     new Integer[]{1,3},
@@ -47,15 +49,21 @@ public class CooperationSubsetMetricTest {
         // 3--4--5--6
         // |
         // 7
-    static CooperationMetric INST = new CooperationMetric(GraphMetrics.additiveSubsetMetric(new DegreeCentrality()));
 
     @Test
-    public void testGetValue() {
-        double[] result1 = INST.getValue(TEST2, new HashSet(Arrays.asList(1,2,3,4)));
-        double[] result2 = INST.getValue(TEST2, new HashSet(Arrays.asList(1,4,5)));
+    public void testGetValue_CooperationMetric() {
+        double[] result1 = METRIC1.getValue(TEST_GRAPH, new HashSet(Arrays.asList(1,2,3,4)));
+        double[] result2 = METRIC1.getValue(TEST_GRAPH, new HashSet(Arrays.asList(1,4,5)));
         assertEquals(5, result1.length);
         assertEquals(5, result2.length);
         assertArrayEquals(new double[]{10,2,14,4,2}, result1, 1e-10);
         assertArrayEquals(new double[]{7,5,14,7,2}, result2, 1e-10);
     }
+
+    @Test
+    public void testGetValue_ContractiveMetric() {
+        assertEquals(4, METRIC2.getValue(TEST_GRAPH, new HashSet(Arrays.asList(1,2,3,4)))); // 4 not 2 because of the presence of the loop
+        assertEquals(4, METRIC2.getValue(TEST_GRAPH, new HashSet(Arrays.asList(4,5,6)))); // 4 not 2 because of the presence of the loop
+    }
+
 }

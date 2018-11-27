@@ -20,20 +20,22 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
+
 import com.google.common.graph.Graph;
 
 /**
- * Global metric describing the # edges in a graph
- * @author elisha
+ * Global metric describing the order (number of nodes) of the graph.
+ *
+ * @author Elisha Peterson
  */
-public class GraphEdgeCount extends AbstractGraphMetric<Integer> {
+public class NodeCount extends AbstractGraphMetric<Integer> {
 
-    public GraphEdgeCount() {
-        super("Edge count", "Number of edges in the graph.", true);
+    public NodeCount() {
+        super("Node count", "Number of nodes in the graph.", true);
     }
 
     @Override
     public Integer apply(Graph graph) {
-        return graph.edges().size();
+        return graph.nodes().size();
     }
 }

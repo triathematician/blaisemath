@@ -21,13 +21,11 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 
-import com.googlecode.blaisemath.graph.GraphMetric;
-
 /**
  * Partial implementation of global metric.
  *
  * @param <T> computed value type
- * @author elisha
+ * @author Elisha Peterson
  */
 public abstract class AbstractGraphMetric<T> implements GraphMetric<T> {
 

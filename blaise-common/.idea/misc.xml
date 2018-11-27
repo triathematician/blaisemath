@@ -4,6 +4,10 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/../blaise-graphics/pom.xml" />
+        <option value="$PROJECT_DIR$/../blaise-graphtheory3/pom.xml" />
+        <option value="$PROJECT_DIR$/../blaise-svg/pom.xml" />
+        <option value="$PROJECT_DIR$/../../blaise-app/blaise-app/pom.xml" />
       </list>
     </option>
   </component>
@@ -40,7 +44,7 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
 </project>

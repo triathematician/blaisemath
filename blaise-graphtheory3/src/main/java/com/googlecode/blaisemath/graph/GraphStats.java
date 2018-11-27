@@ -20,12 +20,14 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-import java.util.Map;
-
 import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphMetric;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphMetrics;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
+
+import java.util.Map;
 
 /**
  * Caches computations of metrics on a graph.
@@ -129,7 +131,7 @@ public class GraphStats {
             this.values = values;
             this.stats = new SummaryStatistics();
             for (Object v : values) {
-                stats.addValue(((Number)v).doubleValue());
+                stats.addValue(((Number) v).doubleValue());
             }
         }
         
@@ -141,9 +143,9 @@ public class GraphStats {
          * @param metric a node metric
          */
         public <N,V extends Number> NodeStats(Graph<N> graph, GraphNodeMetric<V> metric) {
-            this(Iterables.transform(graph.nodes(), GraphMetrics.asFunction(graph, metric)));
+            this(GraphMetrics.distribution(graph, metric));
         }
-        
+
         /** 
          * Values on the nodes
          * @return values

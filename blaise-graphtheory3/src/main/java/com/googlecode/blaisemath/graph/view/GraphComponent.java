@@ -1,8 +1,3 @@
-/*
- * GraphComponent.java
- * Created Jan 31, 2011
- */
-
 package com.googlecode.blaisemath.graph.view;
 
 /*
@@ -25,16 +20,12 @@ package com.googlecode.blaisemath.graph.view;
  * #L%
  */
 
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
@@ -51,6 +42,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Provides a view of a graph, using a {@link GraphLayoutManager} for positions/layout and a {@link VisualGraph} for appearance.
@@ -78,14 +70,14 @@ public class GraphComponent extends JGraphicComponent {
     protected final VisualGraph<Graphics2D> adapter;
 
     /**
-     * Construct without a graph
+     * Construct with an empty graph.
      */
     public GraphComponent() {
         this(new GraphLayoutManager());
     }
 
     /**
-     * Construct with specified graph
+     * Construct with specified graph.
      * @param graph the graph to initialize with
      */
     public GraphComponent(Graph graph) {
@@ -93,21 +85,21 @@ public class GraphComponent extends JGraphicComponent {
     }
 
     /**
-     * Construct with specified graph manager (contains graph and positions)
+     * Construct with specified graph manager (contains graph and positions).
      * @param gm graph manager to initialize with
      */
     public GraphComponent(GraphLayoutManager gm) {
-        adapter = new VisualGraph<Graphics2D>(gm, SWING_GRAPH_SUPPLIER);
+        adapter = new VisualGraph<>(gm, SWING_GRAPH_SUPPLIER);
         addGraphic(adapter.getViewGraph());
         setPreferredSize(new java.awt.Dimension(400, 400));
-        // enable selection
+
         setSelectionEnabled(true);
-        // enable zoom and drag
         PanAndZoomHandler.install(this);
+
         // turn off animation if component hierarchy changes
         addHierarchyListener(e -> {
             if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
-                setLayoutAnimating(false);
+                setLayoutTaskActive(false);
             }
         });
     }
@@ -162,11 +154,11 @@ public class GraphComponent extends JGraphicComponent {
         adapter.setGraph(graph);
     }
 
-    public boolean isLayoutAnimating() {
+    public boolean isLayoutTaskActive() {
         return getLayoutManager().isLayoutTaskActive();
     }
 
-    public void setLayoutAnimating(boolean val) {
+    public void setLayoutTaskActive(boolean val) {
         getLayoutManager().setLayoutTaskActive(val);
     }
 
@@ -195,28 +187,23 @@ public class GraphComponent extends JGraphicComponent {
     }
 
     public Set getSelectedNodes() {
-        Set selectedNodes = Sets.newLinkedHashSet();
-        for (DelegatingPrimitiveGraphic dpg : Iterables.filter(getSelectionModel().getSelection(), 
-                DelegatingPrimitiveGraphic.class)) {
-            selectedNodes.add(dpg.getSourceObject());
-        }
-        return selectedNodes;
+        return getSelectionModel().getSelection().stream()
+                .filter(s -> s instanceof DelegatingPrimitiveGraphic)
+                .map(s -> ((DelegatingPrimitiveGraphic) s).getSourceObject())
+                .collect(toSet());
     }
     
-    public void setSelectedNodes(Collection<String> nodes) {
-        Set<Graphic> newSelection = Sets.newHashSet();
-        for (Object g : adapter.getViewGraph().getPointGraphic().getGraphics()) {
-            if (nodes.contains((String) ((DelegatingPrimitiveGraphic)g).getSourceObject())) {
-                newSelection.add((Graphic) g);
-            }
-        }
+    public void setSelectedNodes(Collection nodes) {
+        Set newSelection = (Set) adapter.getViewGraph().getPointGraphic().getGraphics().stream()
+                .filter(g -> nodes.contains(((DelegatingPrimitiveGraphic)g).getSourceObject()))
+                .collect(toSet());
         selector.getSelectionModel().setSelection(newSelection);
     }
 
     //endregion
 
     /**
-     * Adds context menu element to specified object
+     * Adds context menu element to specified object.
      * @param key either "graph", "node", or "link"
      * @param init used to initialize the context menu
      */

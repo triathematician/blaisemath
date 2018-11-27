@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
  * #%L
@@ -21,37 +21,26 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.google.common.graph.Graph;
-import java.util.Map;
+
+import java.util.Set;
 
 /**
- * Returns a value for a single node in a graph.
- * @param <T> the type of value returned (usually a number)
+ * Returns a value associated with a subset of nodes in a graph.
+ * @param <N> the type of value returned
  * 
  * @author Elisha Peterson
  */
-public interface GraphNodeMetric<T> {
+public interface GraphSubsetMetric<N> {
 
     /**
-     * Computes the value of the metric for the given graph and node.
-     * @param <N> graph vertex type
+     * Computes the value of the metric for the given graph and nodes.
+     * @param <V> graph node type
      * @param graph the graph
-     * @param node a node in the graph
+     * @param nodes a collection of nodes in the graph
      * @return value of the metric
      * @throws IllegalArgumentException if the value cannot be computed for
      *      specified graph (e.g. graph is null, or graph is directed, but the
      *      metric only applies to undirected graphs)
      */
-    <N> T apply(Graph<N> graph, N node);
-
-    /**
-     * Computes the value of the metric for the given graph and all nodes in the graph.
-     * @param <N> graph vertex type
-     * @param graph the graph
-     * @return value of the metric for each node
-     * @throws IllegalArgumentException if the value cannot be computed for
-     *      specified graph (e.g. graph is null, or graph is directed, but the
-     *      metric only applies to undirected graphs)
-     */
-    <N> Map<N,T> apply(Graph<N> graph);
-
+    <V> N getValue(Graph<V> graph, Set<V> nodes);
 }

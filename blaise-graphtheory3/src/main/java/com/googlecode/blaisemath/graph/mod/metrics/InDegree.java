@@ -24,12 +24,12 @@ import com.google.common.graph.Graph;
 
 /**
  * Computes in-degree of vertices (only directed graphs).
- * 
- * @author elisha
+ *
+ * @author Elisha Peterson
  */
-public class InDegreeCentrality extends AbstractGraphNodeMetric<Integer> {
+public class InDegree extends AbstractGraphNodeMetric<Integer> {
     
-    public InDegreeCentrality() {
+    public InDegree() {
         super("In-degree");
     }
 

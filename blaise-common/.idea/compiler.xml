@@ -6,11 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="blaise-app" />
         <module name="blaise-common" />
+        <module name="blaise-graphics" />
+        <module name="blaise-graphtheory3" />
+        <module name="blaise-svg" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="blaise-app" target="1.8" />
       <module name="blaise-common" target="1.8" />
+      <module name="blaise-graphics" target="1.8" />
+      <module name="blaise-graphtheory3" target="1.8" />
+      <module name="blaise-svg" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -22,20 +22,14 @@ package com.googlecode.blaisemath.graph.mod.metrics;
 
 import com.google.common.graph.Graph;
 
+import java.util.function.Function;
+
 /**
- * Node degree as a metric.
+ * Returns a global value associated with a graph.
+ * @param <T> the type of value returned
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
-public class DegreeCentrality extends AbstractGraphNodeMetric<Integer> {
-    
-    public DegreeCentrality() {
-        super("Degree");
-    }
-    
-    @Override
-    public <V> Integer apply(Graph<V> graph, V vertex) {
-        return graph.degree(vertex); 
-    }
+public interface GraphMetric<T> extends Function<Graph, T> {
     
 }

@@ -34,7 +34,8 @@ import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.linear.Matrices;
 
 /**
- * Implementation of the eigenvalue centrality calculation.
+ * Implementation of the eigenvalue centrality calculation. Uses an approximation method to compute the largest eigenvector
+ * for the adjacency matrix.
  *
  * @author Elisha Peterson
  */
@@ -47,64 +48,59 @@ public class EigenCentrality extends AbstractGraphNodeMetric<Double> {
     }
 
     @Override
-    public <V> Double apply(Graph<V> graph, V node) {
+    public <N> Double apply(Graph<N> graph, N node) {
         return apply(graph).get(node);
     }
 
     @Override
-    public <V> Map<V,Double> apply(Graph<V> graph) {
-        int id = Instrument.start("EigenCentrality.allValues", graph.nodes().size()+" nodes", graph.edges().size()+" edges");
+    public <N> Map<N, Double> apply(Graph<N> graph) {
+        int id = Instrument.start("EigenCentrality.allValues", graph.nodes().size() + " nodes", graph.edges().size() + " edges");
 
         // computes eigenvalue centrality via repeated powers of the adjacency matrix
         // (this finds the largest-magnitude eigenvector)
 
-        List<V> nodes = new ArrayList<V>();
+        List<N> nodes = new ArrayList<N>();
         boolean[][] adj0 = GraphUtils.adjacencyMatrix(graph, nodes);
         int n = nodes.size();
-        int[][] mx = new int[adj0.length][adj0.length];
+        double[][] mx = new double[n][n];
         for (int i = 0; i < mx.length; i++) {
             for (int j = 0; j < mx.length; j++) {
                 mx[i][j] = adj0[i][j] ? 1 : 0;
+                mx[i][j] = mx[i][j];
             }
         }
-        double[][] mx2 = new double[n][n]; 
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<n;j++) {
-                mx2[i][j]=mx[i][j];
-            }
-        }
-        double[][] dmx = Matrices.matrixProduct(mx2, mx2);
+        double[][] powerMatrix = Matrices.matrixProduct(mx, mx);
         for (int i = 0; i < 10; i++) {
-          dmx = Matrices.matrixProduct(dmx, dmx);
-          normalize(dmx);
+          powerMatrix = Matrices.matrixProduct(powerMatrix, powerMatrix);
+          normalize(powerMatrix);
         }
 
-        // compute 256 and 257th power vecs
+        // compute 256 and 257th power vectors
         double[] vec0 = new double[n];
         Arrays.fill(vec0, 1.0 / n);
-        double[] vecf1 = Matrices.matrixProduct(dmx, vec0);
-        double[] vecf2 = Matrices.matrixProduct(mx2, vecf1);
+        double[] powerVector1 = Matrices.matrixProduct(powerMatrix, vec0);
+        double[] powerVector2 = Matrices.matrixProduct(mx, powerVector1);
 
         // estimate eigenvalue for testing purposes
         double[] div = new double[n];
-        for (int i = 0; i < div.length; i++) {
-            div[i] = vecf2[i] / vecf1[i];
+        for (int i = 0; i < n; i++) {
+            div[i] = powerVector2[i] / powerVector1[i];
         }
         Instrument.middle(id, "EigenCentrality.allValues", "eigenvalues="+Arrays.toString(div));
 
-        Matrices.normalize(vecf2);
-        for (int i = 0; i < n-1; i++) {
-            if (!(vecf2[i]*vecf2[i]>0)) {
+        Matrices.normalize(powerVector2);
+        for (int i = 0; i < n - 1; i++) {
+            if (!(powerVector2[i] * powerVector2[i] > 0)) {
                 // should not happen
                 LOG.log(Level.SEVERE, "WARNING -- eigenvector has inconsistent signs");
                 break;
             }
         }
-        double sign = Math.signum(vecf2[0]);
+        double sign = Math.signum(powerVector2[0]);
 
-        Map<V,Double> result = new HashMap<V,Double>(n);
-        for (int i = 0; i < div.length; i++) {
-            result.put(nodes.get(i), sign*vecf2[i]);
+        Map<N, Double> result = new HashMap<>(n);
+        for (int i = 0; i < n; i++) {
+            result.put(nodes.get(i), sign * powerVector2[i]);
         }
         Instrument.end(id);
         return result;

@@ -31,11 +31,11 @@ import java.util.Set;
  * directed case, measures "transitivity", i.e. when a-%gt;b,b-%gt;c implies
  * a-%gt;c
  *
- * @author elisha
+ * @author Elisha Peterson
  */
-public class GraphClustering extends AbstractGraphMetric<Double> {
+public class ClusteringCoefficient extends AbstractGraphMetric<Double> {
 
-    public GraphClustering() {
+    public ClusteringCoefficient() {
         super("Clustering coefficient", "Computes the clustering coefficient:"
                 + " Out of all triples of vertices with at least two edges, how many have three edges?", true);
     }
@@ -52,14 +52,14 @@ public class GraphClustering extends AbstractGraphMetric<Double> {
     }
 
     /**
-     * Computes triple characteristics of a graph
+     * Computes triple characteristics of a graph.
      *
      * @param <V> coordinate type of graph
      * @param graph the graph
      * @return int[] array where first entry is number of triangles and second
-     * is number of path triples (i.e., when three nodes are connected together)
+     *      is number of path triples (i.e., when three nodes are connected together)
      */
-    public static <V> int[] triples(Graph<V> graph) {
+    static <V> int[] triples(Graph<V> graph) {
         int triangles = 0;
         int triples = 0;
         for (V node : graph.nodes()) {

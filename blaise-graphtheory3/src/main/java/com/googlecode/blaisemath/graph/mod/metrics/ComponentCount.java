@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.graph.mod.metrics;
 
 /*
  * #%L
@@ -20,15 +20,23 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
 
 /**
- * Returns a global value associated with a graph.
- * @param <T> the type of value returned
- * 
+ * Number of components in the graph.
+ *
  * @author Elisha Peterson
  */
-public interface GraphMetric<T> extends Function<Graph, T> {
-    
+public class ComponentCount extends AbstractGraphMetric<Integer> {
+
+    public ComponentCount() {
+        super("Component count", "Number of connected components in the graph.", true);
+    }
+
+    @Override
+    public Integer apply(Graph graph) {
+        return GraphUtils.components(graph).size();
+    }
+
 }

@@ -23,18 +23,18 @@ package com.googlecode.blaisemath.graph.mod.metrics;
 import com.google.common.graph.Graph;
 
 /**
- * Global metric describing the average degree of the graph.
- * @author elisha
+ * Global metric describing the # edges in a graph
+ *
+ * @author Elisha Peterson
  */
-public class GraphAverageDegree extends AbstractGraphMetric<Double> {
+public class EdgeCount extends AbstractGraphMetric<Integer> {
 
-    public GraphAverageDegree() {
-        super("Average degree", "Average degree of vertices in the graph. Uses average indegree or outdegree for a directed graph.", true);
+    public EdgeCount() {
+        super("Edge count", "Number of edges in the graph.", true);
     }
 
     @Override
-    public Double apply(Graph graph) {
-        return graph.isDirected() ? graph.edges().size() / (double) graph.nodes().size()
-                : 2.0 * graph.edges().size() / (double) graph.nodes().size();
+    public Integer apply(Graph graph) {
+        return graph.edges().size();
     }
 }

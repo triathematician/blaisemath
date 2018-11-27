@@ -26,6 +26,10 @@ package com.googlecode.blaisemath.graph;
 
 
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphMetric;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphSubsetMetric;
+
 import java.util.List;
 import java.util.ServiceLoader;
 

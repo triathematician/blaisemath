@@ -22,6 +22,7 @@ package com.googlecode.blaisemath.graph.mod.metrics;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Ordering;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 
@@ -33,7 +34,7 @@ import java.util.Map;
  * Global metric describes the diameter of the graph, or the largest diameter of
  * one of its subcomponents.
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public class GraphDiameter extends AbstractGraphMetric<Integer> {
 
@@ -54,11 +55,7 @@ public class GraphDiameter extends AbstractGraphMetric<Integer> {
         Map<V, Integer> lengths = new HashMap<>();
         for (V node : graph.nodes()) {
             GraphUtils.breadthFirstSearch(graph, node, HashMultiset.create(), lengths, new ArrayDeque<>(), HashMultimap.create());
-            for (Integer i : lengths.values()) {
-                if (i > maxLength) {
-                    maxLength = i;
-                }
-            }
+            maxLength = Math.max(maxLength, Ordering.natural().max(lengths.values()));
         }
         return maxLength;
     }

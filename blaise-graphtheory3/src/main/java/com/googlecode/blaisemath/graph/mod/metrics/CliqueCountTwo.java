@@ -32,8 +32,8 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  * of the vertex, not counting the edges adjacent to the vertex itself.
  * Current computation time is linear in the # of edges in the graph (vertex case),
  * and quadratic in the map case (linear in edges * linear in vertices).
- * 
- * @author elisha
+ *
+ * @author Elisha Peterson
  */
 public class CliqueCountTwo extends AbstractGraphNodeMetric<Integer> {
 

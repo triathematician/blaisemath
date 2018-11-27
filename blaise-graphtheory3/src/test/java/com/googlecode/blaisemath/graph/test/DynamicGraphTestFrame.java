@@ -69,7 +69,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
         }
-        
+
         addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e) {
@@ -241,19 +241,18 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(RandomBoxLayout.getInstance(), null, 
-                new BoxLayoutParameters(new Rectangle2D.Double(-500, -500, 1000, 1000)));
+        plot.getLayoutManager().applyLayout(RandomBoxLayout.getInstance(), null, new BoxLayoutParameters(new Rectangle2D.Double(-500, -500, 1000, 1000)));
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null, 
-                new CircleLayoutParameters(500.0));
+        plot.getLayoutManager().applyLayout(CircleLayout.getInstance(), null, new CircleLayoutParameters(500.0));
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
-        if (energyLayout == null)
+        if (energyLayout == null) {
             energyLayout = new SpringLayout();
+        }
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().iterateLayout();
@@ -261,8 +260,9 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_energyIBActionPerformed
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
-        if (energyLayout == null)
+        if (energyLayout == null) {
             energyLayout = new SpringLayout();
+        }
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().setLayoutTaskActive(true);
@@ -273,12 +273,10 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_energySBActionPerformed
 
     private synchronized void updateGraph() {
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run() {
-                graphCopy = Graphs.copyOf(graph);
-                plot.getLayoutManager().setGraph(graphCopy);
-                plot.getAdapter().getViewGraph().setEdgeSet(graphCopy.edges());
-            }
+        SwingUtilities.invokeLater(() -> {
+            graphCopy = Graphs.copyOf(graph);
+            plot.getLayoutManager().setGraph(graphCopy);
+            plot.getAdapter().getViewGraph().setEdgeSet(graphCopy.edges());
         });
     }
     
@@ -301,10 +299,12 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     java.util.TimerTask tt;
 
     private void addThreadedBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addThreadedBActionPerformed
-        if (tt != null)
+        if (tt != null) {
             tt.cancel();
-        tt = new java.util.TimerTask(){
-            @Override public void run() {
+        }
+        tt = new java.util.TimerTask() {
+            @Override
+            public void run() {
                 graph.removeVertices(1);
                 graph.removeEdges(10);
                 graph.addVertices(1);
@@ -316,8 +316,9 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addThreadedBActionPerformed
 
     private void threadStopBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threadStopBActionPerformed
-        if (tt != null)
+        if (tt != null) {
             tt.cancel();
+        }
     }//GEN-LAST:event_threadStopBActionPerformed
 
 
@@ -325,12 +326,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                new DynamicGraphTestFrame().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new DynamicGraphTestFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -27,18 +27,18 @@ import com.google.common.graph.Graph;
  * directed case, measures "transitivity", i.e. when a-%gt;b,b-%gt;c implies
  * a-%gt;c
  *
- * @author elisha
+ * @author Elisha Peterson
  */
-public class GraphClusteringByPath extends AbstractGraphMetric<Double> {
+public class ClusteringCoefficientByPath extends AbstractGraphMetric<Double> {
 
-    public GraphClusteringByPath() {
+    public ClusteringCoefficientByPath() {
         super("Clustering coefficient (by path)", "Computes the clustering coefficient:"
                 + " Out of all length-3 paths, how many are enclosed by a triangle?", true);
     }
 
     @Override
     public Double apply(Graph graph) {
-        int[] tri = GraphClustering.triples(graph);
+        int[] tri = ClusteringCoefficient.triples(graph);
         int triangles = tri[0], triples = tri[1];
         if (!graph.isDirected()) {
             triangles /= 3;

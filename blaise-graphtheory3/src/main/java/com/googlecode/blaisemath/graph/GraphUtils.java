@@ -506,18 +506,13 @@ public class GraphUtils {
      * @param <V> graph node type
      * @param graph the graph under consideration
      * @param start the starting node.
-     * @param numShortest a map that will be filled with info on the # of
-     *  shortest paths
-     * @param lengths a map that will be filled with info on the lengths of
-     *  shortest paths
-     * @param deque a stack (LIFO) that will be filled with elements in non-increasing
-     *  order of distance
-     * @param pred a map that will be filled with adjacency information for the
-     *  shortest paths
+     * @param numShortest a map that will be filled with info on the # of shortest paths
+     * @param lengths a map that will be filled with info on the lengths of shortest paths
+     * @param deque a stack (LIFO) that will be filled with elements in non-increasing order of distance
+     * @param adjacencies a map that will be filled with adjacency information for the shortest paths
      */
     public static <V> void breadthFirstSearch(Graph<V> graph, V start,
-            Multiset<V> numShortest, Map<V, Integer> lengths,
-            Deque<V> deque, Multimap<V,V> pred) {
+            Multiset<V> numShortest, Map<V, Integer> lengths, Deque<V> deque, Multimap<V,V> adjacencies) {
 
         Set<V> nodes = graph.nodes();
         numShortest.add(start);
@@ -541,7 +536,7 @@ public class GraphUtils {
                 // adjust the number of shortest paths to w if shortest path goes through v
                 if (lengths.get(w) == lengths.get(v) + 1) {
                     numShortest.add(w, numShortest.count(v));
-                    pred.get(w).add(v);
+                    adjacencies.get(w).add(v);
                 }
             }
         }

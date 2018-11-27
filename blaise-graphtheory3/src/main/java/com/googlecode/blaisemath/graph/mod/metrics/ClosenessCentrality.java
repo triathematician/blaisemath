@@ -20,12 +20,10 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Maps;
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.util.Instrument;
 
@@ -38,10 +36,10 @@ import java.util.Set;
  * Implements closeness centrality (Sabidussi 1966), the inverse sum of
  * distances from one node to other nodes. The same calculation can be used to
  * compute the "eccentricity" of the node, the max distance from this node to
- * any other node, termed <i>graph centrality</i> by Hage/Harary 1995. Instances
+ * any other node, termed graph centrality by Hage/Harary 1995. Instances
  * of both metrics are provided.
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public class ClosenessCentrality extends AbstractGraphNodeMetric<Double> {
     
@@ -52,43 +50,46 @@ public class ClosenessCentrality extends AbstractGraphNodeMetric<Double> {
     @Override
     public <V> Double apply(Graph<V> graph, V node) {
         int n = graph.nodes().size();
-        Map<V, Integer> lengths = new HashMap<V, Integer>();
-        GraphUtils.breadthFirstSearch(graph, node, HashMultiset.<V>create(), lengths, 
-                new ArrayDeque<V>(), HashMultimap.<V,V>create());
+        Map<V, Integer> lengths = new HashMap<>();
+        GraphUtils.breadthFirstSearch(graph, node, HashMultiset.create(), lengths, new ArrayDeque<>(), HashMultimap.create());
         double cptSize = lengths.size();
-        double sum = 0.0;
-        for (Integer i : lengths.values()) {
-            sum += i;
-        }
+        double sum = lengths.values().stream().mapToDouble(v -> v).sum();
         return cptSize / n * (n - 1.0) / sum;
     }
 
     @Override
     public <V> Map<V,Double> apply(Graph<V> graph) {
         int id = Instrument.start("ClosenessCentrality.allValues", graph.nodes().size()+" nodes", graph.edges().size()+" edges");
-        Map<V,Double> res = GraphMetrics.applyToComponents(graph, new ApplyConnected<V>());
+        Map<V,Double> res = GraphMetrics.applyToComponents(graph, new ApplyConnected());
         Instrument.end(id);
         return res;
     }
 
-    /** Computes values for a connected portion of a graph */
-    private static class ApplyConnected<V> implements Function<Graph<V>, Map<V, Double>> {
+    /** Delegate metric that computes values for a connected portion of a graph */
+    private static class ApplyConnected extends AbstractGraphNodeMetric<Double> {
+
+        public ApplyConnected() {
+            super("");
+        }
+
         @Override
-        public Map<V,Double> apply(Graph<V> graph) {
-            Map<V, Double> res = Maps.newHashMap();
-            Set<V> nodes = graph.nodes();
+        public <N> Double apply(Graph<N> graph, N node) {
+            // not used
+            return null;
+        }
+
+        @Override
+        public <N> Map<N,Double> apply(Graph<N> graph) {
+            Map<N, Double> res = Maps.newHashMap();
+            Set<N> nodes = graph.nodes();
             int n = nodes.size();
             double max = n - 1.0;
 
-            for (V start : nodes) {
-                Map<V, Integer> lengths = new HashMap<V, Integer>();
-                GraphUtils.breadthFirstSearch(graph, start, HashMultiset.<V>create(), 
-                        lengths, new ArrayDeque<V>(), HashMultimap.<V,V>create());
-                double sum1 = 0.0;
-                for (Integer j : lengths.values()) {
-                    sum1 += j;
-                }
-                res.put(start, max / sum1);
+            for (N start : nodes) {
+                Map<N, Integer> lengths = new HashMap<>();
+                GraphUtils.breadthFirstSearch(graph, start, HashMultiset.create(), lengths, new ArrayDeque<>(), HashMultimap.create());
+                double sum = lengths.values().stream().mapToDouble(v -> v).sum();
+                res.put(start, max / sum);
             }
             return res;
         }

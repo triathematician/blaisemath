@@ -21,6 +21,7 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 import com.google.common.base.Function;
+import com.google.common.collect.Ordering;
 import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
@@ -29,7 +30,8 @@ import java.awt.*;
 import java.util.Map;
 
 /**
- * Provides an edge styler for changing the appearance of edges in a weighted graph.
+ * Provides an edge styler for changing the appearance of edges in a weighted graph. Provides unique styles for positive
+ * and negative weights.
  * 
  * @param <E> edge type
  * @author elisha
@@ -41,56 +43,44 @@ public class WeightedEdgeStyler<E extends EndpointPair> implements Function<E, A
     /** Parent style */
     protected final AttributeSet parent;
     /** Edge weights */
-    protected Map<E, Float> weights;
+    protected Map<E, Double> weights;
     /** The maximum edge weight */
-    protected float maxWeight = 0f;
+    protected double maxWeight = 0f;
 
     /**
      * Construct the customizer
      * @param parent the parent style
      * @param weights weightings for edges in graph
      */
-    public WeightedEdgeStyler(AttributeSet parent, Map<E, Float> weights) {
+    public WeightedEdgeStyler(AttributeSet parent, Map<E, Double> weights) {
         this.parent = parent;
         this.weights = weights;
-        for (Float wt : weights.values()) {
-            maxWeight = Math.max(maxWeight, wt);
-        }
+        this.maxWeight = weights.isEmpty() ? 1.0 : Ordering.natural().max(weights.values());
     }
 
-    public Map<E, Float> getWeights() {
+    public Map<E, Double> getWeights() {
         return weights;
     }
 
-    public void setWeights(Map<E, Float> weights) {
+    public void setWeights(Map<E, Double> weights) {
         if (this.weights != weights) {
             this.weights = weights;
-            for (Float wt : weights.values()) {
-                maxWeight = Math.max(maxWeight, wt);
-            }
+            this.maxWeight = weights.isEmpty() ? 1.0 : Ordering.natural().max(weights.values());
         }
     }
 
     @Override
     public AttributeSet apply(E o) {
-        Object wt = weights.get(o);
-        if (wt instanceof Number) {
-            float n = ((Number) wt).floatValue();
-            maxWeight = Math.max(maxWeight, Math.abs(n));
-            boolean positive = n >= 0;
-            double relativeWeight = Math.abs(n) / maxWeight;
-            Color stroke = parent.getColor(Styles.STROKE);
-            Color c = positive ? positiveColor(stroke, relativeWeight)
-                    : negativeColor(stroke, relativeWeight);
-            return AttributeSet.withParent(parent)
-                    .and(Styles.STROKE, c)
-                    .and(Styles.STROKE_WIDTH, (float)(2 * relativeWeight));
-        } else if (wt instanceof Color) {
-            return AttributeSet.withParent(parent)
-                    .and(Styles.STROKE, (Color) wt);
-        } else {
-            return parent;
-        }
+        Double wt = weights.get(o);
+        maxWeight = Math.max(maxWeight, Math.abs(wt));
+        boolean positive = wt >= 0;
+        double relativeWeight = Math.abs(wt) / maxWeight;
+        Color stroke = parent.getColor(Styles.STROKE);
+        Color c = positive ? positiveColor(stroke, relativeWeight)
+                : negativeColor(stroke, relativeWeight);
+        return AttributeSet.withParent(parent)
+                .and(Styles.STROKE, c)
+                .and(Styles.STROKE_WIDTH, (float) (2 * relativeWeight));
     }
     
     //region UTILS

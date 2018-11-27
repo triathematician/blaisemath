@@ -24,7 +24,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
+import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 
