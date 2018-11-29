@@ -1,7 +1,3 @@
-/**
- * GraphServices.java
- * Created Mar 23, 2015
- */
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -26,53 +22,59 @@ package com.googlecode.blaisemath.graph;
 
 
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphMetric;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphSubsetMetric;
+import com.google.common.collect.Maps;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 /**
  * Provides instances of registered services of various types.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class GraphServices {
-    
-    private static ServiceLoader<GraphMetric> globalMetrics;
-    private static ServiceLoader<GraphNodeMetric> nodeMetrics;
-    private static ServiceLoader<GraphSubsetMetric> subsetMetrics;
-    private static ServiceLoader<GraphGenerator> generators;
-    private static ServiceLoader<IterativeGraphLayout> iterativeLayout;
-    private static ServiceLoader<StaticGraphLayout> staticLayout;
+
+    private static Map<Class, ServiceLoader> serviceCache = Maps.newHashMap();
 
     /** Utility class cannot be instantiated */
     private GraphServices() {
     }
     
     /**
-     * Locate, initialize, and return the list of registered {@link GraphGenerator}
-     * implementations via the {@link ServiceLoader} class.
+     * Locate, initialize, and return the list of registered {@link GraphGenerator} implementations via the
+     * {@link ServiceLoader} class.
      * @return list of {@code GraphNodeMetric}s
      */
     public static List<GraphGenerator> generators() {
-        if (generators == null) {
-            generators = ServiceLoader.load(GraphGenerator.class);
-        }
-        return Lists.newArrayList(generators);
+        return services(GraphGenerator.class);
+    }
+
+    /**
+     * Locate, initialize, and return the list of registered {@link StaticGraphLayout} implementations via the
+     * {@link ServiceLoader} class.
+     * @return list of {@code StaticGraphLayout}s
+     */
+    public static List<StaticGraphLayout> staticLayouts() {
+        return services(StaticGraphLayout.class);
+    }
+
+    /**
+     * Locate, initialize, and return the list of registered {@link IterativeGraphLayout} implementations via the
+     * {@link ServiceLoader} class.
+     * @return list of {@code IterativeGraphLayout}s
+     */
+    public static List<IterativeGraphLayout> iterativeLayouts() {
+        return services(IterativeGraphLayout.class);
     }
     
     /**
-     * Locate, initialize, and return the list of registered {@link GraphMetric}
-     * implementations via the {@link ServiceLoader} class.
+     * Locate, initialize, and return the list of registered {@link GraphMetric} implementations via the
+     * {@link ServiceLoader} class.
      * @return list of {@code GraphMetric}s
      */
     public static List<GraphMetric> globalMetrics() {
-        if (globalMetrics == null) {
-            globalMetrics = ServiceLoader.load(GraphMetric.class);
-        }
-        return Lists.newArrayList(globalMetrics);
+        return services(GraphMetric.class);
     }
      
     /**
@@ -81,46 +83,24 @@ public final class GraphServices {
      * @return list of {@code GraphNodeMetric}s
      */
     public static List<GraphNodeMetric> nodeMetrics() {
-        if (nodeMetrics == null) {
-            nodeMetrics = ServiceLoader.load(GraphNodeMetric.class);
-        }
-        return Lists.newArrayList(nodeMetrics);
+        return services(GraphNodeMetric.class);
     }
      
     /**
-     * Locate, initialize, and return the list of registered {@link GraphSubsetMetric}
-     * implementations via the {@link ServiceLoader} class.
+     * Locate, initialize, and return the list of registered {@link GraphSubsetMetric} implementations via the
+     * {@link ServiceLoader} class.
      * @return list of {@code GraphSubsetMetric}s
      */
     public static List<GraphSubsetMetric> subsetMetrics() {
-        if (subsetMetrics == null) {
-            subsetMetrics = ServiceLoader.load(GraphSubsetMetric.class);
-        }
-        return Lists.newArrayList(subsetMetrics);
+        return services(GraphSubsetMetric.class);
     }
-    
-    /**
-     * Locate, initialize, and return the list of registered {@link StaticGraphLayout}
-     * implementations via the {@link ServiceLoader} class.
-     * @return list of {@code StaticGraphLayout}s
-     */
-    public static List<StaticGraphLayout> staticLayouts() {
-        if (staticLayout == null) {
-            staticLayout = ServiceLoader.load(StaticGraphLayout.class);
+
+    /** Utility method to dynamically get list of services. */
+    private static <X> List<X> services(Class<X> type) {
+        if (serviceCache.get(type) == null) {
+            serviceCache.put(type, ServiceLoader.load(type));
         }
-        return Lists.newArrayList(staticLayout);
-    }
-    
-    /**
-     * Locate, initialize, and return the list of registered {@link IterativeGraphLayout}
-     * implementations via the {@link ServiceLoader} class.
-     * @return list of {@code IterativeGraphLayout}s
-     */
-    public static List<IterativeGraphLayout> iterativeLayouts() {
-        if (iterativeLayout == null) {
-            iterativeLayout = ServiceLoader.load(IterativeGraphLayout.class);
-        }
-        return Lists.newArrayList(iterativeLayout);
+        return Lists.newArrayList(serviceCache.get(type));
     }
     
 }

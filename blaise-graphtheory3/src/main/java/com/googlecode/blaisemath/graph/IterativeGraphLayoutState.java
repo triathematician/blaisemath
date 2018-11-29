@@ -1,7 +1,3 @@
-/**
- * IterativeGraphLayoutState.java
- * Created Jan 16, 2016
- */
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -24,7 +20,6 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-
 import com.google.common.collect.Maps;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 
@@ -34,12 +29,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * <p>
- *   Core state properties required for iterative graph layouts. Allows for inserting
- *   location updates from alternate threads.
- * </p>
+ * Core state properties required for iterative graph layouts. Allows for inserting
+ * location updates from alternate threads.
+ *
  * @param <C> graph node type
- * @author elisha
+ *
+ * @author Elisha Peterson
  */
 public abstract class IterativeGraphLayoutState<C> {
     
@@ -61,7 +56,7 @@ public abstract class IterativeGraphLayoutState<C> {
     private double coolingParameter;
     
     
-    //<editor-fold defaultstate="collapsed" desc="ThreadSafe GETTERS/MUTATORS">
+    //region ThreadSafe GETTERS/MUTATORS
 
     public double getCoolingParameter() {
         return coolingParameter;
@@ -90,7 +85,7 @@ public abstract class IterativeGraphLayoutState<C> {
     
     //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="LOCATION UPDATES">
+    //region LOCATION UPDATES
     
     /** 
      * Synchronizes pending updates to node locations, executed prior to each layout step.

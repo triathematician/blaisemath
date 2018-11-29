@@ -20,15 +20,16 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.google.common.graph.Graph;
+
+import java.util.function.Function;
 
 /**
  * Generates a graph based on provided settings.
  * @param <P> parameters type
  * @param <N> graph vertex type
- * @author elisha
+ * @author Elisha Peterson
  */
-public interface GraphGenerator<P,N> extends ParameterFactory<P>, Function<P, Graph<N>> {
+public interface GraphGenerator<P, N> extends ParameterFactory<P>, Function<P, Graph<N>> {
     
 }

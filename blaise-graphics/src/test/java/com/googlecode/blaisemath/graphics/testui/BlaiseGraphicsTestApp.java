@@ -172,7 +172,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void addWrappedText() {
-        if (Math.random() < .5) {
+        if (Math.random() < .33) {
+            addWrappedTextEndChar();
+        } else if (Math.random() < .5) {
             addWrappedTextRandom();
         } else {
             addWrappedTextSmall();
@@ -196,6 +198,15 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         Random r = new Random();
         gfc.setPrimitive(new Rectangle2D.Double(r.nextInt(100)+100, r.nextInt(100)+100, r.nextInt(20)+5, r.nextInt(20)+5));
         gfc.getObjectStyler().setLabel(r.nextBoolean() ? "ab" : "a");
+        gfc.getObjectStyler().setLabelStyle(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
+        root1.addGraphic(gfc);
+    }
+
+    private void addWrappedTextEndChar() {
+        LabeledShapeGraphic gfc = new LabeledShapeGraphic();
+        Random r = new Random();
+        gfc.setPrimitive(new Rectangle2D.Double(r.nextInt(100)+100, r.nextInt(100)+100, r.nextInt(100)+5, r.nextInt(100)+5));
+        gfc.getObjectStyler().setLabel("a\nb\nc");
         gfc.getObjectStyler().setLabelStyle(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
         root1.addGraphic(gfc);
     }

@@ -26,14 +26,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Set;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
- * Data structure describing a collection of nodes in a graph. This is a useful way to pass
- * a reference to both the collection of nodes and the graph.
+ * Encapsulate graph with a collection of nodes in the graph.
+ *
  * @param <E> node type
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class NodeSetInGraph<E> {
 
@@ -41,7 +41,7 @@ public class NodeSetInGraph<E> {
     private final Graph<E> graph;
 
     public NodeSetInGraph(Set<E> nodes, @Nullable Graph<E> graph) {
-        checkNotNull(nodes);
+        requireNonNull(nodes);
         this.graph = graph;
         // allow for nodes not in graph, but remove them
         this.nodes = Sets.newLinkedHashSet(nodes);
@@ -64,8 +64,7 @@ public class NodeSetInGraph<E> {
         return nodes;
     }
 
-    @Nullable 
-    public Graph<E> getGraph() {
+    public @Nullable Graph<E> getGraph() {
         return graph;
     }
 }

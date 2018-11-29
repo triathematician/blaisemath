@@ -38,8 +38,9 @@ import java.util.logging.Logger;
 class IterativeGraphLayoutService extends AbstractScheduledService {
 
     private static final Logger LOG = Logger.getLogger(IterativeGraphLayoutService.class.getName());
+
     /** Default time between layout iterations. */
-    private static final int DEFAULT_ITER_DELAY = 10;        
+    private static final int DEFAULT_DELAY = 10;
     
     /** Delay between loops */
     private final int loopDelay;
@@ -47,7 +48,7 @@ class IterativeGraphLayoutService extends AbstractScheduledService {
     private final IterativeGraphLayoutManager manager;
 
     IterativeGraphLayoutService(IterativeGraphLayoutManager mgr) {
-        this(mgr, DEFAULT_ITER_DELAY);
+        this(mgr, DEFAULT_DELAY);
     }
     
     IterativeGraphLayoutService(IterativeGraphLayoutManager mgr, int loopDelay) {
@@ -70,7 +71,7 @@ class IterativeGraphLayoutService extends AbstractScheduledService {
     //endregion
 
     @Override
-    protected synchronized void runOneIteration() throws Exception {
+    protected synchronized void runOneIteration() {
         try {
             manager.runOneLoop();
         } catch (InterruptedException x) {

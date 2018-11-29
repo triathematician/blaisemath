@@ -50,7 +50,7 @@ public class GraphUtilsTest {
     static Graph<Integer> UNDIRECTED_INSTANCE, DIRECTED_INSTANCE;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
         System.out.println("-- GraphsTest --");
         VV = new Integer[] { 1, 2, 3, 4, 5, 6, 10, 11, 15, 20, 21 };
         EE = new Integer[][] {

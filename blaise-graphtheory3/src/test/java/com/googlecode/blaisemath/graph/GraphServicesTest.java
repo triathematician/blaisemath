@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 elisha.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -39,20 +24,10 @@ package com.googlecode.blaisemath.graph;
 import com.google.common.base.Joiner;
 import java.util.List;
 
-import com.googlecode.blaisemath.graph.mod.metrics.GraphMetric;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphSubsetMetric;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
 public class GraphServicesTest {
 
-    /**
-     * Test of graphSuppliers method, of class GraphServices.
-     */
     @Test
     public void testGraphSuppliers() {
         System.out.println("graphSuppliers");
@@ -61,9 +36,6 @@ public class GraphServicesTest {
         System.out.println("- "+Joiner.on("\n- ").join(supp));
     }
 
-    /**
-     * Test of globalMetrics method, of class GraphServices.
-     */
     @Test
     public void testGlobalMetrics() {
         System.out.println("globalMetrics");
@@ -72,9 +44,6 @@ public class GraphServicesTest {
         System.out.println("- "+Joiner.on("\n- ").join(supp));
     }
 
-    /**
-     * Test of nodeMetrics method, of class GraphServices.
-     */
     @Test
     public void testNodeMetrics() {
         System.out.println("nodeMetrics");
@@ -83,9 +52,6 @@ public class GraphServicesTest {
         System.out.println("- "+Joiner.on("\n- ").join(supp));
     }
 
-    /**
-     * Test of subsetMetrics method, of class GraphServices.
-     */
     @Test
     public void testSubsetMetrics() {
         System.out.println("subsetMetrics");
@@ -94,9 +60,6 @@ public class GraphServicesTest {
         System.out.println("- "+Joiner.on("\n- ").join(supp));
     }
 
-    /**
-     * Test of staticLayouts method, of class GraphServices.
-     */
     @Test
     public void testStaticLayouts() {
         System.out.println("staticLayouts");
@@ -105,9 +68,6 @@ public class GraphServicesTest {
         System.out.println("- "+Joiner.on("\n- ").join(supp));
     }
 
-    /**
-     * Test of iterativeLayouts method, of class GraphServices.
-     */
     @Test
     public void testIterativeLayouts() {
         System.out.println("iterativeLayouts");

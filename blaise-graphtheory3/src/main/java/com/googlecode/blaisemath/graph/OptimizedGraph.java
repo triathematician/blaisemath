@@ -37,6 +37,7 @@ import com.google.common.collect.Sets;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.Graph;
+import com.google.common.graph.Graphs;
 import com.google.errorprone.annotations.Immutable;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,45 +49,89 @@ import java.util.Set;
  * (degree 2), and core nodes (degree > 2). This maximizes speed for algorithms that make large numbers of calls to
  * graph API methods.
  *
- * @param <V> graph node type
+ * @param <N> graph node type
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 @Immutable
-public final class OptimizedGraph<V> implements Graph<V> {
+public final class OptimizedGraph<N> implements Graph<N> {
 
     /** Base graph */
-    private final Graph<V> base;
+    private final Graph<N> base;
     
     /** Degree cache */
-    private final Map<V, Integer> degrees = Maps.newHashMap();
+    private final Map<N, Integer> degrees = Maps.newHashMap();
     /** Isolate nodes (deg = 0) */
-    private final Set<V> isolates = Sets.newHashSet();
+    private final Set<N> isolates = Sets.newHashSet();
     /** Leaf nodes (deg = 1) */
-    private final Set<V> leafNodes = Sets.newHashSet();
+    private final Set<N> leafNodes = Sets.newHashSet();
     /** Connector nodes (deg = 2) */
-    private final Set<V> connectorNodes = Sets.newHashSet();
+    private final Set<N> connectorNodes = Sets.newHashSet();
     /** Non-leaf nodes (deg >= 3) */
-    private final Set<V> coreNodes = Sets.newHashSet();
+    private final Set<N> coreNodes = Sets.newHashSet();
     /** General objects adjacent to each node */
-    private final SetMultimap<V, V> neighbors = HashMultimap.create();
+    private final SetMultimap<N, N> neighbors = HashMultimap.create();
     /**
      * Leaf objects adjacent to each node. Values consist of objects that
      * have degree 1 ONLY.
      */
-    private final SetMultimap<V, V> adjLeaves = HashMultimap.create();
-
+    private final SetMultimap<N, N> adjLeaves = HashMultimap.create();
 
     /**
-     * Construct graph with specific nodes and edges
+     * Construct optimized graph version of the given graph.
+     * @param graph graph to optimize
+     */
+    public OptimizedGraph(Graph<N> graph) {
+        this.base = graph;
+        initCachedElements();
+    }
+
+    /**
+     * Construct optimized graph with specific nodes and edges.
      * @param directed whether graph is directed
      * @param nodes nodes in the graph
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
      */
-    public OptimizedGraph(boolean directed, Collection<V> nodes, Iterable<EndpointPair<V>> edges) {
+    public OptimizedGraph(boolean directed, Collection<N> nodes, Iterable<EndpointPair<N>> edges) {
         base = GraphUtils.createFromEdges(directed, nodes, edges);
         initCachedElements();
     }
+
+    //region INITIALIZATION
+
+    /** Initializes set of pre-computed elements. */
+    private void initCachedElements() {
+        for (N n : base.nodes()) {
+            int deg = base.degree(n);
+            degrees.put(n, deg);
+            switch (deg) {
+                case 0:
+                    isolates.add(n);
+                    break;
+                case 1:
+                    leafNodes.add(n);
+                    break;
+                case 2:
+                    connectorNodes.add(n);
+                    break;
+                default:
+                    coreNodes.add(n);
+                    break;
+            }
+            neighbors.putAll(n, base.adjacentNodes(n));
+        }
+        for (N n : base.nodes()) {
+            for (N y : neighbors.get(n)) {
+                Integer get = degrees.get(y);
+                checkState(get != null, "Node " + y + " (neighbor of " + n + ") was not found in provided node set");
+                if (degrees.get(y) == 1) {
+                    adjLeaves.get(n).add(y);
+                }
+            }
+        }
+    }
+
+    //endregion
 
     //region PROPERTIES
 
@@ -94,7 +139,7 @@ public final class OptimizedGraph<V> implements Graph<V> {
      * Nodes with deg 0
      * @return nodes
      */
-    public Set<V> isolates() {
+    public Set<N> isolates() {
         return Collections.unmodifiableSet(isolates);
     }
 
@@ -102,7 +147,7 @@ public final class OptimizedGraph<V> implements Graph<V> {
      * Nodes with deg 1
      * @return nodes
      */
-    public Set<V> leafNodes() {
+    public Set<N> leafNodes() {
         return Collections.unmodifiableSet(leafNodes);
     }
 
@@ -110,7 +155,7 @@ public final class OptimizedGraph<V> implements Graph<V> {
      * Nodes with deg 2
      * @return nodes
      */
-    public Set<V> connectorNodes() {
+    public Set<N> connectorNodes() {
         return Collections.unmodifiableSet(connectorNodes);
     }
 
@@ -118,7 +163,7 @@ public final class OptimizedGraph<V> implements Graph<V> {
      * Nodes with deg &gt;= 3
      * @return nodes
      */
-    public Set<V> coreNodes() {
+    public Set<N> coreNodes() {
         return Collections.unmodifiableSet(coreNodes);
     }
 
@@ -126,7 +171,7 @@ public final class OptimizedGraph<V> implements Graph<V> {
      * Get copy of neighbors.
      * @return neighbors
      */
-    public Multimap<V, V> neighborMap() {
+    public Multimap<N, N> neighborMap() {
         return Multimaps.unmodifiableSetMultimap(neighbors);
     }
 
@@ -135,12 +180,12 @@ public final class OptimizedGraph<V> implements Graph<V> {
     //region OVERRIDES
 
     @Override
-    public Set<V> nodes() {
+    public Set<N> nodes() {
         return base.nodes();
     }
 
     @Override
-    public Set<EndpointPair<V>> edges() {
+    public Set<EndpointPair<N>> edges() {
         return base.edges();
     }
 
@@ -155,51 +200,61 @@ public final class OptimizedGraph<V> implements Graph<V> {
     }
 
     @Override
-    public ElementOrder<V> nodeOrder() {
+    public ElementOrder<N> nodeOrder() {
         return base.nodeOrder();
     }
 
     @Override
-    public Set<V> adjacentNodes(V node) {
+    public Set<N> adjacentNodes(N node) {
         return neighbors.get(node);
     }
 
     @Override
-    public int degree(V x) {
+    public int degree(N x) {
         return degrees.get(x);
     }
 
     @Override
-    public int inDegree(V node) {
+    public int inDegree(N node) {
         return 0;
     }
 
     @Override
-    public int outDegree(V node) {
+    public int outDegree(N node) {
         return 0;
     }
 
     @Override
-    public Set<V> predecessors(V node) {
+    public Set<N> predecessors(N node) {
         return base.predecessors(node);
     }
 
     @Override
-    public Set<V> successors(V node) {
+    public Set<N> successors(N node) {
         return base.successors(node);
     }
 
     @Override
-    public Set<EndpointPair<V>> incidentEdges(V node) {
+    public Set<EndpointPair<N>> incidentEdges(N node) {
         return base.incidentEdges(node);
     }
 
     @Override
-    public boolean hasEdgeConnecting(V x, V y) {
+    public boolean hasEdgeConnecting(N x, N y) {
         return neighbors.containsEntry(x, y);
     }
 
     //endregion
+
+    //region ADDITIONAL QUERIES
+
+    /**
+     * Extract the core graph, consisting of only nodes with degree at least 2.
+     * @return graph with isolates and leaves pruned
+     */
+    public Graph<N> core() {
+        return Graphs.inducedSubgraph(base, Iterables.concat(coreNodes, connectorNodes));
+    }
 
     /**
      * Return the node adjacent to a leaf
@@ -207,51 +262,22 @@ public final class OptimizedGraph<V> implements Graph<V> {
      * @return adjacent node
      * @throws IllegalArgumentException if node is not a leaf
      */
-    public V neighborOfLeaf(V leaf) {
+    public N neighborOfLeaf(N leaf) {
         checkArgument(leafNodes.contains(leaf));
-        V res = Iterables.getFirst(neighbors.get(leaf), null);
+        N res = Iterables.getFirst(neighbors.get(leaf), null);
         checkState(res != null);
         return res;
     }
 
     /**
      * Return leaf nodes adjacent to specified node
-     * @param v node to check
+     * @param n node to check
      * @return leaf nodes
      */
-    public Set<V> leavesAdjacentTo(V v) {
-        return adjLeaves.get(v);
+    public Set<N> leavesAdjacentTo(N n) {
+        return adjLeaves.get(n);
     }
 
-    private void initCachedElements() {
-        for (V v : base.nodes()) {
-            int deg = base.degree(v);
-            degrees.put(v, deg);
-            switch (deg) {
-                case 0:
-                    isolates.add(v);
-                    break;
-                case 1:
-                    leafNodes.add(v);
-                    break;
-                case 2:
-                    connectorNodes.add(v);
-                    break;
-                default:
-                    coreNodes.add(v);
-                    break;
-            }
-            neighbors.putAll(v, base.adjacentNodes(v));
-        }
-        for (V v : base.nodes()) {
-            for (V y : neighbors.get(v)) {
-                Integer get = degrees.get(y);
-                checkState(get != null, "Node " + y + " (neighbor of " + v + ") was not found in provided node set");
-                if (degrees.get(y) == 1) {
-                    adjLeaves.get(v).add(y);
-                }
-            }
-        }
-    }
+    //endregion
 
 }

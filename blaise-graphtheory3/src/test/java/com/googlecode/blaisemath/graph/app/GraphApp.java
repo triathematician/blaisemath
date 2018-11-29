@@ -30,7 +30,7 @@ import org.jdesktop.application.SingleFrameApplication;
 
 /**
  * Application for displaying graphs and testing BlaiseGraphTheory code.
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class GraphApp extends SingleFrameApplication {
 

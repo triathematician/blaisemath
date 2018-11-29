@@ -289,7 +289,7 @@ public class WrappedTextRenderer extends TextRenderer {
             double totHt = (double) font.getSize()+2;
             int pos0 = 0;
             int pos1 = 1;
-            while (pos1 < string.length()) {
+            while (pos1 <= string.length()) {
                 while (pos1 <= string.length() && string.charAt(pos1-1) != '\n' 
                         && font.getStringBounds(string.substring(pos0,pos1), frc).getWidth() < width-4) {
                     pos1++;

@@ -20,10 +20,9 @@ package com.googlecode.blaisemath.graph.app;
  * #L%
  */
 
-
 import com.google.common.base.Functions;
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
+import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
@@ -36,7 +35,7 @@ import java.awt.geom.Point2D;
 /**
  * Graph component for {@link GraphApp}.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 public class GraphAppCanvas extends GraphComponent {
     

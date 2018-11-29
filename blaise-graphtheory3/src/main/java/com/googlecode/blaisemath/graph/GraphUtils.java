@@ -23,6 +23,8 @@ package com.googlecode.blaisemath.graph;
 import com.google.common.collect.*;
 import com.google.common.collect.Table.Cell;
 import com.google.common.graph.*;
+import com.googlecode.blaisemath.graph.metrics.Degree;
+import com.googlecode.blaisemath.graph.metrics.GraphMetrics;
 import com.googlecode.blaisemath.linear.Matrices;
 import com.googlecode.blaisemath.util.Instrument;
 
@@ -30,10 +32,10 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * Contains several utility methods for creating and analyzing graphs.
- *
- * @see Graphs
+ * Utility methods for creating and analyzing graphs.
  *
  * @author Elisha Peterson
  */
@@ -75,7 +77,8 @@ public class GraphUtils {
      * @return new graph
      */
     public static <V> Graph<V> createFromEdges(boolean directed, Iterable<V> nodes, Iterable<EndpointPair<V>> edges) {
-        MutableGraph<V> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build() : GraphBuilder.undirected().allowsSelfLoops(true).build();
+        MutableGraph<V> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build()
+                : GraphBuilder.undirected().allowsSelfLoops(true).build();
         nodes.forEach(res::addNode);
         edges.forEach(e -> res.putEdge(e.nodeU(), e.nodeV()));
         return res;
@@ -90,7 +93,8 @@ public class GraphUtils {
      * @return new empty graph
      */
     public static <V> Graph<V> createFromArrayEdges(boolean directed, Iterable<V> nodes, Iterable<V[]> edges) {
-        MutableGraph<V> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build() : GraphBuilder.undirected().allowsSelfLoops(true).build();
+        MutableGraph<V> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build()
+                : GraphBuilder.undirected().allowsSelfLoops(true).build();
         nodes.forEach(res::addNode);
         edges.forEach(e -> res.putEdge(e[0], e[1]));
         return res;
@@ -153,49 +157,19 @@ public class GraphUtils {
     }
 
     //endregion
-
-    //region SUBGRAPHS
-    
-    /**
-     * Extract the core graph from a parent graph, consisting of only nodes
-     * with degree at least 2.
-     * @param <V> graph node type
-     * @param parent parent graph
-     * @return graph with isolates and leaves pruned
-     */
-    public static <V> Graph<V> core(Graph<V> parent) {
-        Set<V> cNodes = Sets.newLinkedHashSet();
-        if (parent instanceof OptimizedGraph) {
-            OptimizedGraph<V> og = (OptimizedGraph<V>) parent;
-            cNodes.addAll(og.coreNodes());
-            cNodes.addAll(og.connectorNodes());
-        } else {
-            for (V v : parent.nodes()) {
-                if (parent.degree(v) >= 2) {
-                    cNodes.add(v);
-                }
-            }
-        }
-        return Graphs.inducedSubgraph(parent, cNodes);
-    }
-    
-    //endregion
     
     //region ADJACENCY MATRIX METHODS
 
     /**
-     * Computes adjacency matrix of a graph
+     * Compute adjacency matrix of a graph.
      * @param <V> graph node type
      * @param graph the input graph
      * @param order if empty, will be filled with order of nodes; if non-empty, will be used to order nodes in graph
-     * @return matrix of integers describing adjacencies... contains 0's and
-     * 1's... it is symmetric when the graph is copyUndirected, otherwise it may
-     * not be symmetric
+     * @return matrix of integers describing adjacencies... contains 0's and 1's;  it is symmetric when the graph is
+     * undirected, otherwise it may not be symmetric
      */
     public static <V> boolean[][] adjacencyMatrix(Graph<V> graph, List<V> order) {
-        if (order == null) {
-            throw new IllegalArgumentException();
-        }
+        requireNonNull(order);
         if (order.isEmpty()) {
             order.addAll(graph.nodes());
         }
@@ -250,7 +224,7 @@ public class GraphUtils {
      * @return map associating degree #s with counts, sorted by degree
      */
     public static <V> Multiset<Integer> degreeDistribution(Graph<V> graph) {
-        return HashMultiset.create(Iterables.transform(graph.nodes(), graph::degree));
+        return GraphMetrics.distribution(graph, new Degree());
     }
 
     //endregion
@@ -294,10 +268,10 @@ public class GraphUtils {
         int cmax = max == Integer.MAX_VALUE ? max-1 : max;
 
         remaining.remove(vertex);
-        added.add(new HashSet<V>(Arrays.asList(vertex)));
+        added.add(new HashSet<>(Arrays.asList(vertex)));
         while (sRemaining != remaining.size() && added.size() < cmax+1) {
             sRemaining = remaining.size();
-            added.add(new HashSet<V>());
+            added.add(new HashSet<>());
             for (V v1 : added.get(added.size() - 2)) {
                 Set<V> toRemove = Sets.newHashSet();
                 for (V v2 : remaining) {
@@ -313,7 +287,7 @@ public class GraphUtils {
             }
         }
 
-        Map<V, Integer> result = new HashMap<V, Integer>();
+        Map<V, Integer> result = new HashMap<>();
         for (int i = 0; i < added.size(); i++) {
             for (V v : added.get(i)) {
                 result.put(v, i);
@@ -347,9 +321,9 @@ public class GraphUtils {
         verticesAdded.add(Sets.newHashSet(start));
         do {
             verticesToAddCount = verticesToAdd.size();
-            verticesAdded.add(new HashSet<V>());
+            verticesAdded.add(new HashSet<>());
             for (V v1 : verticesAdded.get(verticesAdded.size() - 2)) {
-                Set<V> toRemove = new HashSet<V>();
+                Set<V> toRemove = new HashSet<>();
                 for (V v2 : verticesToAdd) {
                     if (graph.hasEdgeConnecting(v1, v2)) {
                         if (v2.equals(end)) {
@@ -371,7 +345,7 @@ public class GraphUtils {
     //region NEIGHBORHOOD & COMPONENT METHODS
 
     /**
-     * Generates ordered set of nodes from an adjacency map
+     * Generate ordered set of nodes from an adjacency map.
      * @param <V> graph node type
      * @param adj an adjacency map
      * @return list of nodes
@@ -384,7 +358,7 @@ public class GraphUtils {
     }
 
     /**
-     * Computes neighborhood about provided vertex up to a given radius, as a
+     * Compute neighborhood about provided vertex up to a given radius, as a
      * set of vertices. The result <b>always includes</b> the vertex itself.
      * @param <V> graph node type
      * @param graph the graph
@@ -397,7 +371,7 @@ public class GraphUtils {
     }
 
     /**
-     * Generates connected components from an adjacency map.
+     * Generate connected components from an adjacency map.
      * @param <V> graph node type
      * @param dirAdj an adjacency map (may be directed)
      * @return set of components, as a set of sets
@@ -437,7 +411,7 @@ public class GraphUtils {
     }
 
     /**
-     * Generates connected components from an adjacency map.
+     * Generate connected components from an adjacency map.
      * @param <V> graph node type
      * @param adj an adjacency map
      * @return set of components, as a set of sets
@@ -451,7 +425,7 @@ public class GraphUtils {
     }
 
     /**
-     * Generates connected components from a graph.
+     * Generate connected components from a graph.
      * @param <V> graph node type
      * @param graph the graph
      * @return set of connected components
@@ -461,7 +435,7 @@ public class GraphUtils {
     }
 
     /**
-     * Generates connected components from a subset of vertices in a graph.
+     * Generate connected components from a subset of vertices in a graph.
      * @param <V> graph node type
      * @param graph the graph
      * @param nodes subset of nodes
@@ -472,7 +446,7 @@ public class GraphUtils {
     }
 
     /**
-     * Generates connected components as a list of subgraphs.
+     * Generate connected components as a list of subgraphs.
      * @param <V> graph node type
      * @param graph the graph of interest
      * @return set of connected component subgraphs
@@ -486,7 +460,7 @@ public class GraphUtils {
     }
 
     /**
-     * Generates adjacency map from a subgraph.
+     * Generate adjacency map from a subgraph.
      * @param <V> graph node type
      * @param graph the graph
      * @param nodes subset of nodes
@@ -501,8 +475,7 @@ public class GraphUtils {
     }
 
     /**
-     * Performs breadth-first search algorithm to enumerate the nodes in a
-     *  graph, starting from the specified start node.
+     * Performs breadth-first search algorithm to enumerate the nodes in a graph, starting from the specified start node.
      * @param <V> graph node type
      * @param graph the graph under consideration
      * @param start the starting node.
@@ -579,7 +552,6 @@ public class GraphUtils {
         result.removeAll(contract);
         result.add(replace);
         return result;
-
     }
 
     /**

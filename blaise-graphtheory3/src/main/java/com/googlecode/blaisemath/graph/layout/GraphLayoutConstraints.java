@@ -20,15 +20,15 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Collections;
 import java.util.Set;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * A set of constraints for use in graph layouts. Allows nodes to be "pinned"
- * during layout, constrained into boxes, etc.
+ * A set of constraints for use in graph layouts. Allows nodes to be "pinned" during layout, constrained into boxes, etc.
  * @param <C> node type
- * @author elisha
+ * @author Elisha Peterson
  */
 public class GraphLayoutConstraints<C> {
     
@@ -39,7 +39,7 @@ public class GraphLayoutConstraints<C> {
     }
 
     public void setPinnedNodes(Set<C> pinnedNodes) {
-        this.pinnedNodes = checkNotNull(pinnedNodes);
+        this.pinnedNodes = requireNonNull(pinnedNodes);
     }
     
 }

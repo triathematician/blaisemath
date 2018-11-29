@@ -75,8 +75,8 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         selection.addPropertyChangeListener(evt -> {
             Set<Graphic> old = (Set<Graphic>) evt.getOldValue();
             Set<Graphic> nue = (Set<Graphic>) evt.getNewValue();
-            Sets.difference(old, nue).forEach(g -> g.getStyleHints().remove(StyleHints.SELECTED_HINT));
-            Sets.difference(nue, old).forEach(g -> g.getStyleHints().add(StyleHints.SELECTED_HINT));
+            Sets.difference(old, nue).forEach(g -> g.setStyleHint(StyleHints.SELECTED_HINT, false));
+            Sets.difference(nue, old).forEach(g -> g.setStyleHint(StyleHints.SELECTED_HINT, true));
         });
         
         detectMac();

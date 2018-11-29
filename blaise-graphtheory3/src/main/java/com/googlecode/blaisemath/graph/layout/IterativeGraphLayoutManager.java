@@ -34,7 +34,7 @@ import java.util.Map;
  * Manages an iterative graph layout, including its state and parameters.
  * This class is not thread safe.
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class IterativeGraphLayoutManager {
     

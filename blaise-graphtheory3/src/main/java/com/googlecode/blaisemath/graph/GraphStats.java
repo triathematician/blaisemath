@@ -9,9 +9,9 @@ package com.googlecode.blaisemath.graph;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,38 +22,35 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.collect.Maps;
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphMetric;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphMetrics;
-import com.googlecode.blaisemath.graph.mod.metrics.GraphNodeMetric;
+import com.googlecode.blaisemath.graph.metrics.GraphMetrics;
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
 import java.util.Map;
 
 /**
- * Caches computations of metrics on a graph.
- * Both {@link GraphNodeMetric}s and {@link GraphMetric}s are captured here. In the
- * case of {@code GraphNodeMetric}s, the node values are computed along with a
- * {@link SummaryStatistics} object that describes their values.
+ * Caches computations of metrics on a graph. Both {@link GraphNodeMetric}s and {@link GraphMetric}s are captured here.
+ * In the case of {@code GraphNodeMetric}s, the node values are computed along with a {@link SummaryStatistics} object
+ * that describes their values.
  *
  * @author Elisha Peterson
  */
 public class GraphStats {
-    
-    /** The base graph */
+
+    /** The base graph. */
     private final Graph graph;
     /** The node metrics that have been computed. */
     private final Map<GraphNodeMetric, NodeStats> nodeStats = Maps.newHashMap();
     /** The global metrics that have been computed. */
     private final Map<GraphMetric, Object> globalStats = Maps.newHashMap();
-    
-    /** 
-     * Construct graph stats object 
+
+    /**
+     * Construct graph stats object.
      * @param graph graph for computations
      */
     public GraphStats(Graph graph) {
         this.graph = graph;
     }
-    
+
     /**
      * The graph object.
      * @return graph
@@ -61,7 +58,7 @@ public class GraphStats {
     public Graph getGraph() {
         return graph;
     }
-    
+
     /**
      * Returns whether stats have been computed for specified metric.
      * @param metric the metric
@@ -70,11 +67,11 @@ public class GraphStats {
     public boolean containsNodeStats(GraphNodeMetric metric) {
         return nodeStats.containsKey(metric);
     }
-    
+
     /**
-     * Retrieve stats associated with a ndoe metric. If there are none, the stats
-     * will be computed (which may take a while) and the results cached.
-     * 
+     * Retrieve stats associated with a node metric. If there are none, the stats will be computed (which may take a
+     * while) and the results cached.
+     *
      * @param metric the metric
      * @return associated stats
      */
@@ -92,11 +89,11 @@ public class GraphStats {
     public boolean containsGlobalStats(GraphMetric metric) {
         return globalStats.containsKey(metric);
     }
-    
+
     /**
-     * Retrieve stats associated with a ndoe metric. If there are none, the stats
-     * will be computed (which may take a while) and the results cached.
-     * 
+     * Retrieve stats associated with a node metric. If there are none, the stats will be computed (which may take a
+     * while) and the results cached.
+     *
      * @param metric the metric
      * @return associated stats
      */
@@ -106,15 +103,10 @@ public class GraphStats {
         }
         return globalStats.get(metric);
     }
-    
-    
-    
-    
-    //
-    // INNER CLASSES
-    //
-    
-    /** 
+
+    //region INNER CLASSES
+
+    /**
      * Collects values of a metric on nodes together with summary statistics.
      */
     public static class NodeStats {
@@ -123,7 +115,7 @@ public class GraphStats {
         /** Summary statistics of the values. */
         private final SummaryStatistics stats;
 
-        /** 
+        /**
          * Construct the node stats object.
          * @param values the node values
          */
@@ -134,8 +126,8 @@ public class GraphStats {
                 stats.addValue(((Number) v).doubleValue());
             }
         }
-        
-        /** 
+
+        /**
          * Construct the node stats object given a graph and a node metric.
          * @param <N> graph node type
          * @param <V> metric value type
@@ -146,15 +138,15 @@ public class GraphStats {
             this(GraphMetrics.distribution(graph, metric));
         }
 
-        /** 
+        /**
          * Values on the nodes
          * @return values
          */
         public Iterable getValues() {
             return values;
         }
-        
-        /** 
+
+        /**
          * Summary statistics
          * @return stats for metric values
          */
@@ -162,5 +154,7 @@ public class GraphStats {
             return stats;
         }
     }
-    
+
+    //endregion
+
 }

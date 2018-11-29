@@ -74,7 +74,7 @@ public abstract class Graphic<G> {
     
     /** Stores the parent of this entry */
     protected GraphicComposite<G> parent;
-    /** Modifiers that are applied to the style before drawing. */
+    /** Modifiers (ordered) that are applied to the style before drawing. */
     protected final Set<String> styleHints = Sets.newLinkedHashSet();
     /** Default text of tooltip */
     protected String defaultTooltip = null;

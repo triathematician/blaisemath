@@ -1,9 +1,0 @@
-com.googlecode.blaisemath.graph.mod.metrics.AverageDegree
-com.googlecode.blaisemath.graph.mod.metrics.ClusteringCoefficient
-com.googlecode.blaisemath.graph.mod.metrics.ClusteringCoefficientByPath
-com.googlecode.blaisemath.graph.mod.metrics.ComponentCount
-com.googlecode.blaisemath.graph.mod.metrics.EdgeDensity
-com.googlecode.blaisemath.graph.mod.metrics.GraphDiameter
-com.googlecode.blaisemath.graph.mod.metrics.EdgeCount
-com.googlecode.blaisemath.graph.mod.metrics.NodeCount
-com.googlecode.blaisemath.graph.mod.metrics.GraphRadius

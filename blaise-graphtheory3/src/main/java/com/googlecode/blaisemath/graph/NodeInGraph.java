@@ -25,15 +25,15 @@ import com.google.common.graph.Graph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
- * Data structure describing a node in a graph. This is a useful way to pass
- * a reference to a graph's node, providing the target object with access to
- * both the node and the graph.
+ * Data structure describing a node in a graph. This is a useful way to pass a reference to a graph's node, providing
+ * the target object with access to both the node and the graph.
+ *
  * @param <E> node type
  *
- * @author petereb1
+ * @author Elisha Peterson
  */
 public final class NodeInGraph<E> {
 
@@ -41,13 +41,13 @@ public final class NodeInGraph<E> {
     private final Graph<E> graph;
 
     public NodeInGraph(E node, @Nullable Graph<E> graph) {
-        this.node = checkNotNull(node);
+        this.node = requireNonNull(node);
         this.graph = graph;
         checkArgument(graph == null || graph.nodes().contains(node));
     }
 
     public static <E> NodeInGraph<E> create(E node) {
-        return new NodeInGraph<E>(node, null);
+        return new NodeInGraph<>(node, null);
     }
 
     public E getNode() {
@@ -57,4 +57,5 @@ public final class NodeInGraph<E> {
     public @Nullable Graph<E> getGraph() {
         return graph;
     }
+
 }

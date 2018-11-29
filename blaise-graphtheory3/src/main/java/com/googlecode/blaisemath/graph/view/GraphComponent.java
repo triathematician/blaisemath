@@ -49,7 +49,7 @@ import static java.util.stream.Collectors.toSet;
  * The layout manager supports executing long-running layout algorithms in a background thread, and the visual graph
  * shares a {@link CoordinateManager} that is used for updating locations from the layout manager. The coordinate manager is thread-safe.
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public class GraphComponent extends JGraphicComponent {
 

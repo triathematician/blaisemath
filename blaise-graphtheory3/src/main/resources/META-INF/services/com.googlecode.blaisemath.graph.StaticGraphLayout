@@ -1,4 +1,4 @@
-com.googlecode.blaisemath.graph.mod.layout.CircleLayout
-com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout
-com.googlecode.blaisemath.graph.mod.layout.PositionalAddingLayout
-com.googlecode.blaisemath.graph.mod.layout.StaticSpringLayout
+com.googlecode.blaisemath.graph.layout.CircleLayout
+com.googlecode.blaisemath.graph.layout.RandomBoxLayout
+com.googlecode.blaisemath.graph.layout.PositionalAddingLayout
+com.googlecode.blaisemath.graph.layout.StaticSpringLayout

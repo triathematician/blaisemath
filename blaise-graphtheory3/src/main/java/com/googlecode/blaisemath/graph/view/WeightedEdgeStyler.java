@@ -34,7 +34,7 @@ import java.util.Map;
  * and negative weights.
  * 
  * @param <E> edge type
- * @author elisha
+ * @author Elisha Peterson
  */
 public class WeightedEdgeStyler<E extends EndpointPair> implements Function<E, AttributeSet> {
     

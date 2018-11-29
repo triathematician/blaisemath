@@ -1,7 +1,3 @@
-/*
- * GraphGenerator.java
- * Created May 21, 2010
- */
 package com.googlecode.blaisemath.graph;
 
 /*
@@ -25,11 +21,11 @@ package com.googlecode.blaisemath.graph;
  */
 
 /**
- * <p>
- *   A class that generates a parameters object.
- * </p>
+ * A class that generates a parameters object.
+ *
  * @param <P> parameters type
- * @author elisha
+ *
+ * @author Elisha Peterson
  */
 public interface ParameterFactory<P> {
 

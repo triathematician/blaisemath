@@ -35,14 +35,14 @@ public final class HighlightOnMouseoverHandler extends MouseAdapter {
     public void mouseEntered(MouseEvent e) {
         Graphic g = ((GMouseEvent)e).getGraphicSource();
         if (g.isHighlightEnabled()) {
-            g.getStyleHints().add(StyleHints.HIGHLIGHT_HINT);
+            g.setStyleHint(StyleHints.HIGHLIGHT_HINT, true);
         }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         Graphic g = ((GMouseEvent)e).getGraphicSource();
-        g.getStyleHints().remove(StyleHints.HIGHLIGHT_HINT);
+        g.setStyleHint(StyleHints.HIGHLIGHT_HINT, false);
     }
 
 }

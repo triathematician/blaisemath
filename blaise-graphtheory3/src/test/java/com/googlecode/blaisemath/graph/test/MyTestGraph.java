@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * Test graph that supports mutating edges and nodes.
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class MyTestGraph implements Graph<String> {
 

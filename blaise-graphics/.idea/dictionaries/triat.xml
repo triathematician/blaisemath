@@ -20,8 +20,12 @@
       <w>popupmenu</w>
       <w>recomputation</w>
       <w>renderers</w>
+      <w>scaler</w>
+      <w>strogatz</w>
       <w>styler</w>
       <w>subcomponents</w>
+      <w>subgraph</w>
+      <w>subgraphs</w>
     </words>
   </dictionary>
 </component>

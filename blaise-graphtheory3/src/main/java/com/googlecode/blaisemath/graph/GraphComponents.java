@@ -30,14 +30,11 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * Provides additional knowledge about the components of a graph, which may be
- * useful in a variety of circumstances. Since this information may or may not be
- * easily obtained from the basic representation of the graph, this class provides
- * a decoupled cache and access to this info.
+ * Encapsulate graph with its set of components, storing each as a separate collection of nodes and a separate graph.
+ *
+ * @param <N> node type
  *
  * @author Elisha Peterson
- * 
- * @param <N> node type
  */
 @Immutable
 public final class GraphComponents<N> {
@@ -61,8 +58,8 @@ public final class GraphComponents<N> {
             componentGraphs = Collections.singleton(graph);
         } else {
             this.componentGraphs = Sets.newHashSet();
-            for (Set<N> compt : components) {
-                componentGraphs.add(Graphs.inducedSubgraph(graph, compt));
+            for (Set<N> c : components) {
+                componentGraphs.add(Graphs.inducedSubgraph(graph, c));
             }
         }
     }
