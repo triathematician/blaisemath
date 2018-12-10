@@ -1,2 +1,3 @@
-*/target/**
-/blaise-common/nbproject/
+target/
+nbproject/
+.idea/
