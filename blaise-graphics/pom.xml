@@ -54,9 +54,16 @@
         <!-- set license attributes for license plugin -->
         <license.organizationName>Elisha Peterson</license.organizationName>
         <license.licenseName>apache_v2</license.licenseName>
+
+        <guava.version>26.0-jre</guava.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>firestarter</artifactId>
@@ -84,7 +91,7 @@
     
     <build>
         <plugins>
-            <!-- compile to Java 1.6 -->
+            <!-- compile to Java 1.8 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

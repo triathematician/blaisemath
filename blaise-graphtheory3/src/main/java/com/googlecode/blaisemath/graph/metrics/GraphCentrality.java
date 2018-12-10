@@ -25,6 +25,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.util.Instrument;

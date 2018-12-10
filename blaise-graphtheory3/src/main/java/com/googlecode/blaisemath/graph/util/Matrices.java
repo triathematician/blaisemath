@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.linear;
+package com.googlecode.blaisemath.graph.util;
 
 /*
  * #%L
@@ -25,9 +25,8 @@ import java.util.Arrays;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Provides standard utilities for computing with matrices.
+ * Utilities for computing with matrices.
  * @author Elisha Peterson
- * @version 1.0
  */
 public class Matrices {
 

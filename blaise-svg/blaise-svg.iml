@@ -7,18 +7,19 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/license" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-graphics:2.2.21" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-common:0.3.6" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-graphics:2.2.21" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:26.0-jre" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.checkerframework:checker-qual:2.5.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.1.3" level="project" />
+    <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.14" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-graphics:2.2.22" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.blaisemath:firestarter:1.3.3" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-common:0.3.6" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jdesktop:appframework:1.0.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jdesktop:swing-worker:1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />

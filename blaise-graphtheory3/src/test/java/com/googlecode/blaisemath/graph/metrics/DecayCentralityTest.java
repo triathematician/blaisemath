@@ -32,7 +32,6 @@ public class DecayCentralityTest {
 
     @BeforeClass
     public static void setUpClass() {
-        System.out.println("-- DecayCentralityTest --");
         INSTANCE0 = new DecayCentrality(0);
         INSTANCE5 = new DecayCentrality(0.5);
         INSTANCE1 = new DecayCentrality(1);
@@ -40,7 +39,6 @@ public class DecayCentralityTest {
 
     @Test
     public void testGetParameter_setParameter() {
-        System.out.println("getParameter/setParameter");
         DecayCentrality instance = new DecayCentrality(0.1);
         assertEquals(0.1, instance.getParameter(), 0.0);
         assertEquals(instance.parameter, instance.getParameter(), 0.0);

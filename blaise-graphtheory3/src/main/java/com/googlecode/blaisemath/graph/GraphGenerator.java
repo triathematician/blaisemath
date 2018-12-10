@@ -30,6 +30,6 @@ import java.util.function.Function;
  * @param <N> graph vertex type
  * @author Elisha Peterson
  */
-public interface GraphGenerator<P, N> extends ParameterFactory<P>, Function<P, Graph<N>> {
+public interface GraphGenerator<P, N> extends ParameterSupplier<P>, Function<P, Graph<N>> {
     
 }

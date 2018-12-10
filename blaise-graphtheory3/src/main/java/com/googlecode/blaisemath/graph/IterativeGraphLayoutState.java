@@ -71,11 +71,9 @@ public abstract class IterativeGraphLayoutState<C> {
     }
 
     /**
-     * Request the specified locations to be applied at the next opportunity
-     * in the layout algorithm.
+     * Request the specified locations to be applied at the next opportunity in the layout algorithm.
      * @param loc new locations
-     * @param resetNodes if true, the keys in the provided map will be used to
-     *   alter the set of nodes
+     * @param resetNodes if true, the keys in the provided map will be used to alter the set of nodes
      */
     public synchronized void requestPositions(Map<C, Point2D.Double> loc, boolean resetNodes) {
         updateLoc.clear();

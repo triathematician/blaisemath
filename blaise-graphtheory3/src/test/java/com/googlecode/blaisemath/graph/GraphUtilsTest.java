@@ -20,49 +20,27 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Ordering;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import com.google.common.collect.*;
+import com.google.common.graph.Graph;
+import com.google.common.graph.Graphs;
+import org.junit.Test;
+
+import java.util.*;
+
 import static com.googlecode.blaisemath.test.AssertUtils.assertCollectionContentsSame;
-import java.util.Collection;
-import java.util.Collections;
+import static com.googlecode.blaisemath.test.AssertUtils.assertSets;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.graph.Graph;
-import com.google.common.graph.Graphs;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 public class GraphUtilsTest {
 
-    static Integer[] VV;
-    static Integer[][] EE;
-    static Graph<Integer> UNDIRECTED_INSTANCE, DIRECTED_INSTANCE;
-
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("-- GraphsTest --");
-        VV = new Integer[] { 1, 2, 3, 4, 5, 6, 10, 11, 15, 20, 21 };
-        EE = new Integer[][] {
-            {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21}
-        };
-        UNDIRECTED_INSTANCE = GraphUtils.createFromArrayEdges(false, Arrays.asList(VV), Arrays.asList(EE));
-        DIRECTED_INSTANCE = GraphUtils.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE));
-    }
+    private static Integer[] VV = new Integer[] { 1, 2, 3, 4, 5, 6, 10, 11, 15, 20, 21 };
+    private static Integer[][] EE = new Integer[][] { {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21} };
+    private static Graph<Integer> UNDIRECTED_INSTANCE = GraphUtils.createFromArrayEdges(false, Arrays.asList(VV), Arrays.asList(EE));
+    private static Graph<Integer> DIRECTED_INSTANCE = GraphUtils.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE));
 
     @Test
     public void testPrintGraph() {
-        System.out.println("printGraph");
         Graph<Integer> test1 = Graphs.inducedSubgraph(UNDIRECTED_INSTANCE, new HashSet(Arrays.asList(1,2,3,6,10)));
         Graph<Integer> test2 = Graphs.inducedSubgraph(DIRECTED_INSTANCE, new HashSet(Arrays.asList(1,2,3,6,10)));
         assertEquals("NODES: [1, 2, 3, 6, 10]  EDGES: 1: [2, 6] 2: [1, 3] 3: [2] 6: [1, 6, 10] 10: [6]", GraphUtils.printGraph(test1));
@@ -77,7 +55,6 @@ public class GraphUtilsTest {
 
     @Test
     public void testCopyGraph() {
-        System.out.println("copyGraph");
         Graph<Integer> copy1 = Graphs.copyOf(UNDIRECTED_INSTANCE);
         Graph<Integer> copy2 = Graphs.copyOf(DIRECTED_INSTANCE);
         assertEquals(UNDIRECTED_INSTANCE.nodes().size(), copy1.nodes().size());
@@ -92,7 +69,6 @@ public class GraphUtilsTest {
 
     @Test
     public void testAdjacencyMatrix() {
-        System.out.println("adjacencyMatrix");
         boolean[][] result1 = GraphUtils.adjacencyMatrix(UNDIRECTED_INSTANCE, Arrays.asList(VV));
         boolean[][] result2 = GraphUtils.adjacencyMatrix(DIRECTED_INSTANCE, Arrays.asList(VV));
         assertEquals("[[false, true, false, false, false, true, false, true, false, false, false], [true, false, true, true, true, false, false, false, false, false, false], [false, true, false, false, false, false, false, false, false, false, false], [false, true, false, false, false, false, false, false, false, false, false], [false, true, false, false, false, false, false, false, false, false, false], [true, false, false, false, false, true, true, false, false, false, false], [false, false, false, false, false, true, false, true, false, false, false], [true, false, false, false, false, false, true, false, false, false, false], [false, false, false, false, false, false, false, false, true, false, false], [false, false, false, false, false, false, false, false, false, false, true], [false, false, false, false, false, false, false, false, false, true, false]]", Arrays.deepToString(result1));
@@ -110,7 +86,6 @@ public class GraphUtilsTest {
 
     @Test
     public void testAdjacencyMatrixPowers() {
-        System.out.println("adjacencyMatrixPowers");
         List<String> vv = Arrays.asList("A","B","C","D","E");
         String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
         Graph<String> result1 = GraphUtils.createFromArrayEdges(false, vv, Arrays.asList(edges));
@@ -127,7 +102,6 @@ public class GraphUtilsTest {
 
     @Test
     public void testDegreeDistribution() {
-        System.out.println("degreeDistribution");
         Multiset<Integer> result1 = GraphUtils.degreeDistribution(UNDIRECTED_INSTANCE);
         Multiset<Integer> result2 = GraphUtils.degreeDistribution(DIRECTED_INSTANCE);
         assertEquals("[1 x 5, 2 x 3, 3, 4 x 2]", result1.toString());
@@ -136,7 +110,6 @@ public class GraphUtilsTest {
 
     @Test
     public void testGeodesicTree() {
-        System.out.println("geodesicTree");
         Map<Integer, Integer> gd1_2 = GraphUtils.geodesicTree(UNDIRECTED_INSTANCE, 2);
         assertEquals(8, gd1_2.size());
         Map<Integer, Integer> gd1_11 = GraphUtils.geodesicTree(UNDIRECTED_INSTANCE, 11);
@@ -148,7 +121,7 @@ public class GraphUtilsTest {
         Map<Integer, Integer> gd2_2 = GraphUtils.geodesicTree(DIRECTED_INSTANCE, 2);
         assertEquals(8, gd2_2.size());
         Map<Integer, Integer> gd2_3 = GraphUtils.geodesicTree(DIRECTED_INSTANCE, 3);
-        assertEquals(8, gd2_3.size());
+        assertEquals(1, gd2_3.size());
         Map<Integer, Integer> gd2_11 = GraphUtils.geodesicTree(DIRECTED_INSTANCE, 11);
         assertEquals(8, gd2_11.size());
         Map<Integer, Integer> gd2_15 = GraphUtils.geodesicTree(DIRECTED_INSTANCE, 15);
@@ -156,7 +129,7 @@ public class GraphUtilsTest {
         Map<Integer, Integer> gd2_20 = GraphUtils.geodesicTree(DIRECTED_INSTANCE, 20);
         assertEquals(2, gd2_20.size());
         Map<Integer, Integer> gd2_21 = GraphUtils.geodesicTree(DIRECTED_INSTANCE, 21);
-        assertEquals(2, gd2_21.size());
+        assertEquals(1, gd2_21.size());
 
         for (int i = 1; i <= 6; i++) {
             for (int j = 1; j <= 6; j++) {
@@ -170,7 +143,6 @@ public class GraphUtilsTest {
 
     @Test
     public void testGeodesicDistance() {
-        System.out.println("geodesicDistance");
         assertEquals(0, GraphUtils.geodesicDistance(UNDIRECTED_INSTANCE, 1, 1));
         assertEquals(1, GraphUtils.geodesicDistance(UNDIRECTED_INSTANCE, 1, 6));
         assertEquals(2, GraphUtils.geodesicDistance(UNDIRECTED_INSTANCE, 2, 11));
@@ -178,29 +150,27 @@ public class GraphUtilsTest {
         assertEquals(-1, GraphUtils.geodesicDistance(UNDIRECTED_INSTANCE, 1, 15));
         assertEquals(0, GraphUtils.geodesicDistance(DIRECTED_INSTANCE, 1, 1));
         assertEquals(1, GraphUtils.geodesicDistance(DIRECTED_INSTANCE, 1, 6));
-        assertEquals(2, GraphUtils.geodesicDistance(DIRECTED_INSTANCE, 2, 11));
-        assertEquals(1, GraphUtils.geodesicDistance(DIRECTED_INSTANCE, 3, 2));
+        assertEquals(4, GraphUtils.geodesicDistance(DIRECTED_INSTANCE, 2, 11));
+        assertEquals(-1, GraphUtils.geodesicDistance(DIRECTED_INSTANCE, 3, 2));
         assertEquals(-1, GraphUtils.geodesicDistance(DIRECTED_INSTANCE, 1, 15));
     }
 
     @Test
     public void testNeighborhood() {
-        System.out.println("neighborhood");
         assertCollectionContentsSame(Arrays.asList(2), GraphUtils.neighborhood(UNDIRECTED_INSTANCE, 2, 0));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4,5), GraphUtils.neighborhood(UNDIRECTED_INSTANCE, 2, 1));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,11), GraphUtils.neighborhood(UNDIRECTED_INSTANCE, 2, 2));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10,11), GraphUtils.neighborhood(UNDIRECTED_INSTANCE, 2, 3));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10,11), GraphUtils.neighborhood(UNDIRECTED_INSTANCE, 2, 20));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4,5), GraphUtils.neighborhood(DIRECTED_INSTANCE, 2, 1));
-        assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,11), GraphUtils.neighborhood(DIRECTED_INSTANCE, 2, 2));
-        assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10,11), GraphUtils.neighborhood(DIRECTED_INSTANCE, 2, 3));
+        assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6), GraphUtils.neighborhood(DIRECTED_INSTANCE, 2, 2));
+        assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10), GraphUtils.neighborhood(DIRECTED_INSTANCE, 2, 3));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10,11), GraphUtils.neighborhood(DIRECTED_INSTANCE, 2, 20));
-        assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10,11), GraphUtils.neighborhood(DIRECTED_INSTANCE, 5, 20));
+        assertCollectionContentsSame(Arrays.asList(5), GraphUtils.neighborhood(DIRECTED_INSTANCE, 5, 20));
     }
 
     @Test
     public void testComponents() {
-        System.out.println("components_graph");
         for (Graph g : new Graph[]{UNDIRECTED_INSTANCE, DIRECTED_INSTANCE}) {
             List<Set<Integer>> result1 = new ArrayList<Set<Integer>>(GraphUtils.components(g));
             Collections.sort(result1, new Ordering<Collection>(){
@@ -217,34 +187,14 @@ public class GraphUtilsTest {
     
     @Test
     public void testComponents_Multimap() {
-        System.out.println("components_multimap");
-    
         assertSets(GraphUtils.components(HashMultimap.create()));
         assertSets(GraphUtils.components(multimap(0, 0)), ImmutableSet.of(0));
         assertSets(GraphUtils.components(multimap(0, 1, 1, 2)), ImmutableSet.of(0, 1, 2));
         assertSets(GraphUtils.components(multimap(0, 1, 2, 3)), ImmutableSet.of(0, 1), ImmutableSet.of(2, 3));
     }
-    
-    private static <X> Multimap<X,X> multimap(X k, X v) {
-        Multimap<X,X> res = HashMultimap.create();
-        res.put(k, v);
-        return res;
-    }
-    
-    private static <X> Multimap<X,X> multimap(X k1, X v1, X k2, X v2) {
-        Multimap<X,X> res = HashMultimap.create();
-        res.put(k1, v1);
-        res.put(k2, v2);
-        return res;
-    }
-    
-    private static <X> void assertSets(Collection<Set<X>> sets, Set... test) {
-        assertCollectionContentsSame(Arrays.asList(test), sets);
-    }
 
     @Test
     public void testComponentGraphs() {
-        System.out.println("componentGraphs");
         for (Graph g : new Graph[]{UNDIRECTED_INSTANCE, DIRECTED_INSTANCE}) {
             Set<Graph<Integer>> result1 = new TreeSet<Graph<Integer>>(GraphUtils.GRAPH_SIZE_DESCENDING);
             result1.addAll(GraphUtils.componentGraphs(g));
@@ -256,6 +206,19 @@ public class GraphUtilsTest {
             assertCollectionContentsSame(Arrays.asList(15), graphs[2].nodes());
             assertEquals(1, graphs[2].edges().size());
         }
+    }
+
+    static <X> Multimap<X,X> multimap(X k, X v) {
+        Multimap<X,X> res = HashMultimap.create();
+        res.put(k, v);
+        return res;
+    }
+
+    static <X> Multimap<X,X> multimap(X k1, X v1, X k2, X v2) {
+        Multimap<X,X> res = HashMultimap.create();
+        res.put(k1, v1);
+        res.put(k2, v2);
+        return res;
     }
 
 }

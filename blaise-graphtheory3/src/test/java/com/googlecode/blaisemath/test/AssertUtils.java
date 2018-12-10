@@ -21,15 +21,33 @@ package com.googlecode.blaisemath.test;
  */
 
 
+import java.util.Arrays;
 import java.util.Collection;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 public class AssertUtils {
-    /** Tests to see if all elements of one collection are contained in the other, and vice versa */
+
+    /** Tests to see if all elements of one set are contained in the other, and vice versa. */
+    public static <X> void assertSets(Collection<Set<X>> sets, Set... test) {
+        assertCollectionContentsSame(Arrays.asList(test), sets);
+    }
+
+    /** Tests to see if all elements of one collection are contained in the other, and vice versa. */
     public static void assertCollectionContentsSame(Collection expected, Collection found) {
         assertEquals("Collection size mismatch. Expected "+expected+" but was "+found, expected.size(), found.size());
         assertTrue("Collection contents mismatch. Expected "+expected+" but was "+found, expected.containsAll(found));
         assertTrue("Collection contents mismatch. Expected "+expected+" but was "+found, found.containsAll(expected));
+    }
+
+    /** Tests to see if runnable throws an exception. */
+    public static void assertIllegalArgumentException(Runnable r) {
+        try {
+            r.run();
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException x) {
+            // passes
+        }
     }
 }

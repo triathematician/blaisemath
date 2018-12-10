@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import com.googlecode.blaisemath.linear.Matrices;
+import com.googlecode.blaisemath.graph.util.Matrices;
 
 /**
  * Implementation of the eigenvalue centrality calculation. Uses an approximation method to compute the largest eigenvector

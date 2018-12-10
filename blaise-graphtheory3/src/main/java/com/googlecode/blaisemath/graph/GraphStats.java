@@ -22,7 +22,6 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.collect.Maps;
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.metrics.GraphMetrics;
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
 import java.util.Map;
@@ -39,7 +38,7 @@ public class GraphStats {
     /** The base graph. */
     private final Graph graph;
     /** The node metrics that have been computed. */
-    private final Map<GraphNodeMetric, NodeStats> nodeStats = Maps.newHashMap();
+    private final Map<GraphNodeMetric, GraphNodeStats> nodeStats = Maps.newHashMap();
     /** The global metrics that have been computed. */
     private final Map<GraphMetric, Object> globalStats = Maps.newHashMap();
 
@@ -55,7 +54,7 @@ public class GraphStats {
      * The graph object.
      * @return graph
      */
-    public Graph getGraph() {
+    public Graph graph() {
         return graph;
     }
 
@@ -75,9 +74,9 @@ public class GraphStats {
      * @param metric the metric
      * @return associated stats
      */
-    public NodeStats getNodeStats(GraphNodeMetric metric) {
+    public GraphNodeStats nodeStatsOf(GraphNodeMetric metric) {
         if (!nodeStats.containsKey(metric)) {
-            nodeStats.put(metric, new NodeStats(graph, metric));
+            nodeStats.put(metric, new GraphNodeStats(graph, metric));
         }
         return nodeStats.get(metric);
     }
@@ -97,7 +96,7 @@ public class GraphStats {
      * @param metric the metric
      * @return associated stats
      */
-    public Object getGlobalStats(GraphMetric metric) {
+    public Object globalStatsOf(GraphMetric metric) {
         if (!globalStats.containsKey(metric)) {
             globalStats.put(metric, metric.apply(graph));
         }
@@ -105,55 +104,6 @@ public class GraphStats {
     }
 
     //region INNER CLASSES
-
-    /**
-     * Collects values of a metric on nodes together with summary statistics.
-     */
-    public static class NodeStats {
-        /** The values on nodes. */
-        private final Iterable values;
-        /** Summary statistics of the values. */
-        private final SummaryStatistics stats;
-
-        /**
-         * Construct the node stats object.
-         * @param values the node values
-         */
-        public NodeStats(Iterable<? extends Number> values) {
-            this.values = values;
-            this.stats = new SummaryStatistics();
-            for (Object v : values) {
-                stats.addValue(((Number) v).doubleValue());
-            }
-        }
-
-        /**
-         * Construct the node stats object given a graph and a node metric.
-         * @param <N> graph node type
-         * @param <V> metric value type
-         * @param graph the graph
-         * @param metric a node metric
-         */
-        public <N,V extends Number> NodeStats(Graph<N> graph, GraphNodeMetric<V> metric) {
-            this(GraphMetrics.distribution(graph, metric));
-        }
-
-        /**
-         * Values on the nodes
-         * @return values
-         */
-        public Iterable getValues() {
-            return values;
-        }
-
-        /**
-         * Summary statistics
-         * @return stats for metric values
-         */
-        public SummaryStatistics getStatistics() {
-            return stats;
-        }
-    }
 
     //endregion
 

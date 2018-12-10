@@ -23,33 +23,29 @@ package com.googlecode.blaisemath.graph;
 import com.google.common.graph.Graph;
 
 /**
- * Performs an iterative 2D layout on a graph, using a given set of parameters.
- * Implementations should use a state object to track their state and make
- * any changes from step to step.
+ * Performs an iterative 2D layout on a graph, using a given set of parameters. Implementations should use a state
+ * object to track their state and make any changes from step to step.
  *
  * @param <P> object describing layout parameters
  * @param <S> object describing layout state
  * 
  * @author Elisha Peterson
  */
-public interface IterativeGraphLayout<P,S extends IterativeGraphLayoutState> extends ParameterFactory<P> {
+public interface IterativeGraphLayout<P,S extends IterativeGraphLayoutState> extends ParameterSupplier<P> {
     
     /**
-     * Create a new state object for the layout
+     * Create a new state object for the layout.
      * @return new state object
      */
     S createState();
 
     /**
-     * Iterate the energy layout algorithm. The data structure provided to this
-     * method should not be changed during iteration. However, the graph's nodes may not be exactly
-     * the same as for previous calls to iterate (i.e. some may have been added or removed).
-     * If nodes are present for the first time, the algorithm should add in support for
-     * those nodes. If nodes have been removed since the last iteration, the algorithm
-     * should simply ignore those nodes.
+     * Iterate the energy layout algorithm. The data structure provided to this method should not be changed during
+     * iteration. However, the graph's nodes may not be exactly the same as for previous calls to iterate (i.e. some may
+     * have been added or removed). If nodes are present for the first time, the algorithm should add in support for
+     * those nodes. If nodes have been removed since the last iteration, the algorithm should simply ignore those nodes.
      * <p>
-     * If a request has been placed for new locations, the algorithm should adjust
-     * the positions of the requested nodes.
+     * If a request has been placed for new locations, the algorithm should adjust the positions of the requested nodes.
      *
      * @param <C> graph node type
      * @param graph the graph

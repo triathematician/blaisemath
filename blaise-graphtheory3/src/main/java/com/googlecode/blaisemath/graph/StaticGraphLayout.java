@@ -27,15 +27,14 @@ import java.awt.geom.Point2D;
 import java.util.Map;
 
 /**
- * Performs a 2D layout on a graph, using a given set of parameters.
- * Initial conditions may be provided directly to the algorithm, but anything
- * else impacting the layout should go into the parameters object.
+ * Performs a 2D layout on a graph, using a given set of parameters. Initial conditions may be provided directly to the
+ * algorithm, but anything else impacting the layout should go into the parameters object.
  *
  * @param <P> object describing layout parameters
  * 
  * @author Elisha Peterson
  */
-public interface StaticGraphLayout<P> extends ParameterFactory<P> {
+public interface StaticGraphLayout<P> extends ParameterSupplier<P> {
 
     /**
      * Perform layout on given graph, and return result.

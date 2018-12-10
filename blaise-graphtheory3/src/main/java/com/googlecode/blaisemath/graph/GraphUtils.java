@@ -21,12 +21,9 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.google.common.collect.*;
-import com.google.common.collect.Table.Cell;
 import com.google.common.graph.*;
 import com.googlecode.blaisemath.graph.metrics.Degree;
-import com.googlecode.blaisemath.graph.metrics.GraphMetrics;
-import com.googlecode.blaisemath.linear.Matrices;
-import com.googlecode.blaisemath.util.Instrument;
+import com.googlecode.blaisemath.graph.util.Matrices;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -41,6 +38,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class GraphUtils {
 
+    //region COMPARATORS
+
     /** Used to sort graphs in descending order by size */
     public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = (o1, o2) -> {
         int size1 = o1.nodes().size();
@@ -51,6 +50,8 @@ public class GraphUtils {
                 : size1 == size2 ? edges2 - edges1
                 : size2 - size1;
     };
+
+    //endregion
 
     // utility class
     private GraphUtils() {
@@ -189,11 +190,9 @@ public class GraphUtils {
      * @param <V> graph node type
      * @param graph the input graph
      * @param order if empty, will be filled with order of nodes; if non-empty, will be used to order nodes in graph
-     * @param maxPower maximum power of the adjacency matrix to include in
-     * result
-     * @return matrix of integers describing adjacencies... contains 0's and
-     * 1's... it is symmetric when the graph is copyUndirected, otherwise it may
-     * not be symmetric
+     * @param maxPower maximum power of the adjacency matrix to include in result
+     * @return matrix of integers describing adjacencies... contains 0's and 1's... it is symmetric when the graph is
+     *         undirected, otherwise it may not be symmetric
      */
     public static <V> int[][][] adjacencyMatrixPowers(Graph<V> graph, List<V> order, int maxPower) {
         boolean[][] adj0 = adjacencyMatrix(graph, order);
@@ -232,9 +231,8 @@ public class GraphUtils {
     //region GEODESIC & SPANNING TREE METHODS
 
     /**
-     * Computes and creates a tree describing geodesic distances from a
-     * specified vertex. Choice of geodesic when multiple are possible is
-     * unspecified.
+     * Computes and creates a tree describing geodesic distances from a specified vertex, traversing the graph in the direction
+     * of the edges. When there are multiple paths with the same minimum length, the resulting path is unspecified.
      * @param <V> graph node type
      * @param graph the starting graph
      * @param vertex the starting vertex
@@ -245,17 +243,14 @@ public class GraphUtils {
     }
 
     /**
-     * Computes and creates a tree describing geodesic distances from a
-     * specified vertex, up through a distance specified by the max parameter.
-     * Choice of geodesic when multiple are possible is unspecified. The graph
-     * only contains the vertices that are in the same component as the starting
-     * vertex (forward component if directed).
+     * Computes and creates a tree describing geodesic distances from a specified vertex, up through a distance
+     * specified by the max parameter. Choice of geodesic when multiple are possible is unspecified. The graph
+     * only contains the vertices that are in the same component as the starting vertex (forward component if directed).
      * @param <V> graph node type
      * @param graph the starting graph
      * @param vertex the starting vertex
      * @param max the maximum distance to proceed from the starting vertex
-     * @return graph with objects associated to each vertex that describe the
-     * distance from the main vertex.
+     * @return graph with objects associated to each vertex that describe the distance from the main vertex.
      */
     public static <V> Map<V, Integer> geodesicTree(Graph<V> graph, V vertex, int max) {
         // vertices left to add
@@ -297,13 +292,13 @@ public class GraphUtils {
     }
 
     /**
-     * Finds geodesic distance between two vertices in a graph
+     * Finds geodesic distance between two vertices in a graph. For directed graphs, the path must traverse the graph in
+     * the direction of the edges.
      * @param <V> graph node type
      * @param graph the graph
      * @param start first vertex
      * @param end second vertex
-     * @return the geodesic distance between the vertices, or 0 if they are the
-     * same vertex, or -1 if they are not connected
+     * @return geodesic distance between the vertices, or 0 if they are the same vertex, or -1 if they are not connected
      */
     public static <V> int geodesicDistance(Graph<V> graph, V start, V end) {
         if (start.equals(end)) {
@@ -358,8 +353,8 @@ public class GraphUtils {
     }
 
     /**
-     * Compute neighborhood about provided vertex up to a given radius, as a
-     * set of vertices. The result <b>always includes</b> the vertex itself.
+     * Compute neighborhood about provided vertex up to a given radius, as a set of vertices. The result always includes
+     * the vertex itself. For directed graphs, this only traverses the graph in the direction of the edges.
      * @param <V> graph node type
      * @param graph the graph
      * @param vertex the starting vertex
@@ -411,20 +406,6 @@ public class GraphUtils {
     }
 
     /**
-     * Generate connected components from an adjacency map.
-     * @param <V> graph node type
-     * @param adj an adjacency map
-     * @return set of components, as a set of sets
-     */
-    public static <V> Collection<Set<V>> components(Table<V,V,?> adj) {
-        Multimap<V,V> multimap = LinkedHashMultimap.create();
-        for (Cell<V,V,?> cell : adj.cellSet()) {
-            multimap.put(cell.getRowKey(), cell.getColumnKey());
-        }
-        return components(multimap);
-    }
-
-    /**
      * Generate connected components from a graph.
      * @param <V> graph node type
      * @param graph the graph
@@ -452,11 +433,7 @@ public class GraphUtils {
      * @return set of connected component subgraphs
      */
     public static <V> Set<Graph<V>> componentGraphs(Graph<V> graph) {
-        int id = Instrument.start("componentGraphs", "" + graph.nodes().size());
-        Set<Graph<V>> result = new GraphComponents<>(graph, components(graph)).getComponentGraphs();
-        Instrument.end(id);
-        return result;
-
+        return new GraphComponents<>(graph, components(graph)).componentGraphs();
     }
 
     /**

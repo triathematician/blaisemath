@@ -31,13 +31,14 @@ import java.util.Set;
 
 /**
  * Encapsulate graph with its set of components, storing each as a separate collection of nodes and a separate graph.
+ * Designed as an immutable structure, although if the underlying graph changes this class is not aware.
  *
  * @param <N> node type
  *
  * @author Elisha Peterson
  */
 @Immutable
-public final class GraphComponents<N> {
+final class GraphComponents<N> {
 
     /** What this class is modifying/describing. */
     private final Graph<N> graph;
@@ -49,7 +50,7 @@ public final class GraphComponents<N> {
     /**
      * Construct components for specified graph.
      * @param graph graph
-     * @param components the graph's components
+     * @param components the partition of vertices of the graph into components
      */
     public GraphComponents(Graph<N> graph, Collection<Set<N>> components) {
         this.graph = graph;
@@ -68,32 +69,32 @@ public final class GraphComponents<N> {
      * Return source graph
      * @return graph
      */
-    public Graph<N> getGraph() {
+    public Graph<N> graph() {
         return graph;
-    }
-
-    /**
-     * The connected components of the graph, copied into new subgraph representations.
-     * @return subcomponents
-     */
-    public Set<Graph<N>> getComponentGraphs() {
-        return Collections.unmodifiableSet(componentGraphs);
-    }
-
-    /**
-     * The graph's connected components.
-     * @return connected components
-     */
-    public Collection<Set<N>> getComponents() {
-        return Collections.unmodifiableCollection(components);
     }
 
     /**
      * Returns the number of components in the graph.
      * @return number of components
      */
-    public int getComponentCount() {
+    public int componentCount() {
         return components.size();
+    }
+
+    /**
+     * The graph's connected components.
+     * @return connected components
+     */
+    public Collection<Set<N>> components() {
+        return Collections.unmodifiableCollection(components);
+    }
+
+    /**
+     * The connected components of the graph, copied into new sub-graph representations.
+     * @return sub-components
+     */
+    public Set<Graph<N>> componentGraphs() {
+        return Collections.unmodifiableSet(componentGraphs);
     }
 
 }

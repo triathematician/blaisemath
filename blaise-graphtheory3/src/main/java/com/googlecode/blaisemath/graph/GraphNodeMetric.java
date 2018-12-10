@@ -38,9 +38,8 @@ public interface GraphNodeMetric<T> {
      * @param graph the graph
      * @param node  a node in the graph
      * @return value of the metric
-     * @throws IllegalArgumentException if the value cannot be computed for
-     *                                  specified graph (e.g. graph is null, or graph is directed, but the
-     *                                  metric only applies to undirected graphs)
+     * @throws IllegalArgumentException if the value cannot be computed for specified graph (e.g. graph is null, or graph
+     *                                  is directed, but the metric only applies to undirected graphs)
      */
     <N> T apply(Graph<N> graph, N node);
 
@@ -51,9 +50,8 @@ public interface GraphNodeMetric<T> {
      * @param <N>   graph vertex type
      * @param graph the graph
      * @return value of the metric for each node
-     * @throws IllegalArgumentException if the value cannot be computed for
-     *                                  specified graph (e.g. graph is null, or graph is directed, but the
-     *                                  metric only applies to undirected graphs)
+     * @throws IllegalArgumentException if the value cannot be computed for specified graph (e.g. graph is null, or graph
+     *                                  is directed, but the metric only applies to undirected graphs)
      */
     <N> Map<N, T> apply(Graph<N> graph);
 

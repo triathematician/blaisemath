@@ -28,7 +28,6 @@ public class StarGraphGeneratorTest {
 
     @Test
     public void testGetStarGraphInstance() {
-        System.out.println("getStarGraphInstance");
         assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0] 2: [0] 3: [0]",
                 GraphUtils.printGraph(new StarGraphGenerator().apply(new DefaultGeneratorParameters(false,4))));
         assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [] 2: [] 3: []",

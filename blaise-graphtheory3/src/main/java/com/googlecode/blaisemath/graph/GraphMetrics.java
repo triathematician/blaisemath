@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graph.metrics;
+package com.googlecode.blaisemath.graph;
 
 /*
  * #%L
@@ -24,10 +24,6 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multiset;
 import com.google.common.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphMetric;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
-import com.googlecode.blaisemath.graph.GraphSubsetMetric;
-import com.googlecode.blaisemath.graph.GraphUtils;
 
 import java.util.HashMap;
 import java.util.Map;

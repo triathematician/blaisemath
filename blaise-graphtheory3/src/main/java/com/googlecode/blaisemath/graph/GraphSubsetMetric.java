@@ -38,9 +38,8 @@ public interface GraphSubsetMetric<N> {
      * @param graph the graph
      * @param nodes a collection of nodes in the graph
      * @return value of the metric
-     * @throws IllegalArgumentException if the value cannot be computed for
-     *      specified graph (e.g. graph is null, or graph is directed, but the
-     *      metric only applies to undirected graphs)
+     * @throws IllegalArgumentException if the value cannot be computed for specified graph (e.g. graph is null, or
+     *      graph is directed, but the metric only applies to undirected graphs)
      */
     <V> N getValue(Graph<V> graph, Set<V> nodes);
 }

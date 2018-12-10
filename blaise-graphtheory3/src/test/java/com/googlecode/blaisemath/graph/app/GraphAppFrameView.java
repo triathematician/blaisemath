@@ -28,7 +28,7 @@ import com.googlecode.blaisemath.editor.EnumEditor;
 import com.googlecode.blaisemath.graph.*;
 import com.googlecode.blaisemath.graph.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.GraphMetric;
-import com.googlecode.blaisemath.graph.metrics.GraphMetrics;
+import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;

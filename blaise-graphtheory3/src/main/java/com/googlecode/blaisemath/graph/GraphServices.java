@@ -40,6 +40,8 @@ public final class GraphServices {
     /** Utility class cannot be instantiated */
     private GraphServices() {
     }
+
+    //region SERVICE PROVIDERS
     
     /**
      * Locate, initialize, and return the list of registered {@link GraphGenerator} implementations via the
@@ -94,6 +96,8 @@ public final class GraphServices {
     public static List<GraphSubsetMetric> subsetMetrics() {
         return services(GraphSubsetMetric.class);
     }
+
+    //endregion
 
     /** Utility method to dynamically get list of services. */
     private static <X> List<X> services(Class<X> type) {

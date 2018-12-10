@@ -31,8 +31,7 @@ public class CompleteGraphGeneratorTest {
 
     @Test
     public void testGetEmptyGraphInstance() {
-        System.out.println("getCompleteGraphInstance");
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0, 2, 3] 2: [0, 1, 3] 3: [0, 1, 2]", 
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0, 2, 3] 2: [0, 1, 3] 3: [0, 1, 2]",
                 GraphUtils.printGraph(new CompleteGraphGenerator().apply(new DefaultGeneratorParameters(false,4))));
         assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0, 2, 3] 2: [0, 1, 3] 3: [0, 1, 2]",
                 GraphUtils.printGraph(new CompleteGraphGenerator().apply(new DefaultGeneratorParameters(true,4))));

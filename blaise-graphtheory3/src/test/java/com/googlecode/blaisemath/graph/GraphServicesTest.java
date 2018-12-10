@@ -30,15 +30,13 @@ public class GraphServicesTest {
 
     @Test
     public void testGraphSuppliers() {
-        System.out.println("graphSuppliers");
         List<GraphGenerator> supp = GraphServices.generators();
-        System.out.println(supp.size()+" supppliers");
+        System.out.println(supp.size()+" suppliers");
         System.out.println("- "+Joiner.on("\n- ").join(supp));
     }
 
     @Test
     public void testGlobalMetrics() {
-        System.out.println("globalMetrics");
         List<GraphMetric> supp = GraphServices.globalMetrics();
         System.out.println(supp.size()+" global metrics");
         System.out.println("- "+Joiner.on("\n- ").join(supp));
@@ -46,7 +44,6 @@ public class GraphServicesTest {
 
     @Test
     public void testNodeMetrics() {
-        System.out.println("nodeMetrics");
         List<GraphNodeMetric> supp = GraphServices.nodeMetrics();
         System.out.println(supp.size()+" node metrics");
         System.out.println("- "+Joiner.on("\n- ").join(supp));
@@ -54,7 +51,6 @@ public class GraphServicesTest {
 
     @Test
     public void testSubsetMetrics() {
-        System.out.println("subsetMetrics");
         List<GraphSubsetMetric> supp = GraphServices.subsetMetrics();
         System.out.println(supp.size()+" subset metrics");
         System.out.println("- "+Joiner.on("\n- ").join(supp));
@@ -62,7 +58,6 @@ public class GraphServicesTest {
 
     @Test
     public void testStaticLayouts() {
-        System.out.println("staticLayouts");
         List<StaticGraphLayout> supp = GraphServices.staticLayouts();
         System.out.println(supp.size()+" static layouts");
         System.out.println("- "+Joiner.on("\n- ").join(supp));
@@ -70,7 +65,6 @@ public class GraphServicesTest {
 
     @Test
     public void testIterativeLayouts() {
-        System.out.println("iterativeLayouts");
         List<IterativeGraphLayout> supp = GraphServices.iterativeLayouts();
         System.out.println(supp.size()+" iterative layouts");
         System.out.println("- "+Joiner.on("\n- ").join(supp));

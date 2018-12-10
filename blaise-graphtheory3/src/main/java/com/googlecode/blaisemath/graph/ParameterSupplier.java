@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.graph;
  *
  * @author Elisha Peterson
  */
-public interface ParameterFactory<P> {
+public interface ParameterSupplier<P> {
 
     /**
      * Create instance of parameters object
