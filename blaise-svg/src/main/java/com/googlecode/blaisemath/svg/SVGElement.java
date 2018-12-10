@@ -1,8 +1,3 @@
-/**
- * SVGObject.java
- * Created Sep 26, 2014
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*

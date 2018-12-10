@@ -1,8 +1,3 @@
-/**
- * SVGPolygon.java
- * Created Sep 26, 2014
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -26,7 +21,8 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.graphics.swing.AnchoredText;
+import com.googlecode.blaisemath.graphics.AnchoredText;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 

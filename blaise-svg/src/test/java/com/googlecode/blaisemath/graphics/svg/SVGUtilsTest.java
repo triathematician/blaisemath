@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 
-import static com.googlecode.blaisemath.graphics.svg.SVGUtils.parseLength;
+import static com.googlecode.blaisemath.svg.SVGUtils.parseLength;
 import static junit.framework.Assert.assertEquals;
 import org.junit.Test;
 

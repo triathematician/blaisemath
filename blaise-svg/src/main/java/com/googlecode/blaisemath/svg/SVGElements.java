@@ -1,7 +1,3 @@
-/**
- * SVGObjectFactory.java
- * Created on Sep 26, 2014
- */
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -26,6 +22,10 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.graphics.AnchoredIcon;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
+import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.graphics.swing.StyledText;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -33,9 +33,6 @@ import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.graphics.swing.AnchoredIcon;
-import com.googlecode.blaisemath.graphics.swing.AnchoredImage;
-import com.googlecode.blaisemath.graphics.swing.AnchoredText;
 import com.googlecode.blaisemath.util.Images;
 import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
 import java.awt.Graphics2D;
@@ -65,9 +62,7 @@ import javax.swing.Icon;
 public class SVGElements {
     private static final Logger LOG = Logger.getLogger(SVGElements.class.getName());
     
-    //
     // UTILITY CLASS - PREVENT INSTANTIATION
-    //
     private SVGElements() {
     }
 
@@ -168,10 +163,10 @@ public class SVGElements {
      */
     public static SVGElement createWrappedText(String text, AttributeSet style, RectangularShape bounds) {
         Graphics2D testCanvas = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).createGraphics();
-        Iterable<WrappedTextRenderer.StyledText> lines = WrappedTextRenderer.computeLines(text, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
+        Iterable<StyledText> lines = WrappedTextRenderer.computeLines(text, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
         
         SVGGroup grp = new SVGGroup();
-        for (WrappedTextRenderer.StyledText st : lines) {
+        for (StyledText st : lines) {
             grp.addElement(create(null, st.getText(), st.getStyle(), null));
         }
         
@@ -189,7 +184,7 @@ public class SVGElements {
      */
     public static SVGImage create(String id, AnchoredImage img, AttributeSet style) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        Point2D offset = anchor.getRectOffset(img.getWidth(), img.getHeight());
+        Point2D offset = anchor.offsetForRectangle(img.getWidth(), img.getHeight());
         AnchoredImage adjustedImage = new AnchoredImage(
                 img.getX() + offset.getX(), 
                 img.getY() - img.getHeight()+ offset.getY(), 
@@ -210,7 +205,7 @@ public class SVGElements {
      */
     public static SVGImage create(String id, AnchoredIcon icon, AttributeSet style) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        Point2D offset = anchor.getRectOffset(icon.getIconWidth(), icon.getIconHeight());
+        Point2D offset = anchor.offsetForRectangle(icon.getIconWidth(), icon.getIconHeight());
         SVGImage res = new SVGImage(
                 icon.getX() + offset.getX(), 
                 icon.getY() - icon.getIconHeight() + offset.getY(), 

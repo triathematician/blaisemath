@@ -17,9 +17,13 @@
     <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.1.3" level="project" />
     <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.14" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-graphics:2.2.22" level="project" />
+    <orderEntry type="module" module-name="blaise-graphics" />
     <orderEntry type="library" name="Maven: com.googlecode.blaisemath:firestarter:1.3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-common:0.3.6" level="project" />
+    <orderEntry type="module" module-name="blaise-common" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:11" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:11" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:11" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jdesktop:appframework:1.0.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jdesktop:swing-worker:1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />

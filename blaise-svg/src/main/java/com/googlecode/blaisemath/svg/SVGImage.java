@@ -1,8 +1,3 @@
-/**
- * SVGImage.java
- * Created Sep 26, 2014
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -28,18 +23,19 @@ package com.googlecode.blaisemath.svg;
 import afu.org.checkerframework.checker.nullness.qual.Nullable;
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.graphics.swing.AnchoredImage;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
-import java.awt.Image;
+
+import javax.imageio.ImageIO;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>

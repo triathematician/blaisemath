@@ -22,7 +22,7 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import static com.googlecode.blaisemath.graphics.svg.SVGUtils.parseLength;
+import static com.googlecode.blaisemath.svg.SVGUtils.parseLength;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
