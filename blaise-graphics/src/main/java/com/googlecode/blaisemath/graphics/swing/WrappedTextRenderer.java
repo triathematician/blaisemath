@@ -22,6 +22,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;

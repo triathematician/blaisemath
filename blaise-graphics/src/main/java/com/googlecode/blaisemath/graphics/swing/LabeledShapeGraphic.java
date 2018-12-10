@@ -21,6 +21,7 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 import com.google.common.base.Strings;
+import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;

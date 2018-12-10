@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.style.editor;
+package com.googlecode.blaisemath.graphics.editor;
 
 /*
  * #%L
@@ -45,7 +45,7 @@ public class AttributeSetPropertyModelTestFrame extends javax.swing.JFrame {
         
         EditorRegistration.registerEditors();
         AttributeSet as = Styles.fillStroke(Color.white, Color.red);
-        AttributeSetPropertyModel m = new AttributeSetPropertyModel(as, 
+        AttributeSetPropertyModel m = new AttributeSetPropertyModel(as,
                 ImmutableMap.of(Styles.FILL, Color.class, Styles.STROKE, Color.class));
         rollupPanel1.add("AS Test", PropertySheet.forModel(m));
         

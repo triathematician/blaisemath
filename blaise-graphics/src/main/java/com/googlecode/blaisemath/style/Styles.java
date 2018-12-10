@@ -1,7 +1,3 @@
-/*
- * Styles.java
- * Created May 9, 2013
- */
 package com.googlecode.blaisemath.style;
 
 /*
@@ -32,19 +28,15 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.google.common.primitives.Floats;
-import com.googlecode.blaisemath.graphics.swing.PathRenderer;
-import static com.googlecode.blaisemath.style.Anchor.*;
 import com.googlecode.blaisemath.util.Colors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
+import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+
+import static com.googlecode.blaisemath.style.Anchor.*;
 
 /**
  * Factory class providing convenience methods for easily creating styles.
@@ -339,10 +331,9 @@ public final class Styles {
     }
     
     /**
-     * Get stroke from the provided style. For dashed lines, because of a potential
-     * performance issue, it is recommended to use {@link PathRenderer#drawPatched(java.awt.Shape, java.awt.Graphics2D)}
-     * rather than {@link Graphics2D#draw(java.awt.Shape)} if the shape to be drawn
-     * is several magnitudes larger than the canvas (e.g. zoomed in very far).
+     * Get stroke from the provided style. For dashed lines, because of a potential performance issue, it is recommended
+     * to use a patched version of draw in PathRenderer rather than {@link Graphics2D#draw(java.awt.Shape)} if the shape
+     * to be drawn is several magnitudes larger than the canvas (e.g. zoomed in very far).
      * See https://bugs.openjdk.java.net/browse/JDK-6620013.
      * 
      * @param style style object

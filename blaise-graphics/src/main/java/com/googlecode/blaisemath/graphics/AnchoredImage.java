@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graphics.swing;
+package com.googlecode.blaisemath.graphics;
 
 /*
  * #%L

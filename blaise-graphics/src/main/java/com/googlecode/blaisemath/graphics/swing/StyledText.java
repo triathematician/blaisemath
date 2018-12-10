@@ -1,6 +1,7 @@
 package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.annotations.Beta;
+import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.style.AttributeSet;
 
 /**

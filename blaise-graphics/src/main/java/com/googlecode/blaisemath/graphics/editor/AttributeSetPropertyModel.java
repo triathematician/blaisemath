@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.style.editor;
+package com.googlecode.blaisemath.graphics.editor;
 
 /*
  * #%L

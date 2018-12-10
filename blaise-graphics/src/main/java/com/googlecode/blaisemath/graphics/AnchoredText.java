@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graphics.swing;
+package com.googlecode.blaisemath.graphics;
 
 /*
  * #%L
@@ -21,38 +21,46 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 import com.googlecode.blaisemath.coordinate.Point2DBean;
-import javax.swing.Icon;
+import java.awt.geom.Point2D;
 
 /**
- * An icon anchored at a given location.
+ * A text string anchored at a particular point.
  * @author Elisha Peterson
  */
-public final class AnchoredIcon extends Point2DBean {
+public final class AnchoredText extends Point2DBean {
+    
+    private String text;
 
-    private final Icon icon;
+    public AnchoredText() {
+    }
 
-    public AnchoredIcon(double x, double y, Icon icon) {
-        super(x, y);
-        this.icon = icon;
+    public AnchoredText(String text) {
+        this(0, 0, text);
+    }
+    
+    public AnchoredText(Point2D pt, String text) {
+        setText(text);
+        setLocation(pt);
+    }
+    
+    public AnchoredText(double x, double y, String text) {
+        setText(text);
+        setLocation(x, y);
     }
 
     @Override
     public String toString() {
-        return "AnchoredIcon{" + getX() + ',' + getY() + ',' + getIcon() + '}';
+        return "AnchoredText["+x+", "+y+"; "+text+"]";
     }
 
     //region PROPERTIES
     
-    public Icon getIcon() {
-        return icon;
+    public String getText() {
+        return text;
     }
 
-    public int getIconWidth() {
-        return icon.getIconWidth();
-    }
-
-    public int getIconHeight() {
-        return icon.getIconHeight();
+    public void setText(String text) {
+        this.text = text;
     }
     
     //endregion

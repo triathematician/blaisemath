@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.graphics.core;
 import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.graphics.swing.AnchoredText;
+import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

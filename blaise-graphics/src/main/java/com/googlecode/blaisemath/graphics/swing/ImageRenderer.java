@@ -20,6 +20,7 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.AnchoredImage;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;

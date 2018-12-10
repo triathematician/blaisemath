@@ -34,7 +34,7 @@ import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.style.editor.MarkerEditor;
+import com.googlecode.blaisemath.graphics.editor.MarkerEditor;
 import com.googlecode.blaisemath.ui.PropertyActionPanel;
 import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.RollupPanel;

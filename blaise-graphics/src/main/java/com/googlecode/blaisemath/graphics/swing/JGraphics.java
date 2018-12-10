@@ -22,6 +22,9 @@ package com.googlecode.blaisemath.graphics.swing;
 
 
 import com.google.common.graph.EndpointPair;
+import com.googlecode.blaisemath.graphics.AnchoredIcon;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
+import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;

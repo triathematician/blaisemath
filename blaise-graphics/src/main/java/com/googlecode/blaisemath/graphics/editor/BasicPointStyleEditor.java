@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.style.editor;
+package com.googlecode.blaisemath.graphics.editor;
 
 import com.googlecode.blaisemath.editor.ColorEditor;
 import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;

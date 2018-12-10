@@ -28,7 +28,7 @@ import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.graphics.swing.AnchoredText;
+import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
