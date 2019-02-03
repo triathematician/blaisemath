@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -36,6 +37,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Elisha Peterson
  */
+@SuppressWarnings("UnstableApiUsage")
 public class GraphUtils {
 
     //region COMPARATORS
@@ -60,25 +62,25 @@ public class GraphUtils {
     //region CREATORS
     
     /**
-     * Create an empty graph for vertices of appropriate type.
-     * @param <V> vertex type
+     * Create an empty graph for nodes of appropriate type.
+     * @param <N> node type
      * @param directed whether result should be a directed graph
      * @return new empty graph
      */
-    public static <V> Graph<V> emptyGraph(boolean directed) {
+    public static <N> Graph<N> emptyGraph(boolean directed) {
         return ImmutableGraph.copyOf(directed ? GraphBuilder.directed().build() : GraphBuilder.undirected().build());
     }
 
     /**
      * Create a graph using a given list of nodes and edges.
-     * @param <V> vertex type
+     * @param <N> node type
      * @param directed whether result should be a directed graph
      * @param nodes nodes
      * @param edges edges
      * @return new graph
      */
-    public static <V> Graph<V> createFromEdges(boolean directed, Iterable<V> nodes, Iterable<EndpointPair<V>> edges) {
-        MutableGraph<V> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build()
+    public static <N> Graph<N> createFromEdges(boolean directed, Iterable<N> nodes, Iterable<EndpointPair<N>> edges) {
+        MutableGraph<N> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build()
                 : GraphBuilder.undirected().allowsSelfLoops(true).build();
         nodes.forEach(res::addNode);
         edges.forEach(e -> res.putEdge(e.nodeU(), e.nodeV()));
@@ -87,14 +89,14 @@ public class GraphUtils {
 
     /**
      * Create a graph using a given list of nodes and edges
-     * @param <V> vertex type
+     * @param <N> node type
      * @param directed whether result should be a directed graph
      * @param nodes nodes
      * @param edges edges
      * @return new empty graph
      */
-    public static <V> Graph<V> createFromArrayEdges(boolean directed, Iterable<V> nodes, Iterable<V[]> edges) {
-        MutableGraph<V> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build()
+    public static <N> Graph<N> createFromArrayEdges(boolean directed, Iterable<N> nodes, Iterable<N[]> edges) {
+        MutableGraph<N> res = directed ? GraphBuilder.directed().allowsSelfLoops(true).build()
                 : GraphBuilder.undirected().allowsSelfLoops(true).build();
         nodes.forEach(res::addNode);
         edges.forEach(e -> res.putEdge(e[0], e[1]));
@@ -103,11 +105,11 @@ public class GraphUtils {
 
     /**
      * Creates an undirected copy of the specified graph.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph a graph
      * @return undirected copy with the same collection of edges
      */
-    public static <V> Graph<V> copyUndirected(Graph<V> graph) {
+    public static <N> Graph<N> copyUndirected(Graph<N> graph) {
         return createFromEdges(false, graph.nodes(), graph.edges());
     }
 
@@ -126,21 +128,21 @@ public class GraphUtils {
 
     /**
      * Returns string representation of specified graph
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the graph to print
      * @param printNodes whether to print nodes or not
      * @param printEdges whether to print edges or not
      * @return string representation of graph
      */
-    public static <V> String printGraph(Graph<V> graph, boolean printNodes, boolean printEdges) {
+    public static <N> String printGraph(Graph<N> graph, boolean printNodes, boolean printEdges) {
         if (!printEdges && !printNodes) {
             return "GRAPH";
         }
         
-        Set<V> nodes = graph.nodes();
+        Set<N> nodes = graph.nodes();
         boolean sortable = nodes.stream().allMatch(n -> n instanceof Comparable);
         if (sortable) {
-            nodes = new TreeSet<V>(nodes);
+            nodes = new TreeSet<>(nodes);
         }
         StringBuilder result = new StringBuilder();
         if (printNodes) {
@@ -149,9 +151,9 @@ public class GraphUtils {
         
         if (printEdges) {
             result.append("EDGES:");
-            for (V v : nodes) {
-                result.append(" ").append(v).append(": ")
-                        .append(sortable ? new TreeSet(graph.successors(v)) : graph.successors(v));
+            for (N n : nodes) {
+                result.append(" ").append(n).append(": ")
+                        .append(sortable ? new TreeSet(graph.successors(n)) : graph.successors(n));
             }
         }
         return result.toString().trim();
@@ -163,13 +165,13 @@ public class GraphUtils {
 
     /**
      * Compute adjacency matrix of a graph.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the input graph
      * @param order if empty, will be filled with order of nodes; if non-empty, will be used to order nodes in graph
      * @return matrix of integers describing adjacencies... contains 0's and 1's;  it is symmetric when the graph is
      * undirected, otherwise it may not be symmetric
      */
-    public static <V> boolean[][] adjacencyMatrix(Graph<V> graph, List<V> order) {
+    public static <N> boolean[][] adjacencyMatrix(Graph<N> graph, List<N> order) {
         requireNonNull(order);
         if (order.isEmpty()) {
             order.addAll(graph.nodes());
@@ -187,14 +189,14 @@ public class GraphUtils {
 
     /**
      * Computes the adjacency matrix and several of its powers.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the input graph
      * @param order if empty, will be filled with order of nodes; if non-empty, will be used to order nodes in graph
      * @param maxPower maximum power of the adjacency matrix to include in result
      * @return matrix of integers describing adjacencies... contains 0's and 1's... it is symmetric when the graph is
      *         undirected, otherwise it may not be symmetric
      */
-    public static <V> int[][][] adjacencyMatrixPowers(Graph<V> graph, List<V> order, int maxPower) {
+    public static <N> int[][][] adjacencyMatrixPowers(Graph<N> graph, List<N> order, int maxPower) {
         boolean[][] adj0 = adjacencyMatrix(graph, order);
         int[][] adj1 = new int[adj0.length][adj0.length];
         for (int i = 0; i < adj1.length; i++) {
@@ -218,12 +220,12 @@ public class GraphUtils {
 
     /**
      * Computes and returns degree distribution.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the graph
      * @return map associating degree #s with counts, sorted by degree
      */
-    public static <V> Multiset<Integer> degreeDistribution(Graph<V> graph) {
-        return GraphMetrics.distribution(graph, new Degree());
+    public static <N> Multiset<Integer> degreeDistribution(Graph<N> graph) {
+        return GraphMetrics.distribution(graph, (g, n) -> graph.degree(n));
     }
 
     //endregion
@@ -231,76 +233,76 @@ public class GraphUtils {
     //region GEODESIC & SPANNING TREE METHODS
 
     /**
-     * Computes and creates a tree describing geodesic distances from a specified vertex, traversing the graph in the direction
+     * Computes and creates a tree describing geodesic distances from a specified node, traversing the graph in the direction
      * of the edges. When there are multiple paths with the same minimum length, the resulting path is unspecified.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the starting graph
-     * @param vertex the starting vertex
-     * @return map with vertex distance lengths
+     * @param node the starting node
+     * @return map with node distance lengths
      */
-    public static <V> Map<V, Integer> geodesicTree(Graph<V> graph, V vertex) {
-        return geodesicTree(graph, vertex, Integer.MAX_VALUE);
+    public static <N> Map<N, Integer> geodesicTree(Graph<N> graph, N node) {
+        return geodesicTree(graph, node, Integer.MAX_VALUE);
     }
 
     /**
-     * Computes and creates a tree describing geodesic distances from a specified vertex, up through a distance
+     * Computes and creates a tree describing geodesic distances from a specified node, up through a distance
      * specified by the max parameter. Choice of geodesic when multiple are possible is unspecified. The graph
-     * only contains the vertices that are in the same component as the starting vertex (forward component if directed).
-     * @param <V> graph node type
+     * only contains the nodes that are in the same component as the starting node (forward component if directed).
+     * @param <N> graph node type
      * @param graph the starting graph
-     * @param vertex the starting vertex
-     * @param max the maximum distance to proceed from the starting vertex
-     * @return graph with objects associated to each vertex that describe the distance from the main vertex.
+     * @param node the starting node
+     * @param max the maximum distance to proceed from the starting node
+     * @return graph with objects associated to each node that describe the distance from the main node.
      */
-    public static <V> Map<V, Integer> geodesicTree(Graph<V> graph, V vertex, int max) {
-        // vertices left to add
-        Set<V> remaining = Sets.newHashSet(graph.nodes());
-        // vertices added already, by distance
-        List<Set<V>> added = Lists.newArrayList();
-        // stores size of remaining vertices
+    public static <N> Map<N, Integer> geodesicTree(Graph<N> graph, N node, int max) {
+        // nodes left to add
+        Set<N> remaining = Sets.newHashSet(graph.nodes());
+        // nodes added already, by distance
+        List<Set<N>> added = Lists.newArrayList();
+        // stores size of remaining nodes
         int sRemaining = -1;
         
-        int cmax = max == Integer.MAX_VALUE ? max-1 : max;
+        int max2 = max == Integer.MAX_VALUE ? max-1 : max;
 
-        remaining.remove(vertex);
-        added.add(new HashSet<>(Arrays.asList(vertex)));
-        while (sRemaining != remaining.size() && added.size() < cmax+1) {
+        remaining.remove(node);
+        added.add(new HashSet<>(singletonList(node)));
+        while (sRemaining != remaining.size() && added.size() < max2+1) {
             sRemaining = remaining.size();
             added.add(new HashSet<>());
-            for (V v1 : added.get(added.size() - 2)) {
-                Set<V> toRemove = Sets.newHashSet();
-                for (V v2 : remaining) {
-                    if (graph.hasEdgeConnecting(v1, v2)) {
-                        toRemove.add(v2);
-                        added.get(added.size() - 1).add(v2);
-                        V[] arr = (V[]) Array.newInstance(v1.getClass(), 2);
-                        arr[0] = v1;
-                        arr[1] = v2;
+            for (N n1 : added.get(added.size() - 2)) {
+                Set<N> toRemove = Sets.newHashSet();
+                for (N n2 : remaining) {
+                    if (graph.hasEdgeConnecting(n1, n2)) {
+                        toRemove.add(n2);
+                        added.get(added.size() - 1).add(n2);
+                        N[] arr = (N[]) Array.newInstance(n1.getClass(), 2);
+                        arr[0] = n1;
+                        arr[1] = n2;
                     }
                 }
                 remaining.removeAll(toRemove);
             }
         }
 
-        Map<V, Integer> result = new HashMap<>();
+        Map<N, Integer> result = new HashMap<>();
         for (int i = 0; i < added.size(); i++) {
-            for (V v : added.get(i)) {
-                result.put(v, i);
+            for (N n : added.get(i)) {
+                result.put(n, i);
             }
         }
         return result;
     }
 
     /**
-     * Finds geodesic distance between two vertices in a graph. For directed graphs, the path must traverse the graph in
+     * Finds geodesic distance between two nodes in a graph. For directed graphs, the path must traverse the graph in
      * the direction of the edges.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the graph
-     * @param start first vertex
-     * @param end second vertex
-     * @return geodesic distance between the vertices, or 0 if they are the same vertex, or -1 if they are not connected
+     * @param start first node
+     * @param end second node
+     * @return geodesic distance between the nodes, or 0 if they are the same node, or -1 if they are not connected
      */
-    public static <V> int geodesicDistance(Graph<V> graph, V start, V end) {
+    public static <N> int geodesicDistance(Graph<N> graph, N start, N end) {
         if (start.equals(end)) {
             return 0;
         }
@@ -308,29 +310,29 @@ public class GraphUtils {
             return -1;
         }
 
-        List<V> verticesToAdd = Lists.newArrayList(graph.nodes());
-        List<Set<V>> verticesAdded = Lists.newArrayList();
-        int verticesToAddCount;
+        List<N> nodesToAdd = Lists.newArrayList(graph.nodes());
+        List<Set<N>> nodesAdded = Lists.newArrayList();
+        int nodesToAddCount;
 
-        verticesToAdd.remove(start);
-        verticesAdded.add(Sets.newHashSet(start));
+        nodesToAdd.remove(start);
+        nodesAdded.add(Sets.newHashSet(start));
         do {
-            verticesToAddCount = verticesToAdd.size();
-            verticesAdded.add(new HashSet<>());
-            for (V v1 : verticesAdded.get(verticesAdded.size() - 2)) {
-                Set<V> toRemove = new HashSet<>();
-                for (V v2 : verticesToAdd) {
-                    if (graph.hasEdgeConnecting(v1, v2)) {
-                        if (v2.equals(end)) {
-                            return verticesAdded.size() - 1;
+            nodesToAddCount = nodesToAdd.size();
+            nodesAdded.add(new HashSet<>());
+            for (N n1 : nodesAdded.get(nodesAdded.size() - 2)) {
+                Set<N> toRemove = new HashSet<>();
+                for (N n2 : nodesToAdd) {
+                    if (graph.hasEdgeConnecting(n1, n2)) {
+                        if (n2.equals(end)) {
+                            return nodesAdded.size() - 1;
                         }
-                        toRemove.add(v2);
-                        verticesAdded.get(verticesAdded.size() - 1).add(v2);
+                        toRemove.add(n2);
+                        nodesAdded.get(nodesAdded.size() - 1).add(n2);
                     }
                 }
-                verticesToAdd.removeAll(toRemove);
+                nodesToAdd.removeAll(toRemove);
             }
-        } while (verticesToAddCount != verticesToAdd.size());
+        } while (nodesToAddCount != nodesToAdd.size());
 
         return -1;
     }
@@ -341,62 +343,62 @@ public class GraphUtils {
 
     /**
      * Generate ordered set of nodes from an adjacency map.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param adj an adjacency map
      * @return list of nodes
      */
-    public static <V> Set<V> nodes(Multimap<V,V> adj) {
-        Set<V> result = Sets.newLinkedHashSet();
+    public static <N> Set<N> nodes(Multimap<N, N> adj) {
+        Set<N> result = Sets.newLinkedHashSet();
         result.addAll(adj.keySet());
         result.addAll(adj.values());
         return result;
     }
 
     /**
-     * Compute neighborhood about provided vertex up to a given radius, as a set of vertices. The result always includes
-     * the vertex itself. For directed graphs, this only traverses the graph in the direction of the edges.
-     * @param <V> graph node type
+     * Compute neighborhood about provided node up to a given radius, as a set of nodes. The result always includes
+     * the node itself. For directed graphs, this only traverses the graph in the direction of the edges.
+     * @param <N> graph node type
      * @param graph the graph
-     * @param vertex the starting vertex
+     * @param node the starting node
      * @param radius the maximum distance to consider
-     * @return a list containing the vertices within the neighborhood
+     * @return a list containing the nodes within the neighborhood
      */
-    public static <V> Set<V> neighborhood(Graph<V> graph, V vertex, int radius) {
-        return geodesicTree(graph, vertex, radius).keySet();
+    public static <N> Set<N> neighborhood(Graph<N> graph, N node, int radius) {
+        return geodesicTree(graph, node, radius).keySet();
     }
 
     /**
      * Generate connected components from an adjacency map.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param dirAdj an adjacency map (may be directed)
      * @return set of components, as a set of sets
      */
-    public static <V> Collection<Set<V>> components(Multimap<V,V> dirAdj) {
+    public static <N> Collection<Set<N>> components(Multimap<N, N> dirAdj) {
         // ensure symmetry
-        Multimap<V,V> adj = HashMultimap.create();
-        for (Entry<V,V> en : dirAdj.entries()) {
+        Multimap<N, N> adj = HashMultimap.create();
+        for (Entry<N, N> en : dirAdj.entries()) {
             adj.put(en.getKey(), en.getValue());
             adj.put(en.getValue(), en.getKey());
         }
         
-        List<Set<V>> res = Lists.newArrayList();
-        Set<V> toAdd = Sets.newHashSet(adj.keySet());
+        List<Set<N>> res = Lists.newArrayList();
+        Set<N> toAdd = Sets.newHashSet(adj.keySet());
         while (!toAdd.isEmpty()) {
-            V next = toAdd.iterator().next();
-            Set<V> vComp = component(adj, next);
-            res.add(vComp);
-            toAdd.removeAll(vComp);
+            N next = toAdd.iterator().next();
+            Set<N> nComp = component(adj, next);
+            res.add(nComp);
+            toAdd.removeAll(nComp);
         }
         return res;
     }
     
-    private static <V> Set<V> component(Multimap<V,V> adj, V v0) {
-        Set<V> toSearch = Sets.newHashSet(v0);
-        Set<V> res = Sets.newHashSet();
+    private static <N> Set<N> component(Multimap<N, N> adj, N v0) {
+        Set<N> toSearch = Sets.newHashSet(v0);
+        Set<N> res = Sets.newHashSet();
         while (!toSearch.isEmpty()) {
-            Set<V> next = Sets.newHashSet();
-            for (V v : toSearch) {
-                next.addAll(adj.get(v));
+            Set<N> next = Sets.newHashSet();
+            for (N n : toSearch) {
+                next.addAll(adj.get(n));
             }
             res.addAll(toSearch);
             next.removeAll(res);
@@ -407,53 +409,53 @@ public class GraphUtils {
 
     /**
      * Generate connected components from a graph.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the graph
      * @return set of connected components
      */
-    public static <V> Collection<Set<V>> components(Graph<V> graph) {
+    public static <N> Collection<Set<N>> components(Graph<N> graph) {
         return components(adjacencies(graph, graph.nodes()));
     }
 
     /**
-     * Generate connected components from a subset of vertices in a graph.
-     * @param <V> graph node type
+     * Generate connected components from a subset of nodes in a graph.
+     * @param <N> graph node type
      * @param graph the graph
      * @param nodes subset of nodes
      * @return set of connected components
      */
-    public static <V> Collection<Set<V>> components(Graph<V> graph, Set<V> nodes) {
+    public static <N> Collection<Set<N>> components(Graph<N> graph, Set<N> nodes) {
         return components(adjacencies(graph, nodes));
     }
 
     /**
      * Generate connected components as a list of subgraphs.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the graph of interest
      * @return set of connected component subgraphs
      */
-    public static <V> Set<Graph<V>> componentGraphs(Graph<V> graph) {
+    public static <N> Set<Graph<N>> componentGraphs(Graph<N> graph) {
         return new GraphComponents<>(graph, components(graph)).componentGraphs();
     }
 
     /**
      * Generate adjacency map from a subgraph.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the graph
      * @param nodes subset of nodes
      * @return adjacency map restricted to the given subset
      */
-    public static <V> Multimap<V,V> adjacencies(Graph<V> graph, Set<V> nodes) {
-        Multimap<V,V> res = LinkedHashMultimap.create();
-        for (V v : nodes) {
-            res.putAll(v, Sets.intersection(graph.adjacentNodes(v), nodes));
+    public static <N> Multimap<N, N> adjacencies(Graph<N> graph, Set<N> nodes) {
+        Multimap<N, N> res = LinkedHashMultimap.create();
+        for (N n : nodes) {
+            res.putAll(n, Sets.intersection(graph.adjacentNodes(n), nodes));
         }
         return res;
     }
 
     /**
      * Performs breadth-first search algorithm to enumerate the nodes in a graph, starting from the specified start node.
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph the graph under consideration
      * @param start the starting node.
      * @param numShortest a map that will be filled with info on the # of shortest paths
@@ -461,32 +463,31 @@ public class GraphUtils {
      * @param deque a stack (LIFO) that will be filled with elements in non-increasing order of distance
      * @param adjacencies a map that will be filled with adjacency information for the shortest paths
      */
-    public static <V> void breadthFirstSearch(Graph<V> graph, V start,
-            Multiset<V> numShortest, Map<V, Integer> lengths, Deque<V> deque, Multimap<V,V> adjacencies) {
-
-        Set<V> nodes = graph.nodes();
+    public static <N> void breadthFirstSearch(Graph<N> graph, N start, Multiset<N> numShortest, Map<N, Integer> lengths,
+                                              Deque<N> deque, Multimap<N, N> adjacencies) {
+        Set<N> nodes = graph.nodes();
         numShortest.add(start);
-        for (V v : nodes) {
-            lengths.put(v, -1);
+        for (N n : nodes) {
+            lengths.put(n, -1);
         }
         lengths.put(start, 0);
 
         // breadth-first search algorithm
-        Deque<V> queue = Queues.newArrayDeque();
+        Deque<N> queue = Queues.newArrayDeque();
         queue.add(start);
         while (!queue.isEmpty()) {
-            V v = queue.remove();
-            deque.add(v);
-            for (V w : graph.adjacentNodes(v)) {
-                // if w is found for the first time in the tree, add it to the queue, and adjust the length
-                if (lengths.get(w) == -1) {
-                    queue.add(w);
-                    lengths.put(w, lengths.get(v) + 1);
+            N n1 = queue.remove();
+            deque.add(n1);
+            for (N n2 : graph.adjacentNodes(n1)) {
+                // if n2 is found for the first time in the tree, add it to the queue, and adjust the length
+                if (lengths.get(n2) == -1) {
+                    queue.add(n2);
+                    lengths.put(n2, lengths.get(n1) + 1);
                 }
-                // adjust the number of shortest paths to w if shortest path goes through v
-                if (lengths.get(w) == lengths.get(v) + 1) {
-                    numShortest.add(w, numShortest.count(v));
-                    adjacencies.get(w).add(v);
+                // adjust the number of shortest paths to n2 if shortest path goes through n1
+                if (lengths.get(n2) == lengths.get(n1) + 1) {
+                    numShortest.add(n2, numShortest.count(n1));
+                    adjacencies.get(n2).add(n1);
                 }
             }
         }
@@ -499,17 +500,17 @@ public class GraphUtils {
     /**
      * Creates a contracted graph from a parent graph, where all of a specified
      * subset of nodes are contracted to a single node
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param graph parent graph
      * @param contract nodes to contract
      * @param replace node to replace all contracted nodes
      * @return graph where the specified nodes have been contracted
      */
-    public static <V> Graph<V> contractedGraph(Graph<V> graph, Collection<V> contract, V replace) {
-        List<EndpointPair<V>> edges = Lists.newArrayList();
-        for (EndpointPair<V> e : graph.edges()) {
-            V node1 = contract.contains(e.nodeU()) ? replace : e.nodeU();
-            V node2 = contract.contains(e.nodeV()) ? replace : e.nodeV();
+    public static <N> Graph<N> contractedGraph(Graph<N> graph, Collection<N> contract, N replace) {
+        List<EndpointPair<N>> edges = Lists.newArrayList();
+        for (EndpointPair<N> e : graph.edges()) {
+            N node1 = contract.contains(e.nodeU()) ? replace : e.nodeU();
+            N node2 = contract.contains(e.nodeV()) ? replace : e.nodeV();
             edges.add(e.isOrdered() ? EndpointPair.ordered(node1, node2) : EndpointPair.unordered(node1, node2));
         }
         return createFromEdges(graph.isDirected(), contractedNodeSet(graph.nodes(), contract, replace), edges);
@@ -518,33 +519,33 @@ public class GraphUtils {
     /**
      * Contracts list of nodes, replacing all the "contract" nodes with
      * "replace".
-     * @param <V> graph node type
+     * @param <N> graph node type
      * @param nodes collection of nodes
      * @param contract nodes to contract
      * @param replace node to replace all contracted nodes
      * @return node set
      */
-    public static <V> Set<V> contractedNodeSet(Collection<V> nodes, Collection<V> contract, V replace) {
-        Set<V> result = Sets.newHashSet(nodes);
+    public static <N> Set<N> contractedNodeSet(Collection<N> nodes, Collection<N> contract, N replace) {
+        Set<N> result = Sets.newHashSet(nodes);
         result.removeAll(contract);
         result.add(replace);
         return result;
     }
 
     /**
-     * Contracts list of components, combining all components with vertices in subset.
-     * @param <V> graph node type
+     * Contracts list of components, combining all components with nodes in subset.
+     * @param <N> graph node type
      * @param components list of components to contract
      * @param subset subset to contract
-     * @param vertex what to replace contracted subset with
+     * @param node what to replace contracted subset with
      * @return contracted components
      */
-    public static <V> Set<Set<V>> contractedComponents(Collection<Set<V>> components, Collection<V> subset, V vertex) {
-        Set<Set<V>> result = Sets.newHashSet();
-        Set<V> contracted = Sets.newHashSet();
-        contracted.add(vertex);
+    public static <N> Set<Set<N>> contractedComponents(Collection<Set<N>> components, Collection<N> subset, N node) {
+        Set<Set<N>> result = Sets.newHashSet();
+        Set<N> contracted = Sets.newHashSet();
+        contracted.add(node);
         result.add(contracted);
-        for (Set<V> c : components) {
+        for (Set<N> c : components) {
             if (Collections.disjoint(c, subset)) {
                 result.add(Sets.newHashSet(c));
             } else {

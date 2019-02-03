@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,12 +58,12 @@ public final class WattsStrogatzGenerator implements GraphGenerator<WattsStrogat
     }
 
     @Override
-    public Graph<Integer> apply(WattsStrogatzParameters parm) {
-        int nodeCount = parm.getNodeCount();
-        int deg = parm.getInitialDegree();
-        double rewire = parm.getRewiringProbability();
+    public Graph<Integer> apply(WattsStrogatzParameters parameters) {
+        int nodeCount = parameters.getNodeCount();
+        int deg = parameters.getInitialDegree();
+        double rewire = parameters.getRewiringProbability();
         
-        List<Integer[]> edges = new ArrayList<Integer[]>();
+        List<Integer[]> edges = new ArrayList<>();
         for (int i = 0; i < nodeCount; i++) {
             for (int off = 1; off <= (deg / 2); off++) {
                 edges.add(new Integer[]{i, (i + off) % nodeCount});
@@ -77,7 +77,7 @@ public final class WattsStrogatzGenerator implements GraphGenerator<WattsStrogat
             }
         }
 
-        return GraphGenerators.createGraphWithEdges(parm, edges);
+        return GraphGenerators.createGraphWithEdges(parameters, edges);
     }
 
     //region ALGORITHM
@@ -88,15 +88,14 @@ public final class WattsStrogatzGenerator implements GraphGenerator<WattsStrogat
      * @param random random seed
      * @param edges current list of edges
      * @param e the edge to rewire
-     * @param n total # of vertices
-     * @return new edge.
+     * @param n total # of nodes
      */
     private static void randomlyRewire(Random random, List<Integer[]> edges, Integer[] e, int n) {
         if (n <= 1) {
             return;
         }
         Integer[] potential = new Integer[]{e[0], e[1]};
-        Set<Integer[]> edgeTree = new TreeSet<Integer[]>(EdgeCountGenerator.PAIR_COMPARE_UNDIRECTED);
+        Set<Integer[]> edgeTree = new TreeSet<>(EdgeCountGenerator.PAIR_COMPARE_UNDIRECTED);
         edgeTree.addAll(edges);
         while (edgeTree.contains(potential)) {
             if (random.nextBoolean()) {
@@ -125,6 +124,7 @@ public final class WattsStrogatzGenerator implements GraphGenerator<WattsStrogat
     //region PARAMETERS CLASS
     
     /** Parameters for Watts-Strogatz algorithm */
+    @SuppressWarnings("WeakerAccess")
     public static final class WattsStrogatzParameters extends DefaultGeneratorParameters {
         private int deg = 4;
         private float rewire = .5f;

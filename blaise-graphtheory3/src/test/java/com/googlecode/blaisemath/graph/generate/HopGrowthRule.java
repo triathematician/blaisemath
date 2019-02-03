@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import java.util.Set;
  * @author Elisha Peterson
  */
 @Beta
+@SuppressWarnings({"SameParameterValue", "UnstableApiUsage", "unused"})
 public class HopGrowthRule implements GraphGrowthRule {
 
     private int n;
@@ -42,7 +43,7 @@ public class HopGrowthRule implements GraphGrowthRule {
         this(2);
     }
 
-    public HopGrowthRule(int n) {
+    private HopGrowthRule(int n) {
         this.n = n;
     }
 
@@ -84,7 +85,7 @@ public class HopGrowthRule implements GraphGrowthRule {
      * @param n # of steps to grow
      * @return nodes in grown set
      */
-    public static <N> Set<N> grow(Graph<N> graph, Set<N> seed, int n) {
+    private static <N> Set<N> grow(Graph<N> graph, Set<N> seed, int n) {
         if (n == 0) {
             return seed;
         }
@@ -102,9 +103,8 @@ public class HopGrowthRule implements GraphGrowthRule {
      * @param seed seed nodes
      * @return nodes in grown set
      */
-    public static <N> Set grow1(Graph<N> graph, Set<N> seed) {
-        Set<N> result = new HashSet<>();
-        result.addAll(seed);
+    private static <N> Set<N> grow1(Graph<N> graph, Set<N> seed) {
+        Set<N> result = new HashSet<>(seed);
         seed.forEach(o -> result.addAll(graph.adjacentNodes(o)));
         return result;
     }

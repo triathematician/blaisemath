@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.AbstractList;
 
 /**
- * Constructs star graph with n vertices; all vertices are connected to a central hub.
+ * Constructs star graph with n nodes; all nodes are connected to a central hub.
  * @author Elisha Peterson
  */
 public final class StarGraphGenerator extends AbstractGraphGenerator {
@@ -36,12 +36,12 @@ public final class StarGraphGenerator extends AbstractGraphGenerator {
     }
 
     @Override
-    public Graph<Integer> apply(DefaultGeneratorParameters parm) {
-        final int nodes = parm.getNodeCount();
+    public Graph<Integer> apply(DefaultGeneratorParameters parameters) {
+        final int nodes = parameters.getNodeCount();
         if (nodes == 0) {
-            return GraphUtils.emptyGraph(parm.isDirected());
+            return GraphUtils.emptyGraph(parameters.isDirected());
         }
-        return GraphGenerators.createGraphWithEdges(parm, new AbstractList<Integer[]>() {
+        return GraphGenerators.createGraphWithEdges(parameters, new AbstractList<Integer[]>() {
             @Override
             public Integer[] get(int index) {
                 return new Integer[]{0, index + 1};

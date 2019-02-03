@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class EigenCentrality extends AbstractGraphNodeMetric<Double> {
         // computes eigenvalue centrality via repeated powers of the adjacency matrix
         // (this finds the largest-magnitude eigenvector)
 
-        List<N> nodes = new ArrayList<N>();
+        List<N> nodes = new ArrayList<>();
         boolean[][] adj0 = GraphUtils.adjacencyMatrix(graph, nodes);
         int n = nodes.size();
         double[][] mx = new double[n][n];

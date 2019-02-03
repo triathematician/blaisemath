@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,10 +49,10 @@ import static java.util.Objects.requireNonNull;
  * This class is not thread-safe, so all of its methods should be accessed from a single thread. However, coordinate
  * locations can be accessed or updated in the {@code CoordinateManager} from any thread.
  *
- * @param <V> type of node in graph
+ * @param <N> type of node in graph
  * @author Elisha Peterson
  */
-public final class GraphLayoutManager<V> {
+public final class GraphLayoutManager<N> {
     
     private static final Logger LOG = Logger.getLogger(GraphLayoutManager.class.getName());
     
@@ -70,16 +70,16 @@ public final class GraphLayoutManager<V> {
     //endregion
     
     /** Graph */
-    private Graph<V> graph;
+    private Graph<N> graph;
     /** Locates nodes in the graph */
-    private final CoordinateManager<V, Point2D.Double> coordManager = CoordinateManager.create(NODE_CACHE_SIZE);
+    private final CoordinateManager<N, Point2D.Double> coordinateManager = CoordinateManager.create(NODE_CACHE_SIZE);
     
     /** The initial layout scheme */
-    private final StaticGraphLayout initialLayout = CircleLayout.getInstance();
+    private final StaticGraphLayout<CircleLayoutParameters> initialLayout = CircleLayout.getInstance();
     /** The initial layout parameters */
     private final CircleLayoutParameters initialLayoutParameters = new CircleLayoutParameters(50);
-    /** The layout scheme for adding vertices */
-    private final StaticGraphLayout addingLayout = new PositionalAddingLayout();
+    /** The layout scheme for adding nodes */
+    private final StaticGraphLayout<CircleLayoutParameters> addingLayout = new PositionalAddingLayout();
     /** The initial layout parameters */
     private final CircleLayoutParameters addingLayoutParameters = new CircleLayoutParameters(100);
 
@@ -95,17 +95,18 @@ public final class GraphLayoutManager<V> {
     
     /** Initializes with an empty graph */
     public GraphLayoutManager() {
-        iterativeLayoutManager.setCoordinateManager(coordManager);
+        iterativeLayoutManager.setCoordinateManager(coordinateManager);
         setGraph(GraphUtils.emptyGraph(false));
     }
     
     /** 
      * Initializes with a given graph.
+     * @param <N> graph node type
      * @param graph graph for layout
      * @return manager instance
      */
-    public static GraphLayoutManager create(Graph graph) {
-        GraphLayoutManager res = new GraphLayoutManager();
+    public static <N> GraphLayoutManager<N> create(Graph<N> graph) {
+        GraphLayoutManager<N> res = new GraphLayoutManager<>();
         res.setGraph(graph);
         return res;
     }
@@ -118,23 +119,23 @@ public final class GraphLayoutManager<V> {
      * Object providing node locations.
      * @return point manager
      */
-    public CoordinateManager<V, Point2D.Double> getCoordinateManager() {
-        return coordManager;
+    public CoordinateManager<N, Point2D.Double> getCoordinateManager() {
+        return coordinateManager;
     }
 
     /**
      * Return copy of the locations of objects in the graph.
      * @return locations, as a copy of the map provided in the point manager
      */
-    public Map<V, Point2D.Double> getNodeLocationCopy() {
-        return coordManager.getActiveLocationCopy();
+    public Map<N, Point2D.Double> getNodeLocationCopy() {
+        return coordinateManager.getActiveLocationCopy();
     }
 
     /**
      * Return the graph.
      * @return the layout manager's graph
      */
-    public Graph<V> getGraph() {
+    public Graph<N> getGraph() {
         return graph;
     }
     
@@ -144,9 +145,9 @@ public final class GraphLayoutManager<V> {
      *
      * @param g the graph
      */
-    public void setGraph(Graph<V> g) {
+    public void setGraph(Graph<N> g) {
         requireNonNull(g);
-        Graph old = this.graph;
+        Graph<N> old = this.graph;
         if (old != g) {
             boolean active = isLayoutTaskActive();
             setLayoutTaskActive(false);
@@ -232,34 +233,34 @@ public final class GraphLayoutManager<V> {
      * use cached nodes if possible. Otherwise, it may execute the "initial layout" algorithm or the "adding layout"
      * algorithm.
      *
-     * @todo may take some time to execute if the graph is large, consider improving this class's design by running the
+     * TODO - may take some time to execute if the graph is large, consider improving this class's design by running the
      *   initial layout in a background thread; also, locking on the CM may be problematic if the layout takes a long time
      */
-    private void initializeNodeLocations(Graph<V> old, Graph<V> g) {
-        synchronized (coordManager) {
-            Set<V> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
-            coordManager.deactivate(oldNodes);
+    private void initializeNodeLocations(Graph<N> old, Graph<N> g) {
+        synchronized (coordinateManager) {
+            Set<N> oldNodes = Sets.difference(coordinateManager.getActive(), g.nodes());
+            coordinateManager.deactivate(oldNodes);
             // defer to existing locations if possible
-            if (coordManager.locatesAll(g.nodes())) {
-                coordManager.reactivate(g.nodes());
+            if (coordinateManager.locatesAll(g.nodes())) {
+                coordinateManager.reactivate(g.nodes());
             } else {
                 // lays out new graph entirely
-                Map<V, Point2D.Double> newLoc;
+                Map<N, Point2D.Double> newLoc;
                 if (old == null) {
                     newLoc = initialLayout.layout(g, null, initialLayoutParameters);
                 } else {
-                    Map<V, Point2D.Double> curLoc = coordManager.getActiveLocationCopy();
+                    Map<N, Point2D.Double> curLoc = coordinateManager.getActiveLocationCopy();
                     newLoc = addingLayout.layout(g, curLoc, addingLayoutParameters);
                 }
                 // remove objects that are already in coordinate manager
-                newLoc.keySet().removeAll(coordManager.getActive());
-                newLoc.keySet().removeAll(coordManager.getInactive());
-                coordManager.reactivate(g.nodes());
-                coordManager.putAll(newLoc);
+                newLoc.keySet().removeAll(coordinateManager.getActive());
+                newLoc.keySet().removeAll(coordinateManager.getInactive());
+                coordinateManager.reactivate(g.nodes());
+                coordinateManager.putAll(newLoc);
             }
 
             // log size mismatches to help with debugging
-            int sz = coordManager.getActive().size();
+            int sz = coordinateManager.getActive().size();
             boolean check = sz == g.nodes().size();
             if (!check) {
                 LOG.log(Level.WARNING, "Object sizes don''t match: {0} locations, but {1} nodes!",
@@ -275,12 +276,12 @@ public final class GraphLayoutManager<V> {
      *
      * @param locations new locations for objects
      */
-    public void requestLocations(Map<V, Point2D.Double> locations) {
+    public void requestLocations(Map<N, Point2D.Double> locations) {
         requireNonNull(locations);
         if (isLayoutTaskActive()) {
             iterativeLayoutManager.requestPositions(locations, false);
         } else {
-            coordManager.putAll(locations);
+            coordinateManager.putAll(locations);
         }
     }
 
@@ -293,7 +294,7 @@ public final class GraphLayoutManager<V> {
      * @param parameters layout parameters
      * @param <P> parameters type
      */
-    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<V,Point2D.Double> ic, P parameters){
+    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<N,Point2D.Double> ic, P parameters){
         requestLocations(layout.layout(graph, ic, parameters));
     }
 

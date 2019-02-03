@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 
 /**
- * Computes the second-order degree of a vertex in a graph, i.e. how many vertices are within two hops.
- * Does not include the vertex itself.
+ * Computes the second-order degree of a node in a graph, i.e. how many nodes are within two hops.
+ * Does not include the node itself.
  *
  * @author Elisha Peterson
  */
@@ -36,8 +36,8 @@ public class DegreeTwo extends AbstractGraphNodeMetric<Integer> {
     }
     
     @Override
-    public <V> Integer apply(Graph<V> graph, V vertex) {
-        return GraphUtils.neighborhood(graph, vertex, 2).size() - 1;
+    public <N> Integer apply(Graph<N> graph, N node) {
+        return GraphUtils.neighborhood(graph, node, 2).size() - 1;
     }
     
 }

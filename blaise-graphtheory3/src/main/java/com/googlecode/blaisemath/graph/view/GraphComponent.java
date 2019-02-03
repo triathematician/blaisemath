@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.view;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,10 +53,10 @@ import static java.util.stream.Collectors.toSet;
  */
 public class GraphComponent extends JGraphicComponent {
 
-    public static final Logger LOG = Logger.getLogger(GraphComponent.class.getName());
+    private static final Logger LOG = Logger.getLogger(GraphComponent.class.getName());
 
     public static final String MENU_KEY_GRAPH = "graph";
-    public static final String MENU_KEY_LINK = "link";
+    public static final String MENU_KEY_EDGE = "edge";
     public static final String MENU_KEY_NODE = "node";
 
     /** This mechanism is used to create the initial view graph for swing components, by setting up appropriate renderers. */
@@ -204,7 +204,7 @@ public class GraphComponent extends JGraphicComponent {
 
     /**
      * Adds context menu element to specified object.
-     * @param key either "graph", "node", or "link"
+     * @param key either "graph", "node", or "edge"
      * @param init used to initialize the context menu
      */
     public void addContextMenuInitializer(String key, ContextMenuInitializer init) {
@@ -213,7 +213,7 @@ public class GraphComponent extends JGraphicComponent {
             getGraphicRoot().addContextMenuInitializer(init);
         } else if (MENU_KEY_NODE.equalsIgnoreCase(key)) {
             win.getPointGraphic().addContextMenuInitializer(init);
-        } else if (MENU_KEY_LINK.equalsIgnoreCase(key)) {
+        } else if (MENU_KEY_EDGE.equalsIgnoreCase(key)) {
             win.getEdgeGraphic().addContextMenuInitializer(init);
         } else {
             LOG.log(Level.WARNING, "Unsupported context menu key: {0}", key);
@@ -222,7 +222,7 @@ public class GraphComponent extends JGraphicComponent {
 
     /**
      * Removes context menu element from specified object
-     * @param key either "graph", "node", or "link"
+     * @param key either "graph", "node", or "edge"
      * @param init used to initialize the context menu
      */
     public void removeContextMenuInitializer(String key, ContextMenuInitializer init) {
@@ -231,7 +231,7 @@ public class GraphComponent extends JGraphicComponent {
             getGraphicRoot().removeContextMenuInitializer(init);
         } else if (MENU_KEY_NODE.equals(key)) {
             win.getPointGraphic().removeContextMenuInitializer(init);
-        } else if (MENU_KEY_LINK.equals(key)) {
+        } else if (MENU_KEY_EDGE.equals(key)) {
             win.getEdgeGraphic().removeContextMenuInitializer(init);
         } else {
             LOG.log(Level.WARNING, "Unsupported context menu key: {0}", key);

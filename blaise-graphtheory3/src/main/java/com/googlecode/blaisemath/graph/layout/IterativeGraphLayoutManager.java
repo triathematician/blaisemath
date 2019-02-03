@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
@@ -29,6 +28,7 @@ import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
 
 import java.awt.geom.Point2D;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Manages an iterative graph layout, including its state and parameters.
@@ -39,16 +39,16 @@ import java.util.Map;
 public final class IterativeGraphLayoutManager {
     
     /** Default # iterations per layout step */
-    private static final int DEFAULT_ITER_PER_LOOP = 2;
+    private static final int DEFAULT_ITERATIONS_PER_LOOP = 2;
     /** Cooling curve. Determines the cooling parameter at each step, as a product of initial cooling parameter. */
-    private static final Function<Integer,Double> COOLING_CURVE = x -> .1 + .9/Math.log10(x+10.0);
+    private static final Function<Integer, Double> COOLING_CURVE = x -> .1 + .9/Math.log10(x+10.0);
         
     /** The graph for layouts */
     private Graph graph;
     /** The coordinate manager to update after layout */
-    private CoordinateManager coordManager;
+    private CoordinateManager coordinateManager;
     /** Listener for coordinate updates */
-    private final CoordinateListener coordListener;
+    private final CoordinateListener coordinateListener;
     
     /** Contains the algorithm for iterating graph layouts. */
     private IterativeGraphLayout layout;
@@ -61,10 +61,10 @@ public final class IterativeGraphLayoutManager {
     private int iteration = 0;
     
     /** # of iterations per loop */
-    private int iterPerLoop = DEFAULT_ITER_PER_LOOP;
+    private int iterationsPerLoop = DEFAULT_ITERATIONS_PER_LOOP;
 
     public IterativeGraphLayoutManager() {
-        this.coordListener = evt -> requestPositions(((CoordinateManager)evt.getSource()).getActiveLocationCopy(), true);
+        this.coordinateListener = evt -> requestPositions(((CoordinateManager) evt.getSource()).getActiveLocationCopy(), true);
         setCoordinateManager(CoordinateManager.create(GraphLayoutManager.NODE_CACHE_SIZE));
     }
     
@@ -90,17 +90,17 @@ public final class IterativeGraphLayoutManager {
     }
 
     public CoordinateManager getCoordinateManager() {
-        return coordManager;
+        return coordinateManager;
     }
 
-    public void setCoordinateManager(CoordinateManager coordManager) {
-        CoordinateManager old = this.coordManager;
-        if (old != coordManager) {
+    public void setCoordinateManager(CoordinateManager manager) {
+        CoordinateManager old = this.coordinateManager;
+        if (old != manager) {
             if (old != null) {
-                old.removeCoordinateListener(coordListener);
+                old.removeCoordinateListener(coordinateListener);
             }
-            this.coordManager = coordManager;
-            coordManager.addCoordinateListener(coordListener);
+            this.coordinateManager = manager;
+            manager.addCoordinateListener(coordinateListener);
         }
     }
 
@@ -129,15 +129,15 @@ public final class IterativeGraphLayoutManager {
      * @return iterations
      */
     public int getIterationsPerLoop() {
-        return iterPerLoop;
+        return iterationsPerLoop;
     }
 
     /**
      * Set the # of algorithm iterations per update loop
-     * @param iter # of iterations
+     * @param n # of iterations
      */
-    public void setIterationsPerLoop(int iter) {
-        this.iterPerLoop = iter;
+    public void setIterationsPerLoop(int n) {
+        this.iterationsPerLoop = n;
     }
     
     //endregion
@@ -152,7 +152,7 @@ public final class IterativeGraphLayoutManager {
             params = null;
         } else {
             state = layout.createState();
-            state.requestPositions(coordManager.getActiveLocationCopy(), true);
+            state.requestPositions(coordinateManager.getActiveLocationCopy(), true);
             Object newParams = layout.createParameters();
             Class oldParamsType = params == null ? null : params.getClass();
             Class newParamsType = newParams == null ? null : newParams.getClass();
@@ -171,13 +171,13 @@ public final class IterativeGraphLayoutManager {
      */
     public double runOneLoop() throws InterruptedException {
         double energy = 0;
-        for (int i = 0; i < iterPerLoop; i++) {
+        for (int i = 0; i < iterationsPerLoop; i++) {
             energy = layout.iterate(graph, state, params);
             checkInterrupt();
         }
-        coordManager.setCoordinateMap(state.getPositionsCopy());
+        coordinateManager.setCoordinateMap(state.getPositionsCopy());
         
-        iteration += iterPerLoop;
+        iteration += iterationsPerLoop;
         state.setCoolingParameter(COOLING_CURVE.apply(Math.max(0, iteration - 100)));
         checkInterrupt();
         

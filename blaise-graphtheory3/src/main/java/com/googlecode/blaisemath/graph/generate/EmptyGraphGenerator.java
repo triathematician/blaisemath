@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.google.common.graph.Graph;
 import java.util.Collections;
 
 /** 
- * Constructs graph with n vertices.
+ * Constructs graph with n nodes.
  *
  * @author Elisha Peterson
  */

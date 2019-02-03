@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.List;
 
 /**
- * Constructs wheel graph with n vertices. All vertices are connected to a central hub, and all non-central vertices
+ * Constructs wheel graph with n nodes. All nodes are connected to a central hub, and all non-central vertices
  * connected in a cyclic fashion.
  *
  * @author Elisha Peterson
@@ -39,10 +39,10 @@ public final class WheelGraphGenerator extends AbstractGraphGenerator {
     }
 
     @Override
-    public Graph<Integer> apply(DefaultGeneratorParameters parm) {
-        final int nodes = parm.getNodeCount();
+    public Graph<Integer> apply(DefaultGeneratorParameters parameters) {
+        final int nodes = parameters.getNodeCount();
         if (nodes == 0) {
-            return GraphUtils.emptyGraph(parm.isDirected());
+            return GraphUtils.emptyGraph(parameters.isDirected());
         }
         List<Integer[]> edges = Lists.newArrayList();
         for (int i = 1; i < nodes; i++) {
@@ -50,15 +50,15 @@ public final class WheelGraphGenerator extends AbstractGraphGenerator {
         }
         for (int i = 1; i < nodes - 1; i++) {
             edges.add(new Integer[]{i, i + 1});
-            if (parm.isDirected()) {
+            if (parameters.isDirected()) {
                 edges.add(new Integer[]{i + 1, i});
             }
         }
         edges.add(new Integer[]{nodes - 1, 1});
-        if (parm.isDirected()) {
+        if (parameters.isDirected()) {
             edges.add(new Integer[]{1, nodes - 1});
         }
-        return GraphGenerators.createGraphWithEdges(parm, edges);
+        return GraphGenerators.createGraphWithEdges(parameters, edges);
     }
     
 }

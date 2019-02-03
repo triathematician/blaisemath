@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.test;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,15 +41,16 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
 
+@SuppressWarnings("ALL")
 public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     VisualGraph pga;
     /** Flag for when el needs points updated */
     boolean updateEL = true;
     SpringLayout energyLayout;
-    SpringLayoutParameters layoutParams;
+    final SpringLayoutParameters layoutParams;
 
-    MyTestGraph graph = new MyTestGraph();
+    final MyTestGraph graph = new MyTestGraph();
     Graph<String> graphCopy;
 
     public DynamicGraphTestFrame() {
@@ -97,10 +98,10 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         energySB = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         jLabel2 = new javax.swing.JLabel();
-        addVerticesB = new javax.swing.JButton();
         addEdgesB = new javax.swing.JButton();
         rewireB = new javax.swing.JButton();
         addThreadedB = new javax.swing.JButton();
+        addNodesB = new javax.swing.JButton();
         threadStopB = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         rollupPanel1 = new RollupPanel();
@@ -174,16 +175,16 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         jLabel2.setText("ADD:");
         jToolBar1.add(jLabel2);
 
-        addVerticesB.setText("vertices");
-        addVerticesB.setFocusable(false);
-        addVerticesB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addVerticesB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        addVerticesB.addActionListener(new java.awt.event.ActionListener() {
+        addNodesB.setText("nodes");
+        addNodesB.setFocusable(false);
+        addNodesB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addNodesB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addNodesB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addVerticesBActionPerformed(evt);
+                addNodesBActionPerformed(evt);
             }
         });
-        jToolBar1.add(addVerticesB);
+        jToolBar1.add(addNodesB);
 
         addEdgesB.setText("edges");
         addEdgesB.setFocusable(false);
@@ -280,10 +281,10 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         });
     }
     
-    private void addVerticesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVerticesBActionPerformed
-        graph.addVertices(5);
+    private void addNodesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNodesBActionPerformed
+        graph.addNodes(5);
         updateGraph();
-    }//GEN-LAST:event_addVerticesBActionPerformed
+    }//GEN-LAST:event_addNodesBActionPerformed
 
     private void addEdgesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEdgesBActionPerformed
         graph.addEdges(5);
@@ -295,7 +296,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         updateGraph();
     }//GEN-LAST:event_rewireBActionPerformed
 
-    java.util.Timer t = new java.util.Timer();
+    final java.util.Timer t = new java.util.Timer();
     java.util.TimerTask tt;
 
     private void addThreadedBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addThreadedBActionPerformed
@@ -305,9 +306,9 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         tt = new java.util.TimerTask() {
             @Override
             public void run() {
-                graph.removeVertices(1);
                 graph.removeEdges(10);
-                graph.addVertices(1);
+                graph.addNodes(1);
+                graph.removeNodes(1);
                 graph.addEdges(2);
                 updateGraph();
             }
@@ -332,7 +333,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addEdgesB;
     private javax.swing.JButton addThreadedB;
-    private javax.swing.JButton addVerticesB;
+    private javax.swing.JButton addNodesB;
     private javax.swing.JButton circleLB;
     private javax.swing.JButton energyAB;
     private javax.swing.JButton energyIB;

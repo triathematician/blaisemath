@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,9 +49,9 @@ public class ClosenessCentrality extends AbstractGraphNodeMetric<Double> {
     }
 
     @Override
-    public <V> Double apply(Graph<V> graph, V node) {
+    public <N> Double apply(Graph<N> graph, N node) {
         int n = graph.nodes().size();
-        Map<V, Integer> lengths = new HashMap<>();
+        Map<N, Integer> lengths = new HashMap<>();
         GraphUtils.breadthFirstSearch(graph, node, HashMultiset.create(), lengths, new ArrayDeque<>(), HashMultimap.create());
         double cptSize = lengths.size();
         double sum = lengths.values().stream().mapToDouble(v -> v).sum();
@@ -59,9 +59,9 @@ public class ClosenessCentrality extends AbstractGraphNodeMetric<Double> {
     }
 
     @Override
-    public <V> Map<V,Double> apply(Graph<V> graph) {
+    public <N> Map<N, Double> apply(Graph<N> graph) {
         int id = Instrument.start("ClosenessCentrality.allValues", graph.nodes().size()+" nodes", graph.edges().size()+" edges");
-        Map<V,Double> res = GraphMetrics.applyToComponents(graph, new ApplyConnected());
+        Map<N, Double> res = GraphMetrics.applyToComponents(graph, new ApplyConnected());
         Instrument.end(id);
         return res;
     }
@@ -69,7 +69,7 @@ public class ClosenessCentrality extends AbstractGraphNodeMetric<Double> {
     /** Delegate metric that computes values for a connected portion of a graph */
     private static class ApplyConnected extends AbstractGraphNodeMetric<Double> {
 
-        public ApplyConnected() {
+        ApplyConnected() {
             super("");
         }
 

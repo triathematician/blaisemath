@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.test;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class AssertUtils {
     }
 
     /** Tests to see if all elements of one collection are contained in the other, and vice versa. */
-    public static void assertCollectionContentsSame(Collection expected, Collection found) {
+    public static<X> void assertCollectionContentsSame(Collection<X> expected, Collection<X> found) {
         assertEquals("Collection size mismatch. Expected "+expected+" but was "+found, expected.size(), found.size());
         assertTrue("Collection contents mismatch. Expected "+expected+" but was "+found, expected.containsAll(found));
         assertTrue("Collection contents mismatch. Expected "+expected+" but was "+found, found.containsAll(expected));

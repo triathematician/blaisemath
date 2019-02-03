@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,19 +48,19 @@ public final class ProximityGraphGenerator implements GraphGenerator<ProximityGr
     }
 
     @Override
-    public Graph<Point2D.Double> apply(ProximityGraphParameters parm) {
-        int nodes = parm.getNodeCount();
-        double x0 = parm.getBounds().getMinX();
-        double x1 = parm.getBounds().getMaxX();
-        double y0 = parm.getBounds().getMinY();
-        double y1 = parm.getBounds().getMaxY();
-        double connectDistance = parm.getConnectDistance();
+    public Graph<Point2D.Double> apply(ProximityGraphParameters parameters) {
+        int nodes = parameters.getNodeCount();
+        double x0 = parameters.getBounds().getMinX();
+        double x1 = parameters.getBounds().getMaxX();
+        double y0 = parameters.getBounds().getMinY();
+        double y1 = parameters.getBounds().getMaxY();
+        double connectDistance = parameters.getConnectDistance();
         
-        List<Point2D.Double> pts = new ArrayList<Point2D.Double>();
+        List<Point2D.Double> pts = new ArrayList<>();
         for (int i = 0; i < nodes; i++) {
             pts.add(new Point2D.Double(x0 + (x1 - x0) * Math.random(), y0 + (y1 - y0) * Math.random()));
         }
-        List<Point2D.Double[]> edges = new ArrayList<Point2D.Double[]>();
+        List<Point2D.Double[]> edges = new ArrayList<>();
         for (int i0 = 0; i0 < pts.size(); i0++) {
             for (int i1 = i0+1; i1 < pts.size(); i1++) {
                 if (pts.get(i0).distance(pts.get(i1)) > connectDistance) {

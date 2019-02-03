@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,18 +27,18 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * A set of constraints for use in graph layouts. Allows nodes to be "pinned" during layout, constrained into boxes, etc.
- * @param <C> node type
+ * @param <N> node type
  * @author Elisha Peterson
  */
-public class GraphLayoutConstraints<C> {
+public class GraphLayoutConstraints<N> {
     
-    private Set<C> pinnedNodes = Collections.emptySet();
+    private Set<N> pinnedNodes = Collections.emptySet();
 
-    public Set<C> getPinnedNodes() {
+    public Set<N> getPinnedNodes() {
         return pinnedNodes;
     }
 
-    public void setPinnedNodes(Set<C> pinnedNodes) {
+    public void setPinnedNodes(Set<N> pinnedNodes) {
         this.pinnedNodes = requireNonNull(pinnedNodes);
     }
     

@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.test;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,45 +35,47 @@ import static java.util.stream.Collectors.toList;
  *
  * @author Elisha Peterson
  */
-public final class MyTestGraph implements Graph<String> {
+@SuppressWarnings({"UnstableApiUsage", "NullableProblems"})
+final class MyTestGraph implements Graph<String> {
 
-    private boolean directed = false;
+    private final boolean directed = false;
     private final LinkedHashSet<String> nodes = Sets.newLinkedHashSet();
-    protected final Set<EndpointPair<String>> edges = new LinkedHashSet<EndpointPair<String>>();
-    protected final SetMultimap<String, EndpointPair<String>> edgeIndex = HashMultimap.create();
-    protected final Table<String, String, Set<EndpointPair<String>>> edgeTable = HashBasedTable.create();
+    private final Set<EndpointPair<String>> edges = new LinkedHashSet<>();
+    private final SetMultimap<String, EndpointPair<String>> edgeIndex = HashMultimap.create();
+    private final Table<String, String, Set<EndpointPair<String>>> edgeTable = HashBasedTable.create();
 
     public MyTestGraph() {
         nodes.addAll(intList(1, 100));
         for (int i = 0; i < 100; i++) {
-            connect(randomVertex(), randomVertex());
+            connect(randomNode(), randomNode());
         }
     }
     
+    @SuppressWarnings("SameParameterValue")
     private static List<String> intList(int i0, int i1) {
         return IntStream.rangeClosed(i0, i1).mapToObj(Integer::toString).collect(toList());
     }
 
-    public void connect(String v1, String v2) {
+    private void connect(String v1, String v2) {
         addEdge(v1, v2);
     }
 
-    public void disconnect(String v1, String v2) {
+    private void disconnect(String v1, String v2) {
         removeEdge(v1, v2);
     }
 
-    public void addVertices(int number) {
+    public void addNodes(int number) {
         int added = 0;
         while (added < number) {
-            nodes.add("" + nextAvailableVertex());
+            nodes.add("" + nextAvailableNode());
             added++;
         }
         check();
     }
 
-    public void removeVertices(int number) {
+    public void removeNodes(int number) {
         for (int i = 0; i < number; i++) {
-            String n = randomVertex();
+            String n = randomNode();
             nodes.remove(n);
             edges.removeAll(incidentEdges(n));
             edgeTable.rowKeySet().remove(n);
@@ -84,33 +86,32 @@ public final class MyTestGraph implements Graph<String> {
 
     public void addEdges(int number) {
         for (int i = 0; i < number; i++) {
-            connect(randomVertex(), randomVertex());
+            connect(randomNode(), randomNode());
         }
     }
 
     public void removeEdges(int number) {
         for (int i = 0; i < number; i++) {
-            disconnect(randomVertex(), randomVertex());
+            disconnect(randomNode(), randomNode());
         }
     }
 
     public void rewire(int lost, int gained) {
-        int e0 = edgeCount();
         for (int i = 0; i < lost; i++) {
-            removeEdge(randomVertex(), randomVertex());
+            removeEdge(randomNode(), randomNode());
         }
         for (int i = 0; i < gained; i++) {
-            addEdge(randomVertex(), randomVertex());
+            addEdge(randomNode(), randomNode());
         }
         check();
     }
 
-    String randomVertex() {
+    private String randomNode() {
         int idx = (int) (nodes.size() * Math.random());
         return nodes.toArray(new String[0])[idx];
     }
 
-    private int nextAvailableVertex() {
+    private int nextAvailableNode() {
         int i = 1;
         while (nodes.contains("" + i)) {
             i++;
@@ -120,10 +121,10 @@ public final class MyTestGraph implements Graph<String> {
 
     private void check() {
         if (!nodes.containsAll(edgeTable.rowKeySet())) {
-            System.err.println(String.format("Adjacency table has row nodes not in the node set."));
+            System.err.println("Adjacency table has row nodes not in the node set.");
         }
         if (!nodes.containsAll(edgeTable.columnKeySet())) {
-            System.err.println(String.format("Adjacency table has column nodes not in the node set."));
+            System.err.println("Adjacency table has column nodes not in the node set.");
         }
     }
 
@@ -131,19 +132,11 @@ public final class MyTestGraph implements Graph<String> {
         return false;
     }
 
-    public int nodeCount() {
-        return nodes.size();
-    }
-
     public Set<String> nodes() {
         return nodes;
     }
 
-    public boolean contains(String x) {
-        return nodes.contains(x);
-    }
-
-    public int edgeCount() {
+    private int edgeCount() {
         return edges.size();
     }
 
@@ -153,14 +146,14 @@ public final class MyTestGraph implements Graph<String> {
     
     //region MUTATORS
 
-    protected final synchronized void addEdge(String x, String y) {
+    private synchronized void addEdge(String x, String y) {
         EndpointPair<String> edge = directed ? addDirectedEdge(x, y) : addUndirectedEdge(x, y);
         edges.add(edge);
         edgeIndex.put(x, edge);
         edgeIndex.put(y, edge);
     }
     
-    protected EndpointPair<String> addDirectedEdge(String x, String y) {
+    private EndpointPair<String> addDirectedEdge(String x, String y) {
         if (!edgeTable.contains(x, y)) {
             edgeTable.put(x, y, new HashSet<>());
         }
@@ -169,7 +162,7 @@ public final class MyTestGraph implements Graph<String> {
         return edge;
     }
     
-    protected EndpointPair<String> addUndirectedEdge(String x, String y) {
+    private EndpointPair<String> addUndirectedEdge(String x, String y) {
         if (!edgeTable.contains(x, y)) {
             edgeTable.put(x, y, new HashSet<>());
         }
@@ -187,29 +180,25 @@ public final class MyTestGraph implements Graph<String> {
         if (edgeTable.contains(x, y) && !edgeTable.get(x, y).isEmpty()) {
             return true;
         }
-        if (directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty()) {
-            return true;
-        }
-        return false;
+        return directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty();
     }
 
     /**
-     * Remove edge between two vertices, if it exists
-     * @param v1 first vertex
-     * @param v2 second vertex
-     * @return true if edge was found and removed
+     * Remove edge between two nodes, if it exists
+     * @param n1 first node
+     * @param n2 second node
      */
-    protected boolean removeEdge(String v1, String v2) {
-        EndpointPair<String> edge = directed ? EndpointPair.ordered(v1, v2) : EndpointPair.unordered(v1, v2);
-        if (edgeTable.contains(v1, v2)) {
-            edgeTable.get(v1, v2).remove(edge);
+    private void removeEdge(String n1, String n2) {
+        EndpointPair<String> edge = directed ? EndpointPair.ordered(n1, n2) : EndpointPair.unordered(n1, n2);
+        if (edgeTable.contains(n1, n2)) {
+            edgeTable.get(n1, n2).remove(edge);
         }
-        if (!directed && edgeTable.contains(v2, v1)) {
-            edgeTable.get(v2, v1).remove(edge);
+        if (!directed && edgeTable.contains(n2, n1)) {
+            edgeTable.get(n2, n1).remove(edge);
         }
-        edgeIndex.remove(v1, edge);
-        edgeIndex.remove(v2, edge);
-        return edges.remove(edge);
+        edgeIndex.remove(n1, edge);
+        edgeIndex.remove(n2, edge);
+        edges.remove(edge);
     }
     
     //endregion
@@ -234,7 +223,7 @@ public final class MyTestGraph implements Graph<String> {
         if (!directed) {
             return adjacentNodes(x);
         } else {
-            Set<String> result = new HashSet<String>();
+            Set<String> result = new HashSet<>();
             for (EndpointPair<String> e : incidentEdges(x)) {
                 if (x.equals(e.nodeU())) {
                     result.add(e.nodeV());
@@ -248,7 +237,7 @@ public final class MyTestGraph implements Graph<String> {
         if (!directed) {
             return adjacentNodes(x);
         } else {
-            Set<String> result = new HashSet<String>();
+            Set<String> result = new HashSet<>();
             for (EndpointPair<String> e : incidentEdges(x)) {
                 if (x.equals(e.nodeV())) {
                     result.add(e.nodeU());
@@ -260,7 +249,7 @@ public final class MyTestGraph implements Graph<String> {
 
     @Override
     public Set<String> adjacentNodes(String x) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (EndpointPair<String> e : incidentEdges(x)) {
             result.add(e.adjacentNode(x));
         }
@@ -298,7 +287,7 @@ public final class MyTestGraph implements Graph<String> {
     public int degree(String x) {
         int result = 0;
         for (EndpointPair<String> e : incidentEdges(x)) {
-            // permit double counting if both vertices of edge are x
+            // permit double counting if both nodes of edge are x
             if (x.equals(e.nodeU())) {
                 result++;
             }

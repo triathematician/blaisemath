@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.view;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class WeightedEdgeStyler<E extends EndpointPair> implements Function<E, A
     /** Edge weights */
     protected Map<E, Double> weights;
     /** The maximum edge weight */
-    protected double maxWeight = 0f;
+    protected double maxWeight;
 
     /**
      * Construct the customizer

@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,17 +61,17 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
 
     @InvokedFromThread("unknown")
     @Override
-    public final synchronized <C> double iterate(Graph<C> og, SpringLayoutState state, SpringLayoutParameters params) {
-        Graph<C> g = og.isDirected() ? GraphUtils.copyUndirected(og) : og;
-        Set<C> nodes = g.nodes();
-        Set<C> pinned = params.getConstraints().getPinnedNodes();
-        Set<C> unpinned = Sets.difference(nodes, pinned).immutableCopy();
+    public final synchronized <N> double iterate(Graph<N> og, SpringLayoutState state, SpringLayoutParameters params) {
+        Graph<N> g = og.isDirected() ? GraphUtils.copyUndirected(og) : og;
+        Set<N> nodes = g.nodes();
+        Set<N> pinned = params.getConstraints().getPinnedNodes();
+        Set<N> unpinned = Sets.difference(nodes, pinned).immutableCopy();
         double energy;
 
         state.nodeLocationSync(nodes);
         state.updateRegions(params.maxRepelDist);
 
-        Map<C, Point2D.Double> forces = Maps.newHashMap();
+        Map<N, Point2D.Double> forces = Maps.newHashMap();
         computeNonRepulsiveForces(g, nodes, pinned, forces, state, params);
         computeRepulsiveForces(pinned, forces, state, params);
         checkForces(unpinned, forces);
@@ -82,10 +82,9 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
 
     //region FORCE COMPUTATIONS
 
-    protected <C> void computeNonRepulsiveForces(Graph<C> g, Set<C> nodes, 
-            Set<C> pinned, Map<C, Point2D.Double> forces, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
-        for (C io : nodes) {
+    protected <N> void computeNonRepulsiveForces(Graph<N> g, Set<N> nodes, Set<N> pinned, Map<N, Point2D.Double> forces,
+                                                 SpringLayoutState<N> state, SpringLayoutParameters params) {
+        for (N io : nodes) {
             Point2D.Double iLoc = state.getLoc(io);
             if (iLoc == null) {
                 iLoc = newNodeLocation(g, io, state, params);
@@ -107,17 +106,18 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         }
     }
     
-    protected <C> void addAdditionalForces(Graph<C> g, 
-            Point2D.Double sum, C io, Point2D.Double iLoc, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
+    @SuppressWarnings("EmptyMethod")
+    protected <N> void addAdditionalForces(Graph<N> g,
+                                           Point2D.Double sum, N io, Point2D.Double iLoc,
+                                           SpringLayoutState<N> state, SpringLayoutParameters params) {
         // hook for adding additional forces per the needs of child layouts
     }
     
-    protected <C> void computeRepulsiveForces(Set<C> pinned, Map<C, Point2D.Double> forces, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
-        for (LayoutRegion<C>[] rr : state.regions) {
-            for (LayoutRegion<C> r : rr) {
-                for (C io : r.points()) {
+    protected <N> void computeRepulsiveForces(Set<N> pinned, Map<N, Point2D.Double> forces,
+                                              SpringLayoutState<N> state, SpringLayoutParameters params) {
+        for (LayoutRegion<N>[] rr : state.regions) {
+            for (LayoutRegion<N> r : rr) {
+                for (N io : r.points()) {
                     if (!pinned.contains(io)) {
                         addRepulsiveForces(r, forces.get(io), io, r.get(io), params);
                     }
@@ -125,7 +125,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
             }
         }
 
-        for (C io : state.oRegion.points()) {
+        for (N io : state.oRegion.points()) {
             if (!pinned.contains(io)) {
                 addRepulsiveForces(state.oRegion, forces.get(io), io, state.oRegion.get(io), params);
             }
@@ -140,12 +140,12 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
      * Get a position for a node that doesn't currently have a position.
      * @param node the node to get new location of
      */
-    private static <C> Point2D.Double newNodeLocation(Graph<C> g, C node, SpringLayoutState<C> state, SpringLayoutParameters params) {
+    private static <N> Point2D.Double newNodeLocation(Graph<N> g, N node, SpringLayoutState<N> state, SpringLayoutParameters params) {
         double len = params.springL;
         double sx = 0;
         double sy = 0;
         int n = 0;
-        for (C o : g.adjacentNodes(node)) {
+        for (N o : g.adjacentNodes(node)) {
             Point2D.Double p = state.getLoc(o);
             if (p != null) {
                 sx += p.x;
@@ -163,12 +163,12 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     }
 
     /**
-     * Add a global attractive force pushing vertex at specified location toward the origin.
+     * Add a global attractive force pushing node at specified location toward the origin.
      * @param sum vector representing the sum of forces (will be adjusted)
-     * @param iLoc location of first vertex
+     * @param iLoc location of first node
      * @param params algorithm parameters
      */
-    private static <C> void addGlobalForce(Point2D.Double sum, Point2D.Double iLoc, SpringLayoutParameters params) {
+    private static void addGlobalForce(Point2D.Double sum, Point2D.Double iLoc, SpringLayoutParameters params) {
         double dist = iLoc.distance(0, 0);
         if (dist > params.minGlobalForceDist) {
             sum.x += -params.globalC * iLoc.x / dist;
@@ -177,20 +177,20 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     }
 
     /**
-     * Add all repulsive forces for a particular vertex.
+     * Add all repulsive forces for a particular node.
      * @param region the region for the node
      * @param sum vector representing the sum of forces (will be adjusted)
      * @param io the node of interest
-     * @param iLoc location of first vertex
+     * @param iLoc location of first node
      * @param params algorithm parameters
      */
-    private static <C> void addRepulsiveForces(LayoutRegion<C> region, Point2D.Double sum, C io, Point2D.Double iLoc,
-            SpringLayoutParameters params) {
+    private static <N> void addRepulsiveForces(LayoutRegion<N> region, Point2D.Double sum, N io, Point2D.Double iLoc,
+                                               SpringLayoutParameters params) {
         Point2D.Double jLoc;
         double dist;
-        for (LayoutRegion<C> r : region.adjacentRegions()) {
-            for (Entry<C, Point2D.Double> jEntry : r.entries()) {
-                C jo = jEntry.getKey();
+        for (LayoutRegion<N> r : region.adjacentRegions()) {
+            for (Entry<N, Point2D.Double> jEntry : r.entries()) {
+                N jo = jEntry.getKey();
                 if (io != jo) {
                     jLoc = jEntry.getValue();
                     dist = iLoc.distance(jLoc);
@@ -204,14 +204,14 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     }
 
     /**
-     * Add repulsive force at vertex i1 pointing away from vertex i2.
+     * Add repulsive force at node i1 pointing away from node i2.
      * @param sum vector representing the sum of forces (will be adjusted)
-     * @param iLoc location of first vertex
-     * @param jLoc location of second vertex
-     * @param dist distance between vertices
+     * @param iLoc location of first node
+     * @param jLoc location of second node
+     * @param dist distance between nodes
      * @param params algorithm parameters
      */
-    private static <C> void addRepulsiveForce(Point2D.Double sum, Point2D.Double iLoc, Point2D.Double jLoc, double dist,
+    private static void addRepulsiveForce(Point2D.Double sum, Point2D.Double iLoc, Point2D.Double jLoc, double dist,
                                               SpringLayoutParameters params) {
         if (iLoc == jLoc) {
             return;
@@ -235,12 +235,11 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
      * @param iLoc position of node of interest
      * @param params algorithm parameters
      */
-    private static <C> void addSpringForces(Graph<C> g,
-            Point2D.Double sum, C io, Point2D.Double iLoc, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
+    private static <N> void addSpringForces(Graph<N> g, Point2D.Double sum, N io, Point2D.Double iLoc,
+                                            SpringLayoutState<N> state, SpringLayoutParameters params) {
         Point2D.Double jLoc;
         double dist;
-        for (C o : g.adjacentNodes(io)) {
+        for (N o : g.adjacentNodes(io)) {
             if (!Objects.equal(o, io)) {
                 jLoc = state.getLoc(o);
                 dist = iLoc.distance(jLoc);
@@ -249,15 +248,15 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         }
     }
 
-    /** Add spring force at vertex i1 pointing to vertex i2.
+    /** Add spring force at node i1 pointing to node i2.
      * @param sum vector representing the sum of forces (will be adjusted)
      * @param io the node of interest
-     * @param iLoc location of first vertex
+     * @param iLoc location of first node
      * @param jo the second node of interest
-     * @param jLoc location of second vertex
-     * @param dist distance between vertices
+     * @param jLoc location of second node
+     * @param dist distance between nodes
      */
-    private static <C> void addSpringForce(Point2D.Double sum, C io, Point2D.Double iLoc, C jo, Point2D.Double jLoc,
+    private static <N> void addSpringForce(Point2D.Double sum, N io, Point2D.Double iLoc, N jo, Point2D.Double jLoc,
                                            double dist, SpringLayoutParameters params) {
         if (dist == 0) {
             LOG.log(Level.WARNING, "Distance 0 between {0} and {1}: {2}, {3}", new Object[]{io, jo, iLoc, jLoc});
@@ -270,8 +269,8 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         }
     }
     
-    private static <C> void checkForces(Set<C> unpinned, Map<C, Point2D.Double> forces) {
-        for (C io : unpinned) {
+    private static <N> void checkForces(Set<N> unpinned, Map<N, Point2D.Double> forces) {
+        for (N io : unpinned) {
             Point2D.Double netForce = forces.get(io);
             boolean test = !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) 
                     && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
@@ -281,13 +280,13 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         }
     }
     
-    private static <C> double move(Graph<C> g, Set<C> unpinned, Map<C, Point2D.Double> forces, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
+    private static <N> double move(Graph<N> g, Set<N> unpinned, Map<N, Point2D.Double> forces,
+                                   SpringLayoutState<N> state, SpringLayoutParameters params) {
         double energy = 0;
-        for (C io : unpinned) {
+        for (N io : unpinned) {
             energy += adjustVelocity(state.getVel(io), forces.get(io), g.degree(io), params);
         }
-        for (C io : unpinned) {
+        for (N io : unpinned) {
             adjustPosition(state.getLoc(io), state.getVel(io), params.stepT);
         }
         return energy;

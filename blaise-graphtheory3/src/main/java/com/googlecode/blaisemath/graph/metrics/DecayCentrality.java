@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Provides a metric describing the decay centrality of a vertex in a graph.
- * This computation can be slow for large graphs since it uses all vertices in a
+ * Provides a metric describing the decay centrality of a node in a graph.
+ * This computation can be slow for large graphs since it uses all nodes in a
  * component. The computation depends on a single decay
  * parameter... a node at distance 1 contributes this parameter, at distance
  * 2 the parameter squared, and so on. As the parameter approaches 1, the
@@ -87,8 +87,8 @@ public class DecayCentrality extends AbstractGraphNodeMetric<Double> {
     //endregion
 
     @Override
-    public <V> Double apply(Graph<V> graph, V vertex) {
-        Map<V, Integer> nvg = GraphUtils.geodesicTree(graph, vertex);
+    public <N> Double apply(Graph<N> graph, N node) {
+        Map<N, Integer> nvg = GraphUtils.geodesicTree(graph, node);
         return nvg.values().stream().mapToDouble(i -> Math.pow(parameter, i)).sum();
     }
     

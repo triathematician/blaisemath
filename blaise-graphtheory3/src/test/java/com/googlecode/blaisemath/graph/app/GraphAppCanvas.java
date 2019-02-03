@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.app;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.graph.app;
  * #L%
  */
 
-import com.google.common.base.Functions;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
@@ -37,21 +36,21 @@ import java.awt.geom.Point2D;
  * 
  * @author Elisha Peterson
  */
+@SuppressWarnings({"EmptyMethod", "unused", "UnstableApiUsage"})
 public class GraphAppCanvas extends GraphComponent {
-    
-    private final DelegatingNodeLinkGraphic graph;
+
     private final MetricScaler scaler = new MetricScaler();
 
     public GraphAppCanvas() {
         PanAndZoomHandler.install(this);
-        
-        graph = adapter.getViewGraph();
+
+        DelegatingNodeLinkGraphic graph = adapter.getViewGraph();
         graph.setDragEnabled(true);
         graph.setPointSelectionEnabled(true);
         
-        graph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
+        graph.getNodeStyler().setLabelDelegate(Object::toString);
         graph.getNodeStyler().setLabelStyleDelegate(input -> {
-            double rad = ((Number) scaler.apply(input).get(Styles.MARKER_RADIUS)).doubleValue();
+            Double rad = scaler.apply(input).getDouble(Styles.MARKER_RADIUS, 10.0);
             Point2D offset = new Point2D.Double(rad, rad);
             return AttributeSet.withParent(Styles.DEFAULT_TEXT_STYLE)
                     .and(Styles.FONT_SIZE, 8f)

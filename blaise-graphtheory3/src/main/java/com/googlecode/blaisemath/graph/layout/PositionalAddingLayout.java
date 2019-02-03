@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,17 +48,17 @@ public class PositionalAddingLayout implements StaticGraphLayout<CircleLayoutPar
     }
 
     @Override
-    public <C> Map<C, Point2D.Double> layout(Graph<C> g, @Nullable Map<C, Point2D.Double> curLocations, CircleLayoutParameters parm) {
-        double len = parm.getRadius();
-        Map<C, Point2D.Double> res = Maps.newHashMap();
-        for (C node : g.nodes()) {
+    public <N> Map<N, Point2D.Double> layout(Graph<N> g, @Nullable Map<N, Point2D.Double> curLocations, CircleLayoutParameters parameters) {
+        double len = parameters.getRadius();
+        Map<N, Point2D.Double> res = Maps.newHashMap();
+        for (N node : g.nodes()) {
             if (curLocations != null && curLocations.containsKey(node)) {
                 res.put(node, curLocations.get(node));
             } else {
                 double sx = 0;
                 double sy = 0;
                 int n = 0;
-                for (C o : g.adjacentNodes(node)) {
+                for (N o : g.adjacentNodes(node)) {
                     Point2D.Double p = curLocations.get(o);
                     if (p != null) {
                         sx += p.x;

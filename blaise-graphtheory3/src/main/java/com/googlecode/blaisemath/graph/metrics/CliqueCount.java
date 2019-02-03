@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,15 @@ import com.google.common.graph.Graph;
 import com.google.common.graph.Graphs;
 
 /**
- * Computes the clique count of a particular vertex,
+ * Computes the clique count of a particular node,
  * i.e. the number of connections between edges in the neighborhood
- * of the vertex, not counting the edges adjacent to the vertex itself.
- * Current computation time is linear in the # of edges in the graph (vertex case),
- * and quadratic in the map case (linear in edges * linear in vertices).
+ * of the node, not counting the edges adjacent to the node itself.
+ * Current computation time is linear in the # of edges in the graph (node case),
+ * and quadratic in the map case (linear in edges * linear in nodes).
  *
  * @author Elisha Peterson
  */
+@SuppressWarnings("UnstableApiUsage")
 public class CliqueCount extends AbstractGraphNodeMetric<Integer> {
 
     public CliqueCount() {
@@ -39,7 +40,7 @@ public class CliqueCount extends AbstractGraphNodeMetric<Integer> {
     }
     
     @Override
-    public <V> Integer apply(Graph<V> graph, V node) {
+    public <N> Integer apply(Graph<N> graph, N node) {
         return Graphs.inducedSubgraph(graph, graph.adjacentNodes(node)).edges().size();
     }
     

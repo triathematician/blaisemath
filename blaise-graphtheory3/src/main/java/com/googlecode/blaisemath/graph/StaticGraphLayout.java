@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,12 +38,12 @@ public interface StaticGraphLayout<P> extends ParameterSupplier<P> {
 
     /**
      * Perform layout on given graph, and return result.
-     * @param <C> graph node type
+     * @param <N> graph node type
      * @param g a graph written in terms of adjacencies
      * @param ic initial conditions
      * @param parameters parameters for the layout, e.g. radius
-     * @return a mapping of points to vertices
+     * @return a mapping of points to nodes
      */
-    <C> Map<C, Point2D.Double> layout(Graph<C> g, @Nullable Map<C, Point2D.Double> ic, P parameters);
+    <N> Map<N, Point2D.Double> layout(Graph<N> g, @Nullable Map<N, Point2D.Double> ic, P parameters);
     
 }

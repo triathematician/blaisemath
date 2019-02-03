@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,21 +34,22 @@ import java.util.Set;
  * is altruistic; third is entire team value, fourth is partial assessment
  * value, fifth is partial team value.
  *
- * @param <N> metric result type
+ * @param <T> metric result type
  *
  * @author Elisha Peterson
  */
+@SuppressWarnings("UnstableApiUsage")
 @Beta
-public class CooperationMetric<N extends Number> implements GraphSubsetMetric<double[]> {
+class CooperationMetric<T extends Number> implements GraphSubsetMetric<double[]> {
 
-    GraphSubsetMetric<N> baseM;
+    private final GraphSubsetMetric<T> baseM;
 
     /**
      * Construct with base subset metric.
      *
      * @param baseM base metric
      */
-    public CooperationMetric(GraphSubsetMetric<N> baseM) {
+    public CooperationMetric(GraphSubsetMetric<T> baseM) {
         this.baseM = baseM;
     }
 
@@ -58,10 +59,10 @@ public class CooperationMetric<N extends Number> implements GraphSubsetMetric<do
     }
 
     @Override
-    public <V> double[] getValue(Graph<V> graph, Set<V> nodes) {
+    public <N> double[] getValue(Graph<N> graph, Set<N> nodes) {
         int n = graph.nodes().size(), m = nodes.size();
-        Set<V> all = graph.nodes();
-        Set<V> complement = new HashSet<>(all);
+        Set<N> all = graph.nodes();
+        Set<N> complement = new HashSet<>(all);
         complement.removeAll(nodes);
         double outcomeAll = n == 0 ? 0.0 : baseM.getValue(graph, all).doubleValue();
         double outcomeAll2 = m == n ? 0.0 : baseM.getValue(graph, complement).doubleValue();

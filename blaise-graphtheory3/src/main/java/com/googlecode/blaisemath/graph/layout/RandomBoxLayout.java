@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,17 +55,17 @@ public class RandomBoxLayout implements StaticGraphLayout<BoxLayoutParameters> {
     }
     
     @Override
-    public Map layout(Graph g, @Nullable Map ic, BoxLayoutParameters parm) {
+    public <N> Map<N, Point2D.Double> layout(Graph<N> g, @Nullable Map<N, Point2D.Double> ic, BoxLayoutParameters parameters) {
         Random r = new Random();
-        Map<Object, Point2D.Double> result = Maps.newHashMap();
-        double minx = parm.getBounds().getMinX();
-        double miny = parm.getBounds().getMinY();
-        double maxx = parm.getBounds().getMaxX();
-        double maxy = parm.getBounds().getMaxY();
-        for (Object v : g.nodes()) {
+        Map<N, Point2D.Double> result = Maps.newHashMap();
+        double minX = parameters.getBounds().getMinX();
+        double minY = parameters.getBounds().getMinY();
+        double maxX = parameters.getBounds().getMaxX();
+        double maxY = parameters.getBounds().getMaxY();
+        for (N v : g.nodes()) {
             double x = r.nextDouble();
             double y = r.nextDouble();
-            result.put(v, new Point2D.Double(x * minx + (1 - x) * maxx, y * miny + (1 - y) * maxy));
+            result.put(v, new Point2D.Double(x * minX + (1 - x) * maxX, y * minY + (1 - y) * maxY));
         }
         return result;
     }

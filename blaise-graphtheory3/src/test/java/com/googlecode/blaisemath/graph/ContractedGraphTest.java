@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,14 +30,15 @@ import static com.googlecode.blaisemath.test.AssertUtils.assertCollectionContent
 import static com.googlecode.blaisemath.test.AssertUtils.assertIllegalArgumentException;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ContractedGraphTest {
 
-    private static Integer NODE = 0;
-    private static Integer[] NODES = new Integer[] { 1, 2, 3, 4, 5, 6, 10, 11, 15, 20, 21 };
-    private static Integer[][] EDGES = new Integer[][] { {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21} };
-    private static List<Integer> NODES_TO_REPLACE = Arrays.asList(1, 2, 5, 6, 15);
-    private static Graph<Integer> UNDIRECTED_INSTANCE = GraphUtils.contractedGraph(GraphUtils.createFromArrayEdges(false, Arrays.asList(NODES), Arrays.asList(EDGES)), NODES_TO_REPLACE, NODE);
-    private static Graph<Integer> DIRECTED_INSTANCE = GraphUtils.contractedGraph(GraphUtils.createFromArrayEdges(true, Arrays.asList(NODES), Arrays.asList(EDGES)), NODES_TO_REPLACE, NODE);
+    private static final Integer NODE = 0;
+    private static final Integer[] NODES = new Integer[] { 1, 2, 3, 4, 5, 6, 10, 11, 15, 20, 21 };
+    private static final Integer[][] EDGES = new Integer[][] { {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21} };
+    private static final List<Integer> NODES_TO_REPLACE = Arrays.asList(1, 2, 5, 6, 15);
+    private static final Graph<Integer> UNDIRECTED_INSTANCE = GraphUtils.contractedGraph(GraphUtils.createFromArrayEdges(false, Arrays.asList(NODES), Arrays.asList(EDGES)), NODES_TO_REPLACE, NODE);
+    private static final Graph<Integer> DIRECTED_INSTANCE = GraphUtils.contractedGraph(GraphUtils.createFromArrayEdges(true, Arrays.asList(NODES), Arrays.asList(EDGES)), NODES_TO_REPLACE, NODE);
 
     @Test
     public void testNodeCount() {
@@ -47,7 +48,7 @@ public class ContractedGraphTest {
 
     @Test
     public void testNodes() {
-        List expected = Arrays.asList(0, 3, 4, 10, 11, 20, 21);
+        List<Integer> expected = Arrays.asList(0, 3, 4, 10, 11, 20, 21);
         assertCollectionContentsSame(expected, UNDIRECTED_INSTANCE.nodes());
         assertCollectionContentsSame(expected, DIRECTED_INSTANCE.nodes());
     }
@@ -111,7 +112,7 @@ public class ContractedGraphTest {
         assertIllegalArgumentException(() -> UNDIRECTED_INSTANCE.degree(1));
         assertIllegalArgumentException(() -> DIRECTED_INSTANCE.degree(1));
         int[] nodes = {0, 3, 4, 10, 11, 20, 21};
-        Object[][] neighbors = new Object[][] {{0, 3, 4, 10, 11}, {0}, {0}, {0, 11}, {0, 10}, {21}, {20}};
+        Integer[][] neighbors = new Integer[][] {{0, 3, 4, 10, 11}, {0}, {0}, {0, 11}, {0, 10}, {21}, {20}};
         for (int i = 0; i < NODES_TO_REPLACE.size(); i++) {
             assertCollectionContentsSame(Arrays.asList(neighbors[i]), UNDIRECTED_INSTANCE.adjacentNodes(nodes[i]));
             assertCollectionContentsSame(Arrays.asList(neighbors[i]), DIRECTED_INSTANCE.adjacentNodes(nodes[i]));

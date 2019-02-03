@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,13 @@ import com.google.common.graph.Graph;
 import java.util.Set;
 
 /**
- * A "growth rule" that operates on a subset of vertices in a graph and produces a new set of vertices.
+ * A "growth rule" that operates on a subset of nodes in a graph and produces a new set of nodes.
  *
  * @author Elisha Peterson
  */
+@SuppressWarnings("UnstableApiUsage")
 @Beta
-public interface GraphGrowthRule {
+interface GraphGrowthRule {
 
     /**
      * Name of rule for display.

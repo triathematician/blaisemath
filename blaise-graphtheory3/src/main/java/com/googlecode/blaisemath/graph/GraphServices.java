@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import java.util.ServiceLoader;
  */
 public final class GraphServices {
 
-    private static Map<Class, ServiceLoader> serviceCache = Maps.newHashMap();
+    private static final Map<Class, ServiceLoader> SERVICE_CACHE = Maps.newHashMap();
 
     /** Utility class cannot be instantiated */
     private GraphServices() {
@@ -101,10 +101,10 @@ public final class GraphServices {
 
     /** Utility method to dynamically get list of services. */
     private static <X> List<X> services(Class<X> type) {
-        if (serviceCache.get(type) == null) {
-            serviceCache.put(type, ServiceLoader.load(type));
+        if (SERVICE_CACHE.get(type) == null) {
+            SERVICE_CACHE.put(type, ServiceLoader.load(type));
         }
-        return Lists.newArrayList(serviceCache.get(type));
+        return Lists.newArrayList((Iterable<X>) SERVICE_CACHE.get(type));
     }
     
 }

@@ -1,14 +1,10 @@
-/**
- * IterativeGraphLayoutService.java
- * Created Jan 16, 2016
- */
 package com.googlecode.blaisemath.graph.layout;
 
 /*
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +47,7 @@ class IterativeGraphLayoutService extends AbstractScheduledService {
         this(mgr, DEFAULT_DELAY);
     }
     
+    @SuppressWarnings("SameParameterValue")
     IterativeGraphLayoutService(IterativeGraphLayoutManager mgr, int loopDelay) {
         this.manager = mgr;
         this.loopDelay = loopDelay;

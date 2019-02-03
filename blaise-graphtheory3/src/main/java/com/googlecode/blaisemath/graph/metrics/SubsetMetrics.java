@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package com.googlecode.blaisemath.graph.metrics;
  */
 
 import com.google.common.annotations.Beta;
+import com.google.common.collect.Iterables;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.GraphSubsetMetric;
@@ -66,60 +67,56 @@ public class SubsetMetrics {
     //region INNER CLASSES
 
     @Beta
-    private static class AdditiveSubsetMetric<N extends Number> implements GraphSubsetMetric<N> {
+    private static class AdditiveSubsetMetric<T extends Number> implements GraphSubsetMetric<T> {
 
-        GraphNodeMetric<N> baseMetric;
+        final GraphNodeMetric<T> baseMetric;
 
         /**
          * Constructs with provided base metric.
          * @param baseMetric the metric to use for computations on individual nodes.
          */
-        private AdditiveSubsetMetric(GraphNodeMetric<N> baseMetric) { 
+        private AdditiveSubsetMetric(GraphNodeMetric<T> baseMetric) {
             this.baseMetric = baseMetric;
         }
 
         @Override
-        public <V> N getValue(Graph<V> graph, Set<V> vertices) {
+        public <N> T getValue(Graph<N> graph, Set<N> nodes) {
             Double result = 0.0;
             Number val = null;
-            for (V v : vertices) {
-                val = baseMetric.apply(graph, v);
+            for (N n : nodes) {
+                val = baseMetric.apply(graph, n);
                 result += val.doubleValue();
             }
             if (val instanceof Integer) {
-                return (N) (Integer) result.intValue();
+                return (T) (Integer) result.intValue();
             }
             else if (val instanceof Double) {
-                return (N) result;
+                return (T) result;
             }
             else if (val instanceof Float) {
-                return (N) (Float) result.floatValue();
+                return (T) (Float) result.floatValue();
             }
             return null;
         }
     }
 
     @Beta
-    private static class ContractiveSubsetMetric<N> implements GraphSubsetMetric<N> {
+    private static class ContractiveSubsetMetric<T> implements GraphSubsetMetric<T> {
 
-        GraphNodeMetric<N> baseMetric;
+        final GraphNodeMetric<T> baseMetric;
 
         /**
          * Constructs with provided base metric.
          * @param baseMetric the metric to use for computations of contracted node
          */
-        private ContractiveSubsetMetric(GraphNodeMetric<N> baseMetric) { 
+        private ContractiveSubsetMetric(GraphNodeMetric<T> baseMetric) {
             this.baseMetric = baseMetric; 
         }
 
         @Override
-        public <V> N getValue(Graph<V> graph, Set<V> nodes) {
-            V starNode = null;
-            for (V v : nodes) {
-                starNode = v;
-                break;
-            }
-            Graph<V> contracted = GraphUtils.contractedGraph(graph, nodes, starNode);
+        public <N> T getValue(Graph<N> graph, Set<N> nodes) {
+            N starNode = Iterables.getFirst(nodes, null);
+            Graph<N> contracted = GraphUtils.contractedGraph(graph, nodes, starNode);
             return baseMetric.apply(contracted, starNode);
         }
 

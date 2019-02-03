@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import com.google.common.graph.Graph;
 public class AverageDegree extends AbstractGraphMetric<Double> {
 
     public AverageDegree() {
-        super("Average degree", "Average degree of vertices in the graph. Uses average indegree/outdegree for a directed graph.", true);
+        super("Average degree", "Average degree of nodes in the graph. Uses average indegree/outdegree for a directed graph.", true);
     }
 
     @Override

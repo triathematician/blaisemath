@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.function.Function;
 /**
  * Generates a graph based on provided settings.
  * @param <P> parameters type
- * @param <N> graph vertex type
+ * @param <N> graph node type
  * @author Elisha Peterson
  */
 public interface GraphGenerator<P, N> extends ParameterSupplier<P>, Function<P, Graph<N>> {

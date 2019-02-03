@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.test;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,20 +48,17 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
 
-/**
- *
- * @author ae3263
- */
+@SuppressWarnings("ALL")
 public class GraphTestFrame extends javax.swing.JFrame {
 
     VisualGraph pga;
     /** Flag for when el needs points updated */
-    boolean updateEL = true;
-    SpringLayout energyLayout;
-    SpringLayoutParameters layoutParams;
+    private boolean updateEL = true;
+    private SpringLayout energyLayout;
+    private final SpringLayoutParameters layoutParams;
 
     /** Creates new form TestPlaneVisometry */
-    public GraphTestFrame() {
+    private GraphTestFrame() {
         EditorRegistration.registerEditors();
         initComponents();
 
@@ -98,12 +95,12 @@ public class GraphTestFrame extends javax.swing.JFrame {
                 menu.add("Node: " + focus);
             }
         });
-        plot.addContextMenuInitializer("Link", (menu, src, point, focus, selection) -> {
+        plot.addContextMenuInitializer("Edge", (menu, src, point, focus, selection) -> {
             if (menu.getComponentCount() > 0) {
                 menu.addSeparator();
             }
             if (focus != null) {
-                menu.add("Link: " + focus);
+                menu.add("Edge: " + focus);
             }
         });
 

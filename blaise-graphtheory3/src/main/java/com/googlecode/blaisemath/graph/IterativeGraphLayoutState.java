@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,22 +32,22 @@ import java.util.Set;
  * Core state properties required for iterative graph layouts. Allows for inserting
  * location updates from alternate threads.
  *
- * @param <C> graph node type
+ * @param <N> graph node type
  *
  * @author Elisha Peterson
  */
-public abstract class IterativeGraphLayoutState<C> {
+public abstract class IterativeGraphLayoutState<N> {
     
     /** Current locations of nodes in the graph. */
     @GuardedBy("this")
-    protected final Map<C, Point2D.Double> loc = Maps.newHashMap();
+    protected final Map<N, Point2D.Double> loc = Maps.newHashMap();
     /** Current velocities of nodes in the graph. */
     @GuardedBy("this")
-    protected final Map<C, Point2D.Double> vel = Maps.newHashMap();
+    protected final Map<N, Point2D.Double> vel = Maps.newHashMap();
     
     /** Interim update locations to be applied at next opportunity. */
     @GuardedBy("this")
-    private final Map<C, Point2D.Double> updateLoc = Maps.newHashMap();
+    private final Map<N, Point2D.Double> updateLoc = Maps.newHashMap();
     /** If true, the in-memory state will be updated to include only nodes in the update. */
     @GuardedBy("this")
     private boolean resetNodes = false;
@@ -66,7 +66,7 @@ public abstract class IterativeGraphLayoutState<C> {
         coolingParameter = val;
     }
     
-    public synchronized Map<C,Point2D.Double> getPositionsCopy() {
+    public synchronized Map<N,Point2D.Double> getPositionsCopy() {
         return Maps.newHashMap(loc);
     }
 
@@ -75,7 +75,7 @@ public abstract class IterativeGraphLayoutState<C> {
      * @param loc new locations
      * @param resetNodes if true, the keys in the provided map will be used to alter the set of nodes
      */
-    public synchronized void requestPositions(Map<C, Point2D.Double> loc, boolean resetNodes) {
+    public synchronized void requestPositions(Map<N, Point2D.Double> loc, boolean resetNodes) {
         updateLoc.clear();
         updateLoc.putAll(loc);
         this.resetNodes = resetNodes;
@@ -90,11 +90,11 @@ public abstract class IterativeGraphLayoutState<C> {
      * This method locks the entire layout state to prevent clashing updates.
      * @param nodes the set of nodes to be retained
      */
-    public synchronized void nodeLocationSync(Set<C> nodes) {
+    public synchronized void nodeLocationSync(Set<N> nodes) {
         loc.keySet().retainAll(nodes);
 
-        for (Map.Entry<C, Point2D.Double> en : updateLoc.entrySet()) {
-            C n = en.getKey();
+        for (Map.Entry<N, Point2D.Double> en : updateLoc.entrySet()) {
+            N n = en.getKey();
             if (nodes.contains(n)) {
                 loc.put(n, en.getValue());
                 if (vel.containsKey(n)) {
@@ -105,7 +105,7 @@ public abstract class IterativeGraphLayoutState<C> {
             }
         }
         if (resetNodes) {
-            Set keep = new HashSet(nodes);
+            Set<N> keep = new HashSet<>(nodes);
             keep.addAll(updateLoc.keySet());
             loc.keySet().retainAll(keep);
             vel.keySet().retainAll(keep);
@@ -113,7 +113,7 @@ public abstract class IterativeGraphLayoutState<C> {
         resetNodes = false;
         updateLoc.clear();
 
-        for (C v : nodes) {
+        for (N v : nodes) {
             if (!loc.containsKey(v)) {
                 loc.put(v, new Point2D.Double());
                 vel.put(v, new Point2D.Double());

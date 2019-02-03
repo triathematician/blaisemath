@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,10 @@ import java.util.logging.Logger;
 /**
  * State object for spring layout. This tracks node locations and velocities, and divides node space up into regions to allow for more efficient
  * layout calculations. This class may be safely modified by multiple threads simultaneously.
- * @param <C> graph node type
+ * @param <N> graph node type
  * @author Elisha Peterson
  */
-final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
+final class SpringLayoutState<N> extends IterativeGraphLayoutState<N> {
     
     private static final Logger LOG = Logger.getLogger(SpringLayoutState.class.getName());
     
@@ -45,29 +45,29 @@ final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
 
     /** Regions used for localizing computation */
     @GuardedBy("this")
-    LayoutRegion<C>[][] regions;
+    LayoutRegion<N>[][] regions;
     /** Points that are not in a region */
     @GuardedBy("this")
-    LayoutRegion<C> oRegion;
+    LayoutRegion<N> oRegion;
     /** List of all regions */
     @GuardedBy("this")
-    List<LayoutRegion<C>> allRegions;
+    List<LayoutRegion<N>> allRegions;
     
     //region UPDATERS
     
-    Point2D.Double getLoc(C io) {
+    Point2D.Double getLoc(N io) {
         return loc.get(io);
     }
     
-    void putLoc(C io, Point2D.Double pt) {
+    void putLoc(N io, Point2D.Double pt) {
         loc.put(io, pt);
     }
     
-    Point2D.Double getVel(C io) {
+    Point2D.Double getVel(N io) {
         return vel.get(io);
     }
     
-    void putVel(C io, Point2D.Double pt) {
+    void putVel(N io, Point2D.Double pt) {
         vel.put(io, pt);
     }
     
@@ -80,10 +80,10 @@ final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
         if (regions == null) {
             initRegions();
         }
-        for (LayoutRegion<C> r : allRegions) {
+        for (LayoutRegion<N> r : allRegions) {
             r.clear();
         }
-        for (Map.Entry<C, Point2D.Double> en : loc.entrySet()) {
+        for (Map.Entry<N, Point2D.Double> en : loc.entrySet()) {
             LayoutRegion r = regionByLoc(en.getValue(), regionSz);
             if (r != null) {
                 r.put(en.getKey(), en.getValue());
@@ -125,20 +125,20 @@ final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
             }
         }
         // set up adjacencies with outer region
-        oRegion = new LayoutRegion<C>();
+        oRegion = new LayoutRegion<>();
         allRegions.add(oRegion);
         oRegion.addAdjacentRegion(oRegion);
         for (int ix = -REGION_N; ix <= REGION_N; ix++) {
-            LayoutRegion<C> min = regions[ix + REGION_N][0];
-            LayoutRegion<C> max = regions[ix + REGION_N][2 * REGION_N];
+            LayoutRegion<N> min = regions[ix + REGION_N][0];
+            LayoutRegion<N> max = regions[ix + REGION_N][2 * REGION_N];
             min.addAdjacentRegion(oRegion);
             max.addAdjacentRegion(oRegion);
             oRegion.addAdjacentRegion(min);
             oRegion.addAdjacentRegion(max);
         }
         for (int iy = -REGION_N + 1; iy <= REGION_N - 1; iy++) {
-            LayoutRegion<C> min = regions[0][iy + REGION_N];
-            LayoutRegion<C> max = regions[2 * REGION_N][iy + REGION_N];
+            LayoutRegion<N> min = regions[0][iy + REGION_N];
+            LayoutRegion<N> max = regions[2 * REGION_N][iy + REGION_N];
             min.addAdjacentRegion(oRegion);
             max.addAdjacentRegion(oRegion);
             oRegion.addAdjacentRegion(min);

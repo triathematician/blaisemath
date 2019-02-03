@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,11 +52,11 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
     }
 
     @Override
-    public Graph<Integer> apply(PreferentialAttachmentParameters parm) {
-        if (parm.getConnectProbabilities() == null) {
-            return generate(parm.generateSeedGraph(), parm.getNodeCount(), parm.getEdgesPerStep());
+    public Graph<Integer> apply(PreferentialAttachmentParameters parameters) {
+        if (parameters.getConnectProbabilities() == null) {
+            return generate(parameters.generateSeedGraph(), parameters.getNodeCount(), parameters.getEdgesPerStep());
         } else {
-            return generate(parm.generateSeedGraph(), parm.getNodeCount(), parm.getConnectProbabilities());
+            return generate(parameters.generateSeedGraph(), parameters.getNodeCount(), parameters.getConnectProbabilities());
         }
     }
 
@@ -65,11 +65,11 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
     /**
      * Common method for preferential attachment algorithm
      */
-    private static Graph<Integer> generate(Graph<Integer> seedGraph, final int nVertices, Object edgesPerStep) {
+    private static Graph<Integer> generate(Graph<Integer> seedGraph, final int nodeCount, Object edgesPerStep) {
         // prepare parameters for graph to be created
-        List<Integer> nodes = new ArrayList<Integer>(seedGraph.nodes());
-        List<Integer[]> edges = new ArrayList<Integer[]>();
-        int[] degrees = new int[nVertices];
+        List<Integer> nodes = new ArrayList<>(seedGraph.nodes());
+        List<Integer[]> edges = new ArrayList<>();
+        int[] degrees = new int[nodeCount];
         Arrays.fill(degrees, 0);
         int degreeSum = 0;
 
@@ -85,29 +85,29 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
         int cur = 0;
         boolean variableEdgeNumber = edgesPerStep instanceof float[];
         int numberEdgesToAdd = variableEdgeNumber ? 0 : (Integer) edgesPerStep;
-        float[] connectionProbs = variableEdgeNumber ? (float[]) edgesPerStep : new float[]{};
+        float[] connectionProbabilities = variableEdgeNumber ? (float[]) edgesPerStep : new float[]{};
 
-        while (nodes.size() < nVertices) {
+        while (nodes.size() < nodeCount) {
             while (nodes.contains(cur)) {
                 cur++;
             }
             nodes.add(cur);
             if (variableEdgeNumber) {
-                numberEdgesToAdd = sampleRandom(connectionProbs);
+                numberEdgesToAdd = sampleRandom(connectionProbabilities);
             }
-            degreeSum += addEdge(edges, degrees, cur, weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
+            degreeSum += addEdge(edges, degrees, cur, weightedRandomNode(degrees, degreeSum, numberEdgesToAdd));
         }
         return GraphUtils.createFromArrayEdges(false, nodes, edges);
     }
 
     /**
-     * Utility to add specified vertices to the edge set and increment the
+     * Utility to add specified nodes to the edge set and increment the
      * corresponding degrees.
      *
      * @param edges current list of edges
      * @param degrees current list of degrees
-     * @param v1 first vertex of edge to add
-     * @param attachments second vertex (vertices) of edges to add
+     * @param v1 first node of edge to add
+     * @param attachments second node(s) of edges to add
      * @return number of new degrees added
      */
     static int addEdge(List<Integer[]> edges, int[] degrees, int v1, int... attachments) {
@@ -120,16 +120,16 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
     }
 
     /**
-     * Utility to return random vertices in a graph, whose weights are specified by the given array.
+     * Utility to return random nodes in a graph, whose weights are specified by the given array.
      *
-     * @param weights array describing the weights of vertices in the graph
+     * @param weights array describing the weights of nodes in the graph
      * @param sumWeights the sum of weights
      * @param num the number of results to return
-     * @return indices of randomly chosen vertex; will be distinct
+     * @return indices of randomly chosen node; will be distinct
      */
-    public static int[] weightedRandomVertex(int[] weights, int sumWeights, int num) {
+    public static int[] weightedRandomNode(int[] weights, int sumWeights, int num) {
         if (num < 0) {
-            throw new IllegalArgumentException("weightedRandomVertex: requires positive # of results: " + num);
+            throw new IllegalArgumentException("weightedRandomNode: requires positive # of results: " + num);
         }
         if (num == 0) {
             return new int[]{};
@@ -153,20 +153,20 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
                 }
             }
         }
-        throw new IllegalStateException("weightedRandomVertex: should not be here since sum random is less than total degree\n"
+        throw new IllegalStateException("weightedRandomNode: should not be here since sum random is less than total degree\n"
                 + "weights = " + Arrays.toString(weights) + ", sumWeights = " + sumWeights + ", num = " + num);
     }
 
     /**
      * Generate a random index based on a probability array.
-     * @param probs the probability array
+     * @param probabilities the probability array
      * @return index of a randomly chosen # in provided array of probabilities
      */
-    public static int sampleRandom(float[] probs) {
+    public static int sampleRandom(float[] probabilities) {
         double rand = Math.random();
         float sum = 0f;
-        for (int i = 0; i < probs.length; i++) {
-            sum += probs[i];
+        for (int i = 0; i < probabilities.length; i++) {
+            sum += probabilities[i];
             if (sum > rand) {
                 return i;
             }
@@ -189,7 +189,7 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
         /** If using fixed # of edges per step */
         private int edgesPerStep = 1;
         /** If using probability-based # of connections per step */
-        private @Nullable float[] connectProbs = null;
+        private @Nullable float[] probabilities = null;
 
         public PreferentialAttachmentParameters() {
             seedParameters = new ExtendedGeneratorParameters(false, 10, 10);
@@ -205,10 +205,10 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
             setEdgesPerStep(edgesPerStep);
         }
 
-        public PreferentialAttachmentParameters(ExtendedGeneratorParameters p, int nodeCount, float[] probs) {
+        public PreferentialAttachmentParameters(ExtendedGeneratorParameters p, int nodeCount, float[] probabilities) {
             super(p.isDirected(), nodeCount);
             setSeedParameters(p);
-            setConnectProbabilities(probs);
+            setConnectProbabilities(probabilities);
         }
 
         public PreferentialAttachmentParameters(Graph<Integer> seed) {
@@ -221,10 +221,10 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
             setEdgesPerStep(edgesPerStep);
         }
 
-        public PreferentialAttachmentParameters(Graph<Integer> seed, int nodeCount, float[] probs) {
+        public PreferentialAttachmentParameters(Graph<Integer> seed, int nodeCount, float[] probabilities) {
             super(seed.isDirected(), nodeCount);
             setSeedGraph(seed);
-            setConnectProbabilities(probs);
+            setConnectProbabilities(probabilities);
         }
 
         public Graph<Integer> generateSeedGraph() {
@@ -263,15 +263,15 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
         }
 
         public @Nullable float[] getConnectProbabilities() {
-            return connectProbs;
+            return probabilities;
         }
 
         /**
          * Probabilities of initial #s of connections; the i'th entry is the probability that a new node will have i connections, starting at 0.
-         * @param connectProbs array describing probabilities of connections by degree
+         * @param probabilities array describing probabilities of connections by degree
          */
-        public void setConnectProbabilities(@Nullable float[] connectProbs) {
-            this.connectProbs = connectProbs == null ? null : Arrays.copyOf(connectProbs, connectProbs.length);
+        public void setConnectProbabilities(@Nullable float[] probabilities) {
+            this.probabilities = probabilities == null ? null : Arrays.copyOf(probabilities, probabilities.length);
         }
         
         //endregion

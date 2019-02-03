@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,16 +31,16 @@ import static java.util.Objects.requireNonNull;
 /**
  * Encapsulate graph with a collection of nodes in the graph.
  *
- * @param <E> node type
+ * @param <N> node type
  * 
  * @author Elisha Peterson
  */
-public class NodeSetInGraph<E> {
+public class NodeSetInGraph<N> {
 
-    private final Set<E> nodes;
-    private final Graph<E> graph;
+    private final Set<N> nodes;
+    private final Graph<N> graph;
 
-    public NodeSetInGraph(Set<E> nodes, @Nullable Graph<E> graph) {
+    public NodeSetInGraph(Set<N> nodes, @Nullable Graph<N> graph) {
         requireNonNull(nodes);
         this.graph = graph;
         // allow for nodes not in graph, but remove them
@@ -49,22 +49,12 @@ public class NodeSetInGraph<E> {
             this.nodes.retainAll(graph.nodes());
         }
     }
-    
-    /**
-     * Factory method for creating a node set.
-     * @param <E> node type
-     * @param nodes nodes
-     * @return node set data structure
-     */
-    public static <E> NodeSetInGraph<E> create(E... nodes) {
-        return new NodeSetInGraph<>(Sets.newHashSet(nodes), null);
-    }
 
-    public Set<E> getNodes() {
+    public Set<N> getNodes() {
         return nodes;
     }
 
-    public @Nullable Graph<E> getGraph() {
+    public @Nullable Graph<N> getGraph() {
         return graph;
     }
 }

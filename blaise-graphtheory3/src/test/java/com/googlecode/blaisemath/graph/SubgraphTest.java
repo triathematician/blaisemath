@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +32,14 @@ import static com.googlecode.blaisemath.test.AssertUtils.assertCollectionContent
 import static com.googlecode.blaisemath.test.AssertUtils.assertIllegalArgumentException;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SubgraphTest {
 
-    private static Integer[] VV = new Integer[] { 1, 2, 3, 4, 5, 6, 10, 11, 15, 20, 21 };
-    private static Integer[][] EE = new Integer[][] { {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21} };
-    private static Set<Integer> SUB = new HashSet(Arrays.asList(1, 2, 5, 6, 15));
-    private static Graph<Integer> UNDIRECTED_INSTANCE = Graphs.inducedSubgraph(GraphUtils.createFromArrayEdges(false, Arrays.asList(VV), Arrays.asList(EE)), SUB);
-    private static Graph<Integer> DIRECTED_INSTANCE = Graphs.inducedSubgraph(GraphUtils.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE)), SUB);
+    private static final Integer[] VV = new Integer[] { 1, 2, 3, 4, 5, 6, 10, 11, 15, 20, 21 };
+    private static final Integer[][] EE = new Integer[][] { {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21} };
+    private static final Set<Integer> SUB = new HashSet<>(Arrays.asList(1, 2, 5, 6, 15));
+    private static final Graph<Integer> UNDIRECTED_INSTANCE = Graphs.inducedSubgraph(GraphUtils.createFromArrayEdges(false, Arrays.asList(VV), Arrays.asList(EE)), SUB);
+    private static final Graph<Integer> DIRECTED_INSTANCE = Graphs.inducedSubgraph(GraphUtils.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE)), SUB);
 
     @Test
     public void testToString() {
@@ -105,7 +106,7 @@ public class SubgraphTest {
         assertIllegalArgumentException(() -> UNDIRECTED_INSTANCE.adjacentNodes(0).size());
         assertIllegalArgumentException(() -> DIRECTED_INSTANCE.adjacentNodes(0).size());
         int[] nodes = {1, 2, 5, 6, 15};
-        Object[][] result = new Object[][] { {2,6}, {1,5}, {2}, {1,6}, {15} };
+        Integer[][] result = new Integer[][] { {2,6}, {1,5}, {2}, {1,6}, {15} };
         for (int i = 0; i < SUB.size(); i++) {
             assertCollectionContentsSame(Arrays.asList(result[i]), UNDIRECTED_INSTANCE.adjacentNodes(nodes[i]));
             assertCollectionContentsSame(Arrays.asList(result[i]), DIRECTED_INSTANCE.adjacentNodes(nodes[i]));

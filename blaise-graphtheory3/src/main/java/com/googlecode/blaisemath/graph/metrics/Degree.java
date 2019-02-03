@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ public class Degree extends AbstractGraphNodeMetric<Integer> {
     }
     
     @Override
-    public <V> Integer apply(Graph<V> graph, V vertex) {
-        return graph.degree(vertex); 
+    public <N> Integer apply(Graph<N> graph, N node) {
+        return graph.degree(node);
     }
     
 }

@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public final class EdgeLikelihoodGenerator implements GraphGenerator<EdgeLikelih
         boolean directed = p.isDirected();
         Random r = seed == null ? new Random() : seed;
         List<Integer> nn = GraphGenerators.intList(0, p.getNodeCount());
-        List<Integer[]> edges = new ArrayList<Integer[]>();
+        List<Integer[]> edges = new ArrayList<>();
         for (int i = 0; i < p.getNodeCount(); i++) {
             for (int j = directed ? 0 : i + 1; j < p.getNodeCount(); j++) {
                 if (r.nextDouble() < p.getProbability()) {

@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
         // stores the mapping of nodes to desired degrees
         Map<Integer, Integer> vxLeft = new TreeMap<>();
         int i = 0;
-        for (int iDeg = 1; iDeg < deg.length; iDeg++) // ignore the degree 0 vertices
+        for (int iDeg = 1; iDeg < deg.length; iDeg++) // ignore the degree 0 nodes
         {
             for (int nDegI = 0; nDegI < deg[iDeg]; nDegI++) {
                 vxLeft.put(i++, iDeg);
@@ -171,14 +171,14 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
             }
         }
         if (!vxLeft.isEmpty()) {
-            LOG.log(Level.WARNING, "Unable to find edges for all vertices. Remaining list={0}", vxLeft);
+            LOG.log(Level.WARNING, "Unable to find edges for all nodes. Remaining list={0}", vxLeft);
         }
         return GraphUtils.createFromArrayEdges(false, GraphGenerators.intList(0, n), edges);
     }
 
     //region ALGORITHM
     
-    private static <V> V random(Set<V> set) {
+    private static <E> E random(Set<E> set) {
         return Iterables.get(set, new Random().nextInt(set.size()));
     }
 
@@ -189,7 +189,7 @@ public final class DegreeDistributionGenerator implements GraphGenerator<DegreeD
      * @param k the subset size
      * @param omit an integer value to omit from the sequence; if outside the range 0,...,n-1, it is ignored
      * @return random subset of integers 0,...,n-1 of given size
-     * @throw IllegalArgumentException if k is not in the range 0,...,n (if omit is in the sequence),
+     * @throws IllegalArgumentException if k is not in the range 0,...,n (if omit is in the sequence),
      *   or the range 0,...,n-1 (if omit is not in the sequence)
      */
     private static int[] randomSubset(int n, int k, int omit) {

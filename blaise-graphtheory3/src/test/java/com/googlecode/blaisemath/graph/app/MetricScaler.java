@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.app;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.graph.app;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.google.common.graph.Graph;
@@ -29,12 +28,14 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Scales nodes based on a metric value, and provides associated style.
  * @author Elisha Peterson
  */
-public class MetricScaler<T extends Number & Comparable> implements Function<Object,AttributeSet> {
+@SuppressWarnings("UnstableApiUsage")
+class MetricScaler<T extends Number & Comparable> implements Function<Object,AttributeSet> {
     
     private Graph graph;
     private GraphNodeMetric<T> metric;
@@ -42,11 +43,8 @@ public class MetricScaler<T extends Number & Comparable> implements Function<Obj
     private double min;
     private double max;
     
-    private AttributeSet defStyle = Styles.DEFAULT_POINT_STYLE.copy();
-    private float unkRad = 1f;
-    private float minRad = 2f;
-    private float maxRad = 10f;
-    
+    private final AttributeSet defStyle = Styles.DEFAULT_POINT_STYLE.copy();
+
     private void recompute() {
         scores = Maps.newLinkedHashMap();
         if (graph == null || metric == null) {
@@ -72,11 +70,11 @@ public class MetricScaler<T extends Number & Comparable> implements Function<Obj
         }
     }
 
-    public GraphNodeMetric getMetric() {
+    public GraphNodeMetric<T> getMetric() {
         return metric;
     }
 
-    public void setMetric(GraphNodeMetric metric) {
+    public void setMetric(GraphNodeMetric<T> metric) {
         if (this.metric != metric) {
             this.metric = metric;
             recompute();
@@ -96,8 +94,10 @@ public class MetricScaler<T extends Number & Comparable> implements Function<Obj
 
     private double radScale(Object input) {
         Number nScore = scores.get(input);
+        float minRad = 2f;
+        float maxRad = 10f;
         if (nScore == null) {
-            return unkRad;
+            return 1f;
         } else if (min == max) {
             return .5 * (minRad + maxRad);
         }

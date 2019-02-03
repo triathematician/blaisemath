@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.generate;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+@SuppressWarnings("UnstableApiUsage")
 public class DegreeDistributionGeneratorTest {
     
     @Test
@@ -54,6 +55,7 @@ public class DegreeDistributionGeneratorTest {
             DegreeDistributionGenerator.generateUndirected(new int[]{1, 7, 3, 2, 1});
             fail("Shouldn't be able to use odd degree sum.");
         } catch (IllegalArgumentException ex) {
+            // expected
         }
         int[] expected = new int[]{1, 7, 3, 3, 1};
         int sum = 1+7+3+3+1;

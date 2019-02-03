@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.app;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,6 @@ import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.EnumEditor;
 import com.googlecode.blaisemath.graph.*;
 import com.googlecode.blaisemath.graph.layout.SpringLayoutParameters;
-import com.googlecode.blaisemath.graph.GraphMetric;
-import com.googlecode.blaisemath.graph.GraphMetrics;
-import com.googlecode.blaisemath.graph.GraphNodeMetric;
-import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Marker;
@@ -56,6 +52,7 @@ import java.util.logging.Logger;
  * Main view for {@link GraphApp}.
  * @author Elisha Peterson
  */
+@SuppressWarnings({"WeakerAccess", "unused", "UnstableApiUsage"})
 public final class GraphAppFrameView extends FrameView {
 
     private static final Logger LOG = Logger.getLogger(GraphAppFrameView.class.getName());

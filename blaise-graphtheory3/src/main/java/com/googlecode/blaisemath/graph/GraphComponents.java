@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ final class GraphComponents<N> {
     /**
      * Construct components for specified graph.
      * @param graph graph
-     * @param components the partition of vertices of the graph into components
+     * @param components the partition of nodes of the graph into components
      */
     public GraphComponents(Graph<N> graph, Collection<Set<N>> components) {
         this.graph = graph;

@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,12 @@ import com.googlecode.blaisemath.graph.generate.WattsStrogatzGenerator.WattsStro
 import com.googlecode.blaisemath.graph.layout.StaticSpringLayout.StaticSpringLayoutParameters;
 import com.googlecode.blaisemath.util.Instrument;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SpringLayoutPerformanceTest {
 
     public static void main(String[] args) {
@@ -43,7 +46,7 @@ public class SpringLayoutPerformanceTest {
         
         StaticSpringLayout sl = new StaticSpringLayout();
         
-        Graph[] graphs = new Graph[] {
+        List<Graph<Integer>> graphs = Arrays.asList(
             new EdgeLikelihoodGenerator(randomSeed).apply(new EdgeLikelihoodParameters(false, 100, .01f)),
             new EdgeLikelihoodGenerator(randomSeed).apply(new EdgeLikelihoodParameters(false, 100, .05f)),
             new EdgeLikelihoodGenerator(randomSeed).apply(new EdgeLikelihoodParameters(false, 100, .1f)),
@@ -54,9 +57,9 @@ public class SpringLayoutPerformanceTest {
 //            new EdgeLikelihoodGenerator(true, 300, .05f).get(),
             new WattsStrogatzGenerator(randomSeed).apply(new WattsStrogatzParameters(false, 100, 4, .05f))
 //            new WattsStrogatzGenerator(false, 1000, 4, .01f).randomGenerator(randomSeed).get()
-        };
+        );
         
-        for (Graph g : graphs) {
+        for (Graph<Integer> g : graphs) {
             System.out.printf("\nGraph dir=%s, |V|=%s, |E|=%s, #components=%s, degrees=%s\n", 
                     g.isDirected(), g.nodes().size(), g.edges().size(),
                     GraphUtils.components(g).size(),
@@ -69,9 +72,9 @@ public class SpringLayoutPerformanceTest {
         Instrument.print(System.out);
     }
 
-    private static String nicer(Multiset set) {
+    private static <X extends Comparable> String nicer(Multiset<X> set) {
         List<String> ss = Lists.newArrayList();
-        for (Object el : Sets.newTreeSet(set.elementSet())) {
+        for (X el : Sets.newTreeSet(set.elementSet())) {
             ss.add(el+":"+set.count(el));
         }
         return "["+Joiner.on(",").join(ss)+"]";

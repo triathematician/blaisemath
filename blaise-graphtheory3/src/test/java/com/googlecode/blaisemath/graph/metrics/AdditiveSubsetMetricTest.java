@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,14 @@ import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("UnstableApiUsage")
 public class AdditiveSubsetMetricTest {
 
-    static Graph<Integer> TEST2;
-    static GraphSubsetMetric INST;
+    private static Graph<Integer> TEST2;
+    private static GraphSubsetMetric INST;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
         INST = SubsetMetrics.additiveSubsetMetric(new Degree());
         TEST2 = GraphUtils.createFromArrayEdges(false, Arrays.asList(1,2,3,4,5,6,7),
                 Arrays.asList(
@@ -57,8 +58,8 @@ public class AdditiveSubsetMetricTest {
 
     @Test
     public void testGetValue() {
-        assertEquals(10, INST.getValue(TEST2, new HashSet(Arrays.asList(1,2,3,4))));
-        assertEquals(6, INST.getValue(TEST2, new HashSet(Arrays.asList(4,5,6))));
+        assertEquals(10, INST.getValue(TEST2, new HashSet<>(Arrays.asList(1,2,3,4))));
+        assertEquals(6, INST.getValue(TEST2, new HashSet<>(Arrays.asList(4,5,6))));
     }
 
 }

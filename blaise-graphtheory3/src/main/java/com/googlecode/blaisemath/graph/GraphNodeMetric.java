@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public interface GraphNodeMetric<T> {
     /**
      * Computes the value of the metric for the given graph and node.
      *
-     * @param <N>   graph vertex type
+     * @param <N>   graph node type
      * @param graph the graph
      * @param node  a node in the graph
      * @return value of the metric
@@ -47,7 +47,7 @@ public interface GraphNodeMetric<T> {
      * Computes the value of the metric for the given graph and all nodes in the graph. This is provided as a separate
      * interface method to allow for optimization.
      *
-     * @param <N>   graph vertex type
+     * @param <N>   graph node type
      * @param graph the graph
      * @return value of the metric for each node
      * @throws IllegalArgumentException if the value cannot be computed for specified graph (e.g. graph is null, or graph

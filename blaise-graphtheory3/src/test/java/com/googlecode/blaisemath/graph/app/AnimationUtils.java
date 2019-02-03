@@ -4,14 +4,14 @@ package com.googlecode.blaisemath.graph.app;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ import static com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler.setDesi
  * Helps generate animations with coordinate manager and graph layout algorithm.
  * @author Elisha Peterson
  */
-public class AnimationUtils {
+class AnimationUtils {
 
     /** Default number of steps to use in animating pan/zoom */
     private static final int ANIM_STEPS = 25;
@@ -74,7 +74,7 @@ public class AnimationUtils {
      * @param cm coordinate manager
      * @param locations new locations to animate to
      */
-    public static <S> void animateCoordinateChange(final CoordinateManager<S, Point2D.Double> cm, final Map<S, Point2D.Double> locations) {
+    private static <S> void animateCoordinateChange(final CoordinateManager<S, Point2D.Double> cm, final Map<S, Point2D.Double> locations) {
         final Map<S, Point2D.Double> oldLocations = cm.getLocationCopy(locations.keySet());
         AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep() {
             @Override
@@ -101,8 +101,12 @@ public class AnimationUtils {
      * @param gc graphic component, for coordinated zooming
      * @param margin margin for setting boundaries of graph component
      */
-    public static <S> void animateAndZoomCoordinateChange(final CoordinateManager<S,Point2D.Double> cm, final Map<S,Point2D.Double> locations,
-                                                          final JGraphicComponent gc, double margin) {
+    private static <S> void animateAndZoomCoordinateChange(final CoordinateManager<S, Point2D.Double> cm, final Map<S, Point2D.Double> locations,
+                                                           final JGraphicComponent gc, double margin) {
+        if (locations.isEmpty()) {
+            return;
+        }
+
         Rectangle2D.Double oldBounds = getLocalBounds(gc);
         final double xMin = oldBounds.getMinX();
         final double yMin = oldBounds.getMinY();
@@ -110,6 +114,7 @@ public class AnimationUtils {
         final double yMax = oldBounds.getMaxY();
 
         Rectangle2D.Double newBounds = Points.boundingBox(locations.values(), margin);
+        assert newBounds != null;
         final double nxMin = newBounds.getMinX();
         final double nyMin = newBounds.getMinY();
         final double nxMax = newBounds.getMaxX();

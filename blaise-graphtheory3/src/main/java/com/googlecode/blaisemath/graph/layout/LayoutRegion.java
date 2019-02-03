@@ -1,14 +1,10 @@
-/**
- * LayoutRegion.java
- * Created Jan 16, 2016
- */
 package com.googlecode.blaisemath.graph.layout;
 
 /*
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,18 +30,19 @@ import java.util.Set;
 /**
  * Utility class for decomposing a graph background into separate regions.
  *
+ * @param <N> type of element in region
  * @author Elisha Peterson
  */
-class LayoutRegion<C> {
+class LayoutRegion<N> {
 
-    private final Map<C,Point2D.Double> points = Maps.newHashMap();
-    private final Set<LayoutRegion<C>> adjacentRegions = Sets.newLinkedHashSet();
+    private final Map<N,Point2D.Double> points = Maps.newHashMap();
+    private final Set<LayoutRegion<N>> adjacentRegions = Sets.newLinkedHashSet();
     
-    Set<C> points() {
+    Set<N> points() {
         return points.keySet();
     }
 
-    Iterable<Map.Entry<C, Point2D.Double>> entries() {
+    Iterable<Map.Entry<N, Point2D.Double>> entries() {
         return points.entrySet();
     }
 
@@ -53,19 +50,19 @@ class LayoutRegion<C> {
         points.clear();
     }
     
-    Point2D.Double get(C io) {
+    Point2D.Double get(N io) {
         return points.get(io);
     }
     
-    void put(C io, Point2D.Double iLoc) {
+    void put(N io, Point2D.Double iLoc) {
         points.put(io, iLoc);
     }
 
-    Set<LayoutRegion<C>> adjacentRegions() {
+    Set<LayoutRegion<N>> adjacentRegions() {
         return adjacentRegions;
     }
     
-    void addAdjacentRegion(LayoutRegion<C> reg) {
+    void addAdjacentRegion(LayoutRegion<N> reg) {
         adjacentRegions.add(reg);
     }
 

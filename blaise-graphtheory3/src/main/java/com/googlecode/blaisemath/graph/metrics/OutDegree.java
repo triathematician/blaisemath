@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.graph.metrics;
 import com.google.common.graph.Graph;
 
 /**
- * Computes out-degree of vertices (only directed graphs).
+ * Computes out-degree of nodes (only directed graphs).
  *
  * @author Elisha Peterson
  */
@@ -34,8 +34,8 @@ public class OutDegree extends AbstractGraphNodeMetric<Integer> {
     }
 
     @Override
-    public <V> Integer apply(Graph<V> graph, V vertex) {
-        return graph.outDegree(vertex); 
+    public <N> Integer apply(Graph<N> graph, N node) {
+        return graph.outDegree(node);
     }
 
 }

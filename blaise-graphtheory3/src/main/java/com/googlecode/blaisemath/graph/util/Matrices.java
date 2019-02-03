@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.util;
  * #%L
  * BlaiseMath
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ public class Matrices {
      */
     public static double magnitudeOf(double[] vec) {
         double result = 0.0;
-        for (int i = 0; i < vec.length; i++) {
-            result += vec[i] * vec[i];
+        for (double v : vec) {
+            result += v * v;
         }
         return Math.sqrt(result);
     }

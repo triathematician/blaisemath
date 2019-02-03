@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,12 +52,12 @@ public class CircleLayout implements StaticGraphLayout<CircleLayout.CircleLayout
     }
     
     @Override
-    public Map layout(Graph g, @Nullable Map ic, CircleLayoutParameters p) {
+    public <N> Map<N, Point2D.Double> layout(Graph<N> g, @Nullable Map<N, Point2D.Double> ic, CircleLayoutParameters p) {
         double radius = p.radius;
         int n = g.nodes().size();
         int i = 0;
-        Map<Object, Point2D.Double> result = Maps.newHashMap();
-        for (Object v : g.nodes()) {
+        Map<N, Point2D.Double> result = Maps.newHashMap();
+        for (N v : g.nodes()) {
             result.put(v, new Point2D.Double(radius * Math.cos(2 * Math.PI * i / n), radius * Math.sin(2 * Math.PI * i / n)));
             i++;
         }

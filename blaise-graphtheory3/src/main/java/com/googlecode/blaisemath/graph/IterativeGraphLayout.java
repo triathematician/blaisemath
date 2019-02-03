@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,12 +47,12 @@ public interface IterativeGraphLayout<P,S extends IterativeGraphLayoutState> ext
      * <p>
      * If a request has been placed for new locations, the algorithm should adjust the positions of the requested nodes.
      *
-     * @param <C> graph node type
+     * @param <N> graph node type
      * @param graph the graph
      * @param layoutState state object for the layout
      * @param layoutParams parameters object for the layout
      * @return energy computation, to provide a measure of algorithm convergence 
      */
-    <C> double iterate(Graph<C> graph, S layoutState, P layoutParams);
+    <N> double iterate(Graph<N> graph, S layoutState, P layoutParams);
 
 }

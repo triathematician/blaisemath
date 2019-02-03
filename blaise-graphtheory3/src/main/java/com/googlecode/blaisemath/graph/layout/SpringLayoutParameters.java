@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #%L
  * BlaiseGraphTheory (v3)
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class SpringLayoutParameters {
     
     /** Desired distance between nodes */
     double distScale = DEFAULT_DIST_SCALE;
-    /** Global attractive constant (keeps vertices closer to origin) */
+    /** Global attractive constant (keeps nodes closer to origin) */
     double globalC = 1;
     /** Attractive constant */
     double springC = .1;

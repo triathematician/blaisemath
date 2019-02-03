@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class ClusteringCoefficient extends AbstractGraphMetric<Double> {
 
     public ClusteringCoefficient() {
         super("Clustering coefficient", "Computes the clustering coefficient:"
-                + " Out of all triples of vertices with at least two edges, how many have three edges?", true);
+                + " Out of all triples of nodes with at least two edges, how many have three edges?", true);
     }
 
     @Override
@@ -54,19 +54,19 @@ public class ClusteringCoefficient extends AbstractGraphMetric<Double> {
     /**
      * Computes triple characteristics of a graph.
      *
-     * @param <V> coordinate type of graph
+     * @param <N> coordinate type of graph
      * @param graph the graph
      * @return int[] array where first entry is number of triangles and second
      *      is number of path triples (i.e., when three nodes are connected together)
      */
-    static <V> int[] triples(Graph<V> graph) {
+    static <N> int[] triples(Graph<N> graph) {
         int triangles = 0;
         int triples = 0;
-        for (V node : graph.nodes()) {
-            Set<V> g1 = graph.adjacentNodes(node);
+        for (N node : graph.nodes()) {
+            Set<N> g1 = graph.adjacentNodes(node);
             int dist1 = g1.size();
             int aDist1 = Graphs.inducedSubgraph(graph, g1).edges().size();
-            Set<V> g2 = GraphUtils.neighborhood(graph, node, 2);
+            Set<N> g2 = GraphUtils.neighborhood(graph, node, 2);
             int dist2 = g2.size() - 1 - g1.size();
 
             if (graph.isDirected()) {

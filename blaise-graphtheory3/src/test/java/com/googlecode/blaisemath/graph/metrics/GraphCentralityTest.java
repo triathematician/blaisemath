@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,11 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("UnstableApiUsage")
 public class GraphCentralityTest {
 
-    static Graph<Integer> TEST2;
-    static GraphCentrality INST1;
+    private static Graph<Integer> TEST2;
+    private static GraphCentrality INST1;
 
     @BeforeClass
     public static void setUpClass() {

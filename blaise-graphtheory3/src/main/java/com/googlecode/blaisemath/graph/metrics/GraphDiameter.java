@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.metrics;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import java.util.Map;
 public class GraphDiameter extends AbstractGraphMetric<Integer> {
 
     public GraphDiameter() {
-        super("Graph diameter", "Diameter of the graph (longest path between two vertices).", true);
+        super("Graph diameter", "Diameter of the graph (longest path between two nodes).", true);
     }
 
     @Override
@@ -47,13 +47,13 @@ public class GraphDiameter extends AbstractGraphMetric<Integer> {
         return applyTyped(graph);
     }
         
-    private static <V> Integer applyTyped(Graph<V> graph) {
+    private static <N> Integer applyTyped(Graph<N> graph) {
         if (graph.nodes().size() == 0) {
             return 0;
         }
         int maxLength = 0;
-        Map<V, Integer> lengths = new HashMap<>();
-        for (V node : graph.nodes()) {
+        Map<N, Integer> lengths = new HashMap<>();
+        for (N node : graph.nodes()) {
             GraphUtils.breadthFirstSearch(graph, node, HashMultiset.create(), lengths, new ArrayDeque<>(), HashMultimap.create());
             maxLength = Math.max(maxLength, Ordering.natural().max(lengths.values()));
         }
