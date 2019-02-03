@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.core;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2018 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A graph with fully-customizable points, edges, and tooltips. The styles and
+ * A graph with fully-customizable nodes, edges, and tooltips. The styles and
  * point values are computed at runtime. Edges are maintained as a set of {@link EndpointPair}s.
  *
  * @param <S> source object type
