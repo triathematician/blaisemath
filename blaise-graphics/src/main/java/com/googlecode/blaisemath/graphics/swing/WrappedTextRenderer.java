@@ -48,6 +48,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -135,6 +136,22 @@ public class WrappedTextRenderer extends TextRenderer {
         }
     }
     
+    @Override
+    public Rectangle2D boundingBox(AnchoredText text, AttributeSet style) {
+        if (Strings.isNullOrEmpty(text.getText())) {
+            return null;
+        }
+        Graphics2D scratch = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).createGraphics();
+        scratch.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        Iterable<StyledText> lines = computeLines(text.getText(), style, clipPath, getInsets(), scratch);
+        Rectangle2D res = null;
+        for (StyledText t : lines) {
+            Rectangle2D box = TextRenderer.getInstance().boundingBox(t.getText(), t.getStyle());
+            res = res == null ? box : res.createUnion(box);
+        }
+        return res;
+    }
+
     /**
      * Default insets used for wrapping text.
      * @return insets
@@ -285,7 +302,7 @@ public class WrappedTextRenderer extends TextRenderer {
             double totHt = (double) font.getSize()+2;
             int pos0 = 0;
             int pos1 = 1;
-            while (pos1 < string.length()) {
+            while (pos1 <= string.length()) {
                 while (pos1 <= string.length() && string.charAt(pos1-1) != '\n' 
                         && font.getStringBounds(string.substring(pos0,pos1), frc).getWidth() < width-4) {
                     pos1++;

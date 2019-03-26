@@ -203,7 +203,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         gfc.setPrimitive(rect);
         gfc.getObjectStyler().setLabelConstant("this is a long label for a rectangle that should get wrapped, "
                 + "since it needs to be really big so we can adequately test something with a long label\n"
-                + "and new line characters");
+                + "and new line characters\nx");
         gfc.getObjectStyler().setLabelStyleConstant(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
         root1.addGraphic(gfc);
     }

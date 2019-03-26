@@ -30,7 +30,9 @@ import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -57,7 +59,7 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
         if (Styles.hasStroke(style)) {
             canvas.setColor(Styles.strokeColorOf(style));
             canvas.setStroke(Styles.strokeOf(style));
-            canvas.draw(primitive);
+            drawPatched(primitive, canvas);
         }
     }
     
@@ -83,6 +85,36 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
     public boolean intersects(Shape primitive, AttributeSet style, Rectangle2D rect) {
         Shape sh = strokedShape(primitive, style);
         return sh != null && sh.intersects(rect);
+    }
+    
+    /** 
+     * Method to draw a path shape on the canvas that addresses a performance issue.
+     * For dashed lines, it limits render to the canvas clip because of a JDK bug.
+     * See https://bugs.openjdk.java.net/browse/JDK-6620013.
+     * @param primitive to draw
+     * @param canvas target canvas
+     */
+    public static void drawPatched(Shape primitive, Graphics2D canvas) {
+        if (!(canvas.getStroke() instanceof BasicStroke)
+                || ((BasicStroke) canvas.getStroke()).getDashArray() == null) {
+            canvas.draw(primitive);
+            return;
+        }
+        
+        Rectangle r = canvas.getClipBounds();
+        Rectangle2D r2 = primitive.getBounds2D();
+        if (r.contains(r2)) {
+            canvas.draw(primitive);
+        } else {
+            int pad = canvas.getStroke() instanceof BasicStroke
+                    ? (int) Math.ceil(((BasicStroke) canvas.getStroke()).getLineWidth())
+                    : 5;
+            Rectangle paddedClip = new Rectangle(r.x - pad, r.y - pad,
+                    r.width + 2 * pad, r.height + 2 * pad);
+            Area a = new Area(paddedClip);
+            a.intersect(new Area(primitive));
+            canvas.draw(a);
+        }
     }
 
 }

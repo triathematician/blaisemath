@@ -311,19 +311,31 @@ public class AttributeSet {
     }
     
     /**
-     * Get the given attribute.
+     * Get the given attribute. Return null if not found.
      * @param key the key
      * @return value of the found attribute, either contained in this set or its parent,
      *      or null if there is none
      */
-    @Nullable
-    public Object get(String key) {
+    public @Nullable Object get(String key) {
+        return getOrDefault(key, null);
+    }
+    
+    /**
+     * Get the given attribute, or return the given default value if not found.
+     * Will return "null" if this class has an explicit entry with a null value
+     * for the attribute.
+     * @param key the key
+     * @param def default value to return
+     * @return value of the found attribute, either contained in this set or its parent,
+     *      or the default value if there is none
+     */
+    public @Nullable Object getOrDefault(String key, @Nullable Object def) {
         if (attributeMap.containsKey(key)) {
             return attributeMap.get(key);
         } else if (parent.isPresent()) {
             return parent.get().get(key);
         } else {
-            return null;
+            return def;
         }
     }
 
@@ -338,6 +350,17 @@ public class AttributeSet {
         Object res = attributeMap.put(key, value);
         fireStateChanged();
         return res;
+    }
+
+    /**
+     * Adds a value, only if the key is not already present.
+     * @param key the key
+     * @param value the attribute value (may be null)
+     */
+    public void putIfAbsent(String key, @Nullable Object value) {
+        if (!attributeMap.containsKey(key)) {
+            put(key, value);
+        }
     }
     
     /**
