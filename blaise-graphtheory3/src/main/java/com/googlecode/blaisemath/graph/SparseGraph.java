@@ -70,8 +70,8 @@ public final class SparseGraph<V> extends GraphSupport<V> {
      * If undirected, the set of edges is the same for both directions.
      */
     private final Table<V, V, Set<Edge<V>>> edgeTable = HashBasedTable.create();    
-    /** Information about the graph's components (replicated for speed) */
-    private GraphComponents<V> components;
+    /** Information about the graph's components. Result will be computed the first time requested, and cached for speed. */
+    private GraphComponents<V> components = null;
 
     /**
      * Helper constructor for factory methods
@@ -95,7 +95,6 @@ public final class SparseGraph<V> extends GraphSupport<V> {
         for (Edge<V> e : edges) {
             res.addEdge(e.getNode1(), e.getNode2());
         }
-        res.components = new GraphComponents(res, GraphUtils.components(res.edgeTable));
         return res;
     }
     
@@ -116,7 +115,6 @@ public final class SparseGraph<V> extends GraphSupport<V> {
         for (V[] e : edges) {
             res.addEdge(e[0], e[1]);
         }
-        res.components = new GraphComponents(res, GraphUtils.components(res.edgeTable));
         return res;
     }
 
@@ -133,7 +131,6 @@ public final class SparseGraph<V> extends GraphSupport<V> {
         for (V[] e : edges) {
             res.addEdge(e[0], e[1]);
         }
-        res.components = new GraphComponents(res, GraphUtils.components(res.edgeTable));
         return res;
     }
 
@@ -149,11 +146,18 @@ public final class SparseGraph<V> extends GraphSupport<V> {
         for (Entry<V,V> en : adjacencies.entries()) {
             res.addEdge(en.getKey(), en.getValue());
         }
-        res.components = new GraphComponents(res, GraphUtils.components(res.edgeTable));
         return res;
     }
     
     //<editor-fold defaultstate="collapsed" desc="edge construction helpers">
+    
+    /** Get components, caching computation */
+    private GraphComponents<V> components() {
+        if (components == null) {
+            components = new GraphComponents(this, GraphUtils.components(edgeTable));
+        }
+        return components;
+    }
 
     /** Invoke from initializer only */
     private void addEdge(V x, V y) {
@@ -203,9 +207,13 @@ public final class SparseGraph<V> extends GraphSupport<V> {
         return directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty();
     }
     
-
+    /**
+     * Get component information for this graph. Computed the first time the method is called,
+     * and cached for later fast retrieval.
+     * @return component info
+     */
     public GraphComponents<V> getComponentInfo() {
-        return components;
+        return components();
     }
 
     @Override

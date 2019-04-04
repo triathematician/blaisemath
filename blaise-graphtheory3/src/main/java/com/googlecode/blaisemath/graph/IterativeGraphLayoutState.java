@@ -82,9 +82,14 @@ public abstract class IterativeGraphLayoutState<C> {
      *   alter the set of nodes
      */
     public synchronized void requestPositions(Map<C, Point2D.Double> loc, boolean resetNodes) {
-        updateLoc.clear();
-        updateLoc.putAll(loc);
-        this.resetNodes = resetNodes;
+        // in some race conditions, the request positions is called with empty loc, because the coordinate manager's
+        // active location copy is empty (no current active locations). we don't want to clear the update locs in this
+        // case, because it erases the entire state
+        if (!loc.isEmpty()) {
+            updateLoc.clear();
+            updateLoc.putAll(loc);
+            this.resetNodes = resetNodes;
+        }
     }
     
     //</editor-fold>
