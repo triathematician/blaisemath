@@ -58,7 +58,7 @@ public class SpringLayoutParameters {
     /** Min distance between nodes */
     double minDist = distScale / 100;
     /** Max distance to apply repulsive force */
-    double maxRepelDist = 2 * distScale;
+    double maxRepelDist = .1 * distScale;
     
     /** Layout constraints */
     GraphLayoutConstraints constraints = new GraphLayoutConstraints();
@@ -80,7 +80,7 @@ public class SpringLayoutParameters {
         minGlobalForceDist = distScale;
         maxForce = distScale * distScale / 100;
         minDist = distScale / 100;
-        maxRepelDist = 2 * distScale;
+        maxRepelDist = .1 * distScale;
     }
 
     public double getDampingConstant() {

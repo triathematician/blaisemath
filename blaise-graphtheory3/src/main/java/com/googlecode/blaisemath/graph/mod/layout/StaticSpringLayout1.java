@@ -28,10 +28,10 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
+import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
 import com.googlecode.blaisemath.graph.layout.IterativeGraphLayoutManager;
 import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
-import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.StaticSpringLayout.StaticSpringLayoutParameters;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
@@ -48,9 +48,9 @@ import javax.annotation.Nullable;
  * Positions nodes in a graph using a force-based layout technique.
  * @author elisha
  */
-public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutParameters> {
+public class StaticSpringLayout1 implements StaticGraphLayout<StaticSpringLayoutParameters> {
 
-    private static final Logger LOG = Logger.getLogger(StaticSpringLayout.class.getName());
+    private static final Logger LOG = Logger.getLogger(StaticSpringLayout1.class.getName());
     private static final Level LOG_LEVEL = Level.FINE;
     
     private static final CircleLayout INITIAL_LAYOUT = CircleLayout.getInstance();
@@ -101,10 +101,10 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
                 null, parm.initialLayoutParams);
         
         IterativeGraphLayoutManager mgr = new IterativeGraphLayoutManager();
-        mgr.setLayout(new SpringLayout());
+        mgr.setLayout(new SpringLayout1());
         mgr.setGraph(graphForLayout);
         SpringLayoutParameters params = (SpringLayoutParameters) mgr.getParameters();
-        SpringLayoutState state = (SpringLayoutState) mgr.getState();
+        IterativeGraphLayoutState state = (IterativeGraphLayoutState) mgr.getState();
         params.setDistScale(parm.distScale);
         state.requestPositions(initialLocs, false);
         double lastEnergy = Double.MAX_VALUE;
@@ -271,107 +271,4 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         return "["+Joiner.on(",").join(ss)+"]";
     }
     
-    
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
-    
-    /** Parameters assoicated with the static spring layout. */
-    public static class StaticSpringLayoutParameters {
-        
-        public CircleLayoutParameters initialLayoutParams = new CircleLayoutParameters();
-        
-        /** Approximate distance between nodes */
-        public double distScale = SpringLayoutParameters.DEFAULT_DIST_SCALE;
-        /** Distance between leaf and adjacent node, as percentage of distScale */
-        public double leafScale = .5;
-        /** Distance between isolates, as percentage of distScale */
-        public double isolateScale = .5;
-        public int minSteps = 100;
-        public int maxSteps = 5000;
-        public double coolStart = 0.5;
-        public double coolEnd = 0.05;    
-        public double energyChangeThreshold = distScale*distScale*1e-6;
-
-        //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-        //
-        // PROPERTIES
-        //
-
-        public CircleLayoutParameters getInitialLayoutParams() {
-            return initialLayoutParams;
-        }
-
-        public void setInitialLayoutParams(CircleLayoutParameters initialLayoutParams) {
-            this.initialLayoutParams = initialLayoutParams;
-        }
-
-        public double getDistScale() {
-            return distScale;
-        }
-
-        public void setDistScale(double distScale) {
-            this.distScale = distScale;
-            this.energyChangeThreshold = distScale*distScale*1e-6;
-        }
-
-        public double getLeafScale() {
-            return leafScale;
-        }
-
-        public void setLeafScale(double leafScale) {
-            this.leafScale = leafScale;
-        }
-
-        public double getIsolateScale() {
-            return isolateScale;
-        }
-
-        public void setIsolateScale(double isolateScale) {
-            this.isolateScale = isolateScale;
-        }
-
-        public int getMinSteps() {
-            return minSteps;
-        }
-
-        public void setMinSteps(int minSteps) {
-            this.minSteps = minSteps;
-        }
-
-        public int getMaxSteps() {
-            return maxSteps;
-        }
-
-        public void setMaxSteps(int maxSteps) {
-            this.maxSteps = maxSteps;
-        }
-
-        public double getEnergyChangeThreshold() {
-            return energyChangeThreshold;
-        }
-
-        public void setEnergyChangeThreshold(double energyChangeThreshold) {
-            this.energyChangeThreshold = energyChangeThreshold;
-        }
-
-        public double getCoolStart() {
-            return coolStart;
-        }
-
-        public void setCoolStart(double coolStart) {
-            this.coolStart = coolStart;
-        }
-
-        public double getCoolEnd() {
-            return coolEnd;
-        }
-
-        public void setCoolEnd(double coolEnd) {
-            this.coolEnd = coolEnd;
-        }
-
-        //</editor-fold>
-        
-    }
-    
-    //</editor-fold>
 }

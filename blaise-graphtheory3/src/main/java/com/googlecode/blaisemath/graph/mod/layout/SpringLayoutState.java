@@ -54,9 +54,6 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
     
     private static final Logger LOG = Logger.getLogger(SpringLayoutState.class.getName());
     
-    /** # of regions away from origin in x and y directions. Region size is determined by the maximum repel distance. */
-    private static final int REGION_N = 5;
-    
     //</editor-fold>
     
     /** Regions used for localizing computation */
@@ -91,14 +88,13 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
 
     // <editor-fold defaultstate="collapsed" desc="REGION MANAGEMENT">
 
-    /** Updates the alignment of points to region */
-    void updateRegions(double regionSz) {
-        if (regions == null) {
-            initRegions();
-        }
-        for (LayoutRegion<C> r : allRegions) {
-            r.clear();
-        }
+    /** 
+     * Updates the alignment of points to region.
+     * @param nRegios number of regions in each dimension
+     * @param regionSz ideal region size
+     */
+    void updateRegions(int nRegions, double regionSz) {
+        initRegions(nRegions);
         for (Map.Entry<C, Point2D.Double> en : loc.entrySet()) {
             LayoutRegion r = regionByLoc(en.getValue(), regionSz);
             if (r != null) {
@@ -111,31 +107,33 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
     
     /** Return region for specified point */
     private LayoutRegion regionByLoc(Point2D.Double p, double regionSz) {
-        int ix = (int) ((p.x + REGION_N * regionSz) / regionSz);
-        int iy = (int) ((p.y + REGION_N * regionSz) / regionSz);
-        if (ix < 0 || ix > 2 * REGION_N || iy < 0 || iy > 2 * REGION_N) {
+        int n = (regions.length - 1) / 2;
+        int ix = (int) ((p.x + n * regionSz) / regionSz);
+        int iy = (int) ((p.y + n * regionSz) / regionSz);
+        if (ix < 0 || ix > 2 * n || iy < 0 || iy > 2 * n) {
             return oRegion;
         }
         return regions[ix][iy];
     }
     
-    /** Initializes regions */
-    private void initRegions() {
-        regions = new LayoutRegion[2 * REGION_N + 1][2 * REGION_N + 1];
+    /** Initializes regions, with n in each dimension. */
+    private void initRegions(int nRegions) {
+        int n = nRegions/2;
+        regions = new LayoutRegion[2 * n + 1][2 * n + 1];
         allRegions = Lists.newArrayList();
-        for (int ix = -REGION_N; ix <= REGION_N; ix++) {
-            for (int iy = -REGION_N; iy <= REGION_N; iy++) {
+        for (int ix = -n; ix <= n; ix++) {
+            for (int iy = -n; iy <= n; iy++) {
                 LayoutRegion region = new LayoutRegion();
-                regions[ix + REGION_N][iy + REGION_N] = region;
+                regions[ix + n][iy + n] = region;
                 allRegions.add(region);
             }
         }
         // set up adjacencies
-        for (int ix = -REGION_N; ix <= REGION_N; ix++) {
-            for (int iy = -REGION_N; iy <= REGION_N; iy++) {
-                for (int ix2 = Math.max(ix - 1, -REGION_N); ix2 <= Math.min(ix + 1, REGION_N); ix2++) {
-                    for (int iy2 = Math.max(iy - 1, -REGION_N); iy2 <= Math.min(iy + 1, REGION_N); iy2++) {
-                        regions[ix + REGION_N][iy + REGION_N].addAdjacentRegion(regions[ix2 + REGION_N][iy2 + REGION_N]);
+        for (int ix = -n; ix <= n; ix++) {
+            for (int iy = -n; iy <= n; iy++) {
+                for (int ix2 = Math.max(ix - 1, -n); ix2 <= Math.min(ix + 1, n); ix2++) {
+                    for (int iy2 = Math.max(iy - 1, -n); iy2 <= Math.min(iy + 1, n); iy2++) {
+                        regions[ix + n][iy + n].addAdjacentRegion(regions[ix2 + n][iy2 + n]);
                     }
                 }
             }
@@ -144,17 +142,17 @@ public final class SpringLayoutState<C> extends IterativeGraphLayoutState<C> {
         oRegion = new LayoutRegion<C>();
         allRegions.add(oRegion);
         oRegion.addAdjacentRegion(oRegion);
-        for (int ix = -REGION_N; ix <= REGION_N; ix++) {
-            LayoutRegion<C> min = regions[ix + REGION_N][0];
-            LayoutRegion<C> max = regions[ix + REGION_N][2 * REGION_N];
+        for (int ix = -n; ix <= n; ix++) {
+            LayoutRegion<C> min = regions[ix + n][0];
+            LayoutRegion<C> max = regions[ix + n][2 * n];
             min.addAdjacentRegion(oRegion);
             max.addAdjacentRegion(oRegion);
             oRegion.addAdjacentRegion(min);
             oRegion.addAdjacentRegion(max);
         }
-        for (int iy = -REGION_N + 1; iy <= REGION_N - 1; iy++) {
-            LayoutRegion<C> min = regions[0][iy + REGION_N];
-            LayoutRegion<C> max = regions[2 * REGION_N][iy + REGION_N];
+        for (int iy = -n + 1; iy <= n - 1; iy++) {
+            LayoutRegion<C> min = regions[0][iy + n];
+            LayoutRegion<C> max = regions[2 * n][iy + n];
             min.addAdjacentRegion(oRegion);
             max.addAdjacentRegion(oRegion);
             oRegion.addAdjacentRegion(min);

@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphGenerator;
 import java.util.Comparator;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -37,6 +38,8 @@ import java.util.TreeSet;
 public final class EdgeCountGenerator implements GraphGenerator<ExtendedGeneratorParameters,Integer> {
     
     //<editor-fold defaultstate="collapsed" desc="COMPARATOR INSTANCES">
+
+    private static final EdgeCountGenerator INST = new EdgeCountGenerator();
     
     /**
      * Used to sort pairs of integers when order of the two matters.
@@ -67,8 +70,15 @@ public final class EdgeCountGenerator implements GraphGenerator<ExtendedGenerato
     };
     
     //</editor-fold>
+    
+    private Random seed = null;
 
-    private static final EdgeCountGenerator INST = new EdgeCountGenerator();
+    public EdgeCountGenerator() {
+    }
+    
+    public EdgeCountGenerator(Random seed) {
+        this.seed = seed;
+    }
     
     public static EdgeCountGenerator getInstance() {
         return INST;
@@ -88,11 +98,12 @@ public final class EdgeCountGenerator implements GraphGenerator<ExtendedGenerato
     public Graph<Integer> apply(ExtendedGeneratorParameters parm) {
         boolean directed = parm.isDirected();
         int nodes = parm.getNodeCount();
+        Random r = seed == null ? new Random() : seed;
         Set<Integer[]> edgeSet = new TreeSet<Integer[]>(directed ? PAIR_COMPARE : PAIR_COMPARE_UNDIRECTED);
         Integer[] potential;
         for (int i = 0; i < parm.getCheckedEdgeCount(); i++) {
             do {
-                potential = new Integer[]{(int) (nodes * Math.random()), (int) (nodes * Math.random())};
+                potential = new Integer[]{ r.nextInt(nodes), r.nextInt(nodes) };
             } while ((!directed && potential[0].equals(potential[1])) || edgeSet.contains(potential));
             edgeSet.add(potential);
         }

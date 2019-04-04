@@ -32,9 +32,10 @@ import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+import com.googlecode.blaisemath.graph.mod.layout.DistanceFinder.PointPair;
 import java.awt.geom.Point2D;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,11 +50,11 @@ import javax.annotation.concurrent.ThreadSafe;
  * @author Elisha Peterson
  */
 @ThreadSafe
-public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters, SpringLayoutState> {
+public class SpringLayout1 implements IterativeGraphLayout<SpringLayoutParameters, SpringLayoutState1> {
     
     //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
     
-    private static final Logger LOG = Logger.getLogger(SpringLayout.class.getName());
+    private static final Logger LOG = Logger.getLogger(SpringLayout1.class.getName());
     
     //</editor-fold>
     
@@ -63,8 +64,8 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     }
 
     @Override
-    public SpringLayoutState createState() {
-        return new SpringLayoutState();
+    public SpringLayoutState1 createState() {
+        return new SpringLayoutState1();
     }
 
     @Override
@@ -74,7 +75,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
 
     @InvokedFromThread("unknown")
     @Override
-    public final synchronized <C> double iterate(Graph<C> og, SpringLayoutState state, SpringLayoutParameters params) {
+    public final synchronized <C> double iterate(Graph<C> og, SpringLayoutState1 state, SpringLayoutParameters params) {
         Graph<C> g = og.isDirected() ? GraphUtils.copyAsUndirectedSparseGraph(og) : og;
         Set<C> nodes = g.nodes();
         Set<C> pinned = params.getConstraints().getPinnedNodes();
@@ -82,7 +83,6 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         double energy;
 
         state.nodeLocationSync(nodes);
-        state.updateRegions((int) (Math.sqrt(nodes.size())/4), params.maxRepelDist);
 
         Map<C, Point2D.Double> forces = Maps.newHashMap();
         computeNonRepulsiveForces(g, nodes, pinned, forces, state, params);
@@ -95,7 +95,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     
     protected <C> void computeNonRepulsiveForces(Graph<C> g, Set<C> nodes, 
             Set<C> pinned, Map<C, Point2D.Double> forces, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
+            SpringLayoutState1<C> state, SpringLayoutParameters params) {
         for (C io : nodes) {
             Point2D.Double iLoc = state.getLoc(io);
             if (iLoc == null) {
@@ -120,29 +120,21 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     
     protected <C> void addAdditionalForces(Graph<C> g, 
             Point2D.Double sum, C io, Point2D.Double iLoc, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
+            SpringLayoutState1<C> state, SpringLayoutParameters params) {
         // hook for adding additional forces per the needs of child layouts
     }
     
     protected <C> void computeRepulsiveForces(Set<C> pinned, Map<C, Point2D.Double> forces, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
-        for (LayoutRegion<C>[] rr : state.regions) {
-            for (LayoutRegion<C> r : rr) {
-                for (C io : r.points()) {
-                    if (!pinned.contains(io)) {
-                        addRepulsiveForces(r, forces.get(io), io, r.get(io), params);
-                    }
-                }
-            }
-        }
-        for (C io : state.oRegion.points()) {
-            if (!pinned.contains(io)) {
-                addRepulsiveForces(state.oRegion, forces.get(io), io, state.oRegion.get(io), params);
-            }
+            SpringLayoutState1<C> state, SpringLayoutParameters params) {
+
+        // find all nodes that are within X distance of each other, add forces for these
+        List<PointPair<C>> locs = DistanceFinder.findPointsWithinDistance(state.getLoc(), params.maxRepelDist);
+        for (PointPair<C> pp : locs) {
+            addRepulsiveForce(forces.get(pp.item1), pp.point1, pp.point2, pp.distance, params);
+            addRepulsiveForce(forces.get(pp.item2), pp.point2, pp.point1, pp.distance, params);
         }
     }
-
-    
+   
     // <editor-fold defaultstate="collapsed" desc="STATIC ALGORITHMS">
 
     /**
@@ -150,7 +142,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
      * @param node the node to get new location of
      */
     private static <C> Point2D.Double newNodeLocation(Graph<C> g, C node, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
+            SpringLayoutState1<C> state, SpringLayoutParameters params) {
         double len = params.springL;
         double sx = 0;
         double sy = 0;
@@ -185,35 +177,6 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
         if (dist > params.minGlobalForceDist) {
             sum.x += -params.globalC * iLoc.x / dist;
             sum.y += -params.globalC * iLoc.y / dist;
-        }
-    }
-
-    /**
-     * Adds all repulsive forces for a particular vertex.
-     * @param g the graph
-     * @param ireg the region for the node
-     * @param sum vector representing the sum of forces (will be adjusted)
-     * @param io the node of interest
-     * @param iLoc location of first vertex
-     * @param params algorithm parameters
-     */
-    private static <C> void addRepulsiveForces(LayoutRegion<C> ireg, 
-            Point2D.Double sum, C io, Point2D.Double iLoc, 
-            SpringLayoutParameters params) {
-        Point2D.Double jLoc;
-        double dist;
-        for (LayoutRegion<C> r : ireg.adjacentRegions()) {
-            for (Entry<C, Point2D.Double> jEntry : r.entries()) {
-                C jo = jEntry.getKey();
-                if (io != jo) {
-                    jLoc = jEntry.getValue();
-                    dist = iLoc.distance(jLoc);
-                    // repulsive force from other nodes
-                    if (dist < params.maxRepelDist) {
-                        addRepulsiveForce(sum, iLoc, jLoc, dist, params);
-                    }
-                }
-            }
         }
     }
 
@@ -253,7 +216,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
      */
     private static <C> void addSpringForces(Graph<C> g,
             Point2D.Double sum, C io, Point2D.Double iLoc, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
+            SpringLayoutState1<C> state, SpringLayoutParameters params) {
         Point2D.Double jLoc;
         double dist;
         for (C o : g.neighbors(io)) {
@@ -300,7 +263,7 @@ public class SpringLayout implements IterativeGraphLayout<SpringLayoutParameters
     }
     
     private static <C> double move(Graph<C> g, Set<C> unpinned, Map<C, Point2D.Double> forces, 
-            SpringLayoutState<C> state, SpringLayoutParameters params) {
+            SpringLayoutState1<C> state, SpringLayoutParameters params) {
         double energy = 0;
         for (C io : unpinned) {
             energy += adjustVelocity(state.getVel(io), forces.get(io), g.degree(io), params);

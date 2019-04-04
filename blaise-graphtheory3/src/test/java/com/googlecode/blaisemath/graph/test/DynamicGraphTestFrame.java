@@ -34,7 +34,7 @@ import com.googlecode.blaisemath.graph.mod.layout.CircleLayout;
 import com.googlecode.blaisemath.graph.mod.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout;
 import com.googlecode.blaisemath.graph.mod.layout.RandomBoxLayout.BoxLayoutParameters;
-import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
+import com.googlecode.blaisemath.graph.mod.layout.SpringLayout1;
 import com.googlecode.blaisemath.graph.mod.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
@@ -55,7 +55,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     VisualGraph pga;
     /** Flag for when el needs points updated */
     boolean updateEL = true;
-    SpringLayout energyLayout;
+    SpringLayout1 energyLayout;
     SpringLayoutParameters layoutParams;
 
     MyTestGraph graph = new MyTestGraph();
@@ -74,7 +74,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
         // PANELS
 
-        energyLayout = new SpringLayout();
+        energyLayout = new SpringLayout1();
         layoutParams = energyLayout.createParameters();
         rollupPanel1.add("Energy Layout", PropertySheet.forBean(layoutParams));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
@@ -264,7 +264,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout();
+            energyLayout = new SpringLayout1();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().iterateLayout();
@@ -273,7 +273,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout();
+            energyLayout = new SpringLayout1();
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().setLayoutParameters(layoutParams);
         plot.getLayoutManager().setLayoutTaskActive(true);
