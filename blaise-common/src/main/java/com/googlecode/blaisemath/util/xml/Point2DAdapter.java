@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Exports a point as a string.
+ * Exports a point as a string. Results in strings like {@code point[10.0,10.5]}.
  * @author petereb1
  */
 public class Point2DAdapter extends XmlAdapter<String,Point2D.Double> {
