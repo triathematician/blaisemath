@@ -148,7 +148,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             line = new Line2D.Double(line2.getX1(), line2.getY1(), line2.getX2(), line2.getY1());
         } else if (Math.random() < .3) {
             line = new Ellipse2D.Double();
-            ((Ellipse2D.Double) line).setFrameFromDiagonal(randomPoint(), randomPoint());
+            Line2D.Double line2 = new Line2D.Double(randomPoint(), randomPoint());
+//            ((Ellipse2D.Double) line).setFrameFromDiagonal(randomPoint(), randomPoint());
+            ((Ellipse2D.Double) line).setFrameFromDiagonal(line2.getX1(), line2.getY1(), line2.getX2(), line2.getY1());
         }
         PrimitiveGraphic bs = JGraphics.path(line, RandomStyles.path());
         bs.setDefaultTooltip("<html><b>Segment</b>: <i>" + line + "</i>");
