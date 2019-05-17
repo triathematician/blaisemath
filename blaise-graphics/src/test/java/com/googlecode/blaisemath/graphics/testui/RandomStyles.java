@@ -25,6 +25,8 @@ package com.googlecode.blaisemath.graphics.testui;
  */
 
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Styles;
+
 import static com.googlecode.blaisemath.style.Styles.*;
 import java.awt.Color;
 
@@ -64,7 +66,11 @@ class RandomStyles {
     }
     
     static AttributeSet path() {
-        return AttributeSet.of(STROKE, color(), STROKE_WIDTH, strokeWidth());
+        AttributeSet res = AttributeSet.of(STROKE, color(), STROKE_WIDTH, strokeWidth());
+        if (Math.random() < .95) {
+            res.and(STROKE_DASHES, (float) (Math.random())+","+(float) (Math.random()));
+        }
+        return res;
     }
     
     static AttributeSet shape() {
