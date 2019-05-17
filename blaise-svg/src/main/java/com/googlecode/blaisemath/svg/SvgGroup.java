@@ -1,8 +1,3 @@
-/**
- * SVGGroup.java
- * Created Sep 26, 2014
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -25,29 +20,23 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import java.util.List;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  * SVG group object.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
-@XmlRootElement(name="g")
-@XmlSeeAlso({
-    SVGCircle.class, SVGEllipse.class, SVGImage.class, SVGLine.class, SVGPath.class,
-    SVGPolygon.class, SVGPolyline.class, SVGRectangle.class, SVGText.class
-})
-public class SVGGroup extends SVGElement {
+@JacksonXmlRootElement(localName="g")
+public class SvgGroup extends SvgElement {
     
-    private List<SVGElement> obj = Lists.newArrayList();
+    private List<SvgElement> obj = Lists.newArrayList();
 
-    public SVGGroup() {
+    public SvgGroup() {
         super("g");
     }
    
@@ -56,36 +45,33 @@ public class SVGGroup extends SVGElement {
      * @param elements elements to add
      * @return group
      */
-    public static SVGGroup create(SVGElement... elements) {
-        SVGGroup res = new SVGGroup();
-        for (SVGElement el : elements) {
+    public static SvgGroup create(SvgElement... elements) {
+        SvgGroup res = new SvgGroup();
+        for (SvgElement el : elements) {
             res.addElement(el);
         }
         return res;
     }
 
     //region PROPERTIES
-    //
-    // PROPERTY PATTERNS
-    //
     
-    @XmlElementRef
-    public List<SVGElement> getElements() {
+//    @XmlElementRef
+    public List<SvgElement> getElements() {
         return obj;
     }
 
-    public void setElements(List<SVGElement> obj) {
+    public void setElements(List<SvgElement> obj) {
         this.obj = obj;
     }
     
-    public void addElement(SVGElement obj) {
+    public void addElement(SvgElement obj) {
         this.obj.add(checkNotNull(obj));
     }
     
     //endregion
 
-    public SVGElement getObjectById(String id) {
-        for (SVGElement ms : obj) {
+    public SvgElement getObjectById(String id) {
+        for (SvgElement ms : obj) {
             if (Objects.equal(ms.getId(), id)) {
                 return ms;
             }

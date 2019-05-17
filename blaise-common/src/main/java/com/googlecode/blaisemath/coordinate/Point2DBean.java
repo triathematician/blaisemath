@@ -25,7 +25,7 @@ import java.awt.geom.Point2D;
 
 /**
  * An instance of {@link Point2D} that is also a {@link CoordinateBean}.
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class Point2DBean extends Point2D.Double implements CoordinateBean<Point2D> {
 

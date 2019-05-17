@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <S> focus object type for menu
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public interface ContextMenuInitializer<S> {
 
@@ -46,7 +46,6 @@ public interface ContextMenuInitializer<S> {
      * @param focus object of focus
      * @param selection current selection
      */
-    void initContextMenu(JPopupMenu popup, S src, Point2D point, @Nullable Object focus,
-            @Nullable Set selection);
+    void initContextMenu(JPopupMenu popup, S src, Point2D point, @Nullable Object focus, @Nullable Set selection);
 
 }

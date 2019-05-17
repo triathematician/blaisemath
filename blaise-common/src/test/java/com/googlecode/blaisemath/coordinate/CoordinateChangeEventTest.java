@@ -21,19 +21,16 @@ package com.googlecode.blaisemath.coordinate;
  */
 
 
-import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
-import java.awt.Point;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.awt.*;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Before;
 
-/**
- *
- * @author elisha
- */
+import static org.junit.Assert.*;
+
 public class CoordinateChangeEventTest {
 
     private Map add;

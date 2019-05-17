@@ -26,10 +26,6 @@ import java.awt.geom.Rectangle2D;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**
- * Tests code for anchor.
- * @author Elisha
- */
 public class AnchorTest {
 
     @Test

@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 elisha.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -43,16 +28,12 @@ import junit.framework.TestCase;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
-public class SVGPolygonTest extends TestCase {
+public class SvgPolygonTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGPolygon, GeneralPath> conv = SVGPolygon.shapeConverter();
+        Converter<SvgPolygon, GeneralPath> conv = SvgPolygon.shapeConverter();
         
         GeneralPath gp1 = new GeneralPath();
         gp1.moveTo(0, 0);
@@ -76,9 +57,9 @@ public class SVGPolygonTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGPolygon, GeneralPath> conv = SVGPolygon.shapeConverter();
+        Converter<SvgPolygon, GeneralPath> conv = SvgPolygon.shapeConverter();
         
-        SVGPolygon poly1 = new SVGPolygon("0,0 1,0 0,1");
+        SvgPolygon poly1 = new SvgPolygon("0,0 1,0 0,1");
         GeneralPath gp1 = conv.convert(poly1);
         PathIterator pi = gp1.getPathIterator(null);
         double[] crd = new double[6];
@@ -99,21 +80,21 @@ public class SVGPolygonTest extends TestCase {
         assertTrue(pi.isDone());
         
         try {
-            new SVGPolygon("not points");
+            new SvgPolygon("not points");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected
         }
         
         try {
-            new SVGPolygon("1,2,3 4,5 6,7");
+            new SvgPolygon("1,2,3 4,5 6,7");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected
         }
         
         try {
-            new SVGPolygon("1,a 4,5 6,7");
+            new SvgPolygon("1,a 4,5 6,7");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected

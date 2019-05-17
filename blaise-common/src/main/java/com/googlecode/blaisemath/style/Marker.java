@@ -27,7 +27,7 @@ import java.awt.geom.Point2D;
  * Generates shapes at a given point. Angle and radius parameters allow the shape
  * to be sized and oriented as well. Partially inspired by http://www.w3.org/TR/SVG/painting.html#Markers.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public interface Marker {
 

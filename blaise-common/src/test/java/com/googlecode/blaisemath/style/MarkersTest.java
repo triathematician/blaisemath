@@ -43,10 +43,6 @@ import org.junit.Test;
 import java.awt.*;
 import java.util.List;
 
-/**
- *
- * @author Elisha
- */
 public class MarkersTest {
 
     @Test

@@ -26,10 +26,6 @@ import java.awt.Point;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- *
- * @author Elisha
- */
 public class PointCoderTest {
 
     @Test

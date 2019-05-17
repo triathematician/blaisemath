@@ -1,7 +1,3 @@
-/*
- * BlaiseGraphicsTestApp.java
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -24,44 +20,33 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
-import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.svg.SVGElementGraphicConverter;
-import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
+import com.google.common.graph.EndpointPair;
+import com.googlecode.blaisemath.graphics.AnchoredIcon;
+import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.graphics.core.*;
+import com.googlecode.blaisemath.graphics.editor.BasicPointStyleEditor;
+import com.googlecode.blaisemath.graphics.svg.SvgElementGraphicConverter;
+import com.googlecode.blaisemath.graphics.swing.*;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
-import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
-import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
-import com.googlecode.blaisemath.graphics.swing.SegmentGraphic;
-import com.googlecode.blaisemath.graphics.swing.TextRenderer;
-import com.googlecode.blaisemath.graphics.swing.TwoPointGraphic;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.style.editor.BasicPointStyleEditor;
-import com.googlecode.blaisemath.graphics.swing.AnchoredIcon;
-import com.googlecode.blaisemath.graphics.swing.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
-import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
-import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Images;
 import com.googlecode.blaisemath.util.geom.Points;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
+import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.SingleFrameApplication;
+
+import javax.swing.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -72,20 +57,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import org.jdesktop.application.Action;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.SingleFrameApplication;
+import java.util.function.Function;
 
-/**
- * The main class of the application.
- */
 public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     JGraphicRoot root1;
@@ -95,15 +68,14 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void printSVG() throws JAXBException {
-        SVGRoot root = SVGElementGraphicConverter.componentToSvg(canvas1);
-        JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
+        SvgRoot root = SvgElementGraphicConverter.componentToSvg(canvas1);
+        JAXBContext jc = JAXBContext.newInstance(SvgRoot.class);
         Marshaller m = jc.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         m.marshal(root, System.out);
     }
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="GENERAL">
+
+    //region GENERAL
     
     @Action
     public void clear1() {
@@ -115,9 +87,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //endregion
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="BASIC">
+
+    //region BASIC
     
     @Action
     public void addPoint() {        
@@ -206,15 +177,12 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void addPointSet() {      
-        final BasicPointSetGraphic bp = new BasicPointSetGraphic(
-                new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
+        final BasicPointSetGraphic bp = new BasicPointSetGraphic(new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
                 this.pointsetStyle, MarkerRenderer.getInstance());
-        bp.addContextMenuInitializer(new ContextMenuInitializer<Graphic<Graphics2D>>(){
-            public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
-                Point2D pt = bp.getPoint(bp.indexOf(point));
-                menu.add(Points.formatPoint(pt, 2));
-                menu.add(getContext().getActionMap().get("editPointSetStyle"));
-            }
+        bp.addContextMenuInitializer((ContextMenuInitializer<Graphic<Graphics2D>>) (menu, src, point, focus, selection) -> {
+            Point2D pt = bp.getPoint(bp.indexOf(point, null));
+            menu.add(Points.format(pt, 2));
+            menu.add(getContext().getActionMap().get("editPointSetStyle"));
         });
         root1.addGraphic(bp);
     }
@@ -231,9 +199,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
     
     //endregion
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="GRAPHICS WITH DELEGATORS">
+
+    //region GRAPHICS WITH DELEGATORS
         
     @Action
     public void addDelegatingPointSet() {
@@ -249,7 +216,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         bp.addObjects(crds);
         bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
-        bp.getStyler().setLabelStyleConstant(Styles.defaultTextStyle());
+        bp.getStyler().setLabelStyle(Styles.DEFAULT_TEXT_STYLE);
         bp.getStyler().setStyleDelegate(new Function<String,AttributeSet>(){
             AttributeSet r = new AttributeSet();
             public AttributeSet apply(String src) {
@@ -304,56 +271,50 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         for (int i = 0; i < 15; i++) {
             pts.put(i, randomPoint());
         }         
-        Set<Edge<Integer>> edges = new HashSet<Edge<Integer>>();
+        Set<EndpointPair<Integer>> edges = new HashSet<>();
         for (int i = 0; i < pts.size(); i++) {
             int n = (int) (Math.random()*6);
             for (int j = 0; j < n; j++) {
-                edges.add(new Edge<Integer>(i, (int)(Math.random()*pts.size())));
+                edges.add(EndpointPair.ordered(i, (int)(Math.random()*pts.size())));
             }
         }
         // create graphic
-        DelegatingNodeLinkGraphic<Integer,Edge<Integer>,Graphics2D> gr = JGraphics.nodeLink();
+        DelegatingNodeLinkGraphic<Integer,EndpointPair<Integer>,Graphics2D> gr = JGraphics.nodeLink();
         gr.setDragEnabled(true);
         gr.setNodeLocations(pts);
-        gr.getNodeStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
-            public AttributeSet apply(Integer src) {
-                Point2D pt = pts.get(src);
-                int yy = (int) Math.min(pt.getX()/3, 255);
-                return AttributeSet.of(Styles.FILL, new Color(yy, 0, 255-yy))
-                        .and(Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
-            }
+        gr.getNodeStyler().setStyleDelegate(src -> {
+            Point2D pt = pts.get(src);
+            int yy = (int) Math.min(pt.getX()/3, 255);
+            return AttributeSet.of(Styles.FILL, new Color(yy, 0, 255-yy))
+                    .and(Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
         });
-        gr.getNodeStyler().setLabelDelegate(new Function<Integer, String>() {
-            public String apply(Integer src) {
-                Point2D pt = pts.get(src);
-                return String.format("(%.1f,%.1f)", pt.getX(), pt.getY());
-            }
+        gr.getNodeStyler().setLabelDelegate(src -> {
+            Point2D pt = pts.get(src);
+            return String.format("(%.1f,%.1f)", pt.getX(), pt.getY());
         });
         gr.getNodeStyler().setLabelStyleDelegate(new Function<Integer, AttributeSet>(){
-            AttributeSet bss = Styles.defaultTextStyle();
+            AttributeSet bss = Styles.DEFAULT_TEXT_STYLE;
             public AttributeSet apply(Integer src) {
                 return bss;                
             }
         });
         gr.setEdgeSet(edges);
-        gr.getEdgeStyler().setStyleDelegate(new Function<Edge<Integer>,AttributeSet>(){
-            public AttributeSet apply(Edge<Integer> src) {
-                Point2D src0 = pts.get(src.getNode1()), src1 = pts.get(src.getNode2());
-                int dx = (int) (src0.getX() - src1.getX());
-                dx = Math.min(Math.abs(dx/2), 255);
-                int dy = (int) (src0.getY() - src1.getY());
-                dy = Math.min(Math.abs(dy/3), 255);
-                
-                return AttributeSet.of(Styles.STROKE, new Color(dx, dy, 255-dy))
-                        .and(Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
-            }
+        gr.getEdgeStyler().setStyleDelegate(src -> {
+            Point2D src0 = pts.get(src.nodeU()), src1 = pts.get(src.nodeV());
+            int dx = (int) (src0.getX() - src1.getX());
+            dx = Math.min(Math.abs(dx/2), 255);
+            int dy = (int) (src0.getY() - src1.getY());
+            dy = Math.min(Math.abs(dy/3), 255);
+
+            return AttributeSet.of(Styles.STROKE, new Color(dx, dy, 255-dy))
+                    .and(Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
         });
         root1.addGraphic(gr);
     }
     
     //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="COMPOSITES">
+    //region COMPOSITES
     
     @Action
     public void addLabeledShape() {
@@ -362,11 +323,11 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         LabeledShapeGraphic gfc = new LabeledShapeGraphic();
         gfc.setPrimitive(rect);
         gfc.setDragEnabled(true);
-        gfc.getObjectStyler().setStyleConstant(RandomStyles.shape());
-        gfc.getObjectStyler().setLabelConstant("this is a long label for a rectangle that should get wrapped, "
+        gfc.getObjectStyler().setStyle(RandomStyles.shape());
+        gfc.getObjectStyler().setLabel("this is a long label for a rectangle that should get wrapped, "
                 + "since it needs to be really big so we can adequately test something with a long label\n"
                 + "and new line characters");
-        gfc.getObjectStyler().setLabelStyleConstant(RandomStyles.anchoredString());
+        gfc.getObjectStyler().setLabelStyle(RandomStyles.anchoredString());
         root1.addGraphic(gfc);
     }
 
@@ -399,7 +360,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     //endregion
     
-    //<editor-fold defaultstate="collapsed" desc="COOL STUFF USING SPECIAL STYLES">
+    //region COOL STUFF USING SPECIAL STYLES
     
     @Action
     public void addRay() {
@@ -428,7 +389,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     //endregion
         
-    //<editor-fold defaultstate="collapsed" desc="APP CODE">
+    //region APP CODE
 
     /**
      * At startup create and show the main frame of the application.

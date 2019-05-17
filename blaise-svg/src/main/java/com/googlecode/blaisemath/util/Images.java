@@ -35,7 +35,7 @@ import javax.imageio.ImageIO;
 /**
  * Utilities for working with images.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 public class Images {
     

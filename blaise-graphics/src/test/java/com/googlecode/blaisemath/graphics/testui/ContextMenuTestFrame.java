@@ -32,10 +32,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.AbstractAction;
 
-/**
- *
- * @author Elisha Peterson
- */
 @SuppressWarnings("FieldCanBeLocal")
 public class ContextMenuTestFrame extends javax.swing.JFrame {
 

@@ -20,20 +20,18 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 import com.googlecode.blaisemath.graphics.AnchoredText;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
- * <p>
- *   SVG text object.
- * </p>
- * @author elisha
+ * SVG text object.
+ *
+ * @author Elisha Peterson
  */
-@XmlRootElement(name="text")
-public final class SVGText extends SVGElement {
+@JacksonXmlRootElement(localName="text")
+public final class SvgText extends SvgElement {
     
     private static final TextConverter CONVERTER_INST = new TextConverter();
     
@@ -41,11 +39,11 @@ public final class SVGText extends SVGElement {
     private double y;
     private String content;
 
-    public SVGText() {
+    public SvgText() {
         this(0, 0, "");
     }
 
-    public SVGText(double x, double y, String content) {
+    public SvgText(double x, double y, String content) {
         super("polygon");
         this.x = x;
         this.y = y;
@@ -53,11 +51,8 @@ public final class SVGText extends SVGElement {
     }
     
     //region PROPERTIES
-    //
-    // PROPERTY PATTERNS
-    //
-    
-    @XmlAttribute
+
+    @JacksonXmlProperty(isAttribute = true)
     public double getX() {
         return x;
     }
@@ -66,7 +61,7 @@ public final class SVGText extends SVGElement {
         this.x = x;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getY() {
         return y;
     }
@@ -87,19 +82,19 @@ public final class SVGText extends SVGElement {
     
     //endregion
     
-    public static Converter<SVGText, AnchoredText> textConverter() {
+    public static Converter<SvgText, AnchoredText> textConverter() {
         return CONVERTER_INST;
     }
     
     
-    private static class TextConverter extends Converter<SVGText, AnchoredText> {
+    private static class TextConverter extends Converter<SvgText, AnchoredText> {
         @Override
-        protected SVGText doBackward(AnchoredText r) {
-            return new SVGText(r.getX(), r.getY(), r.getText());
+        protected SvgText doBackward(AnchoredText r) {
+            return new SvgText(r.getX(), r.getY(), r.getText());
         }
 
         @Override
-        protected AnchoredText doForward(SVGText r) {
+        protected AnchoredText doForward(SvgText r) {
             return new AnchoredText(r.x, r.y, r.content);
         }
     }

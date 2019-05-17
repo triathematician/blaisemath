@@ -29,10 +29,6 @@ import java.awt.*;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * @author triat
- */
 @SuppressWarnings({"ConstantConditions", "OptionalGetWithoutIsPresent"})
 public class AttributeSetTest {
 

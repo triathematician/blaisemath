@@ -37,30 +37,44 @@ package com.googlecode.blaisemath.svg;
 
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.graphics.swing.AnchoredText;
+import java.awt.geom.Ellipse2D;
 import junit.framework.TestCase;
-import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
 /**
  *
- * @author elisha
+ * @author Elisha Peterson
  */
-public class SVGTextTest extends TestCase {
+public class SvgEllipseTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGText, AnchoredText> conv = SVGText.textConverter();
+        Converter<SvgEllipse, Ellipse2D> conv = SvgEllipse.shapeConverter();
+        
+        Ellipse2D e1 = new Ellipse2D.Double(1.0, 2.0, 2.0, 3.0);
+        SvgEllipse circ = conv.reverse().convert(e1);
+        assert circ != null;
+        assertEquals(2.0, circ.getCx(), 1e-6);
+        assertEquals(3.5, circ.getCy(), 1e-6);
+        assertEquals(1.0, circ.getRx(), 1e-6);
+        assertEquals(1.5, circ.getRy(), 1e-6);
         
         assertEquals(null, conv.reverse().convert(null));
-        
     }
 
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGText, AnchoredText> conv = SVGText.textConverter();
+        Converter<SvgEllipse, Ellipse2D> conv = SvgEllipse.shapeConverter();
+        
+        SvgEllipse sEll = new SvgEllipse(1, 2, 3, 2);
+        Ellipse2D ell = conv.convert(sEll);
+        assert ell != null;
+        assertEquals(-2.0, ell.getMinX(), 1e-6);
+        assertEquals(0.0, ell.getMinY(), 1e-6);
+        assertEquals(6.0, ell.getWidth(), 1e-6);
+        assertEquals(4.0, ell.getHeight(), 1e-6);
         
         assertEquals(null, conv.convert(null));
     }

@@ -27,19 +27,17 @@ package testutil;
  */
 
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import static junit.framework.Assert.assertEquals;
 
-/**
- * @author petereb1
- */
 public class JAXBTestUtils {
 
     /** 
@@ -47,7 +45,7 @@ public class JAXBTestUtils {
      * @param testEquals whether to use a .equals test on the recycled object
      * @return recycled object
      */
-    public static Object testRecycleObject(Object o, @Nullable JAXBContext jc, 
+    public static Object testRecycleObject(Object o, @Nullable JAXBContext jc,
             boolean testEquals, boolean testStringEquals, PrintStream w) throws JAXBException {
         if (jc == null) {
             jc = JAXBContext.newInstance(o.getClass());

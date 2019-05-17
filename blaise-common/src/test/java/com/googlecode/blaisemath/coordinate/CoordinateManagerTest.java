@@ -21,14 +21,10 @@ package com.googlecode.blaisemath.coordinate;
  */
 
 
-import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-/**
- *
- * @author elisha
- */
+import static org.junit.Assert.assertEquals;
+
 public class CoordinateManagerTest {
 
     private final CoordinateManager inst = CoordinateManager.create(50);

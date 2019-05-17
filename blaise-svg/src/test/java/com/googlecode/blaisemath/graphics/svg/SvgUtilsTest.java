@@ -21,15 +21,11 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 
-import static com.googlecode.blaisemath.svg.SVGUtils.parseLength;
+import static com.googlecode.blaisemath.svg.SvgUtils.parseLength;
 import static junit.framework.Assert.assertEquals;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
-public class SVGUtilsTest {
+public class SvgUtilsTest {
 
     @Test
     public void testParseLength() {

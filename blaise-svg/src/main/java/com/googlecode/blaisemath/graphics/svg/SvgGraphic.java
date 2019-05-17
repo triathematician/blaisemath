@@ -26,8 +26,9 @@ import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.GraphicUtils;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import com.googlecode.blaisemath.svg.SVGElement;
-import com.googlecode.blaisemath.svg.SVGRoot;
+import com.googlecode.blaisemath.svg.SvgElement;
+import com.googlecode.blaisemath.svg.SvgRoot;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -43,19 +44,19 @@ import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
 
 /**
- * Uses an {@link SVGElement} as a primitive to be rendered on a {@link JGraphicComponent}.
+ * Uses an {@link SvgElement} as a primitive to be rendered on a {@link JGraphicComponent}.
  * Allows setting bounding boxes, so that the SVG element can be scaled or moved on the canvas.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
-public class SVGGraphic extends GraphicComposite<Graphics2D> {
+public class SvgGraphic extends GraphicComposite<Graphics2D> {
 
-    private static final Logger LOG = Logger.getLogger(SVGGraphic.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgGraphic.class.getName());
     private static final boolean RENDER_BOUNDS = false;
     private static final boolean RENDER_VIEW_BOX = false;
     
     /** Source SVG element to be drawn */
-    private SVGElement element;
+    private SvgElement element;
     /** Describes where on the canvas the element will be drawn */
     private Rectangle2D graphicBounds;
     /** The graphic object that will be rendered */
@@ -66,9 +67,9 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
      * @param element SVG to draw
      * @return graphic
      */
-    public static SVGGraphic create(SVGElement element) {
+    public static SvgGraphic create(SvgElement element) {
         checkNotNull(element);
-        SVGGraphic res = new SVGGraphic();
+        SvgGraphic res = new SvgGraphic();
         res.setElement(element);
         return res;
     }
@@ -78,17 +79,17 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
      * @param svg svg as a string
      * @return graphic
      */
-    public static SVGGraphic create(String svg) {
+    public static SvgGraphic create(String svg) {
         try {
-            return create(SVGRoot.load(svg));
+            return create(SvgRoot.load(svg));
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Invalid SVG", ex);
-            return new SVGGraphic();
+            return new SvgGraphic();
         }
     }
     
     private void updateGraphics() {
-        Graphic<Graphics2D> nue = SVGElementGraphicConverter.getInstance()
+        Graphic<Graphics2D> nue = SvgElementGraphicConverter.getInstance()
                 .convert(element);
         if (primitiveElement == null) {
             addGraphic(nue);
@@ -97,20 +98,20 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
         }
         primitiveElement = nue;
         
-        if (element instanceof SVGRoot) {
-            double wid = ((SVGRoot) element).getWidth();
-            double ht = ((SVGRoot) element).getHeight();
+        if (element instanceof SvgRoot) {
+            double wid = ((SvgRoot) element).getWidth();
+            double ht = ((SvgRoot) element).getHeight();
             this.graphicBounds = new Rectangle2D.Double(0, 0, wid, ht);
         }
     }
     
     //region PROPERTIES
 
-    public SVGElement getElement() {
+    public SvgElement getElement() {
         return element;
     }
     
-    public void setElement(SVGElement el) {
+    public void setElement(SvgElement el) {
         Object old = this.element;
         if (old != el) {
             this.element = el;
@@ -131,16 +132,16 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
     
     /** Generate transform used to scale/translate the SVG. Transforms the view box to within the graphic bounds. */
     private AffineTransform transform() {
-        if (graphicBounds == null || !(element instanceof SVGRoot)) {
+        if (graphicBounds == null || !(element instanceof SvgRoot)) {
             return null;
         }
-        Rectangle2D viewBox = ((SVGRoot) element).getViewBoxAsRectangle();
+        Rectangle2D viewBox = ((SvgRoot) element).getViewBoxAsRectangle();
         return viewBox == null ? null : PanAndZoomHandler.scaleRectTransform(graphicBounds, viewBox);
     }
     
     /** Inverse transform. Transforms the graphic bounds to the view box. */
     private AffineTransform inverseTransform() {
-        if (graphicBounds == null || !(element instanceof SVGRoot)) {
+        if (graphicBounds == null || !(element instanceof SvgRoot)) {
             return null;
         }
         AffineTransform t = transform();
@@ -248,7 +249,7 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
     }
     
     private Rectangle2D viewBox() {
-        return element instanceof SVGRoot ? ((SVGRoot) element).getViewBoxAsRectangle() : null;
+        return element instanceof SvgRoot ? ((SvgRoot) element).getViewBoxAsRectangle() : null;
     }
 
     /** Test if point is in view box, where point is in svg coords */

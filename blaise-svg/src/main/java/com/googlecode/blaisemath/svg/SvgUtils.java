@@ -32,15 +32,16 @@ import java.util.regex.Pattern;
 
 /**
  * Utility class for SVG paths.
- * @author petereb1
+ *
+ * @author Elisha Peterson
  */
-public class SVGUtils {
+public class SvgUtils {
 
-    private static final Logger LOG = Logger.getLogger(SVGUtils.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgUtils.class.getName());
 
     private static final Pattern LEN_PATTERN = Pattern.compile("^auto$|^[+-]?[0-9]+\\.?([0-9]+)?(px|em|ex|%|in|cm|mm|pt|pc)?$");
     
-    private SVGUtils() {
+    private SvgUtils() {
     }
     
     /**
@@ -50,7 +51,7 @@ public class SVGUtils {
      * @return marker
      */
     public static final Marker pathToMarker(String svgPath, final float sz) {
-        final Path2D path = SVGPath.shapeConverter().convert(new SVGPath(svgPath));
+        final Path2D path = SvgPath.shapeConverter().convert(new SvgPath(svgPath));
         if (path == null) {
             
         }

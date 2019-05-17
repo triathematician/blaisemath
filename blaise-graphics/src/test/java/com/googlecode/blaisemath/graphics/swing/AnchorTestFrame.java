@@ -51,10 +51,6 @@ import javax.swing.Icon;
  * #L%
  */
 
-/**
- *
- * @author Elisha Peterson
- */
 @SuppressWarnings("FieldCanBeLocal")
 public class AnchorTestFrame extends javax.swing.JFrame {
 

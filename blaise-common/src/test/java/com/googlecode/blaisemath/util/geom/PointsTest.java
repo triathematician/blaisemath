@@ -26,10 +26,6 @@ import java.awt.geom.Point2D;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
 public class PointsTest {
 
     @Test

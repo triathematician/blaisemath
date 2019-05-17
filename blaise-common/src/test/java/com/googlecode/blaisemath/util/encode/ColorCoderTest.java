@@ -27,10 +27,6 @@ import java.awt.Color;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- *
- * @author Elisha
- */
 public class ColorCoderTest {
 
     @Test

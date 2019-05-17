@@ -29,7 +29,7 @@ import org.junit.Test;
 
 /**
  *
- * @author elisha
+ * @author Elisha Peterson
  */
 public class ImagesTest {
     

@@ -24,10 +24,6 @@ package com.googlecode.blaisemath.style;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Elisha Peterson
- */
 public class StylesTest {
     
     public StylesTest() {

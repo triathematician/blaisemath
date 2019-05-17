@@ -37,10 +37,6 @@ import static java.util.stream.Collectors.toMap;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author petereb1
- */
 public class AttributeSetCoderTest {
     
     private final AttributeSetCoder inst = new AttributeSetCoder();

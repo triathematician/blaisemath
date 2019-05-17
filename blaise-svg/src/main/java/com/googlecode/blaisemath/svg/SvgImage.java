@@ -20,15 +20,15 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import afu.org.checkerframework.checker.nullness.qual.Nullable;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.graphics.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.imageio.ImageIO;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -38,15 +38,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>
- *   SVG-compatible image, with size parameters and a reference URL.
- * </p>
- * @author elisha
+ * SVG-compatible image, with size parameters and a reference URL.
+ *
+ * @author Elisha Peterson
  */
-@XmlRootElement(name="image")
-public final class SVGImage extends SVGElement {
+@JacksonXmlRootElement(localName="image")
+public final class SvgImage extends SvgElement {
     
-    private static final Logger LOG = Logger.getLogger(SVGImage.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgImage.class.getName());
     private static final ImageConverter CONVERTER_INST = new ImageConverter();
     
     private double x;
@@ -57,15 +56,15 @@ public final class SVGImage extends SVGElement {
     
     private Image image;
 
-    public SVGImage() {
+    public SvgImage() {
         this(0, 0, null, null, "");
     }
     
-    public SVGImage(double x, double y, String ref) {
+    public SvgImage(double x, double y, String ref) {
         this(x, y, null, null, ref);
     }
 
-    public SVGImage(double x, double y, Double width, Double height, String ref) {
+    public SvgImage(double x, double y, Double width, Double height, String ref) {
         super("image");
         this.x = x;
         this.y = y;
@@ -75,11 +74,8 @@ public final class SVGImage extends SVGElement {
     }
 
     //region PROPERTIES
-    //
-    // PROPERTY PATTERNS
-    //
-    
-    @XmlAttribute
+
+    @JacksonXmlProperty(isAttribute = true)
     public double getX() {
         return x;
     }
@@ -88,7 +84,7 @@ public final class SVGImage extends SVGElement {
         this.x = x;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getY() {
         return y;
     }
@@ -97,7 +93,7 @@ public final class SVGImage extends SVGElement {
         this.y = y;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public Double getWidth() {
         return width;
     }
@@ -106,7 +102,7 @@ public final class SVGImage extends SVGElement {
         this.width = width;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public Double getHeight() {
         return height;
     }
@@ -114,8 +110,8 @@ public final class SVGImage extends SVGElement {
     public void setHeight(Double height) {
         this.height = height;
     }
-    
-    @XmlAttribute(name="href", namespace="http://www.w3.org/1999/xlink")
+
+    @JacksonXmlProperty(isAttribute = true, localName="href", namespace="http://www.w3.org/1999/xlink")
     public String getImageRef() {
         return imageRef;
     }
@@ -131,8 +127,7 @@ public final class SVGImage extends SVGElement {
      * Load (if necessary) and return the image corresponding to the image reference.
      * @return loaded image, or null if it couldn't be loaded
      */
-    @Nullable
-    public Image getImage() {
+    public @Nullable Image getImage() {
         if (image == null && !Strings.isNullOrEmpty(imageRef)) {
             loadImage();
         }
@@ -164,18 +159,18 @@ public final class SVGImage extends SVGElement {
     
     //endregion
 
-    public static Converter<SVGImage, AnchoredImage> imageConverter() {
+    public static Converter<SvgImage, AnchoredImage> imageConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class ImageConverter extends Converter<SVGImage, AnchoredImage> {
+    private static final class ImageConverter extends Converter<SvgImage, AnchoredImage> {
         @Override
-        protected SVGImage doBackward(AnchoredImage r) {
-            return new SVGImage(r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getReference());
+        protected SvgImage doBackward(AnchoredImage r) {
+            return new SvgImage(r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getReference());
         }
 
         @Override
-        protected AnchoredImage doForward(SVGImage r) {
+        protected AnchoredImage doForward(SvgImage r) {
             Image bi = r.getImage();
             if (bi == null) {
                 return null;

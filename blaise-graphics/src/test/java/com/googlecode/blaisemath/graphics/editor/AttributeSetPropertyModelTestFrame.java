@@ -30,10 +30,6 @@ import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.Point;
 
-/**
- *
- * @author Elisha Peterson
- */
 public class AttributeSetPropertyModelTestFrame extends javax.swing.JFrame {
 
     /**

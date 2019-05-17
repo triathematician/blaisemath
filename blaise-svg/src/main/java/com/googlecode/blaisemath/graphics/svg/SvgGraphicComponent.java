@@ -21,8 +21,9 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.svg.SVGElement;
-import com.googlecode.blaisemath.svg.SVGRoot;
+import com.googlecode.blaisemath.svg.SvgElement;
+import com.googlecode.blaisemath.svg.SvgRoot;
+
 import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -32,15 +33,15 @@ import java.util.logging.Logger;
 /**
  * Swing component for displaying a single SVG element or elements.
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
-public class SVGGraphicComponent extends JGraphicComponent {
+public class SvgGraphicComponent extends JGraphicComponent {
 
-    private static final Logger LOG = Logger.getLogger(SVGGraphicComponent.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgGraphicComponent.class.getName());
 
-    protected final SVGGraphic graphic = new SVGGraphic();
+    protected final SvgGraphic graphic = new SvgGraphic();
 
-    public SVGGraphicComponent() {
+    public SvgGraphicComponent() {
         addGraphic(graphic);
     }
     
@@ -49,8 +50,8 @@ public class SVGGraphicComponent extends JGraphicComponent {
      * @param svg the svg
      * @return component
      */
-    public static SVGGraphicComponent create(SVGElement svg) {
-        SVGGraphicComponent res = new SVGGraphicComponent();
+    public static SvgGraphicComponent create(SvgElement svg) {
+        SvgGraphicComponent res = new SvgGraphicComponent();
         res.setElement(svg);
         return res;
     }
@@ -60,8 +61,8 @@ public class SVGGraphicComponent extends JGraphicComponent {
      * @param svg the svg
      * @return component
      */
-    public static SVGGraphicComponent create(String svg) {
-        SVGGraphicComponent res = new SVGGraphicComponent();
+    public static SvgGraphicComponent create(String svg) {
+        SvgGraphicComponent res = new SvgGraphicComponent();
         res.setSvgText(svg);
         Rectangle2D bounds = res.graphic.getGraphicBounds();
         if (bounds != null) {
@@ -75,17 +76,17 @@ public class SVGGraphicComponent extends JGraphicComponent {
     // PROPERTIES
     //
     
-    public SVGElement getElement() {
+    public SvgElement getElement() {
         return graphic.getElement();
     }
 
-    public void setElement(SVGElement el) {
+    public void setElement(SvgElement el) {
         graphic.setElement(el);
     }
     
     public String getSvgText() {
         try {
-            return SVGRoot.saveToString(graphic.getElement());
+            return SvgRoot.saveToString(graphic.getElement());
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Unable to save SVG", x);
             return "<svg/>";
@@ -94,7 +95,7 @@ public class SVGGraphicComponent extends JGraphicComponent {
     
     public void setSvgText(String svg) {
         try {
-            setElement(SVGRoot.load(svg));
+            setElement(SvgRoot.load(svg));
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Set SVG Failed", x);
         }

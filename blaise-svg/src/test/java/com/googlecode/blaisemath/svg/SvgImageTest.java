@@ -37,51 +37,43 @@ package com.googlecode.blaisemath.svg;
 
 
 import com.google.common.base.Converter;
-import java.awt.geom.Ellipse2D;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-/**
- *
- * @author elisha
- */
-public class SVGCircleTest extends TestCase {
+import java.net.MalformedURLException;
+
+public class SvgImageTest extends TestCase {
+    
+    @Test
+    public void testLoadImage() throws MalformedURLException {
+        System.out.println("loadImage");
+        SvgImage i = new SvgImage();
+        assertTrue(i.getImage() == null);
+        
+        i.setImageRef("cherries.png");
+        assertTrue(i.getImage() == null);
+
+        i.setImageRef("file:cherries.png");
+        assertTrue(i.getImage() == null);
+        
+        i.setImageRef("file:src/test/resources/com/googlecode/blaisemath/util/resources/cherries.png");
+        assertTrue(i.getImage() != null);
+        assertEquals(20.0, i.getWidth());
+        assertEquals(20.0, i.getHeight());
+    }
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGCircle, Ellipse2D> conv = SVGCircle.shapeConverter();
-        
-        Ellipse2D e1 = new Ellipse2D.Double(1.0, 2.0, 2.0, 2.0);
-        SVGCircle circ = conv.reverse().convert(e1);
-        assert circ != null;
-        assertEquals(2.0, circ.getCx(), 1e-6);
-        assertEquals(3.0, circ.getCy(), 1e-6);
-        assertEquals(1.0, circ.getR(), 1e-6);
-        
-        Ellipse2D e2 = new Ellipse2D.Double(1.0, 2.0, 1.0, 2.0);
-        try {
-            conv.reverse().convert(e2);
-        } catch (IllegalArgumentException x) {
-            // expected
-        }
-        
+        Converter<SvgImage, AnchoredImage> conv = SvgImage.imageConverter();
         assertEquals(null, conv.reverse().convert(null));
     }
 
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGCircle, Ellipse2D> conv = SVGCircle.shapeConverter();
-        
-        SVGCircle circ = new SVGCircle(1, 2, 3);
-        Ellipse2D ell = conv.convert(circ);
-        assert ell != null;
-        assertEquals(-2.0, ell.getMinX(), 1e-6);
-        assertEquals(-1.0, ell.getMinY(), 1e-6);
-        assertEquals(6.0, ell.getWidth(), 1e-6);
-        assertEquals(6.0, ell.getHeight(), 1e-6);
-        
+        Converter<SvgImage, AnchoredImage> conv = SvgImage.imageConverter();
         assertEquals(null, conv.convert(null));
     }
     

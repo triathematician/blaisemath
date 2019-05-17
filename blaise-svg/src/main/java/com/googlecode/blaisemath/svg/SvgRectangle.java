@@ -1,8 +1,3 @@
-/**
- * SVGRectangle.java
- * Created Sep 26, 2014
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -25,22 +20,23 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
-import static com.google.common.base.Preconditions.checkArgument;
+
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * <p>
- *   SVG rectangle object.
- * </p>
- * @author elisha
+ * SVG rectangle object.
+ *
+ * @author Elisha Peterson
  */
-@XmlRootElement(name="rect")
-public final class SVGRectangle extends SVGElement {
+@JacksonXmlRootElement(localName="rect")
+public final class SvgRectangle extends SvgElement {
     
     private static final RectangleConverter CONVERTER_INST = new RectangleConverter();
     
@@ -51,15 +47,15 @@ public final class SVGRectangle extends SVGElement {
     private double rx;
     private double ry;
 
-    public SVGRectangle() {
+    public SvgRectangle() {
         this(0, 0, 0, 0, 0, 0);
     }
 
-    public SVGRectangle(double x, double y, double width, double height) {
+    public SvgRectangle(double x, double y, double width, double height) {
         this(x, y, width, height, 0, 0);
     }
     
-    public SVGRectangle(double x, double y, double width, double height, double rx, double ry) {
+    public SvgRectangle(double x, double y, double width, double height, double rx, double ry) {
         super("rect");
         this.x = x;
         this.y = y;
@@ -70,19 +66,16 @@ public final class SVGRectangle extends SVGElement {
     }
 
     /**
-     * Get converter that translates an {@link SVGRectangle} to/from a {@link RectangularShape}.
+     * Get converter that translates an {@link SvgRectangle} to/from a {@link RectangularShape}.
      * @return converter instance
      */
-    public static Converter<SVGRectangle, RectangularShape> shapeConverter() {
+    public static Converter<SvgRectangle, RectangularShape> shapeConverter() {
         return CONVERTER_INST;
     }
 
     //region PROPERTIES
-    //
-    // PROPERTY PATTERNS
-    //
-    
-    @XmlAttribute
+
+    @JacksonXmlProperty(isAttribute = true)
     public double getX() {
         return x;
     }
@@ -91,7 +84,7 @@ public final class SVGRectangle extends SVGElement {
         this.x = x;
     }
     
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getY() {
         return y;
     }
@@ -99,8 +92,8 @@ public final class SVGRectangle extends SVGElement {
     public void setY(double y) {
         this.y = y;
     }
-    
-    @XmlAttribute
+
+    @JacksonXmlProperty(isAttribute = true)
     public double getWidth() {
         return width;
     }
@@ -109,7 +102,7 @@ public final class SVGRectangle extends SVGElement {
         this.width = width;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getHeight() {
         return height;
     }
@@ -118,7 +111,7 @@ public final class SVGRectangle extends SVGElement {
         this.height = height;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getRx() {
         return rx;
     }
@@ -127,7 +120,7 @@ public final class SVGRectangle extends SVGElement {
         this.rx = rx;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getRy() {
         return ry;
     }
@@ -139,23 +132,23 @@ public final class SVGRectangle extends SVGElement {
     //endregion
 
     /** Handles conversion of rectangle to/from a rectangular shape */
-    private static final class RectangleConverter extends Converter<SVGRectangle, RectangularShape> {
+    private static final class RectangleConverter extends Converter<SvgRectangle, RectangularShape> {
         @Override
-        public SVGRectangle doBackward(RectangularShape r) {
+        public SvgRectangle doBackward(RectangularShape r) {
             checkArgument(r instanceof RoundRectangle2D || r instanceof Rectangle2D,
                     "Invalid shape: "+r);
             if (r instanceof RoundRectangle2D) {
                 RoundRectangle2D rr = (RoundRectangle2D) r;
-                return new SVGRectangle(rr.getX(), rr.getY(), rr.getWidth(), rr.getHeight(), rr.getArcWidth(), rr.getArcHeight());
+                return new SvgRectangle(rr.getX(), rr.getY(), rr.getWidth(), rr.getHeight(), rr.getArcWidth(), rr.getArcHeight());
             } else if (r instanceof Rectangle2D) {
-                return new SVGRectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+                return new SvgRectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight());
             } else {
                 throw new IllegalStateException();
             }
         }
 
         @Override
-        public RectangularShape doForward(SVGRectangle r) {
+        public RectangularShape doForward(SvgRectangle r) {
             if (r.rx == 0 && r.ry == 0) {
                 return new Rectangle2D.Double(r.x, r.y, r.width, r.height);
             } else {

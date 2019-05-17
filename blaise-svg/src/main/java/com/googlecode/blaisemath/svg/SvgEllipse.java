@@ -1,8 +1,3 @@
-/**
- * SVGCircle.java
- * Created Sep 26, 2014
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -25,19 +20,19 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
+
 import java.awt.geom.Ellipse2D;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * <p>
- *   SVG-compatible ellipse.
- * </p>
- * @author elisha
+ * SVG-compatible ellipse.
+ *
+ * @author Elisha Peterson
  */
-@XmlRootElement(name="ellipse")
-public final class SVGEllipse extends SVGElement {
+@JacksonXmlRootElement(localName="ellipse")
+public final class SvgEllipse extends SvgElement {
     
     private static final EllipseConverter CONVERTER_INST = new EllipseConverter();
     
@@ -46,11 +41,11 @@ public final class SVGEllipse extends SVGElement {
     private double rx;
     private double ry;
 
-    public SVGEllipse() {
+    public SvgEllipse() {
         this(0, 0, 0, 0);
     }
 
-    public SVGEllipse(double cx, double cy, double rx, double ry) {
+    public SvgEllipse(double cx, double cy, double rx, double ry) {
         super("ellipse");
         this.cx = cx;
         this.cy = cy;
@@ -58,16 +53,13 @@ public final class SVGEllipse extends SVGElement {
         this.ry = ry;
     }
 
-    public static Converter<SVGEllipse, Ellipse2D> shapeConverter() {
+    public static Converter<SvgEllipse, Ellipse2D> shapeConverter() {
         return CONVERTER_INST;
     }
 
     //region PROPERTIES
-    //
-    // PROPERTY PATTERNS
-    //
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getCx() {
         return cx;
     }
@@ -76,7 +68,7 @@ public final class SVGEllipse extends SVGElement {
         this.cx = cx;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getCy() {
         return cy;
     }
@@ -85,7 +77,7 @@ public final class SVGEllipse extends SVGElement {
         this.cy = cy;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getRx() {
         return rx;
     }
@@ -94,7 +86,7 @@ public final class SVGEllipse extends SVGElement {
         this.rx = rx;
     }
 
-    @XmlAttribute
+    @JacksonXmlProperty(isAttribute = true)
     public double getRy() {
         return ry;
     }
@@ -106,14 +98,14 @@ public final class SVGEllipse extends SVGElement {
     //endregion
 
     
-    private static final class EllipseConverter extends Converter<SVGEllipse, Ellipse2D> {
+    private static final class EllipseConverter extends Converter<SvgEllipse, Ellipse2D> {
         @Override
-        protected SVGEllipse doBackward(Ellipse2D r) {
-            return new SVGEllipse(r.getCenterX(), r.getCenterY(), r.getWidth()/2, r.getHeight()/2);
+        protected SvgEllipse doBackward(Ellipse2D r) {
+            return new SvgEllipse(r.getCenterX(), r.getCenterY(), r.getWidth()/2, r.getHeight()/2);
         }
 
         @Override
-        protected Ellipse2D doForward(SVGEllipse r) {
+        protected Ellipse2D doForward(SvgEllipse r) {
             return new Ellipse2D.Double(r.cx-r.rx, r.cy-r.ry, 2*r.rx, 2*r.ry);
         }
     }

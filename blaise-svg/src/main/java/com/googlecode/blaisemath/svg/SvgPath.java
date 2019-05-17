@@ -1,8 +1,3 @@
-/**
- * SVGPath.java
- * Created Dec 9, 2012
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -25,6 +20,8 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.base.Strings;
@@ -39,39 +36,36 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * <p>
- *   SVG path object.
- * </p>
- * @author elisha
+ * SVG path object.
+ *
+ * @author Elisha Peterson
  */
-@XmlRootElement(name="path")
-public final class SVGPath extends SVGElement {
+@JacksonXmlRootElement(localName="path")
+public final class SvgPath extends SvgElement {
 
-    private static final Logger LOG = Logger.getLogger(SVGPath.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgPath.class.getName());
 
     private static final PathConverter CONVERTER_INST = new PathConverter();
     
     private String pathStr;
     
-    public SVGPath() {
+    public SvgPath() {
         super("path");
     }
     
-    public SVGPath(String pathStr) {
+    public SvgPath(String pathStr) {
         super("path");
         this.pathStr = checkSvgPathStr(pathStr);
     }
         
     /**
-     * Create an {@code SVGPath} from a {@code PathIterator} object.
+     * Create an {@code SvgPath} from a {@code PathIterator} object.
      * @param pi path iterator
      * @return svg path
      */
-    public static SVGPath create(PathIterator pi) {
+    public static SvgPath create(PathIterator pi) {
         float[] cur = new float[6];
         int curSegmentType = -1;
         StringBuilder pathString = new StringBuilder();
@@ -98,15 +92,12 @@ public final class SVGPath extends SVGElement {
             }
             pi.next();
         }
-        return new SVGPath(pathString.toString().trim());
+        return new SvgPath(pathString.toString().trim());
     }
     
     //region PROPERTIES
-    //
-    // PROPERTY PATTERNS
-    //
-    
-    @XmlAttribute(name="d")
+
+    @JacksonXmlProperty(isAttribute = true, localName="d")
     public String getPathStr() {
         return pathStr;
     }
@@ -117,23 +108,23 @@ public final class SVGPath extends SVGElement {
     
     //endregion
     
-    public static Converter<SVGPath, Path2D> shapeConverter() {
+    public static Converter<SvgPath, Path2D> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class PathConverter extends Converter<SVGPath, Path2D> {
+    private static final class PathConverter extends Converter<SvgPath, Path2D> {
         @Override
-        protected Path2D doForward(SVGPath path) {
+        protected Path2D doForward(SvgPath path) {
             return toPath(path.pathStr);
         }
 
         @Override
-        protected SVGPath doBackward(Path2D b) {
-            return SVGPath.create(b.getPathIterator(null));
+        protected SvgPath doBackward(Path2D b) {
+            return SvgPath.create(b.getPathIterator(null));
         }
     }
     
-    //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
+    //region STATIC UTILITIES
     
     /** Prints numbers w/ up to n digits of precision, removing trailing zeros */
     static String numStr(int prec, double val) {
@@ -314,6 +305,8 @@ public final class SVGPath extends SVGElement {
         AffineTransform rotation = AffineTransform.getRotateInstance(theta, cx, cy);
         path.append(rotation.createTransformedShape(arc), true);
     }
+
+    //endregion
 
     private enum SvgPathOperator {
         MOVE('m') {

@@ -28,10 +28,6 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import static com.googlecode.blaisemath.style.Styles.*;
 import java.awt.Color;
 
-/**
- *
- * @author Elisha Peterson
- */
 class RandomStyles {
     
     static Color color() {

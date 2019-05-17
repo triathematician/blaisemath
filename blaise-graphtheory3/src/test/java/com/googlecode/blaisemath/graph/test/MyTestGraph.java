@@ -30,11 +30,6 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * Test graph that supports mutating edges and nodes.
- *
- * @author Elisha Peterson
- */
 @SuppressWarnings({"UnstableApiUsage", "NullableProblems"})
 final class MyTestGraph implements Graph<String> {
 

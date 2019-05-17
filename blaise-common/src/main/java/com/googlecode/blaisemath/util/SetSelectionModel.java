@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * notifies listeners on changes.
  * 
  * @param <G> type of object that can be selected
- * @author elisha
+ * @author Elisha Peterson
  */
 public class SetSelectionModel<G> {
     

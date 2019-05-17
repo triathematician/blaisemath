@@ -33,10 +33,6 @@ import java.awt.geom.Rectangle2D;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
 
-/**
- *
- * @author Elisha Peterson
- */
 @SuppressWarnings("FieldCanBeLocal")
 public class PanAndZoomTestFrame extends javax.swing.JFrame {
 

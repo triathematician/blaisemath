@@ -47,10 +47,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
-/**
- *
- * @author Elisha Peterson
- */
 public class HelloWorldTest extends javax.swing.JFrame {
 
     /**

@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.io.Files;
-import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
+import com.googlecode.blaisemath.graphics.svg.SvgGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
@@ -41,23 +41,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
-/**
- *
- * @author elisha
- */
-public class SVGTool extends javax.swing.JFrame {
+public class SvgTool extends javax.swing.JFrame {
 
-    private SVGGraphic gsvg;
+    private SvgGraphic gsvg;
     
     /**
-     * Creates new form SVGTool
+     * Creates new form SvgTool
      */
-    public SVGTool() {
+    public SvgTool() {
         initComponents();
         setMinimumSize(new Dimension(400,400));
         setPreferredSize(new Dimension(500,500));
         setMaximumSize(new Dimension(600,600));
-        gsvg = new SVGGraphic();
+        gsvg = new SvgGraphic();
         gsvg.setStyle(Styles.strokeWidth(Color.blue, 2f));
         canvas.addGraphic(gsvg);
         canvas.addGraphic(JGraphics.path(new Rectangle2D.Double(0, 0, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
@@ -179,17 +175,17 @@ public class SVGTool extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if (pathTB.isSelected()) {
-            gsvg.setElement(new SVGPath(text.getText()));
+            gsvg.setElement(new SvgPath(text.getText()));
         } else {
             try {
-                SVGRoot root = SVGRoot.load(text.getText());
+                SvgRoot root = SvgRoot.load(text.getText());
                 gsvg.setElement(root);
                 Object bg = root.getStyle().get("background");
                 if (bg instanceof Color) {
                     canvas.setBackground((Color) bg);
                 }
             } catch (IOException ex) {
-                Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -199,15 +195,15 @@ public class SVGTool extends javax.swing.JFrame {
     private void saveBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBActionPerformed
         if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(this)) {
             try (FileOutputStream out = new FileOutputStream(chooser.getSelectedFile())) {
-                SVGElement el = gsvg.getElement();
-                if (!(el instanceof SVGRoot)) {
-                    SVGRoot rootEl = new SVGRoot();
+                SvgElement el = gsvg.getElement();
+                if (!(el instanceof SvgRoot)) {
+                    SvgRoot rootEl = new SvgRoot();
                     rootEl.addElement(el);
                     el = rootEl;
                 }
-                SVGRoot.save((SVGRoot) el, out);
+                SvgRoot.save((SvgRoot) el, out);
             } catch (IOException x) {
-                Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, x);
+                Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, x);
             }
         }
     }//GEN-LAST:event_saveBActionPerformed
@@ -215,12 +211,12 @@ public class SVGTool extends javax.swing.JFrame {
     private void loadBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBActionPerformed
         if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
             try (FileInputStream fis = new FileInputStream(chooser.getSelectedFile())) {
-                SVGRoot r = SVGRoot.load(fis);
+                SvgRoot r = SvgRoot.load(fis);
                 gsvg.setElement(r);
                 String fs = Files.toString(chooser.getSelectedFile(), Charset.defaultCharset());
                 text.setText(fs);
             } catch (IOException x) {
-                Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, x);
+                Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, x);
             }
         }
     }//GEN-LAST:event_loadBActionPerformed
@@ -233,36 +229,9 @@ public class SVGTool extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SVGTool.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SVGTool.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SVGTool.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SVGTool.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //endregion
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SVGTool().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new SvgTool().setVisible(true));
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private com.googlecode.blaisemath.graphics.swing.JGraphicComponent canvas;
