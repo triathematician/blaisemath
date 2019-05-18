@@ -24,7 +24,11 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
@@ -40,6 +44,9 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -51,10 +58,21 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
     
     /** Assumed monitor resolution, used in bounding box calculations */
     private static final int DOTS_PER_INCH = 72;
-    
+    /** Logging */
     private static final Logger LOG = Logger.getLogger(TextRenderer.class.getName());
+    /** Static instance */
     private static final TextRenderer INST = new TextRenderer();
-    
+    /** Caches expensive computation of font bounds */
+    private static final LoadingCache<TextBoundsInfo, Rectangle2D.Double> CACHE = CacheBuilder.newBuilder()
+            .maximumSize(10000)
+            .expireAfterAccess(1, TimeUnit.MINUTES)
+            .build(new CacheLoader<TextBoundsInfo, Rectangle2D.Double>() {
+                @Override
+                public Rectangle2D.Double load(TextBoundsInfo textBoundsInfo) {
+                    return textDimensions(textBoundsInfo);
+                }
+            });
+
     /**
      * Get default static instance of the renderer.
      * @return renderer
@@ -105,7 +123,8 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
     }
     
     /**
-     * Get the bounding box for the given text/style to be rendered on the given canvas.
+     * Get the bounding box for the given text/style to be rendered on the given canvas. This computation can be expensive, so the
+     * results are cached so that if the text, font, and render context do not change, the cached results are used.
      * @param primitive text/location
      * @param style desired style
      * @param canvas where to render
@@ -115,20 +134,64 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
         }
-        
+
         Font font = Styles.fontOf(style);
         FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
                 : canvas.getFontRenderContext();
-        double width = font.getStringBounds(primitive.getText(), frc).getWidth();
-        double height = font.getSize()*DOTS_PER_INCH/Toolkit.getDefaultToolkit().getScreenResolution();
-        
+        TextBoundsInfo info = new TextBoundsInfo(primitive.getText(), font, frc);
+        Rectangle2D.Double dimensions;
+        try {
+            dimensions = CACHE.get(info);
+        } catch (ExecutionException e) {
+            LOG.log(Level.FINE, "Unexpected", e);
+            dimensions = textDimensions(info);
+        }
+
         Anchor textAnchor = Styles.anchorOf(style, Anchor.SOUTHWEST);
         Point2D offset = style.getPoint(Styles.OFFSET, new Point());
         assert offset != null;
         return textAnchor.anchoredRectangle(
                 primitive.getX() + offset.getX(),
-                primitive.getY() + offset.getY()-height,
-                width, height);
+                primitive.getY() + offset.getY()-dimensions.height,
+                dimensions.width, dimensions.height);
+    }
+
+    private static Rectangle2D.Double textDimensions(TextBoundsInfo info) {
+        return textDimensions(info.text, info.font, info.context);
+    }
+
+    private static Rectangle2D.Double textDimensions(String text, Font font, FontRenderContext context) {
+        double width = font.getStringBounds(text, context).getWidth();
+        double height = font.getSize()*DOTS_PER_INCH/Toolkit.getDefaultToolkit().getScreenResolution();
+        return new Rectangle2D.Double(0, 0, width, height);
+    }
+
+    /** Info required for most expensive font computation. */
+    private static class TextBoundsInfo {
+        private String text;
+        private Font font;
+        private FontRenderContext context;
+
+        private TextBoundsInfo(String text, Font font, FontRenderContext context) {
+            this.text = text;
+            this.font = font;
+            this.context = context;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TextBoundsInfo that = (TextBoundsInfo) o;
+            return Objects.equal(text, that.text) &&
+                    Objects.equal(font, that.font) &&
+                    Objects.equal(context, that.context);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(text, font, context);
+        }
     }
     
 }
