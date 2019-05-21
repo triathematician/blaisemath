@@ -180,7 +180,7 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
 
     /**
      * Create GraphicMouseEvent from given event.
-     * @param mouseEvent mouse event
+     * @param e mouse event
      * @return associated graphic mouse event
      */
     private GMouseEvent graphicMouseEvent(MouseEvent e) {
