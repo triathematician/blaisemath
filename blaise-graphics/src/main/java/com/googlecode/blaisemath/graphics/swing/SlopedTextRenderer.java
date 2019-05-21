@@ -17,9 +17,21 @@ import java.awt.geom.Rectangle2D;
  */
 public class SlopedTextRenderer implements Renderer<AnchoredText, Graphics2D> {
 
-    private final double theta;
+    private double theta;
+
+    public SlopedTextRenderer() {
+        this(0);
+    }
 
     public SlopedTextRenderer(double theta) {
+        this.theta = theta;
+    }
+
+    public double getTheta() {
+        return theta;
+    }
+
+    public void setTheta(double theta) {
         this.theta = theta;
     }
 
