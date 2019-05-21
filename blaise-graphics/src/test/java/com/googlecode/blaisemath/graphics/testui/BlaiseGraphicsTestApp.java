@@ -33,17 +33,8 @@ import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.LabeledPointGraphic;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
+import com.googlecode.blaisemath.graphics.swing.*;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
-import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
-import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
-import com.googlecode.blaisemath.graphics.swing.SegmentGraphic;
-import com.googlecode.blaisemath.graphics.swing.TextRenderer;
-import com.googlecode.blaisemath.graphics.swing.TwoPointGraphic;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
@@ -55,13 +46,9 @@ import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+
+import java.awt.*;
+import java.awt.geom.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
@@ -90,7 +77,15 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     public void clear1() {
         root1.clearGraphics();
     }
-    
+
+    private double randomX() {
+        return Math.random()*canvas1.getWidth();
+    }
+
+    private double randomY() {
+        return Math.random()*canvas1.getHeight();
+    }
+
     private Point2D randomPoint() {
         return new Point2D.Double(Math.random()*canvas1.getWidth(), Math.random()*canvas1.getHeight());
     }
@@ -131,7 +126,23 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void addSegment() {        
-        Line2D.Double line = new Line2D.Double(randomPoint(), randomPoint());
+        Shape line = new Line2D.Double(randomPoint(), randomPoint());
+        if (Math.random() < .3) {
+            GeneralPath gp = new GeneralPath();
+            double x = randomX();
+            gp.moveTo(x, randomY());
+            gp.lineTo(x, randomY());
+            gp.lineTo(x, randomY());
+            line = gp;
+        } else if (Math.random() < .3) {
+            Line2D.Double line2 = new Line2D.Double(randomPoint(), randomPoint());
+            line = new Line2D.Double(line2.getX1(), line2.getY1(), line2.getX2(), line2.getY1());
+        } else if (Math.random() < .3) {
+            line = new Ellipse2D.Double();
+            Line2D.Double line2 = new Line2D.Double(randomPoint(), randomPoint());
+//            ((Ellipse2D.Double) line).setFrameFromDiagonal(randomPoint(), randomPoint());
+            ((Ellipse2D.Double) line).setFrameFromDiagonal(line2.getX1(), line2.getY1(), line2.getX2(), line2.getY1());
+        }
         PrimitiveGraphic bs = JGraphics.path(line, RandomStyles.path());
         bs.setDefaultTooltip("<html><b>Segment</b>: <i>" + line + "</i>");
         root1.addGraphic(bs);
@@ -151,6 +162,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         Point2D pt = randomPoint();
         AnchoredText txt = new AnchoredText(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
         PrimitiveGraphic bg = JGraphics.text(txt, RandomStyles.string());
+        if (Math.random() < .3) {
+            bg.setRenderer(new SlopedTextRenderer(Math.random()));
+        }
         bg.setDragEnabled(true);
         root1.addGraphic(bg);
     }

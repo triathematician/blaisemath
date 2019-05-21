@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 /**
  * Adapter converting fonts to/from strings.
  *
- * @see Color#decode(java.lang.String)
+ * @see Font#decode(java.lang.String)
  *
  * @author Elisha Peterson
  */

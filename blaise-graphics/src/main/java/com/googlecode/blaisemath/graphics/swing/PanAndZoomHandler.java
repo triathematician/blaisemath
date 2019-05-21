@@ -24,19 +24,17 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.swing.AnimationStep;
 import com.googlecode.blaisemath.util.swing.BSwingUtilities;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -44,8 +42,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Enables pan and zoom of a graphics canvas, by changing the {@link AffineTransform}
@@ -74,7 +75,12 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     /** Renderer for zoom box */
     private static final AttributeSet ZOOM_BOX_STYLE = Styles.fillStroke(
             new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
-    
+
+    /** Cache of recent animation timers */
+    private static final Cache<JGraphicComponent, Timer> TIMERS = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .build();
+
     /** The component for the mouse handling */
     private final JGraphicComponent component;
     /** Hint box for zooming */
@@ -312,6 +318,27 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     //<editor-fold defaultstate="collapsed" desc="ZOOM OPERATIONS">
 
     /**
+     * Cancel previous animation timer.
+     * @param gc component for the zoom operation
+     */
+    private static void cancelZoomTimer(JGraphicComponent gc) {
+        javax.swing.Timer timer = TIMERS.getIfPresent(gc);
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+            TIMERS.invalidate(gc);
+        }
+    }
+
+    /**
+     * Caches provided animation timer.
+     * @param timer to cache
+     * @param gc component for the zoom operation
+     */
+    private static void cacheZoomTimer(javax.swing.Timer timer, JGraphicComponent gc) {
+        TIMERS.put(gc, timer);
+    }
+
+    /**
      * Sets bounds based on the zoom about a given point.
      * The effective zoom point is between current center and mouse position...
      * close to center =%gt; 100% at the given point, close to edge =%gt; 10% at
@@ -411,13 +438,15 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * @return timer running the animation
      */
     public static javax.swing.Timer zoomPointAnimated(final JGraphicComponent gc, Point2D.Double p, final double factor) {
+        cancelZoomTimer(gc);
+
         Rectangle2D.Double rect = getLocalBounds(gc);
         final double cx = .1 * p.x + .9 * rect.getCenterX();
         final double cy = .1 * p.y + .9 * rect.getCenterY();
         final double wx = rect.getWidth();
         final double wy = rect.getHeight();
 
-        return AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
+        javax.swing.Timer timer = AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
             @Override
             @InvokedFromThread("AnimationStep")
             public void run(int idx, double pct) {
@@ -427,6 +456,8 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
                         wx + zoomValue * wx, wy + zoomValue * wy));
             }
         });
+        cacheZoomTimer(timer, gc);
+        return timer;
     }
 
     /**
@@ -450,6 +481,8 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * @return timer running the animation
      */
     public static javax.swing.Timer zoomCoordBoxAnimated(final JGraphicComponent gc, final Point2D newMin, final Point2D newMax) {
+        cancelZoomTimer(gc);
+
         final Rectangle2D.Double rect = getLocalBounds(gc);
         final double xMin = rect.getX();
         final double yMin = rect.getY();
@@ -460,7 +493,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         final double nxMax = newMax.getX();
         final double nyMax = newMax.getY();
 
-        return AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
+        javax.swing.Timer timer = AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
             @Override
             @InvokedFromThread("AnimationStep")
             public void run(int idx, double pct) {
@@ -471,6 +504,8 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
                 setDesiredLocalBounds(gc, new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1));
             }
         });
+        cacheZoomTimer(timer, gc);
+        return timer;
     }
     
     //</editor-fold> 

@@ -25,16 +25,24 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Ints;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
+
+import javax.annotation.Nullable;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Area;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
+import static com.google.common.primitives.Doubles.max;
+import static com.google.common.primitives.Doubles.min;
 
 /**
  * Draws a shape using a stroke (with thickness) and a fill color.
@@ -95,26 +103,87 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
      * @param canvas target canvas
      */
     public static void drawPatched(Shape primitive, Graphics2D canvas) {
-        if (!(canvas.getStroke() instanceof BasicStroke)
-                || ((BasicStroke) canvas.getStroke()).getDashArray() == null) {
+        if (!(canvas.getStroke() instanceof BasicStroke) || ((BasicStroke) canvas.getStroke()).getDashArray() == null) {
+            // draw normally
             canvas.draw(primitive);
             return;
         }
-        
+
         Rectangle r = canvas.getClipBounds();
-        Rectangle2D r2 = primitive.getBounds2D();
-        if (r.contains(r2)) {
-            canvas.draw(primitive);
-        } else {
-            int pad = canvas.getStroke() instanceof BasicStroke
-                    ? (int) Math.ceil(((BasicStroke) canvas.getStroke()).getLineWidth())
-                    : 5;
-            Rectangle paddedClip = new Rectangle(r.x - pad, r.y - pad,
-                    r.width + 2 * pad, r.height + 2 * pad);
-            Area a = new Area(paddedClip);
-            a.intersect(new Area(primitive));
-            canvas.draw(a);
+        // use a large padding because we still want the dashes to be in the right place
+        int pad = Ints.max(canvas.getStroke() instanceof BasicStroke ? (int) Math.ceil(((BasicStroke) canvas.getStroke()).getLineWidth()) : 5,
+                r.width * 50, r.height * 50);
+        Rectangle paddedClip = new Rectangle(r.x - pad, r.y - pad,
+                r.width + 2 * pad, r.height + 2 * pad);
+
+        Shape toDraw = intersectPath(paddedClip, primitive);
+        if (toDraw != null) {
+            canvas.draw(toDraw);
         }
+    }
+
+    /**
+     * Compute intersection of path with rectangular area.
+     * @param rectangle area
+     * @param path path
+     * @return intersecting shape, or null if none
+     */
+    private static @Nullable Shape intersectPath(Rectangle2D rectangle, Shape path) {
+        Rectangle2D r2 = path.getBounds2D();
+
+        if (r2.getWidth() == 0 && r2.getHeight() == 0) {
+            return null;
+        } else if (rectangle.contains(r2)) {
+            return path;
+        }
+
+        if (r2.getWidth() == 0 || r2.getHeight() == 0) {
+            // we have a flat shape, so area intersection doesn't work -- this is not precisely correct for multi-part paths, but close enough?
+            path = new Line2D.Double(r2.getMinX(), r2.getMinY(), r2.getMaxX(), r2.getMaxY());
+        }
+
+        if (path instanceof Line2D.Double) {
+            Line2D line = (Line2D) path;
+            return line.intersects(rectangle) ? intersect(toDouble(line), rectangle) : null;
+        } else {
+            Area a = new Area(rectangle);
+            a.intersect(new Area(path));
+            return a;
+        }
+    }
+
+    private static Line2D.Double toDouble(Line2D line) {
+        return new Line2D.Double(line.getP1(), line.getP2());
+    }
+
+    /**
+     * Compute the line segment from intersecting given line with rectangle.
+     * @param l line to use
+     * @param r rectangle
+     * @return portion of line inside the rectangle, null if none
+     */
+    private static @Nullable Line2D.Double intersect(Line2D.Double l, Rectangle2D r) {
+        if (r.contains(l.getP1()) && r.contains(l.getP2())) {
+            return l;
+        }
+
+        // parameterize line as x=x1+t*(x2-x1), y=y1+t*(y2-y1), so line is between 0 and 1
+        // then compute t values for lines bounding rectangles, and intersect the three intervals
+        // [0,1], [tx1,tx2], and [ty1,ty2]
+        double tx1 = l.x1 == l.x2 ? (between(l.x1, r.getMinX(), r.getMaxX()) ? 0 : -1) : (r.getMinX() - l.x1) / (l.x2 - l.x1);
+        double tx2 = l.x1 == l.x2 ? (between(l.x1, r.getMinX(), r.getMaxX()) ? 1 : -1) : (r.getMaxX() - l.x1) / (l.x2 - l.x1);
+        double ty1 = l.y1 == l.y2 ? (between(l.x1, r.getMinY(), r.getMaxY()) ? 0 : -1) : (r.getMinY() - l.y1) / (l.y2 - l.y1);
+        double ty2 = l.y1 == l.y2 ? (between(l.x1, r.getMinY(), r.getMaxY()) ? 1 : -1) : (r.getMaxY() - l.y1) / (l.y2 - l.y1);
+
+        double t0 = max(0, min(tx1, tx2), min(ty1, ty2));
+        double t1 = min(1, max(tx1, tx2), max(ty1, ty2));
+
+        return t0 > t1 ? null : new Line2D.Double(l.x1 + t0 * (l.x2 - l.x1), l.y1 + t0 * (l.y2 - l.y1),
+                l.x1 + t1 * (l.x2 - l.x1), l.y1 + t1 * (l.y2 - l.y1));
+    }
+
+    private static boolean between(double x, double t0, double t1) {
+        return x >= t0 ? x <= t1 : x >= t1;
     }
 
 }

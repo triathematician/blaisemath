@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Serializes an insets object to/from text.
+ * Serializes an insets object to/from text. Results in strings like {@code insets[t=10,l=0,b=5,r=5]}.
  * @author petereb1
  */
 public class InsetsAdapter extends XmlAdapter<String,Insets> {
