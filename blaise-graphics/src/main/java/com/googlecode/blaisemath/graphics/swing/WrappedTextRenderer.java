@@ -1,8 +1,3 @@
-/*
- * WrappedTextRenderer.java
- * Created on Jan 2, 2013
- */
-
 package com.googlecode.blaisemath.graphics.swing;
 
 /*
@@ -66,6 +61,10 @@ public class WrappedTextRenderer extends TextRenderer {
     protected RectangularShape clipPath;
     /** Insets used for text anchoring. */
     private Insets insets = defaultInsets();
+    /** Flag to show text in a circle/ellipse all on a single line (no wrapping) if not enough space */
+    private boolean allowFullTextOnCircle = false;
+    /** Maximum number of points to reduce font size by for smaller rectangles. Set to 0 to keep font size the same. Defaults to 2. */
+    private int maxReduceFontSize = 2;
 
     public WrappedTextRenderer() {
     }
@@ -99,11 +98,7 @@ public class WrappedTextRenderer extends TextRenderer {
     
     //</editor-fold>
     
-
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
     
     public RectangularShape getTextBounds() {
         return clipPath;
@@ -121,8 +116,23 @@ public class WrappedTextRenderer extends TextRenderer {
         this.insets = insets;
     }
 
+    public boolean isAllowFullTextOnCircle() {
+        return allowFullTextOnCircle;
+    }
+
+    public void setAllowFullTextOnCircle(boolean allowFullTextOnCircle) {
+        this.allowFullTextOnCircle = allowFullTextOnCircle;
+    }
+
+    public int getMaxReduceFontSize() {
+        return maxReduceFontSize;
+    }
+
+    public void setMaxReduceFontSize(int maxReduceFontSize) {
+        this.maxReduceFontSize = maxReduceFontSize;
+    }
+
     //</editor-fold>
-    
     
     @Override
     public void render(AnchoredText text, AttributeSet style, Graphics2D canvas) {
@@ -170,7 +180,7 @@ public class WrappedTextRenderer extends TextRenderer {
      * @param canvas target canvas
      * @return text to render
      */
-    public static Iterable<StyledText> computeLines(String text, AttributeSet style, Shape textBounds, Insets insets, Graphics2D canvas) {
+    public Iterable<StyledText> computeLines(String text, AttributeSet style, Shape textBounds, Insets insets, Graphics2D canvas) {
         Rectangle2D bounds = textBounds.getBounds2D();
         if (textBounds instanceof Ellipse2D) {
             Ellipse2D textClip = new Ellipse2D.Double(
@@ -185,32 +195,44 @@ public class WrappedTextRenderer extends TextRenderer {
         }
     }
 
-    private static List<StyledText> computeEllipseLines(String text, AttributeSet style, Ellipse2D ell, Graphics2D canvas) {
+    private List<StyledText> computeEllipseLines(String text, AttributeSet style, Ellipse2D ell, Graphics2D canvas) {
         canvas.setFont(Styles.fontOf(style));
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
         
         AttributeSet centeredStyle = AttributeSet.createWithParent(style).and(Styles.TEXT_ANCHOR, Anchor.CENTER);
-        if (bounds.getWidth() < ell.getWidth() - 8 || ell.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
+        boolean showOnOneLine = allowFullTextOnCircle && (bounds.getWidth() < ell.getWidth() - 8 || ell.getWidth()*.6 < 3 * canvas.getFont().getSize2D());
+        if (showOnOneLine) {
             return Arrays.asList(new StyledText(new AnchoredText(ell.getCenterX(), ell.getCenterY(), text), centeredStyle));
         } else {
             return computeRectangleLines(text, centeredStyle,
                     new Rectangle2D.Double(
-                    ell.getX()+ell.getWidth()*.15, ell.getY()+ell.getHeight()*.15,
-                    ell.getWidth()*.7, ell.getHeight()*.7),
+                            ell.getX() + ell.getWidth() * .15, ell.getY() + ell.getHeight() * .15,
+                            ell.getWidth() * .7, ell.getHeight() * .7),
                     canvas
-                    );
+            );
         }
     }
 
-    private static List<StyledText> computeRectangleLines(String text, AttributeSet style, Rectangle2D rect, Graphics2D canvas) {
+    private List<StyledText> computeRectangleLines(String text, AttributeSet style, Rectangle2D rect, Graphics2D canvas) {
         // make font smaller if lots of words
         canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         Font font = Styles.fontOf(style);
-        if (rect.getWidth() * rect.getHeight() < (font.getSize() * font.getSize() / 1.5) * text.length()
-                || rect.getWidth() < font.getSize() * 5) {
-            font = font.deriveFont(font.getSize2D()-2);
+        
+        if (maxReduceFontSize > 0) {
+            int fontSize = font.getSize();
+            // will reduce font size for narrow rectangles
+            boolean narrowRectangle = rect.getWidth() < fontSize * 5;
+            // will reduce font size for smaller rectangles
+            double areaRatio = rect.getWidth() * rect.getHeight() / ((fontSize * fontSize / 1.5) * text.length());
+            // reduce font size
+            if (areaRatio < 1) {
+                float newFontSize = (float) Math.max(font.getSize2D() - maxReduceFontSize, font.getSize2D() * areaRatio);
+                font = font.deriveFont(newFontSize);
+            } else if (narrowRectangle) {
+                font = font.deriveFont(font.getSize2D() - Math.min(2, maxReduceFontSize));
+            }
+            canvas.setFont(font);
         }
-        canvas.setFont(font);
         
         List<String> lines = computeLineBreaks(text, font, rect.getWidth(), rect.getHeight());
         Anchor textAnchor = Styles.anchorOf(style, Anchor.CENTER);
