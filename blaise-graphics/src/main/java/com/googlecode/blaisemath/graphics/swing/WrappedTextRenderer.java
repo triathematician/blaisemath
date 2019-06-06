@@ -63,6 +63,8 @@ public class WrappedTextRenderer extends TextRenderer {
     private Insets insets = defaultInsets();
     /** Flag to show text in a circle/ellipse all on a single line (no wrapping) if not enough space */
     private boolean allowFullTextOnCircle = false;
+    /** Minimum width factor (multiple of font size) at which to abbreviate attempt to render text, and just show first character */
+    private int minWidthFactor = 2;
     /** Maximum number of points to reduce font size by for smaller rectangles. Set to 0 to keep font size the same. Defaults to 2. */
     private int maxReduceFontSize = 2;
 
@@ -130,6 +132,14 @@ public class WrappedTextRenderer extends TextRenderer {
 
     public void setMaxReduceFontSize(int maxReduceFontSize) {
         this.maxReduceFontSize = maxReduceFontSize;
+    }
+
+    public int getMinWidthFactor() {
+        return minWidthFactor;
+    }
+
+    public void setMinWidthFactor(int minWidthFactor) {
+        this.minWidthFactor = minWidthFactor;
     }
 
     //</editor-fold>
@@ -305,7 +315,7 @@ public class WrappedTextRenderer extends TextRenderer {
      * @param height height of bounding box
      * @return lines
      */
-    public static List<String> computeLineBreaks(String string, Font font, double width, double height) {
+    public List<String> computeLineBreaks(String string, Font font, double width, double height) {
         FontRenderContext frc = new FontRenderContext(null, true, true);
         Rectangle2D sBounds = font.getStringBounds(string, frc);
 
@@ -313,7 +323,7 @@ public class WrappedTextRenderer extends TextRenderer {
         int length = string.length();
         if (length == 0) {
             // do nothing
-        } else if (width < 3*font.getSize()) {
+        } else if (width < minWidthFactor*font.getSize()) {
             // if really small, show only first character
             lines.add((length <= 2 ? string.substring(0,length) : string.substring(0,1)+"...").trim());
         } else if (sBounds.getWidth() <= width-4 && !string.contains("\n")) {
