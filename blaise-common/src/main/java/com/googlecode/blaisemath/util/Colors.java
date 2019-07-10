@@ -77,7 +77,7 @@ public final class Colors {
         checkArgument(a >= 0 && a <= 255);
         return new Color(col.getRed(), col.getGreen(), col.getBlue(), a);
     }
-    
+
     /**
      * Interpolates between two colors, e.g. r = r1*wt + r2*(1-wt).
      * @param c1 first color
@@ -86,12 +86,27 @@ public final class Colors {
      * @return interpolated color
      */
     public static Color interpolate(Color c1, float wt, Color c2) {
-        checkArgument(wt >= 0f && wt <= 1f);
-        float awt = 1-wt;
-        return new Color((c1.getRed()*wt + c2.getRed()*awt)/255,
-                (c1.getGreen()*wt + c2.getGreen()*awt)/255,
-                (c1.getBlue()*wt + c2.getBlue()*awt)/255,
-                (c1.getAlpha()*wt + c2.getAlpha()*awt)/255);
+        return interpolate(c1, wt, c2, 1-wt);
+    }
+    
+    /**
+     * Interpolates between two colors. In most cases, the weights should sum to 1.
+     * @param c1 first color
+     * @param wt1 first color weight
+     * @param c2 second color
+     * @param wt2 second color weight
+     * @return interpolated colors
+     */
+    public static Color interpolate(Color c1, float wt1, Color c2, float wt2) {
+        return new Color(interpolate(c1.getRed(), wt1, c2.getRed(), wt2),
+                interpolate(c1.getGreen(), wt1, c2.getGreen(), wt2),
+                interpolate(c1.getBlue(), wt1, c2.getBlue(), wt2),
+                interpolate(c1.getAlpha(), wt1, c2.getAlpha(), wt2));
+    }
+    
+    private static int interpolate(int a, float wt1, int b, float wt2) {
+        int res = (int) (a * wt1 + b * wt2);
+        return res < 0 ? 0 : res > 255 ? 255 : res;
     }
     
     /**
