@@ -1,10 +1,8 @@
 package com.googlecode.blaisemath.coordinate;
 
-import java.awt.geom.Point2D;
-
-/*
+/*-
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
  * Copyright (C) 2014 - 2019 Elisha Peterson
  * --
@@ -21,6 +19,9 @@ import java.awt.geom.Point2D;
  * limitations under the License.
  * #L%
  */
+
+import java.awt.geom.Point2D;
+
 
 /**
  * Marks object methods that are used to get/set coordinates.

@@ -60,7 +60,7 @@ public class GradientShapeRenderer extends ShapeRenderer {
         if (stroke != null && strokeWidth != null && strokeWidth > 0) {
             canvas.setColor(stroke);
             canvas.setStroke(new BasicStroke(strokeWidth));
-            canvas.draw(primitive);
+            PathRenderer.drawPatched(primitive, canvas);
         }
     }
 

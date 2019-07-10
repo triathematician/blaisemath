@@ -1,10 +1,8 @@
 package com.googlecode.blaisemath.style;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-/*
+/*-
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
  * Copyright (C) 2014 - 2019 Elisha Peterson
  * --
@@ -21,6 +19,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * limitations under the License.
  * #L%
  */
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Provides an attribute set that throws exceptions if attempting to put or remove values.

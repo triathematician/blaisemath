@@ -1,10 +1,10 @@
-package com.googlecode.blaisemath.coordinate;
+package com.googlecode.blaisemath.graph.mod.ordering;
 
-/*-
+/*
  * #%L
- * blaise-common
+ * blaise-graphtheory3
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,25 +20,21 @@ package com.googlecode.blaisemath.coordinate;
  * #L%
  */
 
+
+import com.google.common.graph.Graph;
+import java.util.List;
+
 /**
- * Marks object methods that are used to get/set coordinates.
- *
- * @param <C> the type of point
- * 
- * @author Elisha Peterson
+ * Provides an ordering of nodes in a graph.
+ * @author petereb1
  */
-public interface CoordinateBean<C> {
+public interface NodeOrdering<C> {
 
     /**
-     * Return the point.
-     * @return the point
+     * Compute node order in a graph.
+     * @param graph the graph
+     * @return ordered list of (all) nodes in the graph
      */
-    C getPoint();
-
-    /**
-     * Set the point.
-     * @param p the new point
-     */
-    void setPoint(C p);
+    List<C> order(Graph<C> graph);
     
 }

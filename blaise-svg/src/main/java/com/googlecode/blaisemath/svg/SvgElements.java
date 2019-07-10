@@ -166,7 +166,10 @@ public class SvgElements {
      */
     public static SvgElement createWrappedText(String text, AttributeSet style, RectangularShape bounds) {
         Graphics2D testCanvas = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).createGraphics();
-        Iterable<StyledText> lines = WrappedTextRenderer.computeLines(text, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
+        WrappedTextRenderer rend = new WrappedTextRenderer();
+        rend.setMinWidthFactor(0);
+        rend.setMaxReduceFontSize(0);
+        Iterable<StyledText> lines = rend.computeLines(text, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
         
         SvgGroup grp = new SvgGroup();
         for (StyledText st : lines) {

@@ -57,6 +57,12 @@ public class WrappedTextRenderer extends TextRenderer {
     protected RectangularShape clipPath;
     /** Insets used for text anchoring. */
     private Insets insets = defaultInsets();
+    /** Flag to show text in a circle/ellipse all on a single line (no wrapping) if not enough space */
+    private boolean allowFullTextOnCircle = false;
+    /** Minimum width factor (multiple of font size) at which to abbreviate attempt to render text, and just show first character */
+    private int minWidthFactor = 2;
+    /** Maximum number of points to reduce font size by for smaller rectangles. Set to 0 to keep font size the same. Defaults to 2. */
+    private int maxReduceFontSize = 2;
     
     @Override
     public String toString() {
@@ -105,8 +111,32 @@ public class WrappedTextRenderer extends TextRenderer {
         this.insets = insets;
     }
 
-    //endregion
+    public boolean isAllowFullTextOnCircle() {
+        return allowFullTextOnCircle;
+    }
 
+    public void setAllowFullTextOnCircle(boolean allowFullTextOnCircle) {
+        this.allowFullTextOnCircle = allowFullTextOnCircle;
+    }
+
+    public int getMaxReduceFontSize() {
+        return maxReduceFontSize;
+    }
+
+    public void setMaxReduceFontSize(int maxReduceFontSize) {
+        this.maxReduceFontSize = maxReduceFontSize;
+    }
+
+    public int getMinWidthFactor() {
+        return minWidthFactor;
+    }
+
+    public void setMinWidthFactor(int minWidthFactor) {
+        this.minWidthFactor = minWidthFactor;
+    }
+
+    //endregion
+    
     @Override
     public void render(AnchoredText text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
@@ -132,7 +162,7 @@ public class WrappedTextRenderer extends TextRenderer {
         }
         return res;
     }
-    
+
     /**
      * Default insets used for wrapping text.
      * @return insets
@@ -151,7 +181,7 @@ public class WrappedTextRenderer extends TextRenderer {
      * @param canvas target canvas
      * @return text to render
      */
-    public static Iterable<StyledText> computeLines(String text, AttributeSet style, Shape textBounds, Insets insets, @Nullable Graphics2D canvas) {
+    public Iterable<StyledText> computeLines(String text, AttributeSet style, Shape textBounds, Insets insets, @Nullable Graphics2D canvas) {
         if (canvas == null) {
             canvas = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).createGraphics();
             canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
@@ -173,32 +203,44 @@ public class WrappedTextRenderer extends TextRenderer {
 
     //region COMPUTE LINE BREAKS
 
-    private static List<StyledText> computeEllipseLines(String text, AttributeSet style, Ellipse2D ell, Graphics2D canvas) {
+    private List<StyledText> computeEllipseLines(String text, AttributeSet style, Ellipse2D ell, Graphics2D canvas) {
         canvas.setFont(Styles.fontOf(style));
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
         
         AttributeSet centeredStyle = AttributeSet.withParent(style).and(Styles.TEXT_ANCHOR, Anchor.CENTER);
-        if (bounds.getWidth() < ell.getWidth() - 8 || ell.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
+        boolean showOnOneLine = allowFullTextOnCircle && (bounds.getWidth() < ell.getWidth() - 8 || ell.getWidth()*.6 < 3 * canvas.getFont().getSize2D());
+        if (showOnOneLine) {
             return Collections.singletonList(new StyledText(new AnchoredText(ell.getCenterX(), ell.getCenterY(), text), centeredStyle));
         } else {
             return computeRectangleLines(text, centeredStyle,
                     new Rectangle2D.Double(
-                    ell.getX()+ell.getWidth()*.15, ell.getY()+ell.getHeight()*.15,
-                    ell.getWidth()*.7, ell.getHeight()*.7),
+                            ell.getX() + ell.getWidth() * .15, ell.getY() + ell.getHeight() * .15,
+                            ell.getWidth() * .7, ell.getHeight() * .7),
                     canvas
-                    );
+            );
         }
     }
 
-    private static List<StyledText> computeRectangleLines(String text, AttributeSet style, Rectangle2D rect, Graphics2D canvas) {
+    private List<StyledText> computeRectangleLines(String text, AttributeSet style, Rectangle2D rect, Graphics2D canvas) {
         // make font smaller if lots of words
         canvas.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         Font font = Styles.fontOf(style);
-        if (rect.getWidth() * rect.getHeight() < (font.getSize() * font.getSize() / 1.5) * text.length()
-                || rect.getWidth() < font.getSize() * 5) {
-            font = font.deriveFont(font.getSize2D()-2);
+        
+        if (maxReduceFontSize > 0) {
+            int fontSize = font.getSize();
+            // will reduce font size for narrow rectangles
+            boolean narrowRectangle = rect.getWidth() < fontSize * 5;
+            // will reduce font size for smaller rectangles
+            double areaRatio = rect.getWidth() * rect.getHeight() / ((fontSize * fontSize / 1.5) * text.length());
+            // reduce font size
+            if (areaRatio < 1) {
+                float newFontSize = (float) Math.max(font.getSize2D() - maxReduceFontSize, font.getSize2D() * areaRatio);
+                font = font.deriveFont(newFontSize);
+            } else if (narrowRectangle) {
+                font = font.deriveFont(font.getSize2D() - Math.min(2, maxReduceFontSize));
+            }
+            canvas.setFont(font);
         }
-        canvas.setFont(font);
         
         List<String> lines = computeLineBreaks(text, font, rect.getWidth(), rect.getHeight());
         Anchor textAnchor = Styles.anchorOf(style, Anchor.CENTER);
@@ -271,15 +313,15 @@ public class WrappedTextRenderer extends TextRenderer {
      * @param height height of bounding box
      * @return lines
      */
-    public static List<String> computeLineBreaks(String string, Font font, double width, double height) {
+    public List<String> computeLineBreaks(String string, Font font, double width, double height) {
         FontRenderContext frc = new FontRenderContext(null, true, true);
         Rectangle2D sBounds = font.getStringBounds(string, frc);
 
         List<String> lines = new ArrayList<>();
         int length = string.length();
         if (length == 0) {
-            return lines;
-        } else if (width < 3*font.getSize()) {
+            // do nothing
+        } else if (width < minWidthFactor*font.getSize()) {
             // if really small, show only first character
             lines.add((length <= 2 ? string.substring(0,length) : string.substring(0,1)+"...").trim());
         } else if (sBounds.getWidth() <= width-4 && !string.contains("\n")) {

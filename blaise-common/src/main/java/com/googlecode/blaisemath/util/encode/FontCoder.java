@@ -25,6 +25,8 @@ import java.awt.Font;
 /**
  * Adapter converting fonts to/from strings. Requires non-null values.
  *
+ * @see Font#decode(java.lang.String)
+ *
  * @author Elisha Peterson
  */
 public final class FontCoder implements StringEncoder<Font>, StringDecoder<Font> {

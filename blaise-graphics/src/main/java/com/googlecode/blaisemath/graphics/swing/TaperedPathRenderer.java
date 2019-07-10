@@ -64,7 +64,7 @@ public class TaperedPathRenderer extends PathRenderer {
         canvas.setColor(cAlpha);
         canvas.fill(shape);
         canvas.setColor(stroke);
-        canvas.draw(shape);
+        PathRenderer.drawPatched(shape, canvas);
     }
     
     /** 

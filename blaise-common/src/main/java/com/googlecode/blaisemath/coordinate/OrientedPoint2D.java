@@ -1,8 +1,8 @@
 package com.googlecode.blaisemath.coordinate;
 
-/*
+/*-
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
  * Copyright (C) 2014 - 2019 Elisha Peterson
  * --
@@ -19,6 +19,7 @@ package com.googlecode.blaisemath.coordinate;
  * limitations under the License.
  * #L%
  */
+
 
 import com.googlecode.blaisemath.coordinate.Point2DBean;
 import java.awt.geom.Point2D;

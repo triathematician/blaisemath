@@ -1,8 +1,8 @@
 package com.googlecode.blaisemath.style;
 
-/*
+/*-
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
  * Copyright (C) 2014 - 2019 Elisha Peterson
  * --
@@ -28,9 +28,6 @@ import static java.lang.Math.PI;
 /**
  * Represents anchor locations and utilities for using them in practice. These anchors can be used for finding points
  * around a circle or for shifting rectangles so various corners are anchored at a target point.
- * <p>
- * For circles, the
- *
  *
  * @author Elisha Peterson
  */

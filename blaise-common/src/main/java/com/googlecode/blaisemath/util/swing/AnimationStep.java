@@ -1,8 +1,8 @@
 package com.googlecode.blaisemath.util.swing;
 
-/*
+/*-
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
  * Copyright (C) 2014 - 2019 Elisha Peterson
  * --
@@ -19,7 +19,6 @@ package com.googlecode.blaisemath.util.swing;
  * limitations under the License.
  * #L%
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import java.awt.event.ActionEvent;

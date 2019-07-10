@@ -1,8 +1,8 @@
 package com.googlecode.blaisemath.util;
 
-/*
+/*-
  * #%L
- * BlaiseGraphTheory
+ * blaise-common
  * --
  * Copyright (C) 2014 - 2019 Elisha Peterson
  * --

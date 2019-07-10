@@ -1,10 +1,8 @@
 package com.googlecode.blaisemath.coordinate;
 
-import com.googlecode.blaisemath.annotation.InvokedFromThread;
-
-/*
+/*-
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
  * Copyright (C) 2014 - 2019 Elisha Peterson
  * --
@@ -21,6 +19,9 @@ import com.googlecode.blaisemath.annotation.InvokedFromThread;
  * limitations under the License.
  * #L%
  */
+
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
+
 
 /**
  * Receives updates regarding the locations of a collection of objects. Handlers

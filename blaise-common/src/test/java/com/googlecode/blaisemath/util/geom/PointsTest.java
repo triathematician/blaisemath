@@ -1,8 +1,8 @@
 package com.googlecode.blaisemath.util.geom;
 
-/*
+/*-
  * #%L
- * BlaiseGraphics
+ * blaise-common
  * --
  * Copyright (C) 2014 - 2019 Elisha Peterson
  * --
@@ -19,7 +19,6 @@ package com.googlecode.blaisemath.util.geom;
  * limitations under the License.
  * #L%
  */
-
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
