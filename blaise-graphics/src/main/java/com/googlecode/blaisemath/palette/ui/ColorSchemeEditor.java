@@ -1,0 +1,109 @@
+package com.googlecode.blaisemath.palette.ui;
+
+/*-
+ * #%L
+ * ******************************* UNCLASSIFIED *******************************
+ * GradientColorSchemeEditor.java
+ * edu.jhuapl.vis:conjecture-legacy
+ * %%
+ * Copyright (C) 2012 - 2017 Johns Hopkins University Applied Physics Laboratory
+ * %%
+ * (c) Johns Hopkins University Applied Physics Laboratory. All Rights Reserved.
+ * JHU-APL Proprietary Information. Do not disseminate without prior approval.
+ * #L%
+ */
+import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.palette.ColorScheme;
+import com.googlecode.blaisemath.util.Colors;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Map;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+/**
+ * Used to edit colors in a color scheme. If the scheme is a gradient scheme, the number of colors is fixed.
+ * 
+ * @author petereb1
+ */
+public class ColorSchemeEditor extends JPanel {
+        
+    private ColorScheme scheme = new ColorScheme();
+    private final ColorList list = new ColorList();
+    
+    public ColorSchemeEditor() {
+        setLayout(new BorderLayout());
+        add(new JScrollPane(list), BorderLayout.CENTER);
+        list.addPropertyChangeListener(new PropertyChangeListener(){
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                updateSchemeColors();
+            }
+        });
+        list.setEditConstraints(new ColorListEditConstraints().keysEditable(false));
+    }
+    
+    private void updateSchemeColors() {
+        ColorListModel model = list.getColorListModel();
+        
+        // update names since the user should not be updating them
+        for (int i = 0; i < model.size(); i++) {
+            KeyColorBean b = model.elementAt(i);
+            b.setName(name(i, b.getColor()));
+        }
+        
+        // update the scheme
+        Color[] colors = new Color[model.size()];
+        for (int i = 0; i < colors.length; i++) {
+            colors[i] = model.color(i);
+        }
+        scheme.setColors(colors);
+        firePropertyChange("scheme", null, scheme);
+    }
+    
+    private void updateListColors() {
+        Map<String, Color> colors = Maps.newLinkedHashMap();
+        for (int i = 0; i < scheme.getColors().length; i++) {
+            Color color = scheme.getColors()[i];
+            colors.put(name(i, color), color);
+        }
+        list.getColorListModel().setColorMap(colors);
+        list.setEditConstraints(new ColorListEditConstraints().keysEditable(false));
+    }
+    
+    private String name(int i, Color c) {
+        return scheme.isDiscrete() ? Colors.stringConverter().convert(c) : "Stop " + (i + 1);
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    
+    public ColorScheme getScheme() {
+        return scheme;
+    }
+    
+    public void setScheme(ColorScheme scheme) {
+        if (this.scheme != scheme) {
+            Object old = this.scheme;
+            this.scheme = scheme;
+            updateListColors();
+            firePropertyChange("scheme", old, scheme);
+        }
+    }
+    
+    public ColorListModel getColorListModel() {
+        return list.getColorListModel();
+    }
+
+    //</editor-fold>
+    
+    public void addColorListPropertyChangeListener(PropertyChangeListener l) {
+        list.addPropertyChangeListener(ColorList.COLORS, l);
+    }
+    
+    public void removeColorListPropertyChangeListener(PropertyChangeListener l) {
+        list.removePropertyChangeListener(ColorList.COLORS, l);
+    }
+
+}
