@@ -83,7 +83,7 @@ public class ColorSchemeEditor extends JPanel {
     }
     
     private String name(int i, Color c) {
-        return scheme.isDiscrete() ? Colors.stringConverter().convert(c) : "Stop " + (i + 1);
+        return scheme.isDiscrete() ? Colors.encode(c) : "Stop " + (i + 1);
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">

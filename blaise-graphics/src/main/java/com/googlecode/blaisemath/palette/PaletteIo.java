@@ -51,7 +51,7 @@ public class PaletteIo {
                 String name = k.substring(8, dot);
                 String col = k.substring(dot+1);
                 try {
-                    colors.put(name, col, Colors.stringConverter().reverse().convert(p.getProperty(k)));
+                    colors.put(name, col, Colors.decode(p.getProperty(k)));
                 } catch (IllegalArgumentException x) {
                     LOG.log(Level.WARNING, "Invalid color: {0}", p.getProperty(k));
                 }
