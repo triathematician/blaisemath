@@ -31,6 +31,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("unchecked")
 public class CoordinateChangeEventTest {
 
     private Map add;

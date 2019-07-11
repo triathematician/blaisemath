@@ -70,6 +70,7 @@ public class AnchorTest {
                 Anchor.WEST.rectangleAnchoredAt(new Point2D.Double(3, 7), 2, 4));
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void assertEqualsPoint(Point2D.Double p, Point2D q, double err) {
         assertEquals(p.getX(), q.getX(), err);
         assertEquals(p.getY(), q.getY(), err);

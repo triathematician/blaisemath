@@ -246,6 +246,7 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
      * @param type decoded type
      * @return decoded value, or null if unable to decode
      */
+    @SuppressWarnings("unchecked")
     static <X> @Nullable X decodeValue(String val, Class<X> type) {
         requireNonNull(val);
         String trim = val.trim();
@@ -253,19 +254,19 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
             if (NULL_STRING.equals(val)) {
                 return null;
             } else if (DECODERS.containsKey(type)) {
-                return (X) DECODERS.get(type).apply(val);
+                return DECODERS.apply(type, val);
             } else if (trim.matches("#[0-9a-fA-f]{3}")
                     || trim.matches("#[0-9a-fA-f]{6}")
                     || trim.matches("#[0-9a-fA-f]{8}")) {
-                return (X) DECODERS.get(Color.class).apply(trim);
+                return (X) DECODERS.apply(Color.class, trim);
             } else if (trim.matches("\\((.*),(.*)\\)") && trim.contains(".")) {
-                return (X) DECODERS.get(Point2D.class).apply(trim);
+                return (X) DECODERS.apply(Point2D.class, trim);
             } else if (trim.matches("\\((.*),(.*)\\)")) {
-                return (X) DECODERS.get(Point.class).apply(trim);
+                return (X) DECODERS.apply(Point.class, trim);
             } else if (trim.matches("rectangle\\((.*)\\)")) {
-                return (X) DECODERS.get(Rectangle.class).apply(trim);
+                return (X) DECODERS.apply(Rectangle.class, trim);
             } else if (trim.matches("rectangle2d\\((.*)\\)")) {
-                return (X) DECODERS.get(Rectangle2D.class).apply(trim);
+                return (X) DECODERS.apply(Rectangle2D.class, trim);
             }
             Integer i = Ints.tryParse(trim);
             if (type.isInstance(i)) {
@@ -301,6 +302,10 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
         private <X> DecoderMap put(Class<X> type, Function<String, X> fromStr) {
             super.put(type, fromStr);
             return this;
+        }
+
+        private <X> X apply(Class<X> type, String key) {
+            return (X) get(type).apply(key);
         }
     }
     

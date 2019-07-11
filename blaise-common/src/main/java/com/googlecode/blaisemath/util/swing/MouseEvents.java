@@ -91,13 +91,8 @@ public class MouseEvents {
      * @param l listener to delegate to
      */
     public static void delegateWheelEvent(MouseWheelEvent e, MouseWheelListener l) {
-        switch(e.getID()) {
-            case MouseEvent.MOUSE_WHEEL:
-                l.mouseWheelMoved(e);
-                break;
-            default:
-                // do nothing
-                break;
+        if (e.getID() == MouseEvent.MOUSE_WHEEL) {
+            l.mouseWheelMoved(e);
         }
     }
     

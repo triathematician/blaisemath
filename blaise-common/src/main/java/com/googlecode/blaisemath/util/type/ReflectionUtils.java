@@ -45,7 +45,7 @@ public class ReflectionUtils {
      * @param paramTypes method parameters
      * @return method if found
      */
-    public static Optional<Method> findStaticMethod(Class type, String name, Class... paramTypes) {
+    public static Optional<Method> findStaticMethod(Class<?> type, String name, Class... paramTypes) {
         try {
             Method m = type.getMethod(name, paramTypes);
             if (Modifier.isStatic(m.getModifiers()) && Modifier.isPublic(m.getModifiers())) {
@@ -81,7 +81,7 @@ public class ReflectionUtils {
      * @param paramTypes method parameters
      * @return constructor if found
      */
-    public static Optional<Constructor> findConstructor(Class type, Class... paramTypes) {
+    public static Optional<Constructor> findConstructor(Class<?> type, Class... paramTypes) {
         try {
             Constructor c = type.getConstructor(paramTypes); 
             if (Modifier.isPublic(c.getModifiers())) {

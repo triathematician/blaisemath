@@ -170,6 +170,7 @@ public class AttributeSetCoderTest {
         assertEquals(nullMap("fill"), inst.decode("fill:none").getAttributeMap());
     }
     
+    @SuppressWarnings("SameParameterValue")
     private static Map<String,Object> nullMap(String key) {
         return Collections.singletonMap(key, null);
     }

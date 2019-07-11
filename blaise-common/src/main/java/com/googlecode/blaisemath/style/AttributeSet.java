@@ -137,6 +137,7 @@ public class AttributeSet {
      * @param val value to copy
      * @return new value instance
      */
+    @SuppressWarnings("unchecked")
     private static <P> P copyValue(P val) {
         if (val instanceof Point2D) {
             return (P) ((Point2D) val).clone();
@@ -599,9 +600,6 @@ public class AttributeSet {
         Object[] listeners = listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == ChangeListener.class) {
-                if (changeEvent == null) {
-                    return;
-                }
                 ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
             }
         }

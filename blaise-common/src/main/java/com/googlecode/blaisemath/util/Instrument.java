@@ -44,7 +44,7 @@ public class Instrument {
     private static final String END = "end";
 
     /** Max number to keep in log */
-    private static int maxEvents = 10000;
+    private static final int MAX_EVENTS = 10000;
     /** All log events */
     private static final Map<Integer,LogEvent> ALL = Maps.newLinkedHashMap();
     /** Log events split by algorithm */
@@ -99,6 +99,7 @@ public class Instrument {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static synchronized int log(String algorithm, String event, String... info) {
         String[] logged = new String[info.length+1];
         logged[0] = event;
@@ -106,14 +107,14 @@ public class Instrument {
         LogEvent e = new LogEvent(logged);
         LOG.put(algorithm, e);
         ALL.put(e.id, e);
-        if (ALL.size() > 1.5*maxEvents) {
-            Set<Integer> rid = new HashSet<Integer>();
-            Set<LogEvent> rem = new HashSet<LogEvent>();
+        if (ALL.size() > 1.5 * MAX_EVENTS) {
+            Set<Integer> rid = new HashSet<>();
+            Set<LogEvent> rem = new HashSet<>();
             int n = 0;
-            for (Entry<Integer,LogEvent> i : ALL.entrySet()) {
+            for (Entry<Integer, LogEvent> i : ALL.entrySet()) {
                 rid.add(i.getKey());
                 rem.add(i.getValue());
-                if (n++ > .75*maxEvents) {
+                if (n++ > .75 * MAX_EVENTS) {
                     break;
                 }
             }
@@ -142,22 +143,26 @@ public class Instrument {
     }
 
     private static class LogEvent {
-        int id;
-        long start;
-        long dur;
-        List<String[]> info = new ArrayList<String[]>();
+        private final int id;
+        private final long start;
+        private final List<String[]> info = new ArrayList<>();
+        private long dur;
+
         LogEvent(String... info) {
             this.id = nextId();
             this.start = System.currentTimeMillis();
             this.info.add(info);
         }
+
         void addInfo(String... info) {
             this.info.add(info);
         }
+
         void end() {
             info.add(new String[]{END});
-            dur = System.currentTimeMillis()-start;
+            dur = System.currentTimeMillis() - start;
         }
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder(100);
