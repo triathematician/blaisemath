@@ -193,8 +193,7 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
      * @param def default value
      * @return value of target type if possible, else default; may return null if def is null
      */
-    static <X> @Nullable X convertValue(@Nullable Object value, Class<X> targetType,
-            @Nullable X def) {
+    static <X> @Nullable X convertValue(@Nullable Object value, Class<X> targetType, @Nullable X def) {
         return TypeConverter.convert(value, targetType, def);
     }
     

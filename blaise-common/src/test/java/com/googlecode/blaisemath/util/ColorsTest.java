@@ -53,8 +53,8 @@ public class ColorsTest {
     public void testInterpolate() {
         System.out.println("interpolate");
         Assert.assertEquals(Color.green, Colors.interpolate(Color.red, 0f, Color.green));
-        Assert.assertEquals(new Color(77, 179, 0), Colors.interpolate(Color.red, .3f, Color.green));
-        Assert.assertEquals(new Color(128, 128, 0), Colors.interpolate(Color.red, .5f, Color.green));
+        Assert.assertEquals(new Color(76, 178, 0), Colors.interpolate(Color.red, .3f, Color.green));
+        Assert.assertEquals(new Color(127, 127, 0), Colors.interpolate(Color.red, .5f, Color.green));
         Assert.assertEquals(Color.red, Colors.interpolate(Color.red, 1f, Color.green));
     }
 

@@ -63,10 +63,8 @@ public class TypeConverter {
      * @param targetType target type
      * @param def default value to return if value is null, or unable to convert
      * @return converted value
-     * @throws UnsupportedOperationException if unable to convert
      */
-    public static <X> @Nullable X convert(@Nullable Object value, Class<X> targetType,
-            @Nullable X def) {
+    public static <X> @Nullable X convert(@Nullable Object value, Class<X> targetType, @Nullable X def) {
         try {
             if (value == null) {
                 return def;
@@ -81,7 +79,7 @@ public class TypeConverter {
             }
             throw new UnsupportedOperationException();
         } catch (UnsupportedOperationException x) {
-            LOG.log(Level.WARNING, "Unable to convert "+value+" to "+targetType, x);
+            LOG.log(Level.WARNING, "Unable to convert "+value+" to "+targetType);
         }
         return def;
     }
@@ -95,8 +93,7 @@ public class TypeConverter {
      * @return converted value
      * @throws UnsupportedOperationException if unable to convert
      */
-    public static <X> @Nullable X convertFromString(@Nullable String value, 
-            Class<X> targetType, @Nullable X def) {
+    public static <X> @Nullable X convertFromString(@Nullable String value, Class<X> targetType, @Nullable X def) {
         if (value == null) {
             return def;
         } else if (TYPE_DECODERS.containsKey(targetType)) {
@@ -108,8 +105,7 @@ public class TypeConverter {
         if (decoder.isPresent()) {
             try {
                 return (X) decoder.get().invoke(null, value);
-            } catch (IllegalAccessException | IllegalArgumentException 
-                    | InvocationTargetException | ClassCastException ex) {
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException ex) {
                 LOG.log(Level.SEVERE, "Failed to invoke factory method "+decoder.get(), ex);
             }
         }
@@ -117,13 +113,11 @@ public class TypeConverter {
         if (con.isPresent()) {
             try {
                 return (X) con.get().newInstance(value);
-            } catch (InstantiationException | IllegalAccessException 
-                    | IllegalArgumentException | InvocationTargetException ex) {
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 LOG.log(Level.SEVERE, "Failed to invoke constructor "+con.get(), ex);
             }
         }
-        throw new UnsupportedOperationException("Cannot construct instance of "
-                + targetType + " from a string.");
+        throw new UnsupportedOperationException("Cannot construct instance of " + targetType + " from a string.");
     }
     
     //region NUMBERS
@@ -138,9 +132,7 @@ public class TypeConverter {
      * @return converted value
      * @throws UnsupportedOperationException if unable to convert
      */
-    @Nullable
-    public static <X extends Number> X convertToNumber(@Nullable Object value, 
-            Class<X> targetType, @Nullable X def) {
+    public static <X extends Number> @Nullable X convertToNumber(@Nullable Object value, Class<X> targetType, @Nullable X def) {
         if (value == null) {
             return def;
         }

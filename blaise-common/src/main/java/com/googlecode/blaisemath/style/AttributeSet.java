@@ -490,8 +490,7 @@ public class AttributeSet {
     /**
      * Retrieve given attribute as a float.
      * @param key attribute key
-     * @return float, or null if not present
-     * @throws UnsupportedOperationException if attribute is present but not a float
+     * @return float, or null if key is not present or value is not convertible to a float
      */
     public @Nullable Float getFloat(String key) {
         return getFloat(key, null);
@@ -501,8 +500,7 @@ public class AttributeSet {
      * Get the float value associated with the key.
      * @param key key
      * @param def default value
-     * @return float value, or def if there is none
-     * @throws UnsupportedOperationException if attribute is present but not a float
+     * @return float value, or def if key is not present or value is not convertible to a float
      */
     public @Nullable Float getFloat(String key, @Nullable Float def) {
         return AttributeSetCoder.convertValue(get(key), Float.class, def);
@@ -511,8 +509,7 @@ public class AttributeSet {
     /**
      * Retrieve given attribute as a double.
      * @param key attribute key
-     * @return double, or null if not present
-     * @throws UnsupportedOperationException if attribute is present but not a double
+     * @return double, or null if key is not present or value is not convertible to a double
      */
     public @Nullable Double getDouble(String key) {
         return getDouble(key, null);
@@ -522,8 +519,7 @@ public class AttributeSet {
      * Get the double value associated with the key.
      * @param key key
      * @param def default value
-     * @return integer value, or def if there is none
-     * @throws UnsupportedOperationException if attribute is present but not a double
+     * @return integer value, or def if key is not present or value is not convertible to a double
      */
     public @Nullable Double getDouble(String key, @Nullable Double def) {
         return AttributeSetCoder.convertValue(get(key), Double.class, def);
@@ -532,8 +528,7 @@ public class AttributeSet {
     /**
      * Retrieve given attribute as a color.
      * @param key attribute key
-     * @return color, or null if not present
-     * @throws UnsupportedOperationException if attribute is present but not a color
+     * @return color, or null if key is not present or value is not convertible to a color
      */
     public @Nullable Color getColor(String key) {
         return getColor(key, null);
@@ -543,8 +538,7 @@ public class AttributeSet {
      * Get the color value associated with the key.
      * @param key key
      * @param def default value
-     * @return color value, or def if there is none
-     * @throws UnsupportedOperationException if attribute is present but not a color
+     * @return color value, or def if key is not present or value is not convertible to a color
      */
     public @Nullable Color getColor(String key, @Nullable Color def) {
         return AttributeSetCoder.convertValue(get(key), Color.class, def);
@@ -553,8 +547,7 @@ public class AttributeSet {
     /**
      * Retrieve given attribute as a point.
      * @param key attribute key
-     * @return point, or null if not present
-     * @throws UnsupportedOperationException if attribute is present but not a point
+     * @return point, or null if key is not present or value is not convertible to a point
      */
     public @Nullable Point getPoint(String key) {
         return getPoint(key, null);
@@ -564,8 +557,7 @@ public class AttributeSet {
      * Get the point value associated with the key.
      * @param key key
      * @param def default value
-     * @return point value, or def if there is none
-     * @throws UnsupportedOperationException if attribute is present but not a point
+     * @return point value, or def if key is not present or value is not convertible to a point
      */
     public @Nullable Point getPoint(String key, @Nullable Point def) {
         return AttributeSetCoder.convertValue(get(key), Point.class, def);
@@ -574,8 +566,7 @@ public class AttributeSet {
     /**
      * Retrieve given attribute as a point.
      * @param key attribute key
-     * @return point, or null if not present
-     * @throws UnsupportedOperationException if attribute is present but not a point
+     * @return point, or null if key is not present or value is not convertible to a point
      */
     public @Nullable Point2D getPoint2D(String key) {
         return getPoint2D(key, null);
@@ -585,8 +576,7 @@ public class AttributeSet {
      * Get the point value associated with the key.
      * @param key key
      * @param def default value
-     * @return point value, or def if there is none
-     * @throws UnsupportedOperationException if attribute is present but not a point
+     * @return point value, or def if key is not present or value is not convertible to a point
      */
     public @Nullable Point2D getPoint2D(String key, @Nullable Point2D def) {
         return AttributeSetCoder.convertValue(get(key), Point2D.class, def);
