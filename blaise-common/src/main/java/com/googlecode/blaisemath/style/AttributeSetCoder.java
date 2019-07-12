@@ -20,21 +20,23 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
+import com.googlecode.blaisemath.geom.Marker;
+import com.googlecode.blaisemath.geom.Anchor;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
 import com.googlecode.blaisemath.util.Colors;
-import com.googlecode.blaisemath.util.encode.FontCoder;
-import com.googlecode.blaisemath.util.encode.InsetsCoder;
-import com.googlecode.blaisemath.util.encode.Point2DCoder;
-import com.googlecode.blaisemath.util.encode.PointCoder;
-import com.googlecode.blaisemath.util.encode.Rectangle2DCoder;
-import com.googlecode.blaisemath.util.encode.RectangleCoder;
-import com.googlecode.blaisemath.util.encode.StringDecoder;
-import com.googlecode.blaisemath.util.encode.StringEncoder;
-import com.googlecode.blaisemath.util.type.TypeConverter;
+import com.googlecode.blaisemath.encode.FontCoder;
+import com.googlecode.blaisemath.encode.InsetsCoder;
+import com.googlecode.blaisemath.encode.Point2DCoder;
+import com.googlecode.blaisemath.encode.PointCoder;
+import com.googlecode.blaisemath.encode.Rectangle2DCoder;
+import com.googlecode.blaisemath.encode.RectangleCoder;
+import com.googlecode.blaisemath.encode.StringDecoder;
+import com.googlecode.blaisemath.encode.StringEncoder;
+import com.googlecode.blaisemath.encode.TypeConverter;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;

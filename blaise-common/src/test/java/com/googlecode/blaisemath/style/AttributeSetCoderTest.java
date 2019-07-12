@@ -21,6 +21,7 @@ package com.googlecode.blaisemath.style;
  */
 
 
+import com.googlecode.blaisemath.geom.Marker;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.util.Colors;
 import java.awt.Color;
