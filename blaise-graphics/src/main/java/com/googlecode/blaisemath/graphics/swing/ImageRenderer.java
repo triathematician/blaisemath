@@ -20,14 +20,15 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.AnchoredImage;
-import com.googlecode.blaisemath.style.Anchor;
+import com.googlecode.blaisemath.geom.Anchor;
+import com.googlecode.blaisemath.geom.AnchoredImage;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.graphics.core.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Renderer for drawing images on a canvas. Anchor is used to position the icon relative to a point. The default anchor
@@ -50,18 +51,18 @@ public class ImageRenderer implements Renderer<AnchoredImage, Graphics2D> {
     }
 
     @Override
-    public Rectangle2D boundingBox(AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
+    public Rectangle2D boundingBox(AnchoredImage primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
         return anchor.rectangleAnchoredAt(primitive, primitive.getWidth(), primitive.getHeight());
     }
 
     @Override
-    public boolean contains(Point2D point, AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean contains(Point2D point, AnchoredImage primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         return boundingBox(primitive, style, canvas).contains(point);
     }
 
     @Override
-    public boolean intersects(Rectangle2D rect, AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean intersects(Rectangle2D rect, AnchoredImage primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         return boundingBox(primitive, style, canvas).intersects(rect);
     }
 

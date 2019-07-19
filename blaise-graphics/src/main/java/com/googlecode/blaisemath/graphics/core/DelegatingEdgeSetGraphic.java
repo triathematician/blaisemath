@@ -30,7 +30,6 @@ import com.google.common.collect.Sets;
 import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;

@@ -22,9 +22,9 @@ package com.googlecode.blaisemath.palette.ui;
 
 
 import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.geom.Marker;
 import com.googlecode.blaisemath.palette.Palette;
 import com.googlecode.blaisemath.palette.Palettes;
-import com.googlecode.blaisemath.style.Marker;
 import java.awt.Color;
 import static java.util.Collections.list;
 import java.util.LinkedHashMap;
@@ -36,7 +36,7 @@ import javax.swing.DefaultListModel;
 
 /**
  * List model for colors associated with strings.
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class ColorListModel extends DefaultListModel<KeyColorBean> {
     

@@ -317,8 +317,7 @@ public abstract class Graphic<G> {
     public abstract AttributeSet getStyle();
 
     /**
-     * Draws the primitive on the specified graphics canvas, using current
-     * style.
+     * Draws the primitive on the specified graphics canvas, using current style.
      * @param canvas graphics canvas
      */
     public abstract void renderTo(G canvas);
@@ -326,9 +325,9 @@ public abstract class Graphic<G> {
     /**
      * Method that provides the bounding box enclosing the graphic.
      * @return bounding box
-     * @param canvas canvas
+     * @param canvas where graphic is rendered
      */
-    public abstract Rectangle2D boundingBox(G canvas);
+    public abstract Rectangle2D boundingBox(@Nullable G canvas);
     
     /**
      * Method used to determine whether the graphic receives mouse events
@@ -338,20 +337,20 @@ public abstract class Graphic<G> {
      * containing the event's point.
      *
      * @param point the window point
-     * @param canvas canvas
+     * @param canvas where graphic is rendered
      * @return true if the entry contains the point, else false
      */
-    public abstract boolean contains(Point2D point, G canvas);
+    public abstract boolean contains(Point2D point, @Nullable G canvas);
 
     /**
      * Checks to see if the graphic intersects the area within specified
      * rectangle.
      *
      * @param box rectangle to check against
-     * @param canvas canvas
+     * @param canvas where graphic is rendered
      * @return true if it intersects, false otherwise
      */
-    public abstract boolean intersects(Rectangle2D box, G canvas);
+    public abstract boolean intersects(Rectangle2D box, @Nullable G canvas);
 
     //endregion
 

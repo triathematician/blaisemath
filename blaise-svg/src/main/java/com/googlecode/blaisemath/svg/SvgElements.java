@@ -22,15 +22,10 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.graphics.AnchoredIcon;
-import com.googlecode.blaisemath.graphics.AnchoredImage;
-import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.geom.*;
 import com.googlecode.blaisemath.graphics.swing.StyledText;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
-import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Images;

@@ -38,12 +38,28 @@ public class Rectangles {
      * @param rects rectangles
      * @return smallest box enclosing provided rectangles, null if argument is empty
      */
-    public static @Nullable Rectangle2D boundingBox(Iterable<? extends Rectangle2D> rects) {
+    public static Rectangle2D.@Nullable Double boundingBox(Iterable<? extends Rectangle2D> rects) {
         Rectangle2D res = null;
         for (Rectangle2D r : rects) {
             res = res == null ? r : res.createUnion(r);
         }
-        return res;
+        return toDouble(res);
+    }
+    
+    /**
+     * Converts a general {@link Rectangle2D} to a {@link Rectangle2D.Double}, returning the argument if it already is.
+     * If the input is null, returns null.
+     * @param rect input rectangle
+     * @return converted rectangle
+     */
+    public static Rectangle2D.@Nullable Double toDouble(Rectangle2D rect) {
+        if (rect instanceof Rectangle2D.Double) {
+            return (Rectangle2D.Double) rect;
+        } else {
+            Rectangle2D.Double res = new Rectangle2D.Double();
+            res.setFrame(rect);
+            return res;
+        }
     }
     
 }

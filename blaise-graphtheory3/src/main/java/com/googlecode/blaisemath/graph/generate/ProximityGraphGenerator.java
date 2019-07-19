@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.geom.Rectangles;
 import com.googlecode.blaisemath.graph.GraphGenerator;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.generate.ProximityGraphGenerator.ProximityGraphParameters;
@@ -76,7 +77,7 @@ public final class ProximityGraphGenerator implements GraphGenerator<ProximityGr
     
     /** Parameters for proximity graph. */
     public static final class ProximityGraphParameters extends DefaultGeneratorParameters {
-        private Rectangle2D bounds = new Rectangle2D.Double();
+        private Rectangle2D.Double bounds = new Rectangle2D.Double();
         private double connectDistance = 1;
         
         public ProximityGraphParameters() {
@@ -84,15 +85,15 @@ public final class ProximityGraphGenerator implements GraphGenerator<ProximityGr
 
         public ProximityGraphParameters(boolean directed, int nodes, Rectangle2D bounds, double dst) {
             super(directed, nodes);
-            this.bounds = bounds;
+            this.bounds = Rectangles.toDouble(bounds);
             this.connectDistance = dst;
         }
 
-        public Rectangle2D getBounds() {
+        public Rectangle2D.Double getBounds() {
             return bounds;
         }
 
-        public void setBounds(Rectangle2D bounds) {
+        public void setBounds(Rectangle2D.Double bounds) {
             this.bounds = bounds;
         }
 

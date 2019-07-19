@@ -26,10 +26,10 @@ import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.geom.AnchoredText;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.graphics.core.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

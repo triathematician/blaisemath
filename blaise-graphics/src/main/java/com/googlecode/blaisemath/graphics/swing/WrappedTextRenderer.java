@@ -22,8 +22,8 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.graphics.AnchoredText;
-import com.googlecode.blaisemath.style.Anchor;
+import com.googlecode.blaisemath.geom.Anchor;
+import com.googlecode.blaisemath.geom.AnchoredText;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -150,7 +150,7 @@ public class WrappedTextRenderer extends TextRenderer {
     }
 
     @Override
-    public Rectangle2D boundingBox(AnchoredText text, AttributeSet style, Graphics2D canvas) {
+    public Rectangle2D boundingBox(AnchoredText text, AttributeSet style, @Nullable Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return null;
         }

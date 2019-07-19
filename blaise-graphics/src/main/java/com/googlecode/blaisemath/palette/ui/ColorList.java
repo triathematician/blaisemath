@@ -46,7 +46,7 @@ import javax.swing.UIManager;
  * within {@link ColorListEditConstraints}. Changes are propagated through the "colors" properties when either
  * the list of colors changes, or individual items within the list change.
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public final class ColorList extends JList {
     

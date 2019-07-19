@@ -21,20 +21,22 @@ package com.googlecode.blaisemath.palette.ui;
  */
 
 
-import com.googlecode.blaisemath.style.Marker;
+import com.googlecode.blaisemath.geom.Marker;
 import java.awt.Color;
 import javax.annotation.Nullable;
 
 /**
  * Bean that tracks a key/name associated with a color (and optionally a marker).
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class KeyColorBean {
     
     private @Nullable String name;
     private @Nullable Color color;
     private @Nullable Marker marker;
+    
+    //region FACTORIES
 
     /**
      * Create bean with name and color
@@ -84,7 +86,27 @@ public class KeyColorBean {
         return res;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    
+//    /**
+//     * Convert an attribute set to a simple style, using the keys {@link Styles.FILL}
+//     * for color, {@link Styles.MARKER} for marker, and {@link Styles.ID} for name.
+//     * @param as attribute set
+//     * @return simple style
+//     */
+//    public static SimpleStyle create(AttributeSet as) {
+//        Color c = getOrDefault(as, Styles.FILL, Color.class, Colors::decode, null);
+//        Marker m = getOrDefault(as, Styles.MARKER, Marker.class, Markers2::toMarker, null);
+//        String n = getOrDefault(as, Styles.ID, String.class, null, null);
+//        SimpleStyle res = new SimpleStyle();
+//        res.setName(n);
+//        res.setColor(c);
+//        res.setMarker(m);
+//        return res;
+//    }
+    
+    //endregion
+    
+    //region PROPERTIES
 
     public @Nullable String getName() {
         return name;
@@ -110,5 +132,5 @@ public class KeyColorBean {
         this.marker = marker;
     }
     
-    //</editor-fold>
+    //endregion
 }

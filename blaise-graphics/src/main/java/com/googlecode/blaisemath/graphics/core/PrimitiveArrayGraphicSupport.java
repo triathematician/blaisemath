@@ -24,11 +24,11 @@ import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.P_
 import static java.util.Arrays.asList;
 
 import com.googlecode.blaisemath.coordinate.DraggableCoordinate;
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Adds an array of primitive objects and a renderer to a {@link Graphic}. Also
@@ -134,18 +134,18 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
     }
 
     @Override
-    public Rectangle2D boundingBox(G canvas) {
+    public Rectangle2D boundingBox(@Nullable G canvas) {
         AttributeSet style = renderStyle();
         return GraphicUtils.boundingBox(asList(primitive), p -> renderer.boundingBox(p, style, canvas), null);
     }
 
     @Override
-    public boolean contains(Point2D point, G canvas) {
+    public boolean contains(Point2D point, @Nullable G canvas) {
         return indexOf(point, canvas) != -1;
     }
 
     @Override
-    public boolean intersects(Rectangle2D box, G canvas) {
+    public boolean intersects(Rectangle2D box, @Nullable G canvas) {
         if (renderer == null) {
             return false;
         }

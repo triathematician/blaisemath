@@ -22,13 +22,13 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.geom.Anchor;
+import com.googlecode.blaisemath.geom.AnchoredText;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.graphics.core.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -105,13 +105,13 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
     }
 
     @Override
-    public boolean contains(Point2D point, AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean contains(Point2D point, AnchoredText primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         Rectangle2D bounds = boundingBox(primitive, style, canvas);
         return bounds != null && bounds.contains(point);
     }
 
     @Override
-    public boolean intersects(Rectangle2D rect, AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean intersects(Rectangle2D rect, AnchoredText primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         Rectangle2D bounds = boundingBox(primitive, style, canvas);
         return bounds != null && bounds.intersects(rect);
     }
@@ -125,7 +125,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
      * @return bounding box for the result
      */
     @Override
-    public @Nullable Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
+    public @Nullable Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
         }

@@ -325,7 +325,7 @@ public class AttributeSet {
      * Get copy of the attributes and the values in this set as a map.
      * @return attribute map
      */
-    public Map<String,Object> getAttributeMap() {
+    public Map<String, Object> getAttributeMap() {
         return Maps.newHashMap(attributeMap);
     }
     

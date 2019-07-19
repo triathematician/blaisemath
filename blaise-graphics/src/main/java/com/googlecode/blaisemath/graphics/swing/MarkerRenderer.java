@@ -22,17 +22,18 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.style.Markers;
-import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.graphics.core.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
+import com.googlecode.blaisemath.geom.Marker;
+import com.googlecode.blaisemath.geom.Markers;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Draws an oriented point on the graphics canvas.
@@ -83,17 +84,17 @@ public class MarkerRenderer implements Renderer<Point2D, Graphics2D> {
     }
 
     @Override
-    public Rectangle2D boundingBox(Point2D primitive, AttributeSet style, Graphics2D canvas) {
+    public Rectangle2D boundingBox(Point2D primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         return shapeRenderer.boundingBox(getShape(primitive, style), style, canvas);
     }
 
     @Override
-    public boolean contains(Point2D point, Point2D primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean contains(Point2D point, Point2D primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         return shapeRenderer.contains(point, getShape(primitive, style), style, canvas);
     }
 
     @Override
-    public boolean intersects(Rectangle2D rect, Point2D primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean intersects(Rectangle2D rect, Point2D primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         return shapeRenderer.intersects(rect, getShape(primitive, style), style, canvas);
     }
     

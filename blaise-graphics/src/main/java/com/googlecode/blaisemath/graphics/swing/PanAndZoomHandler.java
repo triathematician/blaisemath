@@ -23,6 +23,7 @@ package com.googlecode.blaisemath.graphics.swing;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
+import com.googlecode.blaisemath.geom.AffineTransformBuilder;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.swing.AnimationStep;
@@ -38,7 +39,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import static java.util.Objects.requireNonNull;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -267,28 +267,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      */
     @InvokedFromThread("multiple")
     public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle compBounds, final Rectangle2D rect) {
-        MoreSwingUtilities.invokeOnEventDispatchThread(() -> comp.setTransform(scaleRectTransform(compBounds, rect)));
-    }
-    
-    /**
-     * Create a transform that maps the "scaleFrom" rectangle into the "scaleTo" region.
-     * @param scaleTo region to scale to
-     * @param scaleFrom region to scale from
-     * @return transform
-     */
-    public static AffineTransform scaleRectTransform(Rectangle2D scaleTo, final Rectangle2D scaleFrom) {
-        if (scaleTo.getWidth() == 0 || scaleTo.getHeight() == 0 || scaleFrom.getWidth() == 0 || scaleFrom.getHeight() == 0) {
-            LOG.log(Level.INFO, "Scaling with zero area rectangles: {0}, {1}. Returning identity transform.", new Object[]{scaleFrom, scaleTo});
-            return new AffineTransform();
-        }
-        double scaleX = scaleFrom.getWidth() / scaleTo.getWidth();
-        double scaleY = scaleFrom.getHeight() / scaleTo.getHeight();
-        double scale = Math.max(scaleX, scaleY);
-        AffineTransform res = new AffineTransform();
-        res.translate(scaleTo.getCenterX(), scaleTo.getCenterY());
-        res.scale(1 / scale, 1 / scale);
-        res.translate(-scaleFrom.getCenterX(), -scaleFrom.getCenterY());
-        return res;
+        MoreSwingUtilities.invokeOnEventDispatchThread(() -> comp.setTransform(AffineTransformBuilder.transformingTo(compBounds, rect)));
     }
     
     //endregion

@@ -24,7 +24,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.graphics.AnchoredImage;
+import com.googlecode.blaisemath.geom.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

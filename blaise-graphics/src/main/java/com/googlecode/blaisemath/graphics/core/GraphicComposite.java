@@ -26,7 +26,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphic.P_STYLE;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.style.StyleHints;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -295,17 +294,17 @@ public class GraphicComposite<G> extends Graphic<G> {
     //region GRAPHIC IMPLEMENTATIONS
 
     @Override
-    public Rectangle2D boundingBox(G canvas) {
+    public Rectangle2D boundingBox(@Nullable G canvas) {
         return GraphicUtils.boundingBox(entries, canvas);
     }
 
     @Override
-    public boolean contains(Point2D point, G canvas) {
+    public boolean contains(Point2D point, @Nullable G canvas) {
         return graphicAt(point, canvas) != null;
     }
 
     @Override
-    public boolean intersects(Rectangle2D box, G canvas) {
+    public boolean intersects(Rectangle2D box, @Nullable G canvas) {
         return entries.stream().anyMatch(en -> en.intersects(box, canvas));
     }
     

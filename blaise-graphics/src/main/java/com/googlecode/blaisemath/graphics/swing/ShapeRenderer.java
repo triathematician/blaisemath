@@ -21,12 +21,13 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.graphics.core.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Draws a shape using a stroke (with thickness) and a fill color.
@@ -61,7 +62,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
     }
 
     @Override
-    public Rectangle2D boundingBox(Shape primitive, AttributeSet style, Graphics2D canvas) {
+    public Rectangle2D boundingBox(Shape primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         boolean filled = Styles.hasFill(style);
         Shape sh = PathRenderer.strokedShape(primitive, style);
         if (filled && sh != null) {
@@ -86,7 +87,7 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
     }
 
     @Override
-    public boolean intersects(Rectangle2D rect, Shape primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean intersects(Rectangle2D rect, Shape primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         if (Styles.hasFill(style) && primitive.intersects(rect)) {
             return true;            
         } else {

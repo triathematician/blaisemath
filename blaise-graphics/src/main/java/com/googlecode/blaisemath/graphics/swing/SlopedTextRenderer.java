@@ -22,14 +22,14 @@ package com.googlecode.blaisemath.graphics.swing;
 
 
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.graphics.core.Renderer;
+import com.googlecode.blaisemath.geom.AnchoredText;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Renders text at an angle, by rotating the canvas around the text's anchor point.
@@ -70,19 +70,19 @@ public class SlopedTextRenderer implements Renderer<AnchoredText, Graphics2D> {
     }
 
     @Override
-    public @Nullable Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, Graphics2D gr) {
+    public @Nullable Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style, @Nullable Graphics2D gr) {
         Shape shape = shape(primitive, style, gr);
         return shape == null ? null : shape.getBounds2D();
     }
 
     @Override
-    public boolean contains(Point2D point, AnchoredText primitive, AttributeSet style, Graphics2D gr) {
+    public boolean contains(Point2D point, AnchoredText primitive, AttributeSet style, @Nullable Graphics2D gr) {
         Shape shape = shape(primitive, style, gr);
         return shape != null && shape.contains(point);
     }
 
     @Override
-    public boolean intersects(Rectangle2D rect, AnchoredText primitive, AttributeSet style, Graphics2D gr) {
+    public boolean intersects(Rectangle2D rect, AnchoredText primitive, AttributeSet style, @Nullable Graphics2D gr) {
         Shape shape = shape(primitive, style, gr);
         return shape != null && shape.intersects(rect);
     }

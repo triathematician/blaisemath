@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 import static com.google.common.base.Preconditions.checkArgument;
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.coordinate.CoordinateBean;
 import com.googlecode.blaisemath.coordinate.DraggableCoordinate;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -114,17 +113,17 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     }
 
     @Override
-    public Rectangle2D boundingBox(G canvas) {
+    public Rectangle2D boundingBox(@Nullable G canvas) {
         return renderer == null || primitive == null ? null : renderer.boundingBox(primitive, renderStyle(), canvas);
     }
 
     @Override
-    public boolean contains(Point2D point, G canvas) {
+    public boolean contains(Point2D point, @Nullable G canvas) {
         return renderer != null && primitive != null && renderer.contains(point, primitive, renderStyle(), canvas);
     }
 
     @Override
-    public boolean intersects(Rectangle2D box, G canvas) {
+    public boolean intersects(Rectangle2D box, @Nullable G canvas) {
         return renderer != null && primitive != null && renderer.intersects(box, primitive, renderStyle(), canvas);
     }
 

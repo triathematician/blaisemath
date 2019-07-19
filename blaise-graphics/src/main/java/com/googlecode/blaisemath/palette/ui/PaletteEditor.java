@@ -20,41 +20,26 @@ package com.googlecode.blaisemath.palette.ui;
  * #L%
  */
 
-
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.palette.MutablePalette;
 import com.googlecode.blaisemath.palette.Palette;
 import static com.googlecode.blaisemath.palette.Palette.BACKGROUND;
 import static com.googlecode.blaisemath.palette.Palette.FOREGROUND;
 import com.googlecode.blaisemath.palette.Palettes;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import java.util.Set;
 
 /**
  * Used to edit the keyed colors associated with a {@link Palette}. Disables removal of fg/bg colors.
- * @author petereb1
+ * @author Elisha Peterson
  */
-public final class PaletteEditor extends JPanel {
+public final class PaletteEditor extends ColorListEditorSupport {
     
     private MutablePalette palette = Palettes.defaultPalette().mutableCopy();
-    private final ColorList list = new ColorList();
     
     public PaletteEditor() {
-        setLayout(new BorderLayout());
-        add(new JScrollPane(list), BorderLayout.CENTER);
-        list.addPropertyChangeListener(new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                updatePaletteColors();
-            }
-        });
+        super();
         
         // don't allow removal of fg/bg colors
         list.setEditConstraints(new ColorListEditConstraints(){
@@ -69,17 +54,15 @@ public final class PaletteEditor extends JPanel {
         });
     }
     
-    /** Called when the list changes to update the palette. */
-    private void updatePaletteColors() {
-        Map<String, Color> colorMap = list.getColorListModel().getColorMap();
-        for (Map.Entry<String, Color> en : colorMap.entrySet()) {
-            palette.set(en.getKey(), en.getValue());
+    @Override
+    protected void updateModelStyles(List<KeyColorBean> styles) {
+        Set<String> removeKeys = Sets.newHashSet(palette.colors());
+        for (KeyColorBean b : styles) {
+            palette.set(b.getName(), b.getColor());
+            removeKeys.remove(b.getName());
         }
-        List<String> curKeys = Lists.newArrayList(palette.colors());
-        for (String c : curKeys) {
-            if (!colorMap.containsKey(c)) {
-                palette.remove(c);
-            }
+        for (String c : removeKeys) {
+            palette.remove(c);
         }
         firePropertyChange("palette", null, palette);
     }
@@ -99,18 +82,6 @@ public final class PaletteEditor extends JPanel {
         }
     }
     
-    public ColorListModel getColorListModel() {
-        return list.getColorListModel();
-    }
-    
     //</editor-fold>
-    
-    public void addColorListPropertyChangeListener(PropertyChangeListener l) {
-        list.addPropertyChangeListener(ColorList.COLORS, l);
-    }
-    
-    public void removeColorListPropertyChangeListener(PropertyChangeListener l) {
-        list.removePropertyChangeListener(ColorList.COLORS, l);
-    }
 
 }

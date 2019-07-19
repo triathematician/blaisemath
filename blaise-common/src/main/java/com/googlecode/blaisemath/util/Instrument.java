@@ -20,6 +20,7 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -37,6 +38,7 @@ import java.util.Set;
  *
  * @author Elisha Peterson
  */
+@Beta
 public class Instrument {
 
     private static int id = 0;
@@ -63,6 +65,7 @@ public class Instrument {
      * @param info additional information
      * @return unique id for log event
      */
+    @Beta
     public static synchronized int start(String algorithm, String... info) {
         return log(algorithm, START, info);
     }
@@ -73,6 +76,7 @@ public class Instrument {
      * @param event name of event
      * @param info additional information
      */
+    @Beta
     public static synchronized void middle(int id, String event, String... info) {
         log(id, event, info);
     }
@@ -81,6 +85,7 @@ public class Instrument {
      * Log a start algorithm event
      * @param id id of log event
      */
+    @Beta
     public static synchronized void end(int id) {
         log(id, END);
     }
@@ -126,6 +131,7 @@ public class Instrument {
         return e.id;
     }
 
+    @Beta
     public static synchronized void print(PrintStream out, long minT) {
         out.println("Graph Algorithm Log");
         for (String a : LOG.keySet()) {
@@ -138,6 +144,7 @@ public class Instrument {
         }
     }
 
+    @Beta
     public static void print(PrintStream out) {
         print(out, 10);
     }

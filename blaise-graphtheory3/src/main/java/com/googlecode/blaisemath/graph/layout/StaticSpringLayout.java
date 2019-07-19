@@ -27,12 +27,12 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.Graph;
+import com.googlecode.blaisemath.geom.Points;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.layout.StaticSpringLayout.StaticSpringLayoutParameters;
-import com.googlecode.blaisemath.util.geom.Points;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.geom.Point2D;

@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Icon displaying gradient palette.
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class ColorSchemeGradientIcon implements Icon {
 
@@ -84,25 +84,25 @@ public class ColorSchemeGradientIcon implements Icon {
     public void paintIcon(Component c, Graphics g, int x, int y) {
         Graphics2D gr = (Graphics2D) g;
         gr.setColor(palette.background());
-        gr.fillRect(0, 0, getIconWidth(), getIconHeight());
+        gr.fillRect(x, y, getIconWidth(), getIconHeight());
 
         if (scheme.getColors().length > 0) {
             if (scheme.getColors().length == 1) {
                 gr.setColor(scheme.getColors()[0]);
             } else if (scheme.getColors().length == 2) {
-                gr.setPaint(new GradientPaint(0, 5, scheme.getColors()[0], 0, getIconHeight()-5, scheme.getColors()[1]));
+                gr.setPaint(new GradientPaint(0, 5, scheme.getColors()[0], 0, getIconHeight() - 5, scheme.getColors()[1]));
             } else if (scheme.getColors().length > 2) {
                 float[] stops = new float[scheme.getColors().length];
                 for (int i = 0; i < stops.length; i++) {
                     stops[i] = i / (float) (stops.length - 1);
                 }
-                gr.setPaint(new LinearGradientPaint(0, 5, 0, getIconHeight()-5, stops, scheme.getColors()));
+                gr.setPaint(new LinearGradientPaint(0, 5, 0, getIconHeight() - 5, stops, scheme.getColors()));
             }
-            gr.fillRect(5, 5, getIconWidth()-11, getIconHeight()-11);
+            gr.fillRect(x + 5, y + 5, getIconWidth() - 11, getIconHeight() - 11);
         }
         
         gr.setColor(palette.foreground());
-        gr.drawRect(5, 5, getIconWidth()-11, getIconHeight()-11);
+        gr.drawRect(x + 5, y + 5, getIconWidth() - 11, getIconHeight() - 11);
     }
 
 }

@@ -32,7 +32,7 @@ import javax.swing.JPanel;
 
 /**
  * Displays editable color.
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class ColorPicker extends JPanel {
 

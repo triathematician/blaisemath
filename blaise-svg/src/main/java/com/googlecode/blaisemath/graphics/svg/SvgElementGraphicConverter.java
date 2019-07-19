@@ -22,9 +22,9 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.graphics.AnchoredIcon;
-import com.googlecode.blaisemath.graphics.AnchoredImage;
-import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.geom.AnchoredIcon;
+import com.googlecode.blaisemath.geom.AnchoredImage;
+import com.googlecode.blaisemath.geom.AnchoredText;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveArrayGraphicSupport;
@@ -167,7 +167,7 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
         if (element.getId() != null) {
             res.put(Styles.ID, element.getId());
         }
-        AttributeSetAdapter.updateColorFields(res);
+        updateColorFields(res);
         return res;
     }
 

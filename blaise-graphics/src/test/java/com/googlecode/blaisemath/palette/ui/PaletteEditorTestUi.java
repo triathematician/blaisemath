@@ -43,10 +43,12 @@ public class PaletteEditorTestUi extends javax.swing.JFrame {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 jLabel1.repaint();
+                jLabel2.repaint();
+                jLabel3.repaint();
             }
         });
         
-        ColorScheme grad = ColorScheme.createGradient("", ColorSchemes.SCHEME_BLUES);
+        ColorScheme grad = ColorSchemes.scheme("BLUES").get();
         gradientEditor.setScheme(grad);
         gradientPreview.setPalette(pal);
         gradientPreview.setScheme(grad);
@@ -57,7 +59,7 @@ public class PaletteEditorTestUi extends javax.swing.JFrame {
             }
         });
         
-        ColorScheme sch2 = ColorScheme.create("", ColorSchemes.SCHEME_CATEGORY20);
+        ColorScheme sch2 = ColorSchemes.scheme("CATEGORY20").get();
         schemeEditor.setScheme(sch2);
         schemePreview.setPalette(pal);
         schemePreview.setColors(schemeEditor.getColorListModel());

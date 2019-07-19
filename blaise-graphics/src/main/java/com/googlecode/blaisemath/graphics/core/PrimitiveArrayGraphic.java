@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 
 /**

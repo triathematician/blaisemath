@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.svg;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.geom.AnchoredText;
 
 /**
  * SVG text object.

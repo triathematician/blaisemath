@@ -34,7 +34,7 @@ import javax.swing.Icon;
  * Paints a preview icon showing all the colors in a color list. Uses a {@link Palette} for
  * foreground and background colors, and a {@link ColorListModel} for the actual colors.
  *
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class ColorListIcon implements Icon {
 
@@ -84,18 +84,18 @@ public class ColorListIcon implements Icon {
     public void paintIcon(Component c, Graphics g, int x, int y) {
         Graphics2D gr = (Graphics2D) g;        
         gr.setColor(palette.background());
-        gr.fillRect(0, 0, getIconWidth(), getIconHeight());
+        gr.fillRect(x, y, getIconWidth(), getIconHeight());
         
         if (showNames) {
-            paintColorsWithNames(gr);
+            paintColorsWithNames(gr, x, y);
         } else {
-            paintColorsWithoutNames(gr);
+            paintColorsWithoutNames(gr, x, y);
         }
     }
     
-    private void paintColorsWithNames(Graphics2D gr) { 
-        int xx = 5;
-        int yy = 5;
+    private void paintColorsWithNames(Graphics2D gr, int x, int y) { 
+        int xx = x + 5;
+        int yy = y + 5;
         gr.setFont(new Font("Dialog", Font.PLAIN, 15));
         for (KeyColorBean sty : colors.getColors()) {
             new BasicColorIcon(sty.getColor(), 15, palette.foreground()).paintIcon(null, gr, xx, yy);
@@ -107,14 +107,14 @@ public class ColorListIcon implements Icon {
         }
     }
     
-    private void paintColorsWithoutNames(Graphics2D gr) {
-        int xx = 6;
-        int yy = 5;
+    private void paintColorsWithoutNames(Graphics2D gr, int x, int y) {
+        int xx = x + 6;
+        int yy = y + 5;
         for (KeyColorBean sty : colors.getColors()) {
             new BasicColorIcon(sty.getColor(), 15, palette.foreground()).paintIcon(null, gr, xx, yy);
             xx += 20;
             if (xx > getIconWidth()-20) {
-                xx = 6;
+                xx = x + 6;
                 yy += 20;
             }
         }

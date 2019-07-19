@@ -21,10 +21,10 @@ package com.googlecode.blaisemath.graphics.editor;
  */
 
 import com.googlecode.blaisemath.editor.MPanelEditorSupport;
+import com.googlecode.blaisemath.geom.Marker;
+import com.googlecode.blaisemath.geom.Markers;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
 
 import javax.swing.*;

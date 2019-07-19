@@ -39,5 +39,15 @@ public class ColorCoder implements StringEncoder<Color>, StringDecoder<Color> {
     public Color decode(String str) {
         return Colors.decode(str);
     }
-    
+
+    /**
+     * Checks whether a string is decodable as a color.
+     * @param str to test
+     * @return true if matches
+     */
+    public static boolean decodable(String str) {
+        return str.matches("#[0-9a-fA-f]{3}")
+                || str.matches("#[0-9a-fA-f]{6}")
+                || str.matches("#[0-9a-fA-f]{8}");
+    }    
 }

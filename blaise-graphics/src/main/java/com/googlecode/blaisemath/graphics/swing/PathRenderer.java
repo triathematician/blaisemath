@@ -22,10 +22,9 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.primitives.Ints;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.graphics.core.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 
-import javax.annotation.Nullable;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -37,6 +36,7 @@ import java.awt.geom.Rectangle2D;
 
 import static com.google.common.primitives.Doubles.max;
 import static com.google.common.primitives.Doubles.min;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Draws a shape using a stroke (with thickness) and a fill color.
@@ -72,19 +72,19 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
     }
 
     @Override
-    public Rectangle2D boundingBox(Shape primitive, AttributeSet style, Graphics2D canvas) {
+    public Rectangle2D boundingBox(Shape primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         Shape sh = strokedShape(primitive, style);
         return sh == null ? null : sh.getBounds2D();
     }
 
     @Override
-    public boolean contains(Point2D point, Shape primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean contains(Point2D point, Shape primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         Shape sh = strokedShape(primitive, style);
         return sh != null && sh.contains(point);
     }
 
     @Override
-    public boolean intersects(Rectangle2D rect, Shape primitive, AttributeSet style, Graphics2D canvas) {
+    public boolean intersects(Rectangle2D rect, Shape primitive, AttributeSet style, @Nullable Graphics2D canvas) {
         Shape sh = strokedShape(primitive, style);
         return sh != null && sh.intersects(rect);
     }
@@ -156,7 +156,7 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
      * @param r rectangle
      * @return portion of line inside the rectangle, null if none
      */
-    private static @Nullable Line2D.Double intersect(Line2D.Double l, Rectangle2D r) {
+    private static Line2D.@Nullable Double intersect(Line2D.Double l, Rectangle2D r) {
         if (r.contains(l.getP1()) && r.contains(l.getP2())) {
             return l;
         }

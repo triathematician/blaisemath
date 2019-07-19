@@ -23,10 +23,10 @@ package com.googlecode.blaisemath.graph.app;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.geom.Points;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.util.geom.Points;
 import com.googlecode.blaisemath.util.swing.AnimationStep;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

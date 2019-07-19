@@ -24,6 +24,7 @@ import com.google.common.base.Functions;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
+import com.googlecode.blaisemath.geom.Points;
 import com.googlecode.blaisemath.graph.generate.EdgeLikelihoodGenerator;
 import com.googlecode.blaisemath.graph.generate.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;
 import com.googlecode.blaisemath.graph.layout.CircleLayout;
@@ -40,7 +41,6 @@ import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.util.RollupPanel;
-import com.googlecode.blaisemath.util.geom.Points;
 
 import javax.swing.*;
 import java.awt.*;

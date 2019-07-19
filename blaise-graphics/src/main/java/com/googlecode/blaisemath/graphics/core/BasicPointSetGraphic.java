@@ -21,9 +21,8 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 import com.google.common.base.Preconditions;
+import com.googlecode.blaisemath.geom.Points;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.geom.Points;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.geom.Point2D;

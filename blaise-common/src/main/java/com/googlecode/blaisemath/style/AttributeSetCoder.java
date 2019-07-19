@@ -27,6 +27,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
+import com.googlecode.blaisemath.encode.ColorCoder;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.encode.FontCoder;
 import com.googlecode.blaisemath.encode.InsetsCoder;
@@ -257,9 +258,7 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
                 return null;
             } else if (DECODERS.containsKey(type)) {
                 return DECODERS.apply(type, val);
-            } else if (trim.matches("#[0-9a-fA-f]{3}")
-                    || trim.matches("#[0-9a-fA-f]{6}")
-                    || trim.matches("#[0-9a-fA-f]{8}")) {
+            } else if (ColorCoder.decodable(trim)) {
                 return (X) DECODERS.apply(Color.class, trim);
             } else if (trim.matches("\\((.*),(.*)\\)") && trim.contains(".")) {
                 return (X) DECODERS.apply(Point2D.class, trim);

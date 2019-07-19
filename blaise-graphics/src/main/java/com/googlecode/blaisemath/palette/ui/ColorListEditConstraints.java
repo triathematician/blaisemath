@@ -24,7 +24,7 @@ package com.googlecode.blaisemath.palette.ui;
 
 /**
  * Object describing ways in which a particular list of colors may be edited.
- * @author petereb1
+ * @author Elisha Peterson
  */
 public class ColorListEditConstraints {
     

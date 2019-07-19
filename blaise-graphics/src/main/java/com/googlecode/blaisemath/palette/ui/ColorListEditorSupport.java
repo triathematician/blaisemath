@@ -20,86 +20,41 @@ package com.googlecode.blaisemath.palette.ui;
  * #L%
  */
 
-
-import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.palette.ColorScheme;
-import com.googlecode.blaisemath.util.Colors;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Map;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
- * Used to edit colors in a color scheme. If the scheme is a gradient scheme, the number of colors is fixed.
+ * Used to edit a list of colors. Provides custom hooks to  
  * 
- * @author petereb1
+ * @author Elisha Peterson
  */
-public class ColorSchemeEditor extends JPanel {
+public abstract class ColorListEditorSupport extends JPanel {
         
-    private ColorScheme scheme = new ColorScheme();
-    private final ColorList list = new ColorList();
+    protected final ColorList list = new ColorList();
     
-    public ColorSchemeEditor() {
+    public ColorListEditorSupport() {
         setLayout(new BorderLayout());
         add(new JScrollPane(list), BorderLayout.CENTER);
         list.addPropertyChangeListener(new PropertyChangeListener(){
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                updateSchemeColors();
+                updateModelStyles(list.getColorListModel().getColors());
             }
         });
         list.setEditConstraints(new ColorListEditConstraints().keysEditable(false));
     }
     
-    private void updateSchemeColors() {
-        ColorListModel model = list.getColorListModel();
-        
-        // update names since the user should not be updating them
-        for (int i = 0; i < model.size(); i++) {
-            KeyColorBean b = model.elementAt(i);
-            b.setName(name(i, b.getColor()));
-        }
-        
-        // update the scheme
-        Color[] colors = new Color[model.size()];
-        for (int i = 0; i < colors.length; i++) {
-            colors[i] = model.color(i);
-        }
-        scheme.setColors(colors);
-        firePropertyChange("scheme", null, scheme);
-    }
-    
-    private void updateListColors() {
-        Map<String, Color> colors = Maps.newLinkedHashMap();
-        for (int i = 0; i < scheme.getColors().length; i++) {
-            Color color = scheme.getColors()[i];
-            colors.put(name(i, color), color);
-        }
-        list.getColorListModel().setColorMap(colors);
-        list.setEditConstraints(new ColorListEditConstraints().keysEditable(false));
-    }
-    
-    private String name(int i, Color c) {
-        return scheme.isDiscrete() ? Colors.encode(c) : "Stop " + (i + 1);
-    }
+    /**
+     * Update the model content based on user edits in the UI.
+     * @param styles list of styles from the UI
+     */
+    protected abstract void updateModelStyles(List<KeyColorBean> styles);
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    
-    public ColorScheme getScheme() {
-        return scheme;
-    }
-    
-    public void setScheme(ColorScheme scheme) {
-        if (this.scheme != scheme) {
-            Object old = this.scheme;
-            this.scheme = scheme;
-            updateListColors();
-            firePropertyChange("scheme", old, scheme);
-        }
-    }
     
     public ColorListModel getColorListModel() {
         return list.getColorListModel();

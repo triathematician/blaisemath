@@ -37,7 +37,7 @@ package com.googlecode.blaisemath.svg;
 
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.graphics.AnchoredImage;
+import com.googlecode.blaisemath.geom.AnchoredImage;
 import junit.framework.TestCase;
 import org.junit.Test;
 

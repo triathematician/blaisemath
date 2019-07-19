@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * @param <N> graph node type
  * @author Elisha Peterson
  */
-final class SpringLayoutState<N> extends IterativeGraphLayoutState<N> {
+public final class SpringLayoutState<N> extends IterativeGraphLayoutState<N> {
     
     private static final Logger LOG = Logger.getLogger(SpringLayoutState.class.getName());
     

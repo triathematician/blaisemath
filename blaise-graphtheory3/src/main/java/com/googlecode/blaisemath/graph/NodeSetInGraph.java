@@ -22,6 +22,7 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.collect.Sets;
 import com.google.common.graph.Graph;
+import java.util.Arrays;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Set;
@@ -40,6 +41,21 @@ public class NodeSetInGraph<N> {
     private final Set<N> nodes;
     private final Graph<N> graph;
 
+    /**
+     * Construct with just nodes. The graph will be null.
+     * @param nodes nodes
+     */
+    public NodeSetInGraph(N... nodes) {
+        requireNonNull(nodes);
+        this.graph = null;
+        this.nodes = Sets.newLinkedHashSet(Arrays.asList(nodes));
+    }
+
+    /**
+     * Construct with a set of nodes and optional graph.
+     * @param nodes nodes
+     * @param graph graph
+     */
     public NodeSetInGraph(Set<N> nodes, @Nullable Graph<N> graph) {
         requireNonNull(nodes);
         this.graph = graph;

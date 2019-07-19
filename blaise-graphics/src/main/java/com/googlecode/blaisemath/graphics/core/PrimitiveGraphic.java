@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

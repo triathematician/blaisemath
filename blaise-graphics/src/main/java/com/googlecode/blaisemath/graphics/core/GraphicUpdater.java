@@ -1,7 +1,3 @@
-/*
- * GraphicUpdater.java
- * Created Nov 2012
- */
 package com.googlecode.blaisemath.graphics.core;
 
 /*

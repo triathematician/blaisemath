@@ -20,10 +20,10 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.googlecode.blaisemath.geom.Markers;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;

@@ -20,8 +20,8 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.util.geom.AffineTransformBuilder;
+import com.googlecode.blaisemath.geom.AffineTransformBuilder;
+import com.googlecode.blaisemath.geom.Marker;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;

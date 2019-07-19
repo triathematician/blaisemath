@@ -28,6 +28,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.google.common.primitives.Floats;
+import com.googlecode.blaisemath.geom.Anchor;
+import com.googlecode.blaisemath.geom.Marker;
+import com.googlecode.blaisemath.geom.Markers;
 import com.googlecode.blaisemath.util.Colors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -36,7 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import static com.googlecode.blaisemath.style.Anchor.*;
+import static com.googlecode.blaisemath.geom.Anchor.*;
 
 /**
  * Factory class providing convenience methods for easily creating styles.
