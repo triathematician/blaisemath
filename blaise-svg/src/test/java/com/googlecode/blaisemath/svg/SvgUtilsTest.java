@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graphics.svg;
+package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
@@ -20,17 +20,17 @@ package com.googlecode.blaisemath.graphics.svg;
  * #L%
  */
 
-
 import static com.googlecode.blaisemath.svg.SvgUtils.parseLength;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 public class SvgUtilsTest {
 
     @Test
     public void testParseLength() {
-        assertEquals(0.0, parseLength(null));
-        assertEquals(0.0, parseLength("not a number"));
+        assertEquals(0.0, parseLength(null), 1e-3);
+        assertEquals(0.0, parseLength("not a number"), 1e-3);
         assertEquals(0.0, parseLength("auto"), 1e-3);
         assertEquals(0.0, parseLength("50.5%"), 1e-3);
                 

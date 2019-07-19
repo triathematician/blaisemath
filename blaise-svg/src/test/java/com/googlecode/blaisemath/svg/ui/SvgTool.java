@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.ui;
 
 /*
  * #%L
@@ -29,6 +25,11 @@ import com.googlecode.blaisemath.graphics.svg.SvgGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.svg.SvgElement;
+import com.googlecode.blaisemath.svg.SvgPath;
+import com.googlecode.blaisemath.svg.SvgRoot;
+import com.googlecode.blaisemath.svg.io.SvgIo;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -44,10 +45,7 @@ import javax.swing.JFileChooser;
 public class SvgTool extends javax.swing.JFrame {
 
     private SvgGraphic gsvg;
-    
-    /**
-     * Creates new form SvgTool
-     */
+
     public SvgTool() {
         initComponents();
         setMinimumSize(new Dimension(400,400));
@@ -178,7 +176,7 @@ public class SvgTool extends javax.swing.JFrame {
             gsvg.setElement(new SvgPath(text.getText()));
         } else {
             try {
-                SvgRoot root = SvgRoot.load(text.getText());
+                SvgRoot root = SvgIo.read(text.getText());
                 gsvg.setElement(root);
                 Object bg = root.getStyle().get("background");
                 if (bg instanceof Color) {
@@ -201,7 +199,7 @@ public class SvgTool extends javax.swing.JFrame {
                     rootEl.addElement(el);
                     el = rootEl;
                 }
-                SvgRoot.save((SvgRoot) el, out);
+                SvgIo.write(el, out);
             } catch (IOException x) {
                 Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, x);
             }
@@ -211,9 +209,9 @@ public class SvgTool extends javax.swing.JFrame {
     private void loadBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBActionPerformed
         if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
             try (FileInputStream fis = new FileInputStream(chooser.getSelectedFile())) {
-                SvgRoot r = SvgRoot.load(fis);
+                SvgRoot r = SvgIo.read(fis);
                 gsvg.setElement(r);
-                String fs = Files.toString(chooser.getSelectedFile(), Charset.defaultCharset());
+                String fs = Files.asCharSource(chooser.getSelectedFile(), Charset.defaultCharset()).read();
                 text.setText(fs);
             } catch (IOException x) {
                 Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, x);

@@ -22,27 +22,20 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.geom.AnchoredIcon;
 import com.googlecode.blaisemath.geom.AnchoredImage;
 import com.googlecode.blaisemath.geom.AnchoredText;
-import com.googlecode.blaisemath.graphics.Graphic;
-import com.googlecode.blaisemath.graphics.GraphicComposite;
-import com.googlecode.blaisemath.graphics.PrimitiveArrayGraphicSupport;
-import com.googlecode.blaisemath.graphics.PrimitiveGraphicSupport;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
-import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import com.googlecode.blaisemath.graphics.swing.TextRenderer;
-import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
-import com.googlecode.blaisemath.style.*;
+import com.googlecode.blaisemath.graphics.*;
+import com.googlecode.blaisemath.graphics.swing.*;
+import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSetCoder;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.svg.*;
-import com.googlecode.blaisemath.svg.SvgElement;
 import com.googlecode.blaisemath.util.Colors;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
@@ -153,6 +146,8 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
     }
 
     private AttributeSet aggregateStyle(SvgElement element) {
+        AttributeSetCoder coder = new AttributeSetCoder(ImmutableMap.of(Styles.FILL, Color.class, Styles.STROKE, Color.class));
+
         AttributeSet shapeStyle = element.getStyle();
         AttributeSet res = shapeStyle == null 
                 ? new AttributeSet()
@@ -161,7 +156,7 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
         Map<String, Object> attr = element.getOtherAttributes();
         if (attr != null) {
             for (Entry<String, Object> en : attr.entrySet()) {
-                Object val = new AttributeSetCoder().decode((String) en.getValue());
+                Object val = coder.decode((String) en.getValue());
                 res.put(en.getKey(), val);
             }
         }
@@ -248,7 +243,7 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
         if (primitive instanceof Shape) {
             return SvgElements.create(null, (Shape) primitive, sty);
         } else if (primitive instanceof AnchoredText) {
-            return SvgElements.create(null, (AnchoredText) primitive, sty, rend);
+            return SvgElements.create(null, (AnchoredText) primitive, sty);
         } else if (primitive instanceof AnchoredImage) {
             return SvgElements.create(null, (AnchoredImage) primitive, sty);
         } else if (primitive instanceof AnchoredIcon) {

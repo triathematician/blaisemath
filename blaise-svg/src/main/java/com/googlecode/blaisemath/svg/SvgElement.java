@@ -27,7 +27,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.svg.io.AttributeSetDeserializer;
+import com.googlecode.blaisemath.svg.io.AttributeSetSerializer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Map;
@@ -45,7 +48,7 @@ public abstract class SvgElement {
     protected String id;
     protected String value;
     private AttributeSet style = null;
-    private Map<String, Object> otherAttr;
+    private Map<String, Object> otherAttr = Maps.newLinkedHashMap();
 
     protected SvgElement() {
         this.tag = null;

@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 elisha.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -35,15 +20,21 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-
 import com.google.common.base.Converter;
+<<<<<<< Updated upstream
 import com.googlecode.blaisemath.geom.AnchoredImage;
 import junit.framework.TestCase;
+=======
+import com.googlecode.blaisemath.graphics.AnchoredImage;
+>>>>>>> Stashed changes
 import org.junit.Test;
 
 import java.net.MalformedURLException;
 
-public class SvgImageTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class SvgImageTest {
     
     @Test
     public void testLoadImage() throws MalformedURLException {
@@ -59,8 +50,8 @@ public class SvgImageTest extends TestCase {
         
         i.setImageRef("file:src/test/resources/com/googlecode/blaisemath/util/resources/cherries.png");
         assertTrue(i.getImage() != null);
-        assertEquals(20.0, i.getWidth());
-        assertEquals(20.0, i.getHeight());
+        assertEquals(20.0, i.getWidth(), 1e-6);
+        assertEquals(20.0, i.getHeight(), 1e-6);
     }
 
     @Test

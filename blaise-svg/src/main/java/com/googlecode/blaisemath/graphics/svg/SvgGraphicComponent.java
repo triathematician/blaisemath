@@ -22,9 +22,9 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.svg.SvgElement;
-import com.googlecode.blaisemath.svg.SvgRoot;
+import com.googlecode.blaisemath.svg.io.SvgIo;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -72,9 +72,6 @@ public class SvgGraphicComponent extends JGraphicComponent {
     }
 
     //region PROPERTIES
-    //
-    // PROPERTIES
-    //
     
     public SvgElement getElement() {
         return graphic.getElement();
@@ -86,7 +83,7 @@ public class SvgGraphicComponent extends JGraphicComponent {
     
     public String getSvgText() {
         try {
-            return SvgRoot.saveToString(graphic.getElement());
+            return SvgIo.writeToString(graphic.getElement());
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Unable to save SVG", x);
             return "<svg/>";
@@ -95,7 +92,7 @@ public class SvgGraphicComponent extends JGraphicComponent {
     
     public void setSvgText(String svg) {
         try {
-            setElement(SvgRoot.load(svg));
+            setElement(SvgIo.read(svg));
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Set SVG Failed", x);
         }

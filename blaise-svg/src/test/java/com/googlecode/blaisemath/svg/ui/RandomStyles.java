@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.ui;
 
 /*
  * #%L
@@ -29,10 +25,6 @@ import static com.googlecode.blaisemath.style.Styles.*;
 import java.awt.Color;
 import java.util.Random;
 
-/**
- *
- * @author Elisha Peterson
- */
 class RandomStyles {
     
     static Color color() {

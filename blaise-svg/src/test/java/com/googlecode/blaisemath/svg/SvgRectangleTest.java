@@ -20,16 +20,17 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-
 import com.google.common.base.Converter;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
 
-public class SvgRectangleTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class SvgRectangleTest {
 
     @Test
     public void testConvertToSvg() {
@@ -81,8 +82,8 @@ public class SvgRectangleTest extends TestCase {
         assertEquals(2.0, rect2.getY(), 1e-6);
         assertEquals(3.0, rect2.getWidth(), 1e-6);
         assertEquals(4.0, rect2.getHeight(), 1e-6);
-        assertEquals(.2, ((RoundRectangle2D)rect2).getArcWidth());
-        assertEquals(.3, ((RoundRectangle2D)rect2).getArcHeight());
+        assertEquals(.2, ((RoundRectangle2D)rect2).getArcWidth(), 1e-6);
+        assertEquals(.3, ((RoundRectangle2D)rect2).getArcHeight(), 1e-6);
         
         assertEquals(null, conv.convert(null));
     }

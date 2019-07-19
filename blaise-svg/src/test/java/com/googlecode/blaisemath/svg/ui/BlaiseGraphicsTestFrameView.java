@@ -1,8 +1,4 @@
-/*
- * BlaiseGraphicsTestFrameView.java
- */
-
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.ui;
 
 /*
  * #%L
@@ -31,9 +27,6 @@ import javax.swing.JMenuItem;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.SingleFrameApplication;
 
-/**
- * The application's main frame.
- */
 public class BlaiseGraphicsTestFrameView extends FrameView {
 
     public BlaiseGraphicsTestFrameView(SingleFrameApplication app) {

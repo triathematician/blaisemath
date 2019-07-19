@@ -137,7 +137,7 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
 
     //endregion
 
-    /** Used in deserialization for custom type mapping */
+    /** Used in deserialization for custom type mapping. When decoding, types will be used to deserialize values. */
     private final Map<String, Class<?>> types;
 
     /**

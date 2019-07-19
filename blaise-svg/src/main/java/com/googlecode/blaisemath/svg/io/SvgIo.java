@@ -20,64 +20,135 @@ package com.googlecode.blaisemath.svg.io;
  * #L%
  */
 
-
+import com.ctc.wstx.api.WstxOutputProperties;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import com.googlecode.blaisemath.style.AttributeSetCoder;
+import com.googlecode.blaisemath.svg.SvgElement;
 import com.googlecode.blaisemath.svg.SvgRoot;
+import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.*;
 
 /**
  * Utilities for reading/writing SVG.
  * @author Elisha Peterson
  */
-class SvgIo {
-    
-//    static SvgRoot flexibleNamespaceParse(InputSource input) throws IOException {
-//        try {
-//            XMLFilter filter = new SvgNamespaceFilter();
-//            SAXParserFactory factory = SAXParserFactory.newInstance();
-//            factory.setNamespaceAware(true);
-//            filter.setParent(factory.newSAXParser().getXMLReader());
-//            UnmarshallerHandler umHandler = unmarshaller().getUnmarshallerHandler();
-//            filter.setContentHandler(umHandler);
-//            filter.parse(input);
-//            return (SvgRoot) umHandler.getResult();
-//        } catch (ParserConfigurationException | SAXException | JAXBException x) {
-//            throw new IOException("Invalid svg or other error: "+input, x);
-//        }
-//    }
-    
-    static SvgRoot read(String input) throws IOException {
+public class SvgIo {
+
+    /** Mapper instance */
+    private static XmlMapper MAPPER = mapper();
+
+    /** Utility method */
+    private SvgIo() {
+    }
+
+    private static XmlMapper mapper() {
+        if (MAPPER == null) {
+            SimpleModule svgModule = new SimpleModule()
+                    .addSerializer(new SvgElementSerializer())
+                    .addDeserializer(SvgElement.class, new SvgElementDeserializer());
+            MAPPER = (XmlMapper) new XmlMapper()
+//                    .configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true)
+                    .enable(SerializationFeature.INDENT_OUTPUT)
+//                    .registerModule(svgModule)
+                    ;
+//            MAPPER.getFactory().getXMLOutputFactory().setProperty(WstxOutputProperties.P_USE_DOUBLE_QUOTES_IN_XML_DECL, true);
+        }
+        return MAPPER;
+    }
+
+
+    /**
+     * Reads SVG content from input string.
+     * @param input input SVG string
+     * @return SVG root object
+     * @throws IOException if there's a parse failure or other IO failure
+     */
+    public static SvgRoot read(String input) throws IOException {
         return read(new StringReader(input));
     }
-    
-    static SvgRoot read(InputStream input) throws IOException {
-        XmlMapper mapper = new XmlMapper();
-        return mapper.readValue(input, SvgRoot.class);
+
+    /**
+     * Reads SVG content from input stream.
+     * @param input input SVG
+     * @return SVG root object
+     * @throws IOException if there's a parse failure or other IO failure
+     */
+    public static SvgRoot read(InputStream input) throws IOException {
+        return mapper().readValue(input, SvgRoot.class);
     }
-    
-    static SvgRoot read(Reader reader) throws IOException {
-        XmlMapper mapper = new XmlMapper();
-        return mapper.readValue(reader, SvgRoot.class);
+
+    /**
+     * Reads SVG content from input reader.
+     * @param reader reader SVG
+     * @return SVG root object
+     * @throws IOException if there's a parse failure or other IO failure
+     */
+    public  static SvgRoot read(Reader reader) throws IOException {
+        return mapper().readValue(reader, SvgRoot.class);
     }
-    
-    static String writeToString(SvgRoot root) throws IOException {
-        XmlMapper mapper = new XmlMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        return mapper.writeValueAsString(root);
+
+    /**
+     * Write SVG content to string.
+     * @param root SVG content
+     * @return string
+     * @throws IOException if there's a write failure or other IO failure
+     */
+    public static String writeToString(SvgElement root) throws IOException {
+        if (root instanceof SvgRoot) {
+            try {
+                XmlMapper mapper = mapper();
+                StringWriter stringWriter = new StringWriter();
+                XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newFactory();
+                XMLStreamWriter sw = new IndentingXMLStreamWriter(xmlOutputFactory.createXMLStreamWriter(stringWriter));
+                sw.writeStartDocument();
+                sw.writeStartElement("", "svg", "http://www.w3.org/2000/svg");
+                sw.writeNamespace("", "http://www.w3.org/2000/svg");
+                sw.writeNamespace("xlink", "http://www.w3.org/1999/xlink");
+                sw.writeAttribute("width", ((SvgRoot) root).getWidth()+"");
+                sw.writeAttribute("height", ((SvgRoot) root).getHeight()+"");
+                if (((SvgRoot) root).getViewBox() != null) {
+                    sw.writeAttribute("viewBox", ((SvgRoot) root).getViewBox());
+                }
+                sw.writeAttribute("style", new AttributeSetCoder().encode(root.getStyle()));
+                for (SvgElement e : ((SvgRoot) root).getElements()) {
+                    mapper.writeValue(sw, e);
+                }
+                sw.writeEndElement();
+                sw.writeEndDocument();
+                return stringWriter.toString();
+            } catch (XMLStreamException x) {
+                throw new IOException(x);
+            }
+        } else {
+            return mapper().writeValueAsString(root);
+        }
     }
-    
-    static void write(SvgRoot root, OutputStream output) throws IOException {
-        XmlMapper mapper = new XmlMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.writeValue(output, root);
+
+    /**
+     * Write SVG content to output stream.
+     * @param root SVG content
+     * @param output where to write
+     * @throws IOException if there's a write failure or other IO failure
+     */
+    public static void write(SvgElement root, OutputStream output) throws IOException {
+        mapper().writeValue(output, root);
     }
-    
-    static void write(SvgRoot root, Writer writer) throws IOException {
-        XmlMapper mapper = new XmlMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.writeValue(writer, root);
+
+    /**
+     * Write SVG content to writer.
+     * @param root SVG content
+     * @param writer where to write
+     * @throws IOException if there's a write failure or other IO failure
+     */
+    public static void write(SvgElement root, Writer writer) throws IOException {
+        mapper().writeValue(writer, root);
     }
     
 }

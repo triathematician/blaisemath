@@ -20,15 +20,14 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-
 import com.google.common.base.Converter;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
-import junit.framework.TestCase;
-import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
-public class SvgPolygonTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class SvgPolygonTest {
 
     @Test
     public void testConvertToSvg() {
@@ -64,16 +63,16 @@ public class SvgPolygonTest extends TestCase {
         PathIterator pi = gp1.getPathIterator(null);
         double[] crd = new double[6];
         assertEquals(PathIterator.SEG_MOVETO, pi.currentSegment(crd));
-        assertEquals(0.0, crd[0]);
-        assertEquals(0.0, crd[1]);
+        assertEquals(0.0, crd[0], 1e-6);
+        assertEquals(0.0, crd[1], 1e-6);
         pi.next();
         assertEquals(PathIterator.SEG_LINETO, pi.currentSegment(crd));
-        assertEquals(1.0, crd[0]);
-        assertEquals(0.0, crd[1]);
+        assertEquals(1.0, crd[0], 1e-6);
+        assertEquals(0.0, crd[1], 1e-6);
         pi.next();
         assertEquals(PathIterator.SEG_LINETO, pi.currentSegment(crd));
-        assertEquals(0.0, crd[0]);
-        assertEquals(1.0, crd[1]);
+        assertEquals(0.0, crd[0], 1e-6);
+        assertEquals(1.0, crd[1], 1e-6);
         pi.next();
         assertEquals(PathIterator.SEG_CLOSE, pi.currentSegment(crd));
         pi.next();

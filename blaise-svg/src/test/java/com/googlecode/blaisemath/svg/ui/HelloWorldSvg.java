@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.ui;
 
 /*
  * #%L
@@ -20,8 +20,12 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+<<<<<<< Updated upstream:blaise-svg/src/test/java/com/googlecode/blaisemath/svg/HelloWorldSvg.java
 
 import com.googlecode.blaisemath.graphics.Graphic;
+=======
+import com.googlecode.blaisemath.graphics.core.Graphic;
+>>>>>>> Stashed changes:blaise-svg/src/test/java/com/googlecode/blaisemath/svg/ui/HelloWorldSvg.java
 import com.googlecode.blaisemath.graphics.svg.SvgGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
@@ -40,10 +44,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
-/**
- *
- * @author Elisha Peterson
- */
 public class HelloWorldSvg extends JFrame {
 
     public HelloWorldSvg() {

@@ -21,8 +21,9 @@ package com.googlecode.blaisemath.svg;
  */
 
 import java.awt.geom.Path2D;
-import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class SvgPathTest {
     

@@ -21,6 +21,8 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.googlecode.blaisemath.geom.AffineTransformBuilder;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicComposite;
 import com.googlecode.blaisemath.graphics.GraphicUtils;
@@ -28,10 +30,10 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.svg.SvgElement;
 import com.googlecode.blaisemath.svg.SvgRoot;
+import com.googlecode.blaisemath.svg.io.SvgIo;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -41,7 +43,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPopupMenu;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Uses an {@link SvgElement} as a primitive to be rendered on a {@link JGraphicComponent}.
@@ -68,7 +71,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
      * @return graphic
      */
     public static SvgGraphic create(SvgElement element) {
-        checkNotNull(element);
+        requireNonNull(element);
         SvgGraphic res = new SvgGraphic();
         res.setElement(element);
         return res;
@@ -81,7 +84,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
      */
     public static SvgGraphic create(String svg) {
         try {
-            return create(SvgRoot.load(svg));
+            return create(SvgIo.read(svg));
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Invalid SVG", ex);
             return new SvgGraphic();
@@ -136,7 +139,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
             return null;
         }
         Rectangle2D viewBox = ((SvgRoot) element).getViewBoxAsRectangle();
-        return viewBox == null ? null : PanAndZoomHandler.scaleRectTransform(graphicBounds, viewBox);
+        return viewBox == null ? null : AffineTransformBuilder.transformingTo(graphicBounds, viewBox);
     }
     
     /** Inverse transform. Transforms the graphic bounds to the view box. */

@@ -20,11 +20,17 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Objects;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.svg.io.SvgElementDeserializer;
+import com.googlecode.blaisemath.svg.io.SvgElementSerializer;
+
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * SVG group object.
@@ -54,18 +60,19 @@ public class SvgGroup extends SvgElement {
     }
 
     //region PROPERTIES
-    
-//    @XmlElementRef
+
+    @JsonSerialize(contentUsing = SvgElementSerializer.class)
     public List<SvgElement> getElements() {
         return obj;
     }
 
+    @JsonDeserialize(contentUsing = SvgElementDeserializer.class)
     public void setElements(List<SvgElement> obj) {
         this.obj = obj;
     }
     
     public void addElement(SvgElement obj) {
-        this.obj.add(checkNotNull(obj));
+        this.obj.add(requireNonNull(obj));
     }
     
     //endregion

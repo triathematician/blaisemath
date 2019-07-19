@@ -24,13 +24,10 @@ package com.googlecode.blaisemath.util;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import javax.imageio.ImageIO;
-import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
-/**
- *
- * @author Elisha Peterson
- */
+import static org.junit.Assert.assertEquals;
+
 public class ImagesTest {
     
     URL testImage = Images.class.getResource("resources/cherries.png");

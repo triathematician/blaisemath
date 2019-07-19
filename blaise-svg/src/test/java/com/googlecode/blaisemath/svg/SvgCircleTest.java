@@ -20,17 +20,17 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-
 import com.google.common.base.Converter;
-import java.awt.geom.Ellipse2D;
-import junit.framework.TestCase;
 import org.junit.Test;
 
-public class SvgCircleTest extends TestCase {
+import java.awt.geom.Ellipse2D;
+
+import static org.junit.Assert.assertEquals;
+
+public class SvgCircleTest {
 
     @Test
     public void testConvertToSvg() {
-        System.out.println("convertToSvg");
         Converter<SvgCircle, Ellipse2D> conv = SvgCircle.shapeConverter();
         
         Ellipse2D e1 = new Ellipse2D.Double(1.0, 2.0, 2.0, 2.0);
@@ -52,9 +52,8 @@ public class SvgCircleTest extends TestCase {
 
     @Test
     public void testConvertFromSvg() {
-        System.out.println("convertToSvg");
         Converter<SvgCircle, Ellipse2D> conv = SvgCircle.shapeConverter();
-        
+
         SvgCircle circ = new SvgCircle(1, 2, 3);
         Ellipse2D ell = conv.convert(circ);
         assert ell != null;

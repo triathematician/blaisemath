@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.ui;
 
 /*
  * #%L
@@ -37,6 +37,8 @@ import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.svg.SvgRoot;
+import com.googlecode.blaisemath.svg.io.SvgIo;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.Images;
 import com.googlecode.blaisemath.util.geom.Points;
@@ -46,15 +48,13 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -70,12 +70,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     
     @Action
-    public void printSVG() throws JAXBException {
+    public void printSVG() throws IOException {
         SvgRoot root = SvgElementGraphicConverter.componentToSvg(canvas1);
-        JAXBContext jc = JAXBContext.newInstance(SvgRoot.class);
-        Marshaller m = jc.createMarshaller();
-        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        m.marshal(root, System.out);
+        System.out.println(SvgIo.writeToString(root));
     }
 
     //region GENERAL

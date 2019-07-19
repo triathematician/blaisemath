@@ -28,7 +28,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * SVG Polyline object.
@@ -84,7 +84,7 @@ public final class SvgPolyline extends SvgElement {
     
     /** Ensures validity of a string of points */
     static String checkPointString(String s) {
-        checkNotNull(s);
+        requireNonNull(s);
         String ps = s.replaceAll("\\s*,\\s*", ",");
         String[] pp = ps.split("\\s+");
         for (String p : pp) {
