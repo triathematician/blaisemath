@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Provides an ordering of nodes in a graph.
- * @author petereb1
+ * @author Elisha Peterson
  */
 public interface NodeOrdering<C> {
 
