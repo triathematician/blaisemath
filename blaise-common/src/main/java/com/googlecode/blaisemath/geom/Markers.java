@@ -9,9 +9,9 @@ package com.googlecode.blaisemath.geom;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ public final class Markers {
     private static final List<Marker> MARKER_CACHE = Lists.newArrayList();
     /** Singleton for empty path. */
     private static final GeneralPath EMPTY_PATH = new GeneralPath();
-    
+
     //region STATIC INSTANCES
 
     public static final BlankMarker BLANK = new BlankMarker();
@@ -72,7 +72,7 @@ public final class Markers {
     public static final HouseMarker HOUSE = new HouseMarker();
 
     //endregion
-    
+
     /**
      * Utility class
      */
@@ -119,8 +119,8 @@ public final class Markers {
         public Shape create(Point2D p, double angle, float radius) {
             return new Rectangle2D.Double(
                     p.getX() - radius / Math.sqrt(2),
-                    p.getY() - radius / Math.sqrt(2), 
-                    2 * radius / Math.sqrt(2), 
+                    p.getY() - radius / Math.sqrt(2),
+                    2 * radius / Math.sqrt(2),
                     2 * radius / Math.sqrt(2));
         }
     }
@@ -285,7 +285,7 @@ public final class Markers {
     }
 
     /**
-     * Arrow marker (->), pointing forward.
+     * Arrow marker, pointing forward.
      */
     public static class GapArrowMarker implements Marker {
         @Override
@@ -304,7 +304,7 @@ public final class Markers {
     }
 
     /**
-     * Arrow marker (->), pointing forward.
+     * Arrow marker, pointing forward.
      */
     public static class ArrowMarker implements Marker {
         @Override
@@ -323,7 +323,7 @@ public final class Markers {
     }
 
     /**
-     * Thicker arrow marker (->), pointing forward.
+     * Thicker arrow marker, pointing forward.
      */
     public static class ThickArrowMarker implements Marker {
         @Override
@@ -342,7 +342,7 @@ public final class Markers {
     }
 
     /**
-     * Chevron marker (>>), pointing forward.
+     * Chevron marker, pointing forward.
      */
     public static class ChevronMarker implements Marker {
 
@@ -362,7 +362,7 @@ public final class Markers {
     }
 
     /**
-     * Triangle marker (|>), pointing forward.
+     * Triangle marker, pointing forward.
      */
     public static class TriangleMarkerForward implements Marker {
 
@@ -381,7 +381,7 @@ public final class Markers {
     }
 
     /**
-     * Arrowhead marker (>), pointing forward.
+     * Arrowhead marker, pointing forward.
      */
     public static class ArrowheadMarker implements Marker {
 
