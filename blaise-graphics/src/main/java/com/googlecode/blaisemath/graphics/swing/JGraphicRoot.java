@@ -45,7 +45,7 @@ import javax.swing.event.PopupMenuListener;
  * The primary additional behavior implemented by {@code GraphicRoot}, beyond that of its parent
  * {@code GraphicComposite}, is listening to mouse events on the component and
  * generating {@link GraphicMouseEvent}s from them.
- * <p/>
+ * 
  * Subclasses might provide additional behavior such as (i) caching the shapes to be drawn
  * to avoid expensive recomputation, or (ii) sorting the shapes into an alternate draw order
  * (e.g. for projections from 3D to 2D).

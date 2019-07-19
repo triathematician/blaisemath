@@ -142,6 +142,7 @@ public class GraphicUtils {
 
     /**
      * Get bounding box from iterable.
+     * @param <X> item type
      * @param bounds set of items
      * @param mapper gets rectangles
      * @param def to return if result is null
