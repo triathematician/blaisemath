@@ -21,14 +21,13 @@ package com.googlecode.blaisemath.palette;
  */
 
 
-import java.util.Arrays;
 import org.junit.Test;
 
 public class ColorSchemeTest {
 
     @Test
     public void testSchemes() {
-        System.out.println(Arrays.asList(ColorSchemes.schemes()));
+        System.out.println(ColorSchemes.schemes());
     }
     
 }

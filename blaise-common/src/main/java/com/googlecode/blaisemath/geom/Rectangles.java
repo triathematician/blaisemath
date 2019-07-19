@@ -53,7 +53,9 @@ public class Rectangles {
      * @return converted rectangle
      */
     public static Rectangle2D.@Nullable Double toDouble(Rectangle2D rect) {
-        if (rect instanceof Rectangle2D.Double) {
+        if (rect == null) {
+            return null;
+        } else if (rect instanceof Rectangle2D.Double) {
             return (Rectangle2D.Double) rect;
         } else {
             Rectangle2D.Double res = new Rectangle2D.Double();

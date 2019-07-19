@@ -57,7 +57,7 @@ public class Images {
      * @param image the image to encode
      * @param format the image format (gif, png, bmp, jpg, jpeg)
      * @return base-64 string
-     * @throws java.io.IOException
+     * @throws java.io.IOException if unable to encode
      * 
      * @see Base64
      */

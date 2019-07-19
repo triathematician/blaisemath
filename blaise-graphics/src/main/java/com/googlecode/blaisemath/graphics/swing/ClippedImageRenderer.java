@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.graphics.core.Renderer;
+import com.googlecode.blaisemath.graphics.Renderer;
 import com.googlecode.blaisemath.geom.ClippedImage;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;

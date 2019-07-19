@@ -35,7 +35,7 @@ import com.googlecode.blaisemath.graph.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
-import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.swing.CanvasPainter;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;

@@ -20,9 +20,9 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.core.GraphicComposite;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.GraphicComposite;
+import com.googlecode.blaisemath.graphics.PrimitiveGraphic;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
 import java.awt.Graphics2D;

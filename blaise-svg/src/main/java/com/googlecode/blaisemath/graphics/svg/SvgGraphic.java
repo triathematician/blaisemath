@@ -21,9 +21,9 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.core.GraphicComposite;
-import com.googlecode.blaisemath.graphics.core.GraphicUtils;
+import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.GraphicComposite;
+import com.googlecode.blaisemath.graphics.GraphicUtils;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.svg.SvgElement;

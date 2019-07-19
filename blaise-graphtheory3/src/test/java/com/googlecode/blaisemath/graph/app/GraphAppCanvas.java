@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.graph.app;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
-import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.graphics.impl.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;

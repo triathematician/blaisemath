@@ -50,7 +50,7 @@ public class PathMarker implements Marker {
         return name;
     }
 
-    public String getName() {
+    public @Nullable String getName() {
         return name;
     }
 

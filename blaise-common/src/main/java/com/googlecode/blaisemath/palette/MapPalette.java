@@ -21,11 +21,12 @@ package com.googlecode.blaisemath.palette;
  */
 
 import com.google.common.collect.Maps;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Color;
 import java.util.Collection;
 import java.util.Map;
 import static java.util.Objects.requireNonNull;
-import javax.annotation.Nullable;
 
 /**
  * A mutable palette backed by a key-value map.

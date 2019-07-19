@@ -22,7 +22,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;

@@ -22,10 +22,11 @@ package com.googlecode.blaisemath.palette;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Color;
 import java.util.Collection;
 import java.util.Map;
-import javax.annotation.Nullable;
 
 /**
  * A simple color palette interface that provides a set of colors associated with string keys.

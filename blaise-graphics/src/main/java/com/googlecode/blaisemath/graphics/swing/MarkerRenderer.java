@@ -22,7 +22,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.graphics.core.Renderer;
+import com.googlecode.blaisemath.graphics.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
 import com.googlecode.blaisemath.geom.Marker;

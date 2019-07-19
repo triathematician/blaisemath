@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

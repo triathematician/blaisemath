@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.geom.Anchor;
 import com.googlecode.blaisemath.geom.AnchoredText;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.graphics.core.Renderer;
+import com.googlecode.blaisemath.graphics.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Font;
 import java.awt.Graphics2D;

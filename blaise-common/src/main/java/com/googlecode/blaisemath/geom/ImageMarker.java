@@ -20,12 +20,13 @@ package com.googlecode.blaisemath.geom;
  * #L%
  */
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Image;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import javax.annotation.Nullable;
 
 /** 
  * Marker defined by an image and clip path.

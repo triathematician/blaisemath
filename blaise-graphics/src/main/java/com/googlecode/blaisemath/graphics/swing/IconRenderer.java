@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.graphics.swing;
 import com.googlecode.blaisemath.geom.Anchor;
 import com.googlecode.blaisemath.geom.AnchoredIcon;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.graphics.core.Renderer;
+import com.googlecode.blaisemath.graphics.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;

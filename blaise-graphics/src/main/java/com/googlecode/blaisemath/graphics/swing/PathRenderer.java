@@ -22,7 +22,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.primitives.Ints;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.graphics.core.Renderer;
+import com.googlecode.blaisemath.graphics.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 
 import java.awt.BasicStroke;

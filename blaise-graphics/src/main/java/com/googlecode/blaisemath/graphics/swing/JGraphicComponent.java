@@ -22,9 +22,9 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.graphics.core.GMouseEvent;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.core.GraphicUtils;
+import com.googlecode.blaisemath.graphics.GraphicMouseEvent;
+import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.GraphicUtils;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.util.SetSelectionModel;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -412,9 +412,9 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * @param winEvent event in windows coordinate space
      * @return event w/ location in local coordinate space
      */
-    public GMouseEvent toGraphicCoordinateSpace(MouseEvent winEvent) {
+    public GraphicMouseEvent toGraphicCoordinateSpace(MouseEvent winEvent) {
         Point2D loc = toGraphicCoordinate(winEvent.getPoint());
-        return new GMouseEvent(winEvent, loc, null);
+        return new GraphicMouseEvent(winEvent, loc, null);
     }
 
     /**

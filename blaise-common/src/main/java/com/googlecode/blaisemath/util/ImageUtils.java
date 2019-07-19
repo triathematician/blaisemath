@@ -68,7 +68,6 @@ public class ImageUtils {
      * @return encoding as base64 string
      */
     public static String encodeImage(BufferedImage img, String format) {
-        String encodedImage = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ImageIO.write(img, format, baos);
@@ -76,7 +75,7 @@ public class ImageUtils {
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Error encoding image!", ex);
         }
-        return encodedImage;
+        return null;
     }
     
     /**

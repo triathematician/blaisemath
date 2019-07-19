@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.coordinate;
  * #L%
  */
 
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

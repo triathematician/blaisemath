@@ -22,6 +22,7 @@ package com.googlecode.blaisemath.style;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Maps;
+
 import java.awt.Color;
 import java.util.Map;
 import java.util.Properties;

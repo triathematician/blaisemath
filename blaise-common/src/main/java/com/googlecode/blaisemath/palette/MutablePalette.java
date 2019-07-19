@@ -20,8 +20,9 @@ package com.googlecode.blaisemath.palette;
  * #L%
  */
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Color;
-import javax.annotation.Nullable;
 
 /**
  * A color palette that can be edited.
