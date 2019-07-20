@@ -52,9 +52,9 @@ public class PaletteDeserializer extends JsonDeserializer<Palette> {
      * @param attr attribute set
      * @return palette
      */
-    public static Palette toPalette(AttributeSet pal) {
+    public static Palette toPalette(AttributeSet attr) {
         Map<String, Color> cols = Maps.newLinkedHashMap();
-        pal.getAttributeMap().entrySet().forEach(en -> {
+        attr.getAttributeMap().entrySet().forEach(en -> {
             Object val = en.getValue();
             if (val instanceof String) {
                 val = ((String) val).trim();
