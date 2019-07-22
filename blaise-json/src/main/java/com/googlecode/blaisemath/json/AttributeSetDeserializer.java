@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -35,7 +34,7 @@ import java.io.IOException;
 public class AttributeSetDeserializer extends JsonDeserializer<AttributeSet> {
 
     @Override
-    public AttributeSet deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public AttributeSet deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String val = p.readValueAs(String.class);
         return new AttributeSetCoder().decode(val);
     }

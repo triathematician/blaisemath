@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.awt.Rectangle;
@@ -34,7 +33,7 @@ import java.io.IOException;
 public class RectangleDeserializer extends JsonDeserializer<Rectangle> {
 
     @Override
-    public Rectangle deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Rectangle deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         RectangleProxy proxy = p.readValueAs(RectangleProxy.class);
         return proxy.toRectangle();
     }

@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.awt.geom.Point2D;
@@ -34,7 +33,7 @@ import java.io.IOException;
 public class Point2DDeserializer extends JsonDeserializer<Point2D.Double> {
 
     @Override
-    public Point2D.Double deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Point2D.Double deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         return p.readValueAs(Point2D.Double.class);
     }
 

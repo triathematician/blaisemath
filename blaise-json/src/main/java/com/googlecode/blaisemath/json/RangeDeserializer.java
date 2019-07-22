@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.google.common.collect.Range;
@@ -34,7 +33,7 @@ import java.io.IOException;
 public class RangeDeserializer extends JsonDeserializer<Range> {
 
     @Override
-    public Range deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Range deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         RangeProxy proxy = p.readValueAs(RangeProxy.class);
         return proxy.toRange();
     }

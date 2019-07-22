@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -48,7 +47,7 @@ public final class ClassDeserializer extends JsonDeserializer<Class> {
             .build();
 
     @Override
-    public Class deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Class deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String name = ((JsonNode) p.getCodec().readTree(p)).asText();
         if (PRIMITIVE_LOOKUP.containsKey(name)) {
             return PRIMITIVE_LOOKUP.get(name);

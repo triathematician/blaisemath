@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.googlecode.blaisemath.util.Colors;
@@ -35,7 +34,7 @@ import java.io.IOException;
 public class ColorSerializer extends JsonSerializer<Color> {
 
     @Override
-    public void serialize(Color value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
+    public void serialize(Color value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeString(Colors.encode(value));
     }
 

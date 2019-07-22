@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.google.common.collect.Maps;
@@ -42,7 +41,7 @@ import java.util.Map;
 public class PaletteDeserializer extends JsonDeserializer<Palette> {
 
     @Override
-    public Palette deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Palette deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String val = p.readValueAs(String.class);
         return toPalette(new AttributeSetCoder().decode(val));
     }
@@ -54,15 +53,14 @@ public class PaletteDeserializer extends JsonDeserializer<Palette> {
      */
     public static Palette toPalette(AttributeSet attr) {
         Map<String, Color> cols = Maps.newLinkedHashMap();
-        attr.getAttributeMap().entrySet().forEach(en -> {
-            Object val = en.getValue();
+        attr.getAttributeMap().forEach((key, val) -> {
             if (val instanceof String) {
                 val = ((String) val).trim();
             }
             if (val instanceof Color) {
-                cols.put(en.getKey(), (Color) val);
+                cols.put(key, (Color) val);
             } else if (val instanceof String && ColorCoder.decodable((String) val)) {
-                cols.put(en.getKey(), Colors.decode((String) val));
+                cols.put(key, Colors.decode((String) val));
             }
         });
         return MapPalette.create(cols);

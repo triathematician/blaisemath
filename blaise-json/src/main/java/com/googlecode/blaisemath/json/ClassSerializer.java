@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
@@ -34,7 +33,7 @@ import java.io.IOException;
 public final class ClassSerializer extends JsonSerializer<Class> {
 
     @Override
-    public void serialize(Class value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
+    public void serialize(Class value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         String nm = value.getName();
         if (nm.startsWith("java.lang.") || nm.startsWith("java.util.")) {
             nm = nm.substring(10);

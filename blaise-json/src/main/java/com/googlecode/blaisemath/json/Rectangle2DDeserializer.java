@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.json;
  */
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.awt.geom.Rectangle2D;
@@ -34,7 +33,7 @@ import java.io.IOException;
 public class Rectangle2DDeserializer extends JsonDeserializer<Rectangle2D.Double> {
 
     @Override
-    public Rectangle2D.Double deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Rectangle2D.Double deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         Rectangle2DProxy proxy = p.readValueAs(Rectangle2DProxy.class);
         return proxy.toRectangle();
     }
