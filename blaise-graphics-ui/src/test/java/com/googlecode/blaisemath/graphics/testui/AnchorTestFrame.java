@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.primitive.ui;
+package com.googlecode.blaisemath.graphics.testui;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.editor.EditorRegistration;

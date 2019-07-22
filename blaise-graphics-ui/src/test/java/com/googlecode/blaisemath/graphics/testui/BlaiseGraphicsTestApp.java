@@ -352,9 +352,11 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addLabeledPoint() {
         Point2D p1 = randomPoint();
-        LabeledPointGraphic lpg = new LabeledPointGraphic(
-                String.format("(%.2f,%.2f)", p1.getX(), p1.getY()), p1,
-                new ObjectStyler());
+        LabeledPointGraphic<Point2D, Graphics2D> lpg = new LabeledPointGraphic<>(p1, p1, new ObjectStyler());
+        lpg.setRenderer(MarkerRenderer.getInstance());
+        lpg.setLabelRenderer(new TextRenderer());
+        lpg.getObjectStyler().setLabelDelegate(p -> String.format("(%.2f,%.2f)", p.getX(), p.getY()));
+        lpg.getObjectStyler().setLabelStyle(Styles.text(Color.red, 14f, Anchor.SOUTHWEST));
         lpg.setDefaultTooltip("<html><b>Labeled Point</b>: <i> " + p1 + "</i>");
         lpg.setDragEnabled(true);
         root1.addGraphic(lpg);        

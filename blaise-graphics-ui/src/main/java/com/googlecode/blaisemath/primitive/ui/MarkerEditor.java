@@ -26,6 +26,7 @@ import com.googlecode.blaisemath.primitive.Marker;
 import com.googlecode.blaisemath.primitive.Markers;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +76,7 @@ public class MarkerEditor extends MPanelEditorSupport {
 
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            setText(value.getClass().getSimpleName());
+            setText(value == null ? "<html><i>no marker selected</i>" : value.getClass().getSimpleName());
             setIcon(new MarkerIcon((Marker) value, size));
             return this;
         }
@@ -88,17 +89,19 @@ public class MarkerEditor extends MPanelEditorSupport {
 
         private final AttributeSet style = Styles.fillStroke(Color.white, Color.black, 1f);
         private final int size;
-        private final Marker marker;
+        private final @Nullable Marker marker;
 
-        public MarkerIcon(Marker m, int size) {
+        public MarkerIcon(@Nullable Marker m, int size) {
             this.marker = m;
             this.size = size;
         }
 
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
-            Shape sh = marker.create(new Point(size/2, size/2), 0, size/2f-1);
-            ShapeRenderer.getInstance().render(sh, style, (Graphics2D) g);
+            if (marker != null) {
+                Shape sh = marker.create(new Point(size / 2, size / 2), 0, size / 2f - 1);
+                ShapeRenderer.getInstance().render(sh, style, (Graphics2D) g);
+            }
         }
 
         @Override
