@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.palette.ui;
  */
 
 import java.awt.BorderLayout;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.JPanel;

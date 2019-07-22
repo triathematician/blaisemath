@@ -22,8 +22,9 @@ package com.googlecode.blaisemath.palette.ui;
 
 
 import com.googlecode.blaisemath.primitive.Marker;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Color;
-import javax.annotation.Nullable;
 
 /**
  * Bean that tracks a key/name associated with a color (and optionally a marker).
