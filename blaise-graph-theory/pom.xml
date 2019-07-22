@@ -69,18 +69,6 @@
             <version>${guava.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-app</artifactId>
-            <version>0.2.0-beta</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.blaisemath</groupId>
-            <artifactId>blaise-graphics-ui</artifactId>
-            <version>3.0.3.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
