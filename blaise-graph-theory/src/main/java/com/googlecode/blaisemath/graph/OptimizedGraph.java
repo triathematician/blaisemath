@@ -41,7 +41,7 @@ import java.util.Set;
 
 /**
  * A storage-optimized graph component that caches degrees and divides nodes into isolates, leaf nodes, connector nodes
- * (degree 2), and core nodes (degree > 2). This maximizes speed for algorithms that make large numbers of calls to
+ * (degree 2), and core nodes (degree more than 2). This maximizes speed for algorithms that make large numbers of calls to
  * graph API methods.
  *
  * @param <N> graph node type
