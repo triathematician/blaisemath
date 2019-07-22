@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-graphics-ui</artifactId>
-    <version>3.0.3-SNAPSHOT</version>
+    <version>3.0.3</version>
     <packaging>jar</packaging>
     
     <name>blaise-graphics-ui</name>
@@ -35,7 +35,8 @@
         <url>https://github.com/triathematician/blaisemath</url>
         <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
         <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
-    </scm>    
+      <tag>blaise-graphics-ui-3.0.3</tag>
+  </scm>    
     <issueManagement>
         <system>GitHub Issues</system>
         <url>https://github.com/triathematician/blaisemath/issues</url>
