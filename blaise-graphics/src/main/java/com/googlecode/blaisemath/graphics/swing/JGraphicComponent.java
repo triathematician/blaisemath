@@ -29,6 +29,7 @@ import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicUtils;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.util.SetSelectionModel;
+import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.awt.Color;
 import java.awt.Dimension;

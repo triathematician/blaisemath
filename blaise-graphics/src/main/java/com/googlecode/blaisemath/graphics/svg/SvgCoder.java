@@ -44,7 +44,7 @@ public abstract class SvgCoder implements StringEncoder<SvgGraphic>, StringDecod
      */
     public static SvgCoder defaultInstance() {
         for (SvgCoder c : ServiceLoader.load(SvgCoder.class)) {
-            if (!SvgCoderBlank.class.isInstance(c)) {
+            if (!(c instanceof SvgCoderBlank)) {
                 return c;
             }
         }

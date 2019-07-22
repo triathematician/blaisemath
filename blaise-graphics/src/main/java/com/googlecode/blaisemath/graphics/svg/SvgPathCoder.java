@@ -48,7 +48,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
     public String encode(Path2D obj) {
         PathIterator pi = obj.getPathIterator(null);
         float[] cur = new float[6];
-        int curSegmentType = -1;
+        int curSegmentType;
         StringBuilder pathString = new StringBuilder();
         while (!pi.isDone()) {
             curSegmentType = pi.currentSegment(cur);
@@ -291,8 +291,8 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         HLINE('h') {
             @Override
             void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
-                for (int i = 0; i < coords.length; i++) {
-                    loc[0] = relative ? loc[0]+coords[i] : coords[i];
+                for (float coord : coords) {
+                    loc[0] = relative ? loc[0] + coord : coord;
                     gp.lineTo(loc[0], loc[1]);
                 }
                 nextAnchor[0] = loc[0];
@@ -302,8 +302,8 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         VLINE('v') {
             @Override
             void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
-                for (int i = 0; i < coords.length; i++) {
-                    loc[1] = relative ? loc[1]+coords[i] : coords[i];
+                for (float coord : coords) {
+                    loc[1] = relative ? loc[1] + coord : coord;
                     gp.lineTo(loc[0], loc[1]);
                 }
                 nextAnchor[0] = loc[0];
@@ -400,7 +400,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         
         private char cmd;
 
-        private SvgPathOperator(char cmd) {
+        SvgPathOperator(char cmd) {
             this.cmd = cmd;
         }
 

@@ -29,6 +29,7 @@ import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
+import com.googlecode.blaisemath.graphics.GraphicComposite;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.event.MouseListener;

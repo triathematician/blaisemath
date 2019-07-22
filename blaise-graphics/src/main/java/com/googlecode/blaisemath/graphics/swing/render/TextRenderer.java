@@ -158,7 +158,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
 
     private static Rectangle2D.Double textDimensions(String text, Font font, FontRenderContext context) {
         double width = font.getStringBounds(text, context).getWidth();
-        double height = font.getSize() * DOTS_PER_INCH / Toolkit.getDefaultToolkit().getScreenResolution();
+        int height = font.getSize() * DOTS_PER_INCH / Toolkit.getDefaultToolkit().getScreenResolution();
         return new Rectangle2D.Double(0, 0, width, height);
     }
 
