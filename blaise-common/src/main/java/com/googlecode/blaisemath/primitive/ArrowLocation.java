@@ -29,5 +29,5 @@ public enum ArrowLocation {
     NONE, 
     START, 
     END, 
-    BOTH;
+    BOTH
 }

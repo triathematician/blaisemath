@@ -26,6 +26,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
+import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;

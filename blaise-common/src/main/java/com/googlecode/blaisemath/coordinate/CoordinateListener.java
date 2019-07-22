@@ -21,6 +21,7 @@ package com.googlecode.blaisemath.coordinate;
  */
 
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 
 
 /**
