@@ -1,7 +1,3 @@
-/**
- * EnumEditor.java
- * Created on Jul 2, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -32,9 +28,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 /**
- * <p>
- *   Uses a combo box for editing enum's.
- * </p>
+ * Uses a combo box for editing enum's. Must be registered separately for each
+ * enum type that uses it.
  *
  * @author Elisha Peterson
  */

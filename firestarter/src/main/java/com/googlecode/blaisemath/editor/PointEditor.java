@@ -1,7 +1,3 @@
-/**
- * PointEditor.java
- * Created on Jun 18, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -29,9 +25,7 @@ import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
- * <p>
- *   Displays two spinners that change the value of an underlying point.
- * </p>
+ * Displays two spinners that change the value of an underlying point.
  *
  * @author Elisha Peterson
  */

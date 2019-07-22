@@ -1,7 +1,3 @@
-/**
- * IndexedPropertyEditor.java
- * Created on Jul 3, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -28,11 +24,9 @@ import java.beans.PropertyEditor;
 import java.lang.reflect.Array;
 
 /**
- * <p>
- *   Provides string-based editing of indexed properties, as long as the
- *   underlying data type supports the {@link #getAsText()} and {@link #setAsText(java.lang.String)}
- *   methods. Commas are used for splitting, so the strings must not use commas.
- * </p>
+ * Provides string-based editing of indexed properties, as long as the
+ * underlying data type supports the {@link #getAsText()} and {@link #setAsText(java.lang.String)}
+ * methods. Commas are used for splitting, so the strings must not use commas.
  *
  * @author Elisha Peterson
  */

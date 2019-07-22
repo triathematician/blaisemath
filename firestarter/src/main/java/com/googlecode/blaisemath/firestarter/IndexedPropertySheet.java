@@ -1,7 +1,3 @@
-/**
- * IndexedPropertySheet.java
- * Created on Jan 28, 2010
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -39,12 +35,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
- * <p>
- *   <code>IndexedPropertySheet</code> is a table-formatted list of individual properties
- *   within an array, useful for editing indexed properties. Almost all of the functionality
- *   is borrowed from <code>PropertySheet</code>... the underyling model here will be an
- *   <code>IndexedBeanEditorSupport</code>.
- * </p>
+ * Table-formatted list of individual properties within an array, useful for editing 
+ * indexed properties. Uses {@link BeanIndexedPropertyModel} for the underlying model.
  *
  * @author Elisha Peterson
  */

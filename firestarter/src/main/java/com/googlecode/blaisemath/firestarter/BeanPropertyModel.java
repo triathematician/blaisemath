@@ -1,7 +1,3 @@
-/**
- * BeanEditorSupport.java
- * Created on Jun 30, 2009
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -35,13 +31,9 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 /**
- * <p>
- *   Uses bean information about an object, gathered by introspection, to provide
- *   editable attributes of that object.
- * </p>
- * <p>
- *   A filter may be supplied to limit the properties made available by the model.
- * </p>
+ * Uses bean information about an object, gathered by introspection, to provide
+ * editable attributes of that object.
+ * A filter may be supplied to limit the properties made available by the model.
  *
  * @author Elisha Peterson
  */
@@ -83,10 +75,7 @@ public final class BeanPropertyModel extends PropertyModelSupport {
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
-
+    
     /** 
      * Get the bean object represented by this class.
      * @return the underlying object.

@@ -1,8 +1,3 @@
-/*
- * PropertySheetDialog.java
- * Created on Aug 4, 2009, 12:47:50 PM
- */
-
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -35,10 +30,8 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 
 /**
- * <p>
- *   Shows a property sheet for a specified bean within a dialog box.
- * </p>
- * @author ae3263
+ * Shows a property sheet for a specified bean within a dialog box.
+ * @author Elisha Peterson
  */
 public class PropertySheetDialog extends javax.swing.JDialog {
     

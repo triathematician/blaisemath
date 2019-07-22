@@ -1,8 +1,3 @@
-/**
- * BeanEditorModelSupport.java
- * Created Sep 22, 2014
- */
-
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -30,10 +25,9 @@ import java.beans.PropertyChangeSupport;
 import javax.swing.AbstractListModel;
 
 /**
- * <p>
- *   Implements most functionality required by {@link PropertyModel}.
- * </p>
- * @author elisha
+ * Implements most functionality required by {@link PropertyModel}.
+ * 
+ * @author Elisha Peterson
  */
 public abstract class PropertyModelSupport extends AbstractListModel<String> implements PropertyModel {
     

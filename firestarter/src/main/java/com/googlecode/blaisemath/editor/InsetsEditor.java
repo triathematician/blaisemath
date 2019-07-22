@@ -1,7 +1,3 @@
-/**
- * InsetsEditor.java
- * Created on Jul 2, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -29,9 +25,7 @@ import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
- * <p>
- *   Edits insets, with 4 spinners.
- * </p>
+ * Edits insets, with 4 spinners.
  *
  * @author Elisha Peterson
  */

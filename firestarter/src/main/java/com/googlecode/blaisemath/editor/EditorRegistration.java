@@ -1,7 +1,3 @@
-/**
- * EditorRegistration.java
- * Created on Jul 1, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -35,9 +31,7 @@ import java.beans.PropertyEditorSupport;
 import static java.util.Objects.requireNonNull;
 
 /**
- * <p>
- *   Static code for registering and accessing registered property editors.
- * </p>
+ * Static code for registering and accessing registered property editors.
  *
  * @author Elisha Peterson
  */
@@ -112,6 +106,7 @@ public class EditorRegistration {
     
     /**
      * Returns editor type for a given object/class, as registered by the property manager.
+     * @param <T> object type
      * @param obj the object type
      * @param cls the class type
      * @return a property editor for the provided class, or {@code null} if there is no available editor
@@ -131,6 +126,7 @@ public class EditorRegistration {
         }
         // look for the object instance type
         if (obj != null) {
+            assert cls != null;
             assert cls.isInstance(obj);
             result = PropertyEditorManager.findEditor(obj.getClass());
             if (result != null) {

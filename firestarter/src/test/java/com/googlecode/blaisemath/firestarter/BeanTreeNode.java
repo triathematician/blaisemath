@@ -1,7 +1,3 @@
-/**
- * BeanTreeNode.java
- * Created on Aug 19, 2009
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -24,8 +20,6 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-
-
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.beans.BeanInfo;
@@ -38,14 +32,14 @@ import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * <p>
- *   <code>BeanTreeNode</code> adds the sub-properties of a bean object (that do
- *   not have registered editors) as children of the tree.
- * </p>
+ * Adds the sub-properties of a bean object (that do
+ * not have registered editors) as children of the tree.
  *
  * @author Elisha Peterson
  */
-public class BeanTreeNode extends DefaultMutableTreeNode {
+public final class BeanTreeNode extends DefaultMutableTreeNode {
+
+    private static final Logger LOG = Logger.getLogger(BeanTreeNode.class.getName());
 
     /** Object of this class. */
     Object bean;
@@ -79,7 +73,7 @@ public class BeanTreeNode extends DefaultMutableTreeNode {
                         add(new BeanTreeNode(elt));
                     }
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(BeanTreeNode.class.getName()).log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, null, ex);
                 }
             } else {
                 // add only elements not supporting custom editors

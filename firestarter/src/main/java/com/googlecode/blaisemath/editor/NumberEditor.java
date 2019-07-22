@@ -1,7 +1,3 @@
-/**
- * NumberEditor.java
- * Created on Jun 30, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -30,9 +26,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 /**
- * <p>
- *   Components for editing numbers, using spinners.
- * </p>
+ * Components for editing numbers, using spinners.
  *
  * @author Elisha Peterson
  */

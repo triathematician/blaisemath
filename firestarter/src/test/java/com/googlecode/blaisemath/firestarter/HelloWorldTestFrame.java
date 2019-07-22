@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 elisha.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -35,26 +20,20 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 import javax.swing.JScrollPane;
 
-/**
- *
- * @author elisha
- */
 public class HelloWorldTestFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form HelloWorldTestFrame
-     */
     public HelloWorldTestFrame() {
         initComponents();
         EditorRegistration.registerEditors();
@@ -128,34 +107,19 @@ public class HelloWorldTestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Map<String,Class> typ = ImmutableMap.<String,Class>of("prop 1", Integer.class, "prop 2", Color.class, "prop 3", Double.class);
-        Map<String,Object> map = ImmutableMap.<String,Object>of("prop 1", 10, "prop 2", Color.white, "prop 3", 15.5);
+        Map<String,Class> typ = new LinkedHashMap<>();
+        typ.put("prop 1", Integer.class);
+        typ.put("prop 2", Color.class);
+        typ.put("prop 3", Double.class);
+        Map<String,Object> map = new LinkedHashMap<>();
+        map.put("prop 1", 10);
+        map.put("prop 2", Color.white);
+        map.put("prop 3", 15.5);
         PropertySheetDialog.show(this, true, map, new TestPropertyModel(typ, map));
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (Exception ex) {
-//            java.util.logging.Logger.getLogger(HelloWorldTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new HelloWorldTestFrame().setVisible(true));
+        EventQueue.invokeLater(() -> new HelloWorldTestFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

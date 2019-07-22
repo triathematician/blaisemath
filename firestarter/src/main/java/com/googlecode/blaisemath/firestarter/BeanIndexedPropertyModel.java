@@ -1,8 +1,3 @@
-/**
- * BeanIndexedPropertyListModel.java
- * Created Sep 23, 2014
- */
-
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -33,11 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * <p>
- *   Supports editing of individual items in an indexed property of a bean object.
- *   Provides methods for adding a new item to the property, and for removing an
- *   arbitrary set of items.
- * </p>
+ * Supports editing of individual items in an indexed property of a bean object.
+ * Provides methods for adding a new item to the property, and for removing an
+ * arbitrary set of items.
+ * 
  * @author elisha
  */
 public final class BeanIndexedPropertyModel extends PropertyModelSupport {

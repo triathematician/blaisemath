@@ -1,7 +1,3 @@
-/**
- * RollupPanel.java
- * Created on Jun 25, 2009
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -31,11 +27,9 @@ import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
 /**
- * <p>
- *   Combines several collapsible components into a single panel. Each component
- *   is wrapped by an {@link MPanel} so that it has a displayed title bar and
- *   expand/collapse buttons.
- * </p>
+ * Combines several collapsible components into a single panel. Each component
+ * is wrapped by an {@link MPanel} so that it has a displayed title bar and
+ * expand/collapse buttons.
  *
  * @author Elisha Peterson
  */

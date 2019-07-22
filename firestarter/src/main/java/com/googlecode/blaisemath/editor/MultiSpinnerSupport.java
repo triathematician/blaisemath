@@ -1,7 +1,3 @@
-/**
- * MultiSpinnerSupport.java
- * Created on Jul 2, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -33,9 +29,7 @@ import javax.swing.JSpinner;
 import javax.swing.event.ChangeListener;
 
 /**
- * <p>
- *   Base class for editors that use multiple coordinates.
- * </p>
+ * Base class for editors that use multiple coordinates.
  *
  * @param <N> numeric type for the spinners
  * 

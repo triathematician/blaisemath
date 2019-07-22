@@ -1,8 +1,3 @@
-/**
- * PropertySheetTableModel.java
- * Created Sep 23, 2014
- */
-
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -30,13 +25,12 @@ import javax.swing.event.ListDataListener;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * <p>
- *   Model for a table of editable properties, based on a {@link PropertyModel}
- *   and a corresponding {@link PropertyEditorModel}.
- * </p>
+ * Model for a table of editable properties, based on a {@link PropertyModel}
+ * and a corresponding {@link PropertyEditorModel}.
+ * 
  * @author elisha
  */
-class PropertySheetModel extends AbstractTableModel {
+public class PropertySheetModel extends AbstractTableModel {
 
     /** Column containing property names */
     public static final int NAME_COL = 0;
@@ -70,9 +64,6 @@ class PropertySheetModel extends AbstractTableModel {
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
 
     public PropertyModel getPropertyModel() {
         return propModel;

@@ -1,7 +1,3 @@
-/**
- * PropertySheet.java
- * Created on Jun 29, 2009
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -44,9 +40,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 /**
- * <p>
- *   Provides a table used for editing a list of properties.
- * </p>
+ * Table used for editing a collection of key-value properties.
  *
  * @author Elisha Peterson
  */
@@ -189,9 +183,6 @@ public class PropertySheet extends JPanel {
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
     
     /** 
      * Get the core property model used by the property sheet.
@@ -226,11 +217,6 @@ public class PropertySheet extends JPanel {
     }
     
     //</editor-fold>
-
-    
-    //
-    // EVENT HANDLING
-    //
 
     /** Updates the size of the table. */
     void updateRowHeights() {
@@ -274,12 +260,8 @@ public class PropertySheet extends JPanel {
     public void addBeanChangeListener(String propertyName, PropertyChangeListener listener) {
         getPropertyModel().addPropertyChangeListener(propertyName, listener);
     }
-
     
     // <editor-fold defaultstate="collapsed" desc="Inner Classes">
-    //
-    //                  INNER CLASSES
-    //
 
     /** Provides support for editing properties. */
     class ValueColEditor extends AbstractCellEditor implements TableCellEditor, TableCellRenderer {

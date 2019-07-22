@@ -1,5 +1,3 @@
-/*
- */
 package com.googlecode.blaisemath.editor;
 
 /*

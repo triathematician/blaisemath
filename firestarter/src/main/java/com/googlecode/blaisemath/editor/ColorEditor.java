@@ -1,7 +1,3 @@
-/**
- * ColorEditor.java
- * Created on Jul 1, 2009
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -51,13 +47,13 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
 /**
- * <p>
- *   Provides multiple controls for editing a color.
- * </p>
+ * Provides multiple controls for editing a color.
  *
  * @author Elisha Peterson
  */
 public class ColorEditor extends MPanelEditorSupport {
+
+    private static final Logger LOG = Logger.getLogger(ColorEditor.class.getName());
     
     private static final String COLOR_ICON = "beaninfo.ColorIcon";
     private static final String COLOR_PRESSED_ICON = "beaninfo.ColorPressedIcon";
@@ -119,8 +115,7 @@ public class ColorEditor extends MPanelEditorSupport {
                 setNewValue(getColor(rgbaValue.getText()));
                 initEditorValue();
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(ColorEditor.class.getName()).log(Level.FINE,
-                        "Not a color: "+rgbaValue.getText(), ex);
+                LOG.log(Level.FINE, "Not a color: "+rgbaValue.getText(), ex);
                 JOptionPane.showMessageDialog(panel.getParent(), ex.toString());
             }
         });
@@ -224,7 +219,7 @@ public class ColorEditor extends MPanelEditorSupport {
     }
 
     /** combo-like rect button */
-    private class ChooserComboButton extends JButton {
+    private final class ChooserComboButton extends JButton {
         ChooserComboPopup popup;
 
         ChooserComboButton() {

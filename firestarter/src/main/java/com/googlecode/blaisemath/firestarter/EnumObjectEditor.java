@@ -1,7 +1,3 @@
-/**
- * EnumObjectEditor.java
- * Created on Jul 2, 2009
- */
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -40,16 +36,16 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
- * <p>
- *  This class implements a customized editor for components that do not have a default
- *  assigned editor, but have an associated "getInstance" method, with argument taking
- *  an enum value, such that each enum returns a value of the object. When the enum value is
- *  selected in a ComboBox, the underlying value is updated.
- * </p>
+ * Implements a customized editor for components that do not have a default
+ * assigned editor, but have an associated "getInstance" method, with argument taking
+ * an enum value, such that each enum returns a value of the object. When the enum value is
+ * selected in a ComboBox, the underlying value is updated.
  * 
  * @author Elisha Peterson
  */
 public final class EnumObjectEditor extends MPanelEditorSupport {
+
+    private static final Logger LOG = Logger.getLogger(EnumObjectEditor.class.getName());
 
     /** Method used to retrieve new instances. */
     private Method instanceMethod;
@@ -132,9 +128,9 @@ public final class EnumObjectEditor extends MPanelEditorSupport {
                 setNewValue( super.getValue() );
             } else {
                 try {
-                    setNewValue( instanceMethod.invoke(null, e.getItem()) );
+                    setNewValue(instanceMethod.invoke(null, e.getItem()));
                 } catch (IllegalAccessException | InvocationTargetException ex) {
-                    Logger.getLogger(EnumObjectEditor.class.getName()).log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, null, ex);
                 }
             }
         }

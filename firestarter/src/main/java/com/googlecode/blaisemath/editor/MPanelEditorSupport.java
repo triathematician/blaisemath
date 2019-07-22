@@ -1,8 +1,3 @@
-/**
- * MPanelEditorSupport.java
- * Created on Jul 2, 2009
- */
-
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -29,13 +24,12 @@ import java.awt.Component;
 import javax.swing.JPanel;
 
 /**
- * <p>
- *   Generic super class for custom editors that use a panel for layout and display.
- * </p>
+ * Generic super class for custom editors that use a panel for layout and display.
  *
  * @author Elisha Peterson
  */
 public abstract class MPanelEditorSupport extends MPropertyEditorSupport {
+    
     protected JPanel panel;
 
     public MPanelEditorSupport() {

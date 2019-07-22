@@ -1,8 +1,3 @@
-/**
- * PropertyEditorModel.java
- * Created Sep 23, 2014
- */
-
 package com.googlecode.blaisemath.firestarter;
 
 /*
@@ -42,11 +37,10 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 /**
- * <p>
- *   Provides lists of {@link PropertyEditor}s and corresponding components used
- *   for editing the properties of a {@link PropertyModel}.
- * </p>
- * @author elisha
+ * Provides lists of {@link PropertyEditor}s and corresponding components used
+ * for editing the properties of a {@link PropertyModel}.
+ * 
+ * @author Elisha Peterson
  */
 public final class PropertyEditorModel implements ListModel<Component> {
 
@@ -141,9 +135,6 @@ public final class PropertyEditorModel implements ListModel<Component> {
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
 
     public PropertyModel getPropertyModel() {
         return model;

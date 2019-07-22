@@ -1,7 +1,3 @@
-/*
- * FontEditor.java
- * Created Nov 8, 2011
- */
 package com.googlecode.blaisemath.editor;
 
 /*
@@ -52,8 +48,8 @@ import javax.swing.SwingUtilities;
  */
 public final class FontEditor extends MPanelEditorSupport {
 
-    private static final int[] PT_SIZES = {3, 5, 8, 10, 12, 14, 18, 24, 36, 48};
-
+    /** List of font sizes to show in dropdown */
+    private static final int[] PT_SIZES = {3, 5, 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 72, 96, 108, 120};
     /** Static list of fonts. Will be loaded only once. */
     private static final List<String> FONTS = new ArrayList<>();
     

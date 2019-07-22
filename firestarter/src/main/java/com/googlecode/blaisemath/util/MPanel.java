@@ -1,7 +1,3 @@
-/**
- * MPanel.java
- * Created on Jun 25, 2009
- */
 package com.googlecode.blaisemath.util;
 
 /*
@@ -47,12 +43,10 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 /**
- * <p>
- *   Adds a title bar onto another component, with text and a show/hide options.
- *   The component may be minimized or maximized depending upon the user's actions.
- *   The title bar defaults to a simple label, but the user may also alter that
- *   component directly for custom displays.
- * </p>
+ * Adds a title bar onto another component, with text and a show/hide options.
+ * The component may be minimized or maximized depending upon the user's actions.
+ * The title bar defaults to a simple label, but the user may also alter that
+ * component directly for custom displays.
  *
  * @author Elisha Peterson
  */
@@ -61,48 +55,6 @@ public final class MPanel extends JPanel {
     //<editor-fold defaultstate="collapsed" desc="STATICS">
     
     private static final int ICON_SIZE = UIManager.getFont("Label.font").getSize();
-    
-    private static final class ExpandIcon extends SquareIcon {
-        private final boolean min;
-        private final Color color;
-        public ExpandIcon(boolean min, Color color) {
-            super(ICON_SIZE);
-            this.min = min;
-            this.color = color;
-        }
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(color);
-            g2.setStroke(new BasicStroke(1f));
-            double hsz = .5*sz;
-            if (min) {
-                g2.draw(new Line2D.Double(x+.3*sz, y+2, x+.7*sz, y+hsz));
-                g2.draw(new Line2D.Double(x+.3*sz, y+sz-2, x+.7*sz, y+hsz));
-            } else {
-                g2.draw(new Line2D.Double(x+2, y+.3*sz, x+hsz, y+.7*sz));
-                g2.draw(new Line2D.Double(x+sz-2, y+.3*sz, x+hsz, y+.7*sz));
-            }
-        }
-    }
-    
-    private static final class PressIcon extends SquareIcon {
-        private final Color color;
-        public PressIcon(Color color) {
-            super(ICON_SIZE);
-            this.color = color;
-        }
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(color);
-            g2.setStroke(new BasicStroke(1f));
-            g2.draw(new Line2D.Double(x+.65*sz, y+.25*sz, x+.65*sz, y+.65*sz));
-            g2.draw(new Line2D.Double(x+.25*sz, y+.65*sz, x+.65*sz, y+.65*sz));
-        }
-    }
     
     //</editor-fold>
     
@@ -117,10 +69,6 @@ public final class MPanel extends JPanel {
     private Component component;
     /** Listen for changes to component size */
     private final PropertyChangeListener componentSizeListener;
-    
-    //
-    // CONSTRUCTORS
-    //
 
     public MPanel() {
         this("Title", new JLabel("Component"));
@@ -229,10 +177,8 @@ public final class MPanel extends JPanel {
         revalidate();
         repaint();
     }
-
-    //
-    // BEAN PATTERNS
-    //
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
 
     /** 
      * Get title string
@@ -276,6 +222,10 @@ public final class MPanel extends JPanel {
         add(component, BorderLayout.CENTER);
         updateSize();
     }
+    
+    //</editor-fold> 
+    
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
 
     private abstract static class SquareIcon implements Icon {
         protected final int sz;
@@ -291,5 +241,49 @@ public final class MPanel extends JPanel {
             return sz;
         }
     }
+    
+    private static final class ExpandIcon extends SquareIcon {
+        private final boolean min;
+        private final Color color;
+        public ExpandIcon(boolean min, Color color) {
+            super(ICON_SIZE);
+            this.min = min;
+            this.color = color;
+        }
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(color);
+            g2.setStroke(new BasicStroke(1f));
+            double hsz = .5*sz;
+            if (min) {
+                g2.draw(new Line2D.Double(x+.3*sz, y+2, x+.7*sz, y+hsz));
+                g2.draw(new Line2D.Double(x+.3*sz, y+sz-2, x+.7*sz, y+hsz));
+            } else {
+                g2.draw(new Line2D.Double(x+2, y+.3*sz, x+hsz, y+.7*sz));
+                g2.draw(new Line2D.Double(x+sz-2, y+.3*sz, x+hsz, y+.7*sz));
+            }
+        }
+    }
+    
+    private static final class PressIcon extends SquareIcon {
+        private final Color color;
+        public PressIcon(Color color) {
+            super(ICON_SIZE);
+            this.color = color;
+        }
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(color);
+            g2.setStroke(new BasicStroke(1f));
+            g2.draw(new Line2D.Double(x+.65*sz, y+.25*sz, x+.65*sz, y+.65*sz));
+            g2.draw(new Line2D.Double(x+.25*sz, y+.65*sz, x+.65*sz, y+.65*sz));
+        }
+    }
+    
+    //</editor-fold> 
     
 }
