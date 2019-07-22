@@ -31,9 +31,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ClippedImageTestUi extends javax.swing.JFrame {
+public class ClippedImageTestFrame extends javax.swing.JFrame {
 
-    public ClippedImageTestUi() {
+    public ClippedImageTestFrame() {
         try {
             JGraphicComponent canvas = new JGraphicComponent();
             canvas.setBackground(Color.black);
@@ -47,13 +47,13 @@ public class ClippedImageTestUi extends javax.swing.JFrame {
             setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
             pack();
         } catch (IOException ex) {
-            Logger.getLogger(ClippedImageTestUi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClippedImageTestFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static void main(String[] args) {
         // expect a torus image to show up inside a circle, with black empty region on top and below
-        EventQueue.invokeLater(() -> new ClippedImageTestUi().setVisible(true));
+        EventQueue.invokeLater(() -> new ClippedImageTestFrame().setVisible(true));
     }
 
 }

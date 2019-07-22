@@ -27,9 +27,9 @@ import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class HelloWorldTest extends javax.swing.JFrame {
+public class HelloWorldTestFrame extends javax.swing.JFrame {
 
-    public HelloWorldTest() {
+    public HelloWorldTestFrame() {
         JGraphicComponent canvas = new JGraphicComponent();
         canvas.setBackground(Color.black);
         PanAndZoomHandler.install(canvas);
@@ -49,6 +49,6 @@ public class HelloWorldTest extends javax.swing.JFrame {
 
     public static void main(String[] args) {
         // expect two colored dots inside a blue rectangle
-        EventQueue.invokeLater(() -> new HelloWorldTest().setVisible(true));
+        EventQueue.invokeLater(() -> new HelloWorldTestFrame().setVisible(true));
     }
 }
