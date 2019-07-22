@@ -27,7 +27,7 @@ import java.awt.Graphics;
 import javax.swing.Icon;
 
 /**
- * Displays a basic square color icon, handles both null & non-null colors.
+ * Displays a basic square color icon, handles both null and non-null colors.
  * 
  * @author Elisha Peterson
  */
