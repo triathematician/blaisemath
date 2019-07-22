@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-import com.google.common.base.Predicate;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.swing.AbstractListModel;
 
 /**
@@ -44,8 +44,8 @@ import javax.swing.AbstractListModel;
  */
 public class FilteredListModel<O> extends AbstractListModel<O> {
 
-    protected List<O> unfilteredItems = new ArrayList<O>();
-    private final List<O> filterItems = new ArrayList<O>();
+    protected List<O> unfilteredItems = new ArrayList<>();
+    private final List<O> filterItems = new ArrayList<>();
     
     /** Stores the present filter value. */
     protected Predicate<O> filter = null;
@@ -64,7 +64,7 @@ public class FilteredListModel<O> extends AbstractListModel<O> {
      * @param items properties
      */
     public void setUnfilteredItems(List<O> items) {
-        this.unfilteredItems = new ArrayList<O>(items);
+        this.unfilteredItems = new ArrayList<>(items);
         refilter();
     }
     
@@ -113,9 +113,9 @@ public class FilteredListModel<O> extends AbstractListModel<O> {
     }
     
     private static <T> Set<T> filter(Iterable<T> src, Predicate<? super T> filter) {
-        Set<T> res = new LinkedHashSet<T>();
+        Set<T> res = new LinkedHashSet<>();
         for (T t : src) {
-            if (filter.apply(t) && !res.contains(t)) {
+            if (filter.test(t) && !res.contains(t)) {
                 res.add(t);
             }
         }

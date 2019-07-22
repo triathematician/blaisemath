@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import javax.swing.AbstractCellEditor;
 import javax.swing.Box;
@@ -41,8 +39,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -138,12 +134,7 @@ public class PropertySheet extends JPanel {
                 (fg.getGreen()+5*bg.getGreen())/6,
                 (fg.getBlue()+5*bg.getBlue())/6));
         model = new PropertySheetModel(new PropertyEditorModel(pm));
-        model.addTableModelListener(new TableModelListener(){
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                handleTableChange();
-            }
-        });
+        model.addTableModelListener(e -> handleTableChange());
         table.setModel(model);
         table.getTableHeader().setReorderingAllowed(false);
         updateRowHeights();
@@ -178,13 +169,10 @@ public class PropertySheet extends JPanel {
         Font font = filterCombo.getFont().deriveFont( (float) filterCombo.getFont().getSize() - 2);
         filterCombo.setFont(font);
         filterCombo.setSelectedItem(BeanPropertyFilter.STANDARD);
-        filterCombo.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (getPropertyModel() instanceof BeanPropertyModel) {
-                    ((BeanPropertyModel)getPropertyModel()).setFilter(
-                            (BeanPropertyFilter) filterCombo.getSelectedItem());
-                }
+        filterCombo.addActionListener(e -> {
+            if (getPropertyModel() instanceof BeanPropertyModel) {
+                ((BeanPropertyModel)getPropertyModel()).setFilter(
+                        (BeanPropertyFilter) filterCombo.getSelectedItem());
             }
         });
 
@@ -223,7 +211,7 @@ public class PropertySheet extends JPanel {
     
     /** 
      * Sets toolbar visibility
-     * @param val 
+     * @param val true if visible
      */
     public void setToolbarVisible(boolean val) {
         if (val != toolsVisible) {

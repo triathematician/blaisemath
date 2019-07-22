@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package com.googlecode.blaisemath.firestarter;
  * limitations under the License.
  * #L%
  */
-import com.google.common.base.Predicate;
 import java.beans.PropertyDescriptor;
+import java.util.function.Predicate;
 
 /**
  * Encodes possible filters for bean patterns.
@@ -32,7 +32,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     STANDARD {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return pd.getWriteMethod() != null && pd.getReadMethod() != null && !pd.isExpert() && !pd.isHidden();
         }
 
@@ -46,7 +46,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     STANDARD_READ_OR_WRITE {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return (pd.getWriteMethod() != null || pd.getReadMethod() != null) && !pd.isExpert() && !pd.isHidden();
         }
 
@@ -60,7 +60,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     PREFERRED {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return pd.isPreferred();
         }
 
@@ -74,7 +74,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     EXPERT {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return pd.isExpert();
         }
 
@@ -88,7 +88,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     ALL {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return true;
         }
 
@@ -102,7 +102,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     READ_ONLY {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return pd.getWriteMethod() == null;
         }
 
@@ -116,7 +116,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     BOUND {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return pd.isBound() && pd.getWriteMethod() != null;
         }
 
@@ -130,7 +130,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     CONSTRAINED {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return pd.isConstrained() && pd.getWriteMethod() != null;
         }
 
@@ -144,7 +144,7 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
      */
     HIDDEN {
         @Override
-        public boolean apply(PropertyDescriptor pd) {
+        public boolean test(PropertyDescriptor pd) {
             return pd.isHidden();
         }
 
@@ -156,16 +156,11 @@ public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
 
     /**
      * Converts string filter to a property filter, using the property name.
-     * @param propertyFilter
-     * @return 
+     * @param propertyFilter filter
+     * @return predicate
      */
     public static Predicate<PropertyDescriptor> byName(final Predicate<String> propertyFilter) {
-        return new Predicate<PropertyDescriptor>() {
-            @Override
-            public boolean apply(PropertyDescriptor input) {
-                return propertyFilter == null || propertyFilter.apply(input.getName());
-            }
-        };
+        return input -> propertyFilter == null || propertyFilter.test(input.getName());
     }
 
 }

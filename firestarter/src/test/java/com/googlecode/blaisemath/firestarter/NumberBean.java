@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class NumberBean {
     public Byte getNByte() { return NByte; }
     public void setNByte(Byte NByte) { this.NByte = NByte;}
 
-    protected Long NLong=199823844l;
+    protected Long NLong= 199823844L;
     public Long getNLong() {return NLong;}
     public void setNLong(Long NLong) {this.NLong = NLong;}
 

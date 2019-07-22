@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.editor;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
 
 /**
@@ -59,12 +57,9 @@ public abstract class MPanelEditorSupport extends MPropertyEditorSupport {
             initCustomizer();
             initEditorValue();
         }
-        panel.addPropertyChangeListener("enabled", new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                for (int i = 0; i < panel.getComponentCount(); i++) {
-                    panel.getComponent(i).setEnabled(panel.isEnabled());
-                }
+        panel.addPropertyChangeListener("enabled", evt -> {
+            for (int i = 0; i < panel.getComponentCount(); i++) {
+                panel.getComponent(i).setEnabled(panel.isEnabled());
             }
         });
         return panel;

@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.editor;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +55,7 @@ public final class FontEditor extends MPanelEditorSupport {
     private static final int[] PT_SIZES = {3, 5, 8, 10, 12, 14, 18, 24, 36, 48};
 
     /** Static list of fonts. Will be loaded only once. */
-    private static List<String> fonts = new ArrayList<String>();
+    private static final List<String> FONTS = new ArrayList<>();
     
     private static boolean loadStarted = false;
     private static boolean fontsLoaded = false;
@@ -81,7 +80,6 @@ public final class FontEditor extends MPanelEditorSupport {
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 1, 0, 1);
-        gbc.weightx = 1;
         p.add(familyNameCombo, gbc);
         gbc.weightx = .3;
         p.add(fontSizeCombo, gbc);
@@ -96,7 +94,7 @@ public final class FontEditor extends MPanelEditorSupport {
      */
     private void initializeComboBoxes() {
         if (fontsLoaded) {
-            familyNameCombo = new JComboBox(fonts.toArray());
+            familyNameCombo = new JComboBox(FONTS.toArray());
         } else {
             familyNameCombo = new JComboBox(new Object[]{"<html><i>Loading fonts...</i>"});
             familyNameCombo.setEnabled(false);
@@ -107,8 +105,8 @@ public final class FontEditor extends MPanelEditorSupport {
         familyNameCombo.setAlignmentY(Component.CENTER_ALIGNMENT);
 
         fontSizeCombo = new JComboBox();
-        for (int i = 0; i < PT_SIZES.length; i++) {
-            fontSizeCombo.addItem("" + PT_SIZES[i]);
+        for (int ptSize : PT_SIZES) {
+            fontSizeCombo.addItem("" + ptSize);
         }
         fontSizeCombo.setMinimumSize(new Dimension(40, 0));
         fontSizeCombo.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -120,12 +118,7 @@ public final class FontEditor extends MPanelEditorSupport {
         styleCombo.setAlignmentX(Component.CENTER_ALIGNMENT);
         styleCombo.setAlignmentY(Component.CENTER_ALIGNMENT);
         
-        ActionListener comboListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleComboChange();
-            }
-        };
+        ActionListener comboListener = e -> handleComboChange();
         familyNameCombo.addActionListener(comboListener);
         fontSizeCombo.addActionListener(comboListener);
         styleCombo.addActionListener(comboListener);
@@ -166,16 +159,13 @@ public final class FontEditor extends MPanelEditorSupport {
     
     private void loadFontsInBackground() {
         String[] ff = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        synchronized(fonts) {
-            fonts.addAll(Arrays.asList(ff));
+        synchronized(FONTS) {
+            FONTS.addAll(Arrays.asList(ff));
             if (newValue != null) {
-                SwingUtilities.invokeLater(new Runnable(){
-                    @Override
-                    public void run() {
-                        familyNameCombo.setModel(new DefaultComboBoxModel(fonts.toArray()));
-                        familyNameCombo.setEnabled(true);
-                        familyNameCombo.setSelectedItem(((Font)newValue).getFamily());
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    familyNameCombo.setModel(new DefaultComboBoxModel(FONTS.toArray()));
+                    familyNameCombo.setEnabled(true);
+                    familyNameCombo.setSelectedItem(((Font)newValue).getFamily());
                 });
             }
             fontsLoaded = true;

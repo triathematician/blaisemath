@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,8 +63,8 @@ public interface PropertyModel extends ListModel<String> {
 
     /**
      * Sets property in given row.
-     * @param row
-     * @param value
+     * @param row property row
+     * @param value value for the row
      */
     void setPropertyValue(int row, Object value);
 
@@ -83,7 +83,7 @@ public interface PropertyModel extends ListModel<String> {
 
     
     /** Blank instance of a property model */
-    public class Empty implements PropertyModel {
+    class Empty implements PropertyModel {
         @Override
         public int getSize() {
             return 0;

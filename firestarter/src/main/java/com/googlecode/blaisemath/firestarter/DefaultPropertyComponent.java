@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.IndexedPropertyDescriptor;
 import java.util.Arrays;
 import javax.swing.JButton;
@@ -46,12 +44,7 @@ final class DefaultPropertyComponent extends JButton {
         super(parent.getElementAt(row));
         this.parent = parent;
         this.row = row;
-        addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateProperty();
-            }
-        });
+        addActionListener(e -> updateProperty());
         setEnabled(false);
         updateButtonText();
     }

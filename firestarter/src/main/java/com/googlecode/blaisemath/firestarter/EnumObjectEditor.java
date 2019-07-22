@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,7 @@ import com.googlecode.blaisemath.editor.MPanelEditorSupport;
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
@@ -73,22 +70,14 @@ public final class EnumObjectEditor extends MPanelEditorSupport {
         combo = new JComboBox();
         combo.setEditable(false);
         combo.setBackground(panel.getBackground());
-        combo.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                handleSelectionChange(e);
-            }
-        });
+        combo.addItemListener(this::handleSelectionChange);
         panel.add(combo, BorderLayout.CENTER);
 
         JButton button = new JButton("...");
         button.setMargin(new Insets(3, 3, 3, 2));
-        button.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Window win = SwingUtilities.getWindowAncestor(panel);
-                PropertySheetDialog.show(win, false, newValue);
-            }
+        button.addActionListener(e -> {
+            Window win = SwingUtilities.getWindowAncestor(panel);
+            PropertySheetDialog.show(win, false, newValue);
         });
         panel.add(button, BorderLayout.EAST);
     }
@@ -144,9 +133,7 @@ public final class EnumObjectEditor extends MPanelEditorSupport {
             } else {
                 try {
                     setNewValue( instanceMethod.invoke(null, e.getItem()) );
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(EnumObjectEditor.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
+                } catch (IllegalAccessException | InvocationTargetException ex) {
                     Logger.getLogger(EnumObjectEditor.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

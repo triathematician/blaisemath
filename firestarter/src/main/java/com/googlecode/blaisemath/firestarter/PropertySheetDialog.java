@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,12 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-import com.google.common.base.Predicate;
 import java.awt.Frame;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.IndexedPropertyDescriptor;
+import java.util.function.Predicate;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 
@@ -191,12 +189,9 @@ public class PropertySheetDialog extends javax.swing.JDialog {
                 ), java.awt.BorderLayout.CENTER);
 
         JButton okButton = new JButton("Close");
-        okButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                dispose();
-            }
+        okButton.addActionListener(e -> {
+            setVisible(false);
+            dispose();
         });
         add(okButton, java.awt.BorderLayout.SOUTH);
 

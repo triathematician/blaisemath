@@ -20,7 +20,7 @@ package com.googlecode.blaisemath.util;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,10 @@ import com.googlecode.blaisemath.firestarter.IndexedBean;
 import java.awt.Point;
 import java.beans.BeanInfo;
 import java.beans.IndexedPropertyDescriptor;
-import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -64,7 +66,7 @@ public class ReflectionUtilsTest {
         assertEquals(new Point(), result);
         
         assertEquals(new Integer(0), ReflectionUtils.tryInvokeNew(Integer.class));
-        assertEquals(null, ReflectionUtils.tryInvokeNew(int.class));
+        assertNull(ReflectionUtils.tryInvokeNew(int.class));
     }
 
     @Test
@@ -73,7 +75,7 @@ public class ReflectionUtilsTest {
         BeanInfo info = ReflectionUtils.getBeanInfo(Point.class);
         assertEquals("x", info.getPropertyDescriptors()[2].getDisplayName());
         assertEquals(2.0, ReflectionUtils.tryInvokeRead(new Point(2,3), info.getPropertyDescriptors()[2]));
-        assertEquals(null, ReflectionUtils.tryInvokeRead("not a point", info.getPropertyDescriptors()[1]));
+        assertNull(ReflectionUtils.tryInvokeRead("not a point", info.getPropertyDescriptors()[1]));
     }
 
     @Test
@@ -81,7 +83,7 @@ public class ReflectionUtilsTest {
         System.out.println("tryInvokeWrite");
         BeanInfo info = ReflectionUtils.getBeanInfo(Point.class);
         assertEquals("x", info.getPropertyDescriptors()[2].getDisplayName());
-        assertEquals(false, ReflectionUtils.tryInvokeWrite(new Point(2,3), info.getPropertyDescriptors()[2], 2));
+        assertFalse(ReflectionUtils.tryInvokeWrite(new Point(2, 3), info.getPropertyDescriptors()[2], 2));
         Point p = new Point(2,3);
         ReflectionUtils.tryInvokeWrite(p, info.getPropertyDescriptors()[1], new Point(1,1));
         assertEquals(new Point(1,1), p);

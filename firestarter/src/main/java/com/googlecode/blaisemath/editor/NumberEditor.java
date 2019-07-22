@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.editor;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * <p>
@@ -46,12 +44,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
     public NumberEditor() {
         spinner = new JSpinner();
-        spinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                setNewValue(spinner.getValue());
-            }
-        });
+        spinner.addChangeListener(e -> setNewValue(spinner.getValue()));
     }
 
     @Override

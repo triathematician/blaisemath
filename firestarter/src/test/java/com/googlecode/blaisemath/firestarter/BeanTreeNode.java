@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,27 +67,23 @@ public class BeanTreeNode extends DefaultMutableTreeNode {
 
     /** Creates and adds subnodes, which are the "non-terminal" properties of the bean. */
     void addSubNodes() {
-        for (int i = 0; i < descriptors.length; i++) {
-            if (!BeanPropertyFilter.STANDARD.apply(descriptors[i])) {
+        for (PropertyDescriptor descriptor : descriptors) {
+            if (!BeanPropertyFilter.STANDARD.test(descriptor)) {
                 // required to prevent infinite loop!
                 continue;
-            } else if (descriptors[i] instanceof IndexedPropertyDescriptor) {
+            } else if (descriptor instanceof IndexedPropertyDescriptor) {
                 try {
                     // add all array elements
-                    Object[] elts = (Object[]) descriptors[i].getReadMethod().invoke(bean);
-                    for (int j = 0; j < elts.length; j++) {
-                        add(new BeanTreeNode(elts[j]));
+                    Object[] elts = (Object[]) descriptor.getReadMethod().invoke(bean);
+                    for (Object elt : elts) {
+                        add(new BeanTreeNode(elt));
                     }
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(BeanTreeNode.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(BeanTreeNode.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(BeanTreeNode.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 // add only elements not supporting custom editors
-                PropertyEditor editor = EditorRegistration.getEditor(bean, descriptors[i]);
+                PropertyEditor editor = EditorRegistration.getEditor(bean, descriptor);
                 if (!editor.supportsCustomEditor()) {
                     add(new BeanTreeNode(editor.getValue()));
                 }

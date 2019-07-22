@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.editor;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
@@ -69,19 +68,16 @@ public abstract class MultiSpinnerSupport<N extends Number> extends MPanelEditor
             panel.add(spinners[i]);
         }
 
-        ChangeListener cl = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                List<N> vals = new ArrayList<N>();
-                for (int i = 0; i < n; i++) {
-                    vals.add((N) spinners[i].getValue());
-                }
-                setNewValueList(vals);
+        ChangeListener cl = e -> {
+            List<N> vals = new ArrayList<>();
+            for (JSpinner spinner : spinners) {
+                vals.add((N) spinner.getValue());
             }
+            setNewValueList(vals);
         };
 
-        for (int i = 0; i < n; i++) {
-            spinners[i].addChangeListener(cl);
+        for (JSpinner spinner : spinners) {
+            spinner.addChangeListener(cl);
         }
 
         panel.revalidate();
@@ -105,16 +101,16 @@ public abstract class MultiSpinnerSupport<N extends Number> extends MPanelEditor
     
     @Override
     public String getAsText() {
-        String result = getValue(0).toString();
+        StringBuilder result = new StringBuilder(getValue(0).toString());
         for (int i = 1; i < spinners.length; i++) {
-            result += "," + getValue(i);
+            result.append(",").append(getValue(i));
         }
-        return result;
+        return result.toString();
     }
 
     /** 
      * Use a comma-delimited technique for setting as text.
-     * @param s 
+     * @param s text
      */
     @Override
     public void setAsText(String s) {

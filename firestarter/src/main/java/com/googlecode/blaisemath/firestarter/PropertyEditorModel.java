@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ package com.googlecode.blaisemath.firestarter;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.MPropertyEditorSupport;
 import com.googlecode.blaisemath.util.FilteredListModel;
-import static com.googlecode.blaisemath.util.Preconditions.checkState;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -66,18 +65,15 @@ public final class PropertyEditorModel implements ListModel<Component> {
 
     public PropertyEditorModel(PropertyModel m) {
         this.model = m;
-        this.model.addPropertyChangeListener(new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                String name = evt.getPropertyName();
-                assert name != null;
-                for (int i = 0; i < model.getSize(); i++) {
-                    if (name.equals(model.getElementAt(i))) {
-                        editors[i].setValue(evt.getNewValue());
-                    }
+        this.model.addPropertyChangeListener(evt -> {
+            String name = evt.getPropertyName();
+            assert name != null;
+            for (int i = 0; i < model.getSize(); i++) {
+                if (name.equals(model.getElementAt(i))) {
+                    editors[i].setValue(evt.getNewValue());
                 }
-                pcs.firePropertyChange(evt);
             }
+            pcs.firePropertyChange(evt);
         });
         this.model.addListDataListener(new ListDataListener(){
             @Override
@@ -94,14 +90,9 @@ public final class PropertyEditorModel implements ListModel<Component> {
             }
         });
         
-        editorListener = new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                handleEditorChange(evt);
-            }
-        };
+        editorListener = this::handleEditorChange;
         
-        components = new FilteredListModel<Component>();
+        components = new FilteredListModel<>();
         initEditors();
     }
 
@@ -109,10 +100,12 @@ public final class PropertyEditorModel implements ListModel<Component> {
     private void initEditors() {
         int size = model.getSize();
         editors = new PropertyEditor[size];
-        List<Component> comps = new ArrayList<Component>();
+        List<Component> comps = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Class<?> type = model.getPropertyType(i);
-            checkState(type != null, model.getElementAt(i)+" has null type for model "+model);
+            if (type == null) {
+                throw new IllegalStateException(model.getElementAt(i)+" has null type for model "+model);
+            }
             Object val = model.getPropertyValue(i);
             editors[i] = EditorRegistration.getRegisteredEditor(val, model.getPropertyType(i));
             if (editors[i] != null) {

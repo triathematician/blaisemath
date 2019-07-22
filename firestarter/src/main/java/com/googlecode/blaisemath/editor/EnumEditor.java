@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.editor;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.editor;
 
 import java.awt.Component;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -54,12 +53,9 @@ public final class EnumEditor extends MPanelEditorSupport {
         combo.setAlignmentY(Component.CENTER_ALIGNMENT);
         panel.add(combo);
 
-        combo.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    setNewValue(evt.getItem());
-                }
+        combo.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                setNewValue(evt.getItem());
             }
         });
     }

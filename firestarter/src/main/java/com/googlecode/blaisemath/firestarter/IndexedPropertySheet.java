@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,12 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-import static com.googlecode.blaisemath.util.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.beans.IndexedPropertyDescriptor;
+import static java.util.Objects.requireNonNull;
 import javax.swing.AbstractAction;
 import static javax.swing.Action.SHORT_DESCRIPTION;
 import javax.swing.Box;
@@ -60,7 +60,7 @@ public final class IndexedPropertySheet extends PropertySheet {
      * @return newly forBeand property sheet
      */
     public static PropertySheet forIndexedProperty(Object bean, String propName) {
-        checkNotNull(bean);
+        requireNonNull(bean);
         return forIndexedProperty(bean, ReflectionUtils.indexedPropertyDescriptor(bean.getClass(), propName));
     }
 
@@ -71,8 +71,8 @@ public final class IndexedPropertySheet extends PropertySheet {
      * @return newly forBeand property sheet
      */
     public static PropertySheet forIndexedProperty(Object bean, IndexedPropertyDescriptor ipd) {
-        checkNotNull(bean);
-        checkNotNull(ipd);
+        requireNonNull(bean);
+        requireNonNull(ipd);
         
         IndexedPropertySheet res = new IndexedPropertySheet();
         res.beanModel = new BeanIndexedPropertyModel(bean, ipd);

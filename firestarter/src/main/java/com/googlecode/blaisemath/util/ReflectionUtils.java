@@ -7,7 +7,7 @@ package com.googlecode.blaisemath.util;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,9 +51,8 @@ public class ReflectionUtils {
 
     /**
      * Retrieves the BeanInfo for a Class
-     *
-     * @param cls
-     * @return
+     * @param cls class
+     * @return bean info
      */
     public static BeanInfo getBeanInfo(Class<?> cls) {
         BeanInfo beanInfo = null;
@@ -109,16 +108,7 @@ public class ReflectionUtils {
         if (con != null) {
             try {
                 return con.newInstance();
-            } catch (InstantiationException ex) {
-                Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                        FAIL_NEW_MSG, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                        FAIL_NEW_MSG, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                        FAIL_NEW_MSG, ex);
-            } catch (InvocationTargetException ex) {
+            } catch (InstantiationException | InvocationTargetException | IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                         FAIL_NEW_MSG, ex);
             }
@@ -137,13 +127,7 @@ public class ReflectionUtils {
         }
         try {
             return pd.getReadMethod().invoke(parent);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException ex) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     FAIL_INVOKE_MSG, ex);
         }
@@ -162,13 +146,7 @@ public class ReflectionUtils {
         try {
             pd.getWriteMethod().invoke(parent, val);
             return true;
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException ex) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     FAIL_INVOKE_MSG, ex);
         }
@@ -186,13 +164,7 @@ public class ReflectionUtils {
         }
         try {
             return pd.getIndexedReadMethod().invoke(parent, index);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException ex) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     FAIL_INVOKE_MSG, ex);
         }
@@ -211,13 +183,7 @@ public class ReflectionUtils {
         try {
             pd.getIndexedWriteMethod().invoke(parent, index, value);
             return true;
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
-                    FAIL_INVOKE_MSG, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException ex) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     FAIL_INVOKE_MSG, ex);
         }

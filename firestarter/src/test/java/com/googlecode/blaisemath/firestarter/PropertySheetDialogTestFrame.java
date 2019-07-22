@@ -19,7 +19,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 import java.awt.Rectangle;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
  *
@@ -67,19 +67,11 @@ public class PropertySheetDialogTestFrame extends javax.swing.JFrame {
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         jButton1.setText("Show");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jButton1.addActionListener(this::jButton1ActionPerformed);
         getContentPane().add(jButton1);
 
         jButton2.setText("Show w/ callback");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        jButton2.addActionListener(this::jButton2ActionPerformed);
         getContentPane().add(jButton2);
 
         pack();
@@ -91,19 +83,14 @@ public class PropertySheetDialogTestFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         final Rectangle r = new Rectangle();
-        PropertySheetDialog.show(this, true, r, new Runnable(){
-            @Override
-            public void run() {
-                JOptionPane.showMessageDialog(PropertySheetDialogTestFrame.this,
-                        "You just edited the rectangle "+r);
-            }
-        });
+        PropertySheetDialog.show(this, true, r, () -> JOptionPane.showMessageDialog(PropertySheetDialogTestFrame.this,
+                "You just edited the rectangle "+r));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -116,23 +103,13 @@ public class PropertySheetDialogTestFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PropertySheetDialogTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PropertySheetDialogTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PropertySheetDialogTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
             java.util.logging.Logger.getLogger(PropertySheetDialogTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PropertySheetDialogTestFrame().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new PropertySheetDialogTestFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

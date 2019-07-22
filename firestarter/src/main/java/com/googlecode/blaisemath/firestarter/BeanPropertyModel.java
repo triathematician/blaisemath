@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-import com.google.common.base.Predicate;
 import com.googlecode.blaisemath.util.FilteredListModel;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.beans.BeanInfo;
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
+import java.util.function.Predicate;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -59,7 +59,7 @@ public final class BeanPropertyModel extends PropertyModelSupport {
     public BeanPropertyModel(Object bean) {
         this.bean = bean;
 
-        filteredProperties = new FilteredListModel<PropertyDescriptor>();
+        filteredProperties = new FilteredListModel<>();
         filteredProperties.setFilter(BeanPropertyFilter.STANDARD);
         filteredProperties.addListDataListener(new ListDataListener(){
             @Override

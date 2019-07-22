@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.editor;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
@@ -116,28 +114,22 @@ public class ColorEditor extends MPanelEditorSupport {
         colorChooserButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         panel.add(colorChooserButton);
 
-        rgbaValue.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    setNewValue(getColor(rgbaValue.getText()));
-                    initEditorValue();
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(ColorEditor.class.getName()).log(Level.FINE, 
-                            "Not a color: "+rgbaValue.getText(), ex);
-                    JOptionPane.showMessageDialog(panel.getParent(), ex.toString());
-                }
+        rgbaValue.addActionListener(e -> {
+            try {
+                setNewValue(getColor(rgbaValue.getText()));
+                initEditorValue();
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(ColorEditor.class.getName()).log(Level.FINE,
+                        "Not a color: "+rgbaValue.getText(), ex);
+                JOptionPane.showMessageDialog(panel.getParent(), ex.toString());
             }
         });
 
-        colorChooserButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                color = JColorChooser.showDialog(panel.getParent(), "Color Chooser", color);
-                if (color != null) {
-                    setNewValue(color);
-                    initEditorValue();
-                }
+        colorChooserButton.addActionListener(e -> {
+            color = JColorChooser.showDialog(panel.getParent(), "Color Chooser", color);
+            if (color != null) {
+                setNewValue(color);
+                initEditorValue();
             }
         });
     }

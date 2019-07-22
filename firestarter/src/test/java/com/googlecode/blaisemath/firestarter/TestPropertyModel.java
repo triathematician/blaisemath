@@ -19,7 +19,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ import java.util.Map;
         public final Map<String,Object> map;
 
         public TestPropertyModel(Map<String, Class> types, Map<String, Object> map) {
-            this.props = new ArrayList<String>(types.keySet());
+            this.props = new ArrayList<>(types.keySet());
             this.types = types;
             this.map = map;
         }

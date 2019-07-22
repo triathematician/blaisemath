@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.util;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,7 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.geom.Line2D;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import javax.swing.BorderFactory;
@@ -168,12 +165,7 @@ public final class MPanel extends JPanel {
         toggle.setRolloverSelectedIcon(new ExpandIcon(true, fg2));
         toggle.setPressedIcon(new PressIcon(fg2));
         
-        toggle.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                updateSize();
-            }
-        });
+        toggle.addItemListener(e -> updateSize());
 
         titleBar = new JPanel();
         titleBar.setMinimumSize(new Dimension(component.getMinimumSize().width + 2, titleHt));
@@ -190,14 +182,11 @@ public final class MPanel extends JPanel {
         setLayout(new BorderLayout());
         add(titleBar, BorderLayout.NORTH);
         
-        componentSizeListener = new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                String prop = evt.getPropertyName();
-                if ("size".equals(prop) || "minimumSize".equals(prop)
-                        || "preferredSize".equals(prop) || "maximumSize".equals(prop)) {
-                    updateSize();
-                }
+        componentSizeListener = evt -> {
+            String prop = evt.getPropertyName();
+            if ("size".equals(prop) || "minimumSize".equals(prop)
+                    || "preferredSize".equals(prop) || "maximumSize".equals(prop)) {
+                updateSize();
             }
         };
         setPrimaryComponent(component);
@@ -255,7 +244,7 @@ public final class MPanel extends JPanel {
 
     /** 
      * Sets title string
-     * @param title
+     * @param title title of component
      */
     public void setTitle(String title) {
         titleLabel.setText(title);
@@ -271,7 +260,7 @@ public final class MPanel extends JPanel {
 
     /** 
      * Sets main component
-     * @param c 
+     * @param c component
      */
     public void setPrimaryComponent(Component c) {
         if (component != null) {

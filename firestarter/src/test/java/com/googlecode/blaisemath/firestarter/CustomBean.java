@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.firestarter;
  * #%L
  * Firestarter
  * --
- * Copyright (C) 2009 - 2017 Elisha Peterson
+ * Copyright (C) 2009 - 2019 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@ package com.googlecode.blaisemath.firestarter;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Point;
-import java.awt.geom.Point2D;
 
 /**
  * <p>
@@ -55,7 +53,7 @@ public class CustomBean {
     public boolean getBoo2() { return boo; }
     public void setBoo2(boolean boo) { this.boo = boo; }
 
-    protected Font font = new Font("", 0, 10);
+    protected Font font = new Font("", Font.PLAIN, 10);
     public Font getFont() { return font; }
     public void setFont(Font font) { this.font = font; }
 
