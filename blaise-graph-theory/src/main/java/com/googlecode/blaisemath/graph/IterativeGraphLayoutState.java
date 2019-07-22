@@ -77,7 +77,7 @@ public abstract class IterativeGraphLayoutState<N> {
      */
     public synchronized void requestPositions(Map<N, Point2D.Double> loc, boolean resetNodes) {
         // in some race conditions, the request positions is called with empty loc, because the coordinate manager's
-        // active location copy is empty (no current active locations). we don't want to clear the update locs in this
+        // active location copy is empty (no current active locations). we don't want to clear the update locations in this
         // case, because it erases the entire state
         if (!loc.isEmpty()) {
             updateLoc.clear();

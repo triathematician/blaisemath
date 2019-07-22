@@ -27,8 +27,6 @@ import java.util.Map;
 
 /**
  * Caches computations of metrics on a graph. Both {@link GraphNodeMetric}s and {@link GraphMetric}s are captured here.
- * In the case of {@code GraphNodeMetric}s, the node values are computed along with a {@link SummaryStatistics} object
- * that describes their values.
  *
  * @author Elisha Peterson
  */

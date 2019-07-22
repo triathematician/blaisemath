@@ -49,7 +49,7 @@ public final class StarGraphGenerator extends AbstractGraphGenerator {
 
             @Override
             public int size() {
-                return nodes == 0 ? 0 : nodes - 1;
+                return nodes - 1;
             }
         });
     }
