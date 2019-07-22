@@ -26,7 +26,6 @@ import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.impl.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.geom.AnchoredText;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.graphics.Renderer;
@@ -39,6 +38,7 @@ import java.beans.PropertyChangeListener;
 import java.util.function.Supplier;
 
 import static com.googlecode.blaisemath.graph.layout.GraphLayoutManager.P_GRAPH;
+import com.googlecode.blaisemath.primitive.AnchoredText;
 
 /**
  * Combines a {@link GraphLayoutManager} and a {@link DelegatingNodeLinkGraphic}
@@ -99,7 +99,7 @@ public class VisualGraph<G> {
             if (viewGraphSupplier != null) {
                 viewGraph = viewGraphSupplier.get();
             } else {
-                viewGraph = new DelegatingNodeLinkGraphic<Object,EndpointPair<Object>, G>(
+                viewGraph = new DelegatingNodeLinkGraphic<Object, EndpointPair<Object>, G>(
                         layoutManager.getCoordinateManager(), null, null, null);
                 viewGraph.getNodeStyler().setStyle(DEFAULT_NODE_STYLE);
             }

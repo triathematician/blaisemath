@@ -20,6 +20,8 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.googlecode.blaisemath.geom.TransformedCoordinateSpace;
+import com.googlecode.blaisemath.util.swing.CanvasPainter;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graphics.GraphicMouseEvent;

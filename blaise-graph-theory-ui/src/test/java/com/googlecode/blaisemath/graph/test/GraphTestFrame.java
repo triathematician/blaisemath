@@ -36,11 +36,11 @@ import com.googlecode.blaisemath.graph.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
 import com.googlecode.blaisemath.graphics.Graphic;
-import com.googlecode.blaisemath.graphics.swing.CanvasPainter;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.util.RollupPanel;
+import com.googlecode.blaisemath.util.swing.CanvasPainter;
 
 import javax.swing.*;
 import java.awt.*;

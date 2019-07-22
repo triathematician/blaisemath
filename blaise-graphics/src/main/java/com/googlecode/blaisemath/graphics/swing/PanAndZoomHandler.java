@@ -20,6 +20,8 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.swing.render.ShapeRenderer;
+import com.googlecode.blaisemath.util.swing.CanvasPainter;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;

@@ -28,7 +28,6 @@ import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.geom.AnchoredText;
 import com.googlecode.blaisemath.graphics.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicComposite;
@@ -48,6 +47,7 @@ import java.util.logging.Logger;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.googlecode.blaisemath.graphics.impl.LabeledPointGraphic.P_LABEL_RENDERER;
 import static com.googlecode.blaisemath.graphics.PrimitiveGraphicSupport.P_RENDERER;
+import com.googlecode.blaisemath.primitive.AnchoredText;
 
 /**
  * Manages a collection of points that are maintained as separate {@link Graphic}s,
@@ -76,7 +76,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     protected boolean dragEnabled = false;
 
     /** Manages locations of points */
-    protected CoordinateManager<S,Point2D> manager;
+    protected CoordinateManager<S, Point2D.Double> manager;
     /** Responds to coordinate update events. Also used as a lock object for updates. */
     private final CoordinateListener coordListener;
     /** Flag that indicates points are being updated, and no notification events should be sent. */
@@ -87,9 +87,9 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     /** Selects styles for graphics */
     protected ObjectStyler<S> styler = ObjectStyler.create();
     /** Selects renderer for points */
-    protected com.googlecode.blaisemath.graphics.Renderer<Point2D,G> renderer;
+    protected Renderer<Point2D, G> renderer;
     /** Renderer for point labels */
-    protected com.googlecode.blaisemath.graphics.Renderer<AnchoredText,G> textRenderer;
+    protected Renderer<AnchoredText, G> textRenderer;
 
     //region CONSTRUCTORS
     
@@ -116,7 +116,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * @param renderer used for drawing the points
      * @param labelRenderer draws labels
      */
-    public DelegatingPointSetGraphic(CoordinateManager<S, Point2D> crdManager, 
+    public DelegatingPointSetGraphic(CoordinateManager<S, Point2D.Double> crdManager, 
             @Nullable Renderer<Point2D, G> renderer,
             @Nullable Renderer<AnchoredText, G> labelRenderer) {
         setRenderer(renderer);
@@ -151,7 +151,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Manager responsible for tracking point locations
      * @return manager
      */
-    public CoordinateManager<S, Point2D> getCoordinateManager() {
+    public CoordinateManager<S, Point2D.Double> getCoordinateManager() {
         return manager;
     }
 
@@ -159,7 +159,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Set manager responsible for tracking point locations
      * @param mgr manager
      */
-    public final void setCoordinateManager(CoordinateManager<S, Point2D> mgr) {
+    public final void setCoordinateManager(CoordinateManager<S, Point2D.Double> mgr) {
         if (this.manager != checkNotNull(mgr)) {
             if (this.manager != null) {
                 this.manager.removeCoordinateListener(coordListener);
@@ -172,7 +172,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             // lock to ensure that no changes are made until after the listener has been setup
             synchronized (mgr) {
                 this.manager = mgr;
-                Map<S,Point2D> activePoints = manager.getActiveLocationCopy();
+                Map<S, Point2D.Double> activePoints = manager.getActiveLocationCopy();
                 toRemove.removeAll(activePoints.keySet());
                 updatePointGraphics(activePoints, toRemove, false);
                 this.manager.addCoordinateListener(coordListener);
@@ -260,7 +260,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Adds objects to the graphic
      * @param obj objects to put
      */
-    public final void addObjects(Map<S, Point2D> obj) {
+    public final void addObjects(Map<S, Point2D.Double> obj) {
         manager.putAll(obj);
     }
 
@@ -310,14 +310,14 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     }
     
     @InvokedFromThread("EDT")
-    private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed, boolean notify) {
+    private void updatePointGraphics(Map<S, Point2D.Double> added, Set<S> removed, boolean notify) {
         updating = true;
         boolean change = false;
         List<Graphic<G>> addMe = Lists.newArrayList();
         if (added != null) {
-            for (Entry<S, Point2D> en : added.entrySet()) {
+            for (Entry<S, Point2D.Double> en : added.entrySet()) {
                 S src = en.getKey();
-                DelegatingPrimitiveGraphic<S,Point2D,G> dpg = points.get(src);
+                DelegatingPrimitiveGraphic<S, Point2D, G> dpg = points.get(src);
                 if (dpg == null) {
                     LabeledPointGraphic<S,G> lpg = new LabeledPointGraphic<>(en.getKey(), en.getValue(), styler);
                     lpg.setRenderer(renderer);
@@ -356,8 +356,10 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     @Override
     public void graphicChanged(Graphic<G> source) {
         if (!updating && source instanceof LabeledPointGraphic) {
-            LabeledPointGraphic<S,G> dpg = (LabeledPointGraphic<S,G>) source;
-            manager.put(dpg.getSourceObject(), dpg.getPrimitive());
+            LabeledPointGraphic<S, G> dpg = (LabeledPointGraphic<S, G>) source;
+            Point2D prim = dpg.getPrimitive();
+            manager.put(dpg.getSourceObject(), prim instanceof Point2D.Double ? (Point2D.Double) prim
+                    : new Point2D.Double(prim.getX(), prim.getY()));
         }
         if (!updating) {
             super.graphicChanged(source);

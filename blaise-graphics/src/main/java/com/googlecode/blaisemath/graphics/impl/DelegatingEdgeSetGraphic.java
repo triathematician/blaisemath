@@ -67,16 +67,16 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
     public static final int DEFAULT_MAX_CACHE_SIZE = 5000;
 
     /** The edges in the graphic. */
-    protected final Map<E, DelegatingPrimitiveGraphic<E,Shape,G>> edges = Maps.newHashMap();
+    protected final Map<E, DelegatingPrimitiveGraphic<E, Shape, G>> edges = Maps.newHashMap();
     /** Styler for edges */
     protected ObjectStyler<E> edgeStyler = ObjectStyler.create();
     /** Renderer for edges */
-    protected Renderer<Shape,G> edgeRenderer;
+    protected Renderer<Shape, G> edgeRenderer;
     
     /** Point manager. Maintains objects and their locations, and enables mouse dragging. */
-    protected CoordinateManager<S, Point2D> pointManager;
+    protected CoordinateManager<S, Point2D.Double> pointManager;
     /** Listener for changes to coordinates */
-    private final CoordinateListener<S, Point2D> coordListener;
+    private final CoordinateListener<S, Point2D.Double> coordListener;
     /** Flag that indicates points are being updated, and no notification events should be sent. */
     protected boolean updating = false;
     /** Queue of updates to be processed */
@@ -94,7 +94,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
      * @param mgr manages source object loc
      * @param edgeRenderer edge renderer
      */
-    public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr, Renderer<Shape,G> edgeRenderer) {
+    public DelegatingEdgeSetGraphic(CoordinateManager<S, Point2D.Double> mgr, Renderer<Shape, G> edgeRenderer) {
         coordListener = this::handleCoordinateChange;
         
         setCoordinateManager(mgr);
@@ -104,7 +104,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
     //region EVENTS
     
     @InvokedFromThread("unknown")
-    private void handleCoordinateChange(final CoordinateChangeEvent<S,Point2D> evt) {
+    private void handleCoordinateChange(final CoordinateChangeEvent<S, Point2D.Double> evt) {
         updateQueue.add(evt);
         MoreSwingUtilities.invokeOnEventDispatchThread(this::processNextCoordinateChangeEvent);
     }
@@ -129,7 +129,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
     }
                 
     @InvokedFromThread("EDT")
-    private void updateEdgeGraphics(Map<S, Point2D> locMap, List<Graphic<G>> removeMe, boolean notify) {
+    private void updateEdgeGraphics(Map<S, Point2D.Double> locMap, List<Graphic<G>> removeMe, boolean notify) {
         if (!SwingUtilities.isEventDispatchThread()) {
             LOG.log(Level.WARNING, "updateEdgeGraphics() called from non-EDT");
         }
@@ -170,7 +170,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
 
     //region PROPERTIES
     
-    public CoordinateManager<S, Point2D> getCoordinateManager() {
+    public CoordinateManager<S, Point2D.Double> getCoordinateManager() {
         return pointManager;
     }
 
@@ -178,7 +178,7 @@ public class DelegatingEdgeSetGraphic<S,E extends EndpointPair<S>,G> extends Gra
      * Set manager responsible for tracking point locations
      * @param mgr manager
      */
-    public final void setCoordinateManager(CoordinateManager<S, Point2D> mgr) {
+    public final void setCoordinateManager(CoordinateManager<S, Point2D.Double> mgr) {
         if (this.pointManager != checkNotNull(mgr)) {
             if (this.pointManager != null) {
                 this.pointManager.removeCoordinateListener(coordListener);

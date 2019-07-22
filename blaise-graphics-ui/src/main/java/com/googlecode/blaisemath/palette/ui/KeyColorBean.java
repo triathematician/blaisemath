@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.palette.ui;
  */
 
 
-import com.googlecode.blaisemath.geom.Marker;
+import com.googlecode.blaisemath.primitive.Marker;
 import java.awt.Color;
 import javax.annotation.Nullable;
 

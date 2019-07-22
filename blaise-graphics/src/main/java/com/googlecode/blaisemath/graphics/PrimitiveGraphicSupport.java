@@ -113,7 +113,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     }
 
     @Override
-    public Rectangle2D boundingBox(@Nullable G canvas) {
+    public @Nullable Rectangle2D boundingBox(@Nullable G canvas) {
         return renderer == null || primitive == null ? null : renderer.boundingBox(primitive, renderStyle(), canvas);
     }
 

@@ -24,8 +24,8 @@ import com.google.common.graph.EndpointPair;
 import com.googlecode.blaisemath.graphics.GraphicComposite;
 import com.googlecode.blaisemath.graphics.Renderer;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.geom.AnchoredText;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.primitive.AnchoredText;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.Shape;
@@ -80,8 +80,8 @@ public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends Gr
      * @param labelRenderer draws labels
      * @param edgeRenderer draws edges
      */
-    public DelegatingNodeLinkGraphic(CoordinateManager<S,Point2D> crdManager,
-            @Nullable Renderer<Point2D,G> nodeRenderer,
+    public DelegatingNodeLinkGraphic(CoordinateManager<S, Point2D.Double> crdManager,
+            @Nullable Renderer<Point2D, G> nodeRenderer,
             @Nullable Renderer<AnchoredText, G> labelRenderer,
             @Nullable Renderer<Shape, G> edgeRenderer) {
         pointGraphics = new DelegatingPointSetGraphic<>(crdManager, nodeRenderer, labelRenderer);
@@ -94,15 +94,15 @@ public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends Gr
 
     //region DELEGATES - POINTS
 
-    public DelegatingPointSetGraphic<S,G> getPointGraphic() {
+    public DelegatingPointSetGraphic<S, G> getPointGraphic() {
         return pointGraphics;
     }
 
-    public CoordinateManager<S, Point2D> getCoordinateManager() {
+    public CoordinateManager<S, Point2D.Double> getCoordinateManager() {
         return pointGraphics.getCoordinateManager();
     }
 
-    public void setCoordinateManager(CoordinateManager ptMgr) {
+    public void setCoordinateManager(CoordinateManager<S, Point2D.Double> ptMgr) {
         pointGraphics.setCoordinateManager(ptMgr);
         edgeGraphics.setCoordinateManager(ptMgr);
     }
@@ -111,11 +111,11 @@ public class DelegatingNodeLinkGraphic<S,E extends EndpointPair<S>,G> extends Gr
         return pointGraphics.getObjects();
     }
     
-    public Map<S, Point2D> getNodeLocations() {
+    public Map<S, Point2D.Double> getNodeLocations() {
         return pointGraphics.getCoordinateManager().getActiveLocationCopy();
     }
 
-    public void setNodeLocations(Map<S, Point2D> pts) {
+    public void setNodeLocations(Map<S, Point2D.Double> pts) {
         pointGraphics.getCoordinateManager().putAll(pts);
     }
 

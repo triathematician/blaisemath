@@ -20,8 +20,8 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
-import com.googlecode.blaisemath.geom.Marker;
-import com.googlecode.blaisemath.geom.Anchor;
+import com.googlecode.blaisemath.primitive.Marker;
+import com.googlecode.blaisemath.primitive.Anchor;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;

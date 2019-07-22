@@ -25,7 +25,7 @@ import com.googlecode.blaisemath.graphics.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.geom.AnchoredText;
+import com.googlecode.blaisemath.primitive.AnchoredText;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
@@ -38,7 +38,7 @@ import java.awt.geom.Point2D;
  * @param <G> graphics canvas type
  * @author Elisha Peterson
  */
-public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point2D,G> {
+public class LabeledPointGraphic<O, G> extends DelegatingPrimitiveGraphic<O, Point2D, G> {
     
     public static final String P_LABEL_RENDERER = "labelRenderer";
 

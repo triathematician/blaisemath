@@ -20,12 +20,14 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.swing.render.WrappedTextRenderer;
+import com.googlecode.blaisemath.graphics.swing.render.ShapeRenderer;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.geom.AnchoredText;
 import com.googlecode.blaisemath.graphics.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.graphics.Renderer;
+import com.googlecode.blaisemath.primitive.AnchoredText;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;

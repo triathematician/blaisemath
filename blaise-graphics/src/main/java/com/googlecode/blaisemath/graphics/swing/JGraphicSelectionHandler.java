@@ -20,6 +20,8 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.swing.render.ShapeRenderer;
+import com.googlecode.blaisemath.util.swing.CanvasPainter;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graphics.Graphic;

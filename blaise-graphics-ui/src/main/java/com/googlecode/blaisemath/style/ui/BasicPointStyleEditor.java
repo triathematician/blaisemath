@@ -21,9 +21,9 @@ package com.googlecode.blaisemath.style.ui;
  */
 
 import com.googlecode.blaisemath.editor.ColorEditor;
-import com.googlecode.blaisemath.geom.Marker;
-import com.googlecode.blaisemath.geom.Markers;
-import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
+import com.googlecode.blaisemath.graphics.swing.render.MarkerRenderer;
+import com.googlecode.blaisemath.primitive.Marker;
+import com.googlecode.blaisemath.primitive.Markers;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Component;

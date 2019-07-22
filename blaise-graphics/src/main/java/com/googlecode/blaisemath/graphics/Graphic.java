@@ -325,9 +325,9 @@ public abstract class Graphic<G> {
     /**
      * Method that provides the bounding box enclosing the graphic.
      * @return bounding box
-     * @param canvas where graphic is rendered
+     * @param canvas where graphic is rendered, or null if not rendered
      */
-    public abstract Rectangle2D boundingBox(@Nullable G canvas);
+    public abstract @Nullable Rectangle2D boundingBox(@Nullable G canvas);
     
     /**
      * Method used to determine whether the graphic receives mouse events

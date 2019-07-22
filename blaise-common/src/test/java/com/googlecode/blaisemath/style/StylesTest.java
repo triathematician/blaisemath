@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import com.googlecode.blaisemath.geom.Anchor;
+import com.googlecode.blaisemath.primitive.Anchor;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
