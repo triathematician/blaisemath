@@ -148,7 +148,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         assert offset != null;
         return textAnchor.rectangleAnchoredAt(
                 primitive.getX() + offset.getX(),
-                primitive.getY() + offset.getY() - dimensions.height,
+                primitive.getY() + offset.getY(),
                 dimensions.width, dimensions.height);
     }
 

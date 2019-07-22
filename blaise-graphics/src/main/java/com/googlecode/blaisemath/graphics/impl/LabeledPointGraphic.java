@@ -42,7 +42,7 @@ public class LabeledPointGraphic<O, G> extends DelegatingPrimitiveGraphic<O, Poi
     
     public static final String P_LABEL_RENDERER = "labelRenderer";
 
-    private Renderer<AnchoredText,G> textRenderer;
+    private Renderer<AnchoredText, G> textRenderer;
     
     public LabeledPointGraphic() {
         this(null, new Point(), new ObjectStyler<>());
@@ -73,7 +73,7 @@ public class LabeledPointGraphic<O, G> extends DelegatingPrimitiveGraphic<O, Poi
      * @return label, or null if there is none visible
      */
     private String visibleLabel() {
-        if (styler.getLabelDelegate() == null || getLabelRenderer() == null
+        if (styler.getLabelDelegate() == null || textRenderer == null
                 || (styler.getLabelFilter() != null && !styler.getLabelFilter().test(source))) {
             return null;
         }
