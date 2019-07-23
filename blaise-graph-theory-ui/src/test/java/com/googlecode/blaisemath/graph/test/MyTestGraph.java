@@ -200,7 +200,7 @@ final class MyTestGraph implements Graph<String> {
 
     @Override
     public boolean allowsSelfLoops() {
-        return false;
+        return true;
     }
 
     @Override

@@ -29,6 +29,7 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import org.jdesktop.application.Action;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 /**
@@ -53,6 +54,7 @@ public class GraphAppCanvas extends GraphComponent {
             Double rad = scaler.apply(input).getDouble(Styles.MARKER_RADIUS, 10.0);
             Point2D offset = new Point2D.Double(rad, rad);
             return AttributeSet.withParent(Styles.DEFAULT_TEXT_STYLE)
+                    .and(Styles.FILL, new Color(128, 128, 64, 128))
                     .and(Styles.FONT_SIZE, 8f)
                     .and(Styles.OFFSET, offset);
         });

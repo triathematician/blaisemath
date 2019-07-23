@@ -65,6 +65,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>blaise-common</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics</artifactId>
             <version>3.0.4</version>
         </dependency>
@@ -78,6 +83,12 @@
             <artifactId>blaise-app</artifactId>
             <version>0.2.0-beta</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.googlecode.blaisemath</groupId>
+                    <artifactId>firestarter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
