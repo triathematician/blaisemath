@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-graph-theory-ui</artifactId>
-    <version>4.0.2-SNAPSHOT</version>
+    <version>4.0.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>blaise-graph-theory-ui</name>
@@ -66,12 +66,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics</artifactId>
-            <version>3.0.3</version>
+            <version>3.0.4</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics-ui</artifactId>
-            <version>3.0.3.1</version>
+            <version>3.0.4.1</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
