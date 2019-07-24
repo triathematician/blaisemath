@@ -65,12 +65,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-common</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics</artifactId>
-            <version>3.0.4</version>
+            <version>3.0.6</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.blaisemath</groupId>
