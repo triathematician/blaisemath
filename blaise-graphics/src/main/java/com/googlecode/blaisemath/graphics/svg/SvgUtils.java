@@ -63,7 +63,6 @@ public class SvgUtils {
      * @param component compatible component to encode
      * @param format image format type
      * @return encoded string
-     * @see PModNarrative for formats
      */
     public static String encode(Component component, String format) {
         return FORMAT_SVG_RAW.equals(format) ? encodeSvg(component, false)
