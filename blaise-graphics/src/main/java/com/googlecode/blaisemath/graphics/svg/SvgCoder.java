@@ -20,6 +20,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.encode.StringDecoder;
 import com.googlecode.blaisemath.encode.StringEncoder;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
@@ -29,6 +30,7 @@ import java.util.ServiceLoader;
  * Reads/writes graphics to SVG.
  * @author Elisha Peterson
  */
+@Beta
 public abstract class SvgCoder implements StringEncoder<SvgGraphic>, StringDecoder<SvgGraphic> {
 
     /**

@@ -20,6 +20,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.Graphics2D;
@@ -31,6 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Placeholder to decode SVG as an empty string.
  * @author Elisha Peterson
  */
+@Beta
 public class SvgCoderBlank extends SvgCoder {
     
     /** String produced when unable to export SVG */

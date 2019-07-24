@@ -20,6 +20,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #L%
  */
 
+import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.Dimension;
@@ -30,6 +31,7 @@ import java.awt.geom.Rectangle2D;
  * A graphic that represents SVG.
  * @author Elisha Peterson
  */
+@Beta
 public abstract class SvgGraphic extends Graphic<Graphics2D> {
     
     /** Size of the content. */
