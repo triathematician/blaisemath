@@ -61,22 +61,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graph-theory</artifactId>
-            <version>4.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-common</artifactId>
-            <version>1.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-graphics</artifactId>
-            <version>3.0.6</version>
+            <version>4.0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics-ui</artifactId>
-            <version>3.0.6</version>
+            <version>3.0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

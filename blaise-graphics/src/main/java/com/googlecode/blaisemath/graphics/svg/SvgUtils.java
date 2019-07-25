@@ -22,9 +22,10 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.util.ImageUtils;
+import com.googlecode.blaisemath.util.Images;
 import java.awt.Component;
 import java.awt.Container;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Base64;
@@ -63,11 +64,12 @@ public class SvgUtils {
      * @param component compatible component to encode
      * @param format image format type
      * @return encoded string
+     * @throws IOException if there's an encoding error
      */
-    public static String encode(Component component, String format) {
+    public static String encode(Component component, String format) throws IOException {
         return FORMAT_SVG_RAW.equals(format) ? encodeSvg(component, false)
                 : FORMAT_SVG_BASE64.equals(format) ? encodeSvg(component, true)
-                : ImageUtils.encodeImage(ImageUtils.renderImage(component), format);
+                : Images.encodeStandardBase64(Images.renderImage(component), format);
     }
 
     /**

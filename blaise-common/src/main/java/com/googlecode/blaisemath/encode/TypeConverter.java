@@ -22,9 +22,7 @@ package com.googlecode.blaisemath.encode;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.util.Colors;
-import com.googlecode.blaisemath.encode.Point2DCoder;
-import com.googlecode.blaisemath.encode.PointCoder;
-import com.googlecode.blaisemath.util.ReflectionUtils;
+import com.googlecode.blaisemath.util.Reflection;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -101,7 +99,7 @@ public class TypeConverter {
             return (X) TYPE_DECODERS.get(targetType).apply(value);
         }
         
-        Optional<Method> decoder = ReflectionUtils.findStaticMethod(targetType, 
+        Optional<Method> decoder = Reflection.staticMethod(targetType,
                 new String[]{"valueOf", "decode"}, String.class);
         if (decoder.isPresent()) {
             try {
@@ -110,7 +108,7 @@ public class TypeConverter {
                 LOG.log(Level.SEVERE, "Failed to invoke factory method "+decoder.get(), ex);
             }
         }
-        Optional<Constructor> con = ReflectionUtils.findConstructor(targetType, String.class);
+        Optional<Constructor> con = Reflection.constructor(targetType, String.class);
         if (con.isPresent()) {
             try {
                 return (X) con.get().newInstance(value);

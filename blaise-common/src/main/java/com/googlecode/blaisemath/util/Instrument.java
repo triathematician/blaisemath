@@ -149,6 +149,7 @@ public class Instrument {
         print(out, 10);
     }
 
+    @Beta
     private static class LogEvent {
         private final int id;
         private final long start;
