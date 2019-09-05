@@ -20,22 +20,16 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.awt.Insets;
 import java.io.IOException;
-import java.util.Map;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-/**
- * Deserializes {@link Insets} from a json object.
- * @author Elisha Peterson
- */
-public class InsetsDeserializer extends JsonDeserializer<Insets> {
+public class InsetsDeserializerTest {
 
-    @Override
-    public Insets deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        return p.readValueAs(InsetsProxy.class).toInsets();
+    @Test
+    public void testRead() throws IOException {
+        assertEquals(new Insets(1, 2, 0, 0), BlaiseJson.allMapper().readValue("{\"top\":1,\"left\":2}", Insets.class));
     }
-
+    
 }
