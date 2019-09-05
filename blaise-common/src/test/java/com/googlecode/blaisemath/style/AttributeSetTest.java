@@ -32,12 +32,10 @@ import static org.junit.Assert.*;
 @SuppressWarnings({"ConstantConditions", "OptionalGetWithoutIsPresent"})
 public class AttributeSetTest {
 
-    /**
-     * Test of toString method, of class AttributeSet.
-     */
     @Test
     public void testToString() {
         System.out.println("toString");
+        assertEquals("{ a: }", AttributeSet.of("a", null).toString());
         assertEquals("{  }", new AttributeSet().toString());
         assertEquals("{ a:1; b:2 }", AttributeSet.of("a", 1, "b", 2).toString());
         assertEquals("{ a:true }", AttributeSet.of("a", true).toString());
@@ -46,18 +44,12 @@ public class AttributeSetTest {
     
     //<editor-fold defaultstate="collapsed" desc="FACTORY/BUILDER TESTS">
 
-    /**
-     * Test of create method, of class AttributeSet.
-     */
     @Test
     public void testCreate() {
         System.out.println("create");
         assertEquals("{ a:1 }", AttributeSet.create(ImmutableMap.of("a", 1)).toString());
     }
 
-    /**
-     * Test of withParent method, of class AttributeSet.
-     */
     @Test
     public void testWithParent() {
         System.out.println("withParent");
@@ -73,9 +65,6 @@ public class AttributeSetTest {
         assertNull(set2.get("key"));
     }
 
-    /**
-     * Test of copyOf method, of class AttributeSet.
-     */
     @Test
     public void testCopyOf() {
         System.out.println("copyOf");
@@ -86,9 +75,6 @@ public class AttributeSetTest {
         assertSame(set.getParent().get(), copy.getParent().get());
     }
 
-    /**
-     * Test of flatCopyOf method, of class AttributeSet.
-     */
     @Test
     public void testFlatCopyOf() {
         System.out.println("flatCopyOf");
@@ -98,9 +84,6 @@ public class AttributeSetTest {
         assertEquals(Sets.newHashSet("a", "b"), result.getAttributes());
     }
 
-    /**
-     * Test of copy method, of class AttributeSet.
-     */
     @Test
     public void testCopy_AttributeSet_StringArr() {
         System.out.println("copy");
@@ -110,45 +93,29 @@ public class AttributeSetTest {
         assertFalse(b.getParent().isPresent());
     }
 
-    /**
-     * Test of of method, of class AttributeSet.
-     */
     @Test
     public void testOf_String_Object() {
         System.out.println("of");
         assertEquals("{ a:1 }", AttributeSet.of("a", 1).toString());
     }
 
-    /**
-     * Test of of method, of class AttributeSet.
-     */
     @Test
     public void testOf_4args() {
         System.out.println("of");
         assertEquals("{ a:1; b:2 }", AttributeSet.of("a", 1, "b", 2).toString());
     }
 
-    /**
-     * Test of of method, of class AttributeSet.
-     */
     @Test
     public void testOf_6args() {
         System.out.println("of");
         assertEquals("{ a:1; b:2; c:3 }", AttributeSet.of("a", 1, "b", 2, "c", 3).toString());
     }
 
-    /**
-     * Test of and method, of class AttributeSet.
-     */
     @Test
     public void testAnd() {
         System.out.println("and");
         assertEquals("{ a:1 }", new AttributeSet().and("a", 1).toString());
     }
-
-    /**
-     * Test of immutable method, of class AttributeSet.
-     */
     @Test
     public void testImmutable() {
         System.out.println("immutable");
@@ -163,9 +130,6 @@ public class AttributeSetTest {
         fail();
     }
 
-    /**
-     * Test of immutableWithParent method, of class AttributeSet.
-     */
     @Test
     public void testImmutableWithParent() {
         System.out.println("immutableWithParent");
@@ -182,9 +146,6 @@ public class AttributeSetTest {
         assertEquals(par, result.getParent().get());
     }
 
-    /**
-     * Test of copy method, of class AttributeSet.
-     */
     @Test
     public void testCopy_0args() {
         System.out.println("copy");
@@ -195,9 +156,6 @@ public class AttributeSetTest {
         assertEquals(1, result.get("a"));
     }
 
-    /**
-     * Test of flatCopy method, of class AttributeSet.
-     */
     @Test
     public void testFlatCopy() {
         System.out.println("flatCopy");
@@ -236,10 +194,7 @@ public class AttributeSetTest {
         AttributeSet instance = AttributeSet.of("a", 1);
         assertEquals(ImmutableMap.of("a", 1), instance.getAttributeMap());
     }
-
-    /**
-     * Test of getAllAttributes method, of class AttributeSet.
-     */
+    
     @Test
     public void testGetAllAttributes_Class() {
         System.out.println("getAllAttributes");
@@ -247,9 +202,6 @@ public class AttributeSetTest {
         assertEquals(ImmutableSet.of("a"), instance.getAllAttributes(Integer.class));
     }
 
-    /**
-     * Test of getAttributes method, of class AttributeSet.
-     */
     @Test
     public void testGetAttributes_0args() {
         AttributeSet par = AttributeSet.of("b", 2);
@@ -257,9 +209,6 @@ public class AttributeSetTest {
         assertEquals(ImmutableSet.of("a"), instance.getAttributes());
     }
 
-    /**
-     * Test of getAttributes method, of class AttributeSet.
-     */
     @Test
     public void testGetAttributes_Predicate() {
         System.out.println("getAttributes");
@@ -267,9 +216,6 @@ public class AttributeSetTest {
         assertEquals(ImmutableSet.of("a", "a2"), instance.getAttributes(s -> s.startsWith("a")));
     }
 
-    /**
-     * Test of contains method, of class AttributeSet.
-     */
     @Test
     public void testContains() {
         System.out.println("contains");
@@ -278,9 +224,6 @@ public class AttributeSetTest {
         assertFalse(as.contains("b"));
     }
 
-    /**
-     * Test of get method, of class AttributeSet.
-     */
     @Test
     public void testGet() {
         System.out.println("get");
@@ -290,9 +233,6 @@ public class AttributeSetTest {
         assertNull(as.get("c"));
     }
 
-    /**
-     * Test of getOrDefault method, of class AttributeSet.
-     */
     @Test
     public void testGetOrDefault() {
         System.out.println("getOrDefault");
@@ -395,6 +335,7 @@ public class AttributeSetTest {
         assertEquals(3, (int) instance.getInteger("d"));
         assertNull(instance.getInteger("e"));
 
+        
         // TODO - test failure case
     }
 

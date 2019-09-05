@@ -32,7 +32,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -47,22 +46,20 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class AttributeSet {
     
-    private static final Logger LOG = Logger.getLogger(AttributeSet.class.getName());
-    
     /** Constant representing the empty attribute set */
     public static final AttributeSet EMPTY = ImmutableAttributeSet.copyOf(new AttributeSet());
     
     /** The parent attribute set */
     protected @Nullable AttributeSet parent = null;
-    /** The map of style key/value pairs */
-    protected final Map<String,Object> attributeMap = Maps.newHashMap();
+    /** The map of style key/value pairs. May contain null values. */
+    protected final Map<String, Object> attributeMap = Maps.newHashMap();
     
     private final ChangeEvent changeEvent = new ChangeEvent(this);
     private final EventListenerList listenerList = new EventListenerList();
 
     @Override
     public String toString() {
-        return "{ " + Joiner.on("; ").withKeyValueSeparator(":").join(attributeMap) + " }";
+        return "{ " + Joiner.on("; ").withKeyValueSeparator(":").useForNull("").join(attributeMap) + " }";
     }
 
     //region FACTORY METHODS
