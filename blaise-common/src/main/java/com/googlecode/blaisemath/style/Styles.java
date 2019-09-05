@@ -316,7 +316,7 @@ public final class Styles {
         int bold = FONT_WEIGHT_BOLD.equals(style.getString(Styles.FONT_WEIGHT, null)) ? BOLD : 0;
         int italic = FONT_STYLE_ITALIC.equals(style.getString(Styles.FONT_STYLE, null)) ? ITALIC : 0;
         Integer pointSize = style.getInteger(Styles.FONT_SIZE, FONT_SIZE_DEFAULT);
-        return new Font(fontFace, BOLD | ITALIC, pointSize);
+        return new Font(fontFace, bold | italic, pointSize);
     }
     
     /**
