@@ -24,11 +24,13 @@ import com.google.common.annotations.Beta;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -46,10 +48,12 @@ public class UpdatingGraphicComposite<T, G> {
 
     /** Contains the graphic elements */
     private final GraphicComposite<G> composite = new GraphicComposite<>();
+    /** Cache of source objects and their locations */
+    private final Map<T, Rectangle2D> bounds = Maps.newLinkedHashMap();
     /** Index for the graphics, based on source object */
     private final BiMap<T, Graphic<G>> index = HashBiMap.create();
     /** Creates/updates the graphics */
-    private final GraphicUpdater<T,G> updater;
+    private GraphicUpdater<T, G> updater;
 
     public UpdatingGraphicComposite(GraphicUpdater<T, G> updater) {
         this.updater = requireNonNull(updater);
@@ -68,24 +72,32 @@ public class UpdatingGraphicComposite<T, G> {
     public GraphicUpdater<T, G> getUpdater() {
         return updater;
     }
+    
+    public void setUpdater(GraphicUpdater<T, G> gr) {
+        this.updater = gr;
+    }
 
     public void setObjects(Iterable<T> data, Function<T, @Nullable Rectangle2D> locMap) {
+        Collection<T> cData = data instanceof Collection ? (Collection<T>) data : Lists.newArrayList(data);
+        bounds.keySet().retainAll(cData);
+        
         Set<Graphic<G>> toRemove = Sets.newHashSet(composite.getGraphics());
         for (T t : data) {
+            bounds.put(t, locMap.apply(t));
             if (index.containsKey(t)) {
                 toRemove.remove(index.get(t));
             }
         }
         composite.removeGraphics(toRemove);
-        index.keySet().retainAll(data instanceof Collection ? (Collection<T>) data : Lists.newArrayList(data));
-
-        updateItemGraphics(locMap);
+        
+        index.keySet().retainAll(cData);
+        updateItemGraphics();
     }
 
-    private void updateItemGraphics(Function<T, @Nullable Rectangle2D> locMap) {
-        for (T obj : index.keySet()) {
+    private void updateItemGraphics() {
+        for (T obj : bounds.keySet()) {
             Graphic<G> existing = index.get(obj);
-            Rectangle2D loc = locMap.apply(obj);
+            Rectangle2D loc = bounds.get(obj);
             if (loc == null && existing != null) {
                 composite.removeGraphic(existing);
                 index.remove(obj);
