@@ -45,7 +45,7 @@ public final class AffineTransformBuilder {
      */
     public static AffineTransform transformingTo(Rectangle2D scaleTo, final Rectangle2D scaleFrom) {
         if (scaleTo.getWidth() == 0 || scaleTo.getHeight() == 0 || scaleFrom.getWidth() == 0 || scaleFrom.getHeight() == 0) {
-            LOG.log(Level.INFO, "Scaling with zero area rectangles: {0}, {1}. Returning identity transform.", new Object[]{scaleFrom, scaleTo});
+            LOG.log(Level.FINE, "Scaling with zero area rectangles: {0}, {1}. Returning identity transform.", new Object[]{scaleFrom, scaleTo});
             return new AffineTransform();
         }
         double scaleX = scaleFrom.getWidth() / scaleTo.getWidth();

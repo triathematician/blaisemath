@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.encode;
  * #L%
  */
 
-import com.googlecode.blaisemath.encode.ColorCoder;
 import com.googlecode.blaisemath.util.*;
 import java.awt.Color;
 
