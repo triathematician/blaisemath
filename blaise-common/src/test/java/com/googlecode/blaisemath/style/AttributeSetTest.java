@@ -328,15 +328,13 @@ public class AttributeSetTest {
     @Test
     public void testGetInteger_String() {
         System.out.println("getInteger");
-        AttributeSet instance = AttributeSet.of("a", "1", "b", 2, "c", null).and("d", 3.0);
+        AttributeSet instance = AttributeSet.of("a", "1", "b", 2, "c", null).and("d", 3.0).and("f", "val");
         assertEquals(1, (int) instance.getInteger("a"));
         assertEquals(2, (int) instance.getInteger("b"));
         assertNull(instance.getInteger("c"));
         assertEquals(3, (int) instance.getInteger("d"));
         assertNull(instance.getInteger("e"));
-
-        
-        // TODO - test failure case
+        assertNull(instance.getInteger("f"));
     }
 
     @Test

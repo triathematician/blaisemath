@@ -13,10 +13,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="blaise-common" />
-    <orderEntry type="module" module-name="blaise-common" />
-    <orderEntry type="module" module-name="blaise-graph-theory" />
-    <orderEntry type="module" module-name="blaise-common" />
+    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-graph-theory:4.0.3" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-common:1.0.5" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:11" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:11" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:26.0-jre" level="project" />
@@ -24,9 +22,9 @@
     <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.1.3" level="project" />
     <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.14" level="project" />
-    <orderEntry type="module" module-name="blaise-graphics-ui" />
-    <orderEntry type="module" module-name="blaise-graphics" />
-    <orderEntry type="module" module-name="firestarter" />
+    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-graphics-ui:3.0.7" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:blaise-graphics:3.0.7" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.blaisemath:firestarter:1.5.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.googlecode.blaisemath:blaise-app:0.2.0-beta" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jdesktop.bsaf:bsaf:1.9.2" level="project" />

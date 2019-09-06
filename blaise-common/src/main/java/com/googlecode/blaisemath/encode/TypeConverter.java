@@ -99,13 +99,12 @@ public class TypeConverter {
             return (X) TYPE_DECODERS.get(targetType).apply(value);
         }
         
-        Optional<Method> decoder = Reflection.staticMethod(targetType,
-                new String[]{"valueOf", "decode"}, String.class);
+        Optional<Method> decoder = Reflection.staticMethod(targetType, new String[]{"valueOf", "decode"}, String.class);
         if (decoder.isPresent()) {
             try {
                 return (X) decoder.get().invoke(null, value);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException ex) {
-                LOG.log(Level.SEVERE, "Failed to invoke factory method "+decoder.get(), ex);
+                LOG.log(Level.WARNING, "Failed to invoke factory method "+decoder.get(), ex);
             }
         }
         Optional<Constructor> con = Reflection.constructor(targetType, String.class);
@@ -113,7 +112,7 @@ public class TypeConverter {
             try {
                 return (X) con.get().newInstance(value);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                LOG.log(Level.SEVERE, "Failed to invoke constructor "+con.get(), ex);
+                LOG.log(Level.WARNING, "Failed to invoke constructor "+con.get(), ex);
             }
         }
         throw new UnsupportedOperationException("Cannot construct instance of " + targetType + " from a string.");
