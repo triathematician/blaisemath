@@ -27,6 +27,7 @@ import java.util.Map;
 import static com.google.common.collect.Maps.newHashMap;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Uses set positions if available to position nodes; otherwise uses a static layout.
@@ -45,7 +46,7 @@ public class FixableStaticLayout<P> implements StaticGraphLayout<P> {
      * @param parent parent layout, used as a default
      */
     public FixableStaticLayout(StaticGraphLayout<P> parent) {
-        this.parent = parent;
+        this.parent = requireNonNull(parent);
         positions = newHashMap();
     }
 
@@ -55,6 +56,7 @@ public class FixableStaticLayout<P> implements StaticGraphLayout<P> {
      * @param positions fixed positions
      */
     public FixableStaticLayout(StaticGraphLayout<P> parent, Map<?, Point2D.Double> positions) {
+        this.parent = requireNonNull(parent);
         this.positions = positions;
     }
 
