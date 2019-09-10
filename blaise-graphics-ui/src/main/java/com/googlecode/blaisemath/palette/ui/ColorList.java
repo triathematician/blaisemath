@@ -20,23 +20,18 @@ package com.googlecode.blaisemath.palette.ui;
  * #L%
  */
 
+import com.googlecode.firestarter.property.PropertySheetDialog;
 
-import com.googlecode.blaisemath.firestarter.PropertySheetDialog;
-import java.awt.Component;
+import javax.swing.*;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+
 import static java.util.Objects.requireNonNull;
-import javax.swing.UIManager;
 
 /**
  * UI with an editable list of colors, each of which may be associated with a string. This presents the colors

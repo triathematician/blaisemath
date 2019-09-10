@@ -23,9 +23,10 @@ package com.googlecode.blaisemath.style.ui;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.firestarter.PropertyModelSupport;
-import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.firestarter.property.PropertyModelSupport;
+import com.googlecode.firestarter.property.PropertySheet;
+
 import java.awt.Component;
 import java.util.List;
 import java.util.Map;

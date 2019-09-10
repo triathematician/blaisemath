@@ -57,21 +57,18 @@
         <!-- set license attributes for license plugin -->
         <license.organizationName>Elisha Peterson</license.organizationName>
         <license.licenseName>apache_v2</license.licenseName>
-
-        <guava.version>26.0-jre</guava.version>
-        <javafx.version>11</javafx.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
+            <version>28.1-jre</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
+            <version>11.0.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -83,14 +80,38 @@
     
     <build>
         <plugins>
-            <!-- compile to Java 1.8 -->
+            <!-- set minimum constraints on build environment -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.0.5</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>11</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- set sources and targets to Java 11 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>11</release>
                 </configuration>
             </plugin>
                 
@@ -106,9 +127,6 @@
                     </roots>
                     <canUpdateCopyright>true</canUpdateCopyright>
                     <sectionDelimiter>--</sectionDelimiter>
-                    <excludes>
-                        <exclude>**/com/google/**</exclude>
-                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -157,7 +175,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -172,7 +190,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.1</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>

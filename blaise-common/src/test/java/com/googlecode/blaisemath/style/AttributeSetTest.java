@@ -349,10 +349,10 @@ public class AttributeSetTest {
     public void testGetFloat_String() {
         System.out.println("getFloat");
         AttributeSet instance = AttributeSet.of("a", "1", "b", 2f, "c", null).and("d", 3);
-        assertEquals(new Float(1), instance.getFloat("a"));
-        assertEquals(new Float(2), instance.getFloat("b"));
+        assertEquals((Float) 1f, instance.getFloat("a"));
+        assertEquals((Float) 2f, instance.getFloat("b"));
         assertNull(instance.getFloat("c"));
-        assertEquals(new Float(3), instance.getFloat("d"));
+        assertEquals((Float) 3f, instance.getFloat("d"));
         assertNull(instance.getFloat("e"));
     }
 
@@ -360,8 +360,8 @@ public class AttributeSetTest {
     public void testGetFloat_String_Float() {
         System.out.println("getFloat");
         AttributeSet instance = AttributeSet.of("a", "1");
-        assertEquals(new Float(1), instance.getFloat("a", 2f));
-        assertEquals(new Float(2), instance.getFloat("b", 2f));
+        assertEquals((Float) 1f, instance.getFloat("a", 2f));
+        assertEquals((Float) 2f, instance.getFloat("b", 2f));
     }
 
     @Test

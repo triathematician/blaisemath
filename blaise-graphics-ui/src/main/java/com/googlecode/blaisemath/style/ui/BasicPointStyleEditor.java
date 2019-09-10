@@ -20,32 +20,21 @@ package com.googlecode.blaisemath.style.ui;
  * #L%
  */
 
-import com.googlecode.blaisemath.editor.ColorEditor;
 import com.googlecode.blaisemath.graphics.swing.render.MarkerRenderer;
 import com.googlecode.blaisemath.primitive.Marker;
 import com.googlecode.blaisemath.primitive.Markers;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.RenderingHints;
+import com.googlecode.firestarter.editor.ColorEditor;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.beans.Customizer;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * GUI form for editing an {@link AttributeSet} for points.

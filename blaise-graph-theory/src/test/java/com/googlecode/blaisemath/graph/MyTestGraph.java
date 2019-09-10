@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graph.test;
+package com.googlecode.blaisemath.graph;
 
 /*
  * #%L
@@ -176,6 +176,11 @@ final class MyTestGraph implements Graph<String> {
             return true;
         }
         return directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty();
+    }
+
+    @Override
+    public boolean hasEdgeConnecting(EndpointPair<String> edge) {
+        return hasEdgeConnecting(edge.nodeU(), edge.nodeV());
     }
 
     /**

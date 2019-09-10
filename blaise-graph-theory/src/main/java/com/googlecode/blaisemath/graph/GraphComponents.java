@@ -23,7 +23,6 @@ package com.googlecode.blaisemath.graph;
 import com.google.common.collect.Sets;
 import com.google.common.graph.Graph;
 import com.google.common.graph.Graphs;
-import com.google.errorprone.annotations.Immutable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +36,6 @@ import java.util.Set;
  *
  * @author Elisha Peterson
  */
-@Immutable
 final class GraphComponents<N> {
 
     /** What this class is modifying/describing. */

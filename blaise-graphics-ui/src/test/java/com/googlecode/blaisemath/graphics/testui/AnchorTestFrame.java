@@ -1,12 +1,9 @@
 package com.googlecode.blaisemath.graphics.testui;
 
 import com.google.common.collect.ImmutableMap;
-import com.googlecode.blaisemath.editor.EditorRegistration;
-import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
 import com.googlecode.blaisemath.graphics.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
@@ -17,7 +14,11 @@ import com.googlecode.blaisemath.primitive.AnchoredIcon;
 import com.googlecode.blaisemath.primitive.AnchoredImage;
 import com.googlecode.blaisemath.primitive.AnchoredText;
 import com.googlecode.blaisemath.style.ui.AttributeSetPropertyModel;
-import com.googlecode.blaisemath.util.RollupPanel;
+import com.googlecode.firestarter.property.PropertySheet;
+import com.googlecode.firestarter.editor.EditorRegistration;
+import com.googlecode.firestarter.swing.MPanel;
+import com.googlecode.firestarter.swing.RollupPanel;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;

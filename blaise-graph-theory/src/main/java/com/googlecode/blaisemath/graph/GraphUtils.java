@@ -22,8 +22,7 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.collect.*;
 import com.google.common.graph.*;
-import com.googlecode.blaisemath.graph.metrics.Degree;
-import com.googlecode.blaisemath.graph.util.Matrices;
+import com.googlecode.blaisemath.graph.internal.Matrices;
 
 import java.lang.reflect.Array;
 import java.util.*;

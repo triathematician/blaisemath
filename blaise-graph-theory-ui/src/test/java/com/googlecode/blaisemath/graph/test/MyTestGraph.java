@@ -178,6 +178,11 @@ final class MyTestGraph implements Graph<String> {
         return directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty();
     }
 
+    @Override
+    public boolean hasEdgeConnecting(EndpointPair<String> edge) {
+        return hasEdgeConnecting(edge.nodeU(), edge.nodeV());
+    }
+
     /**
      * Remove edge between two nodes, if it exists
      * @param n1 first node

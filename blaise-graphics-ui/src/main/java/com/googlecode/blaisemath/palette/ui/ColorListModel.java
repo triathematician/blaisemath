@@ -25,13 +25,14 @@ import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.palette.Palette;
 import com.googlecode.blaisemath.palette.Palettes;
 import com.googlecode.blaisemath.primitive.Marker;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Color;
 import static java.util.Collections.list;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.annotation.Nullable;
 import javax.swing.DefaultListModel;
 
 /**

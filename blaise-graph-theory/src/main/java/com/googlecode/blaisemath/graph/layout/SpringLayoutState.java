@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.graph.layout;
  */
 
 import com.google.common.collect.Lists;
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.googlecode.blaisemath.graph.IterativeGraphLayoutState;
 
 import java.awt.geom.Point2D;
@@ -44,13 +43,10 @@ public final class SpringLayoutState<N> extends IterativeGraphLayoutState<N> {
     private static final int REGION_N = 5;
 
     /** Regions used for localizing computation */
-    @GuardedBy("this")
     LayoutRegion<N>[][] regions;
     /** Points that are not in a region */
-    @GuardedBy("this")
     LayoutRegion<N> oRegion;
     /** List of all regions */
-    @GuardedBy("this")
     List<LayoutRegion<N>> allRegions;
     
     //region UPDATERS

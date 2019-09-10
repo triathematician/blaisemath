@@ -22,8 +22,6 @@ package com.googlecode.blaisemath.graph.test;
 
 import com.google.common.graph.Graph;
 import com.google.common.graph.Graphs;
-import com.googlecode.blaisemath.editor.EditorRegistration;
-import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.graph.layout.CircleLayout;
 import com.googlecode.blaisemath.graph.layout.CircleLayout.CircleLayoutParameters;
 import com.googlecode.blaisemath.graph.layout.RandomBoxLayout;
@@ -34,7 +32,9 @@ import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.util.Instrument;
-import com.googlecode.blaisemath.util.RollupPanel;
+import com.googlecode.firestarter.editor.EditorRegistration;
+import com.googlecode.firestarter.property.PropertySheet;
+import com.googlecode.firestarter.swing.RollupPanel;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;

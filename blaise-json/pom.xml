@@ -65,7 +65,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-common</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -79,20 +79,44 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
-            <!-- compile to Java 1.8 -->
+            <!-- set minimum constraints on build environment -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.0.5</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>11</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- set sources and targets to Java 11 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>11</release>
                 </configuration>
             </plugin>
-                
+
             <!-- Automatically update file headers, and add license file to distribution -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -116,7 +140,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- override to customize release plugin options -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -142,7 +166,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
             <!-- this is for building sources & javadocs, signing, & deploying to staging repo -->
@@ -153,7 +177,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -163,12 +187,12 @@
                             </execution>
                         </executions>
                     </plugin>
-            
+
                     <!-- build javadocs -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.1</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -178,7 +202,7 @@
                             </execution>
                         </executions>
                     </plugin>
-            
+
                     <!-- sign the artifacts with gpg (requires command-line utility) -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -194,8 +218,8 @@
                             </execution>
                         </executions>
                     </plugin>
-         
-                    <!-- deploy to staging repo -->   
+
+                    <!-- deploy to staging repo -->
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>

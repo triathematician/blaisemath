@@ -20,12 +20,12 @@ package com.googlecode.blaisemath.primitive.ui;
  * #L%
  */
 
-import com.googlecode.blaisemath.editor.MPanelEditorSupport;
 import com.googlecode.blaisemath.graphics.swing.render.ShapeRenderer;
 import com.googlecode.blaisemath.primitive.Marker;
 import com.googlecode.blaisemath.primitive.Markers;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.firestarter.editor.MPanelEditorSupport;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;

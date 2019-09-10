@@ -20,18 +20,16 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Arrays.asList;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
-import com.googlecode.blaisemath.graphics.GraphicComposite;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import javax.swing.*;
+import javax.swing.event.EventListenerList;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
@@ -41,8 +39,9 @@ import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import javax.swing.JPopupMenu;
-import javax.swing.event.EventListenerList;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Arrays.asList;
 
 /**
  * An object along with style and renderer information allowing it to be drawn

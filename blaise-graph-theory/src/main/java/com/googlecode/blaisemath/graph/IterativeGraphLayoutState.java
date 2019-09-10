@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.google.common.collect.Maps;
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 
 import java.awt.geom.Point2D;
 import java.util.HashSet;
@@ -39,17 +38,13 @@ import java.util.Set;
 public abstract class IterativeGraphLayoutState<N> {
     
     /** Current locations of nodes in the graph. */
-    @GuardedBy("this")
     protected final Map<N, Point2D.Double> loc = Maps.newHashMap();
     /** Current velocities of nodes in the graph. */
-    @GuardedBy("this")
     protected final Map<N, Point2D.Double> vel = Maps.newHashMap();
     
     /** Interim update locations to be applied at next opportunity. */
-    @GuardedBy("this")
     private final Map<N, Point2D.Double> updateLoc = Maps.newHashMap();
     /** If true, the in-memory state will be updated to include only nodes in the update. */
-    @GuardedBy("this")
     private boolean resetNodes = false;
     
     /** Cooling parameter, used to gradually reduce the impact of the layout */

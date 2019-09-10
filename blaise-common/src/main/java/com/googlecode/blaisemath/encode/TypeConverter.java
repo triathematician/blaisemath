@@ -22,7 +22,7 @@ package com.googlecode.blaisemath.encode;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.util.Colors;
-import com.googlecode.blaisemath.util.Reflection;
+import com.googlecode.blaisemath.internal.Reflection;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;

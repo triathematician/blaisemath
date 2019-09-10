@@ -20,13 +20,14 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
-import javax.annotation.Nullable;
 import java.awt.geom.Point2D;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import static java.util.Objects.requireNonNull;
 
 /**

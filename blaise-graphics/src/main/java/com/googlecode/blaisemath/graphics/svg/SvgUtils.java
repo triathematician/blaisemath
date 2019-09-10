@@ -23,6 +23,8 @@ package com.googlecode.blaisemath.graphics.svg;
 import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.util.Images;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.io.IOException;
@@ -34,7 +36,6 @@ import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 
 /**
  * Utilities for working with SVG.

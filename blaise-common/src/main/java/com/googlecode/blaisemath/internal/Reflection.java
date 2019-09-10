@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.util;
+package com.googlecode.blaisemath.internal;
 
 /*-
  * #%L
@@ -167,21 +167,18 @@ public class Reflection {
      * @param pd property descriptor
      * @param index index of property
      * @param value value for index
-     * @return true if successfully written
      */
-    public static boolean tryInvokeIndexedWrite(Object parent, IndexedPropertyDescriptor pd, int index, Object value) {
+    public static void tryInvokeIndexedWrite(Object parent, IndexedPropertyDescriptor pd, int index, Object value) {
         requireNonNull(parent);
         if (pd.getIndexedWriteMethod() == null) {
             LOG.log(Level.FINE, NO_WRITE_MSG);
-            return false;
+            return;
         }
         try {
             pd.getIndexedWriteMethod().invoke(parent, index, value);
-            return true;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             LOG.log(Level.FINE, FAIL_INVOKE_MSG, ex);
         }
-        return false;
     }
 
     //endregion
@@ -253,6 +250,7 @@ public class Reflection {
      * @param cls type to construct
      * @return new instance, or null if unable to instantiate
      */
+    @SuppressWarnings("unchecked")
     public static <T> T tryInvokeNew(Class<T> cls) {
         Constructor<T> con = null;
         try {
@@ -263,13 +261,13 @@ public class Reflection {
             LOG.log(Level.FINE, "Unable to get no-arg constructor for " + cls, ex);
         }
         if (con == null && Number.class.isAssignableFrom(cls)) {
-            return cls == Integer.class ? (T) new Integer(0)
-                    : cls == Double.class ? (T) new Double(0)
-                    : cls == Float.class ? (T) new Float(0)
-                    : cls == Long.class ? (T) new Long(0)
-                    : cls == Short.class ? (T) new Short((short) 0)
-                    : cls == Byte.class ? (T) new Byte((byte) 0)
-                    : cls == Character.class ? (T) new Character((char) 0)
+            return cls == Integer.class ? (T) (Integer) 0
+                    : cls == Double.class ? (T) (Double) 0.0
+                    : cls == Float.class ? (T) (Float) 0f
+                    : cls == Long.class ? (T) (Long) 0L
+                    : cls == Short.class ? (T) (Short) (short) 0
+                    : cls == Byte.class ? (T) (Byte) (byte) 0
+                    : cls == Character.class ? (T) (Character) (char) 0
                     : cls == Boolean.class ? (T) Boolean.TRUE
                     : null;
         }
@@ -307,5 +305,5 @@ public class Reflection {
     }
 
     //endregion
-    
+
 }

@@ -24,17 +24,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
-import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import static java.util.Objects.requireNonNull;
-import java.util.Set;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -66,14 +61,11 @@ public final class CoordinateManager<S, C> {
     /** Max size of the cache */
     private final int maxCacheSize;
     
-    /** Map with current objects and locations (stores the data) */
-    @GuardedBy("this")
+    /** Map with current objects and locations (stores the data). */
     private final ConcurrentMap<S, C> map = Maps.newConcurrentMap();
     /** Active objects. This value may be set. */
-    @GuardedBy("this")
     private Set<S> active = Sets.newConcurrentHashSet();
-    /** Cached objects */
-    @GuardedBy("this")
+    /** Cached objects. */
     private final Set<S> inactive = Sets.newConcurrentHashSet();
 
     /** Listeners that will receive updates. */

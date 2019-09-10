@@ -47,7 +47,7 @@ public final class GraphicMouseEvent extends MouseEvent {
      */
     public GraphicMouseEvent(MouseEvent evt, Point2D loc, Graphic gfc) {
         super((Component) evt.getSource(), 
-                evt.getID(), evt.getWhen(), evt.getModifiers(),
+                evt.getID(), evt.getWhen(), evt.getModifiersEx(),
                 evt.getX(), evt.getY(),
                 evt.getClickCount(), evt.isPopupTrigger(), evt.getButton());
         this.baseEvent = evt;

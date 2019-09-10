@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.googlecode.blaisemath.graphics.testui;
 
 /*
@@ -27,10 +23,11 @@ package com.googlecode.blaisemath.graphics.testui;
 import com.googlecode.blaisemath.style.AttributeSet;
 
 import static com.googlecode.blaisemath.style.Styles.*;
-import java.awt.Color;
+
+import java.awt.*;
 
 class RandomStyles {
-    
+
     static Color color() {
         return new Color((float)Math.random(),(float)Math.random(),(float)Math.random());
     }

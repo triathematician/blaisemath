@@ -20,24 +20,19 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.Graph;
 import com.google.common.graph.Graphs;
-import com.google.errorprone.annotations.Immutable;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * A storage-optimized graph component that caches degrees and divides nodes into isolates, leaf nodes, connector nodes
@@ -48,7 +43,6 @@ import java.util.Set;
  * 
  * @author Elisha Peterson
  */
-@Immutable
 public final class OptimizedGraph<N> implements Graph<N> {
 
     /** Base graph */
@@ -237,6 +231,11 @@ public final class OptimizedGraph<N> implements Graph<N> {
     @Override
     public boolean hasEdgeConnecting(N x, N y) {
         return neighbors.containsEntry(x, y);
+    }
+
+    @Override
+    public boolean hasEdgeConnecting(EndpointPair<N> pair) {
+        return hasEdgeConnecting(pair.nodeU(), pair.nodeV());
     }
 
     //endregion

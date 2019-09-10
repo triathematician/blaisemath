@@ -21,12 +21,10 @@ package com.googlecode.blaisemath.palette.ui;
  */
 
 import com.google.common.base.Objects;
-import com.googlecode.blaisemath.editor.ColorEditor;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import javax.swing.JPanel;
+import com.googlecode.firestarter.editor.ColorEditor;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Displays editable color.
