@@ -38,9 +38,9 @@ import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Instrument;
 import com.googlecode.blaisemath.util.swing.CanvasPainter;
-import com.googlecode.firestarter.editor.EditorRegistration;
-import com.googlecode.firestarter.property.PropertySheet;
-import com.googlecode.firestarter.swing.RollupPanel;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
+import com.googlecode.blaisemath.firestarter.property.PropertySheet;
+import com.googlecode.blaisemath.firestarter.swing.RollupPanel;
 
 import javax.swing.*;
 import java.awt.*;

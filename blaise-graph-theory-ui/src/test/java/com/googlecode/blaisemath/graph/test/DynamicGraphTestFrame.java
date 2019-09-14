@@ -32,9 +32,9 @@ import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.util.Instrument;
-import com.googlecode.firestarter.editor.EditorRegistration;
-import com.googlecode.firestarter.property.PropertySheet;
-import com.googlecode.firestarter.swing.RollupPanel;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
+import com.googlecode.blaisemath.firestarter.property.PropertySheet;
+import com.googlecode.blaisemath.firestarter.swing.RollupPanel;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
