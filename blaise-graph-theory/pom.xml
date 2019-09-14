@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     
     <name>blaise-graph-theory</name>
-    <description>Graph definitions, algorithms, and visualization.</description>
+    <description>Graph definitions and algorithms.</description>
     <url>http://blaisemath.googlecode.com</url>
     <inceptionYear>2009</inceptionYear>
     <licenses>
