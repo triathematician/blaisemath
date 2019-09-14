@@ -27,4 +27,6 @@ module com.googlecode.blaisemath.graphtheory.ui {
     requires com.googlecode.blaisemath.common;
     requires com.googlecode.blaisemath.graphics;
     requires com.googlecode.blaisemath.graphtheory;
+
+    exports com.googlecode.blaisemath.graph.view;
 }

@@ -25,4 +25,6 @@ module com.googlecode.blaisemath.json {
     requires com.fasterxml.jackson.core;
 
     requires com.googlecode.blaisemath.common;
+
+    exports com.googlecode.blaisemath.json;
 }
