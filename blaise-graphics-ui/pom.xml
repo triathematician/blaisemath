@@ -9,7 +9,7 @@
     
     <name>blaise-graphics-ui</name>
     <description>
-      Swing UI support for Blaise components.
+      Swing UI support for graphics components.
     </description>
     <url>https://github.com/triathematician/blaisemath</url>
     <inceptionYear>2019</inceptionYear>

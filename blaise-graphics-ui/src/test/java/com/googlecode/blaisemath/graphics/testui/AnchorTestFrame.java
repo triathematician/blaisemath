@@ -14,10 +14,10 @@ import com.googlecode.blaisemath.primitive.AnchoredIcon;
 import com.googlecode.blaisemath.primitive.AnchoredImage;
 import com.googlecode.blaisemath.primitive.AnchoredText;
 import com.googlecode.blaisemath.style.ui.AttributeSetPropertyModel;
-import com.googlecode.firestarter.property.PropertySheet;
-import com.googlecode.firestarter.editor.EditorRegistration;
-import com.googlecode.firestarter.swing.MPanel;
-import com.googlecode.firestarter.swing.RollupPanel;
+import com.googlecode.blaisemath.firestarter.property.PropertySheet;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
+import com.googlecode.blaisemath.firestarter.swing.MPanel;
+import com.googlecode.blaisemath.firestarter.swing.RollupPanel;
 
 import java.awt.Color;
 import java.awt.Component;

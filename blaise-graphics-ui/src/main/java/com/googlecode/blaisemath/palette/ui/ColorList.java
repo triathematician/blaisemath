@@ -20,7 +20,7 @@ package com.googlecode.blaisemath.palette.ui;
  * #L%
  */
 
-import com.googlecode.firestarter.property.PropertySheetDialog;
+import com.googlecode.blaisemath.firestarter.property.PropertySheetDialog;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;

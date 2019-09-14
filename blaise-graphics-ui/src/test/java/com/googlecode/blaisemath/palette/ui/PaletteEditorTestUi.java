@@ -24,7 +24,7 @@ import com.googlecode.blaisemath.palette.ColorScheme;
 import com.googlecode.blaisemath.palette.ColorSchemes;
 import com.googlecode.blaisemath.palette.MutablePalette;
 import com.googlecode.blaisemath.palette.Palettes;
-import com.googlecode.firestarter.editor.EditorRegistration;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
 
 import javax.swing.*;
 

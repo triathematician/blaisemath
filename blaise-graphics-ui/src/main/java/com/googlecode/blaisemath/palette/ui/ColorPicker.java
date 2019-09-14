@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.palette.ui;
  */
 
 import com.google.common.base.Objects;
-import com.googlecode.firestarter.editor.ColorEditor;
+import com.googlecode.blaisemath.firestarter.editor.ColorEditor;
 
 import javax.swing.*;
 import java.awt.*;

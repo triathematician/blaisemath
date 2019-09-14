@@ -22,13 +22,14 @@ package com.googlecode.blaisemath.style.ui;
 
 
 import com.google.common.collect.ImmutableMap;
+import com.googlecode.blaisemath.firestarter.swing.RollupPanel;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.primitive.Marker;
 import com.googlecode.blaisemath.primitive.ui.MarkerEditor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.firestarter.property.PropertySheet;
-import com.googlecode.firestarter.editor.EditorRegistration;
+import com.googlecode.blaisemath.firestarter.property.PropertySheet;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
 
 import java.awt.*;
 import java.beans.PropertyEditorManager;
@@ -36,11 +37,11 @@ import java.beans.PropertyEditorManager;
 public class AttributeSetPropertyModelTestFrame extends javax.swing.JFrame {
 
     private com.googlecode.blaisemath.graphics.swing.JGraphicComponent canvas;
-    private com.googlecode.firestarter.swing.RollupPanel rollups;
+    private RollupPanel rollups;
 
     public AttributeSetPropertyModelTestFrame() {
 
-        rollups = new com.googlecode.firestarter.swing.RollupPanel();
+        rollups = new RollupPanel();
         canvas = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);

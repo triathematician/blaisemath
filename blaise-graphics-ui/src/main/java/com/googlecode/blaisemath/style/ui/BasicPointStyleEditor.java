@@ -25,7 +25,7 @@ import com.googlecode.blaisemath.primitive.Marker;
 import com.googlecode.blaisemath.primitive.Markers;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.firestarter.editor.ColorEditor;
+import com.googlecode.blaisemath.firestarter.editor.ColorEditor;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

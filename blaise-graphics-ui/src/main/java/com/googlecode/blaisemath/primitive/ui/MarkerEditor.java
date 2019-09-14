@@ -25,7 +25,7 @@ import com.googlecode.blaisemath.primitive.Marker;
 import com.googlecode.blaisemath.primitive.Markers;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.firestarter.editor.MPanelEditorSupport;
+import com.googlecode.blaisemath.firestarter.editor.MPanelEditorSupport;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;
