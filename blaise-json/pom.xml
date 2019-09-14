@@ -9,7 +9,7 @@
     
     <name>blaise-json</name>
     <description>
-      Support for JSON serialization of blaisemath and some Java types.
+      Support for JSON serialization of blaisemath and some Java types, using Jackson.
     </description>
     <url>https://github.com/triathematician/blaisemath</url>
     <inceptionYear>2019</inceptionYear>
@@ -65,7 +65,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-common</artifactId>
-            <version>1.0.7-SNAPSHOT</version>
+            <version>1.0.7</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
