@@ -25,10 +25,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.Range;
 import com.googlecode.blaisemath.palette.Palette;
 import com.googlecode.blaisemath.style.AttributeSet;
-import java.awt.Color;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
+
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -61,6 +59,8 @@ public class BlaiseJson {
         sm.addSerializer(Point.class, new PointSerializer());
         sm.addDeserializer(Point.class, new PointDeserializer());
         sm.addDeserializer(Point2D.class, new Point2DDeserializer());
+        sm.addSerializer(Font.class, new FontSerializer());
+        sm.addDeserializer(Font.class, new FontDeserializer());
         sm.addSerializer(AttributeSet.class, new AttributeSetSerializer());
         sm.addDeserializer(AttributeSet.class, new AttributeSetDeserializer());
         sm.addSerializer(Palette.class, new PaletteSerializer());
@@ -101,6 +101,8 @@ public class BlaiseJson {
         sm.addSerializer(Point.class, new PointSerializer());
         sm.addDeserializer(Point.class, new PointDeserializer());
         sm.addDeserializer(Point2D.Double.class, new Point2DDeserializer());
+        sm.addSerializer(Font.class, new FontSerializer());
+        sm.addDeserializer(Font.class, new FontDeserializer());
         return sm;
     }
 
