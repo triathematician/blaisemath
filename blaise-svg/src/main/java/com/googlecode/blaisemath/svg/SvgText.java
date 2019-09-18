@@ -20,17 +20,18 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.geom.AnchoredText;
+import com.googlecode.blaisemath.primitive.AnchoredText;
+
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * SVG text object.
  *
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="text")
+@XmlRootElement(name="text")
 public final class SvgText extends SvgElement {
     
     private static final TextConverter CONVERTER_INST = new TextConverter();
@@ -52,7 +53,7 @@ public final class SvgText extends SvgElement {
     
     //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getX() {
         return x;
     }
@@ -61,7 +62,7 @@ public final class SvgText extends SvgElement {
         this.x = x;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getY() {
         return y;
     }

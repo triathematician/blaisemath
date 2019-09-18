@@ -20,16 +20,18 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.json.AttributeSetDeserializer;
+import com.googlecode.blaisemath.json.AttributeSetSerializer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import javax.xml.bind.annotation.XmlAnyAttribute;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.namespace.QName;
 import java.util.Map;
 
 /**
@@ -45,7 +47,7 @@ public abstract class SvgElement {
     protected String id;
     protected String value;
     private AttributeSet style = null;
-    private Map<String, Object> otherAttr;
+    private Map<QName, Object> otherAttr;
 
     protected SvgElement() {
         this.tag = null;
@@ -61,7 +63,7 @@ public abstract class SvgElement {
      * Get the tag associated with the object.
      * @return tag
      */
-    @JsonIgnore
+    @XmlTransient
     public String getTag() {
         return tag;
     }
@@ -70,7 +72,7 @@ public abstract class SvgElement {
      * Get the id associated with the object.
      * @return id
      */
-    @JsonIgnore
+    @XmlAttribute
     public String getId() {
         return id;
     }
@@ -83,32 +85,26 @@ public abstract class SvgElement {
         this.id = id;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
-    @JsonSerialize(using = AttributeSetSerializer.class)
+    @XmlAttribute
+    @XmlJavaTypeAdapter(AttributeSetAdapter.class)
     public @Nullable AttributeSet getStyle() {
         return style;
     }
 
-    @JsonDeserialize(using = AttributeSetDeserializer.class)
     public void setStyle(@Nullable AttributeSet style) {
         this.style = style;
     }
-    
-    @JsonAnyGetter
-    public Map<String,Object> getOtherAttributes() {
+
+    @XmlAnyAttribute
+    public Map<QName,Object> getOtherAttributes() {
         return otherAttr;
     }
-    
-    public void setOtherAttributes(Map<String,Object> other) {
+
+    public void setOtherAttributes(Map<QName,Object> other) {
         this.otherAttr = other;
     }
 
-    @JsonAnySetter
-    public void setOtherAttribute(String key, Object value) {
-        this.otherAttr.put(key, value);
-    }
-    
-    @JacksonXmlText
+    @XmlValue
     public String getValue() {
         return value;
     }

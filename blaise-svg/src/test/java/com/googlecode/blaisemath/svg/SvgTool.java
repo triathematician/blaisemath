@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.io.Files;
-import com.googlecode.blaisemath.graphics.svg.SvgGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;

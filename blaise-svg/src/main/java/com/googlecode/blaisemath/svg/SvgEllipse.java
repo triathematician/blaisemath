@@ -20,10 +20,10 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.geom.Ellipse2D;
 
 /**
@@ -31,7 +31,7 @@ import java.awt.geom.Ellipse2D;
  *
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="ellipse")
+@XmlRootElement(name="ellipse")
 public final class SvgEllipse extends SvgElement {
     
     private static final EllipseConverter CONVERTER_INST = new EllipseConverter();
@@ -59,7 +59,7 @@ public final class SvgEllipse extends SvgElement {
 
     //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getCx() {
         return cx;
     }
@@ -68,7 +68,7 @@ public final class SvgEllipse extends SvgElement {
         this.cx = cx;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getCy() {
         return cy;
     }
@@ -77,7 +77,7 @@ public final class SvgEllipse extends SvgElement {
         this.cy = cy;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getRx() {
         return rx;
     }
@@ -86,7 +86,7 @@ public final class SvgEllipse extends SvgElement {
         this.rx = rx;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getRy() {
         return ry;
     }

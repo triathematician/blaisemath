@@ -20,10 +20,10 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 
@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="polyline")
+@XmlRootElement(name="polyline")
 public final class SvgPolyline extends SvgElement {
     
     private static final PolylineConverter CONVERTER_INST = new PolylineConverter();
@@ -50,10 +50,8 @@ public final class SvgPolyline extends SvgElement {
         super("polyline");
         this.ptStr = checkPointString(pts);
     }
-    
-    //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true, localName="points")
+    @XmlAttribute(name="points")
     public String getPointStr() {
         return ptStr;
     }
@@ -61,9 +59,7 @@ public final class SvgPolyline extends SvgElement {
     public void setPointStr(String ptStr) {
         this.ptStr = checkPointString(ptStr);
     }
-    
-    //endregion
-    
+
     public static Converter<SvgPolyline, GeneralPath> shapeConverter() {
         return CONVERTER_INST;
     }

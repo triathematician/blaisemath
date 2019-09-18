@@ -20,16 +20,17 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
+
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.geom.Line2D;
 
 /**
  * SVG-compatible line.
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="line")
+@XmlRootElement(name="line")
 public final class SvgLine extends SvgElement {
     
     private static final LineConverter CONVERTER_INST = new LineConverter();
@@ -53,7 +54,7 @@ public final class SvgLine extends SvgElement {
 
     //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getX1() {
         return x1;
     }
@@ -62,7 +63,7 @@ public final class SvgLine extends SvgElement {
         this.x1 = x1;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getY1() {
         return y1;
     }
@@ -71,7 +72,7 @@ public final class SvgLine extends SvgElement {
         this.y1 = y1;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getX2() {
         return x2;
     }
@@ -80,7 +81,7 @@ public final class SvgLine extends SvgElement {
         this.x2 = x2;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getY2() {
         return y2;
     }

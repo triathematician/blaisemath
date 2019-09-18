@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graphics.svg;
+package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
@@ -21,8 +21,6 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.svg.SvgElement;
-import com.googlecode.blaisemath.svg.SvgRoot;
 
 import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;

@@ -37,7 +37,7 @@ package com.googlecode.blaisemath.svg;
 
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.geom.AnchoredImage;
+import com.googlecode.blaisemath.primitive.AnchoredImage;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -57,7 +57,7 @@ public class SvgImageTest extends TestCase {
         i.setImageRef("file:cherries.png");
         assertTrue(i.getImage() == null);
         
-        i.setImageRef("file:src/test/resources/com/googlecode/blaisemath/util/resources/cherries.png");
+        i.setImageRef("file:src/test/resources/com/googlecode/blaisemath/svg/resources/cherries.png");
         assertTrue(i.getImage() != null);
         assertEquals(20.0, i.getWidth());
         assertEquals(20.0, i.getHeight());

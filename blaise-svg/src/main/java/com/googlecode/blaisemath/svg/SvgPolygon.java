@@ -20,20 +20,20 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
-import static com.googlecode.blaisemath.svg.SvgPolyline.checkPointString;
-import static com.googlecode.blaisemath.svg.SvgPolyline.toPath;
-import static com.googlecode.blaisemath.svg.SvgPolyline.toPathString;
+
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.geom.GeneralPath;
+
+import static com.googlecode.blaisemath.svg.SvgPolyline.*;
 
 /**
  * SVG Polygon object.
  *
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="polygon")
+@XmlRootElement(name="polygon")
 public final class SvgPolygon extends SvgElement {
     
     private static final PolygonConverter CONVERTER_INST = new PolygonConverter();
@@ -48,11 +48,8 @@ public final class SvgPolygon extends SvgElement {
         super("polygon");
         this.ptStr = checkPointString(pts);
     }
-    
-    //region PROPERTIES
 
-
-    @JacksonXmlProperty(isAttribute = true, localName="points")
+    @XmlAttribute(name="points")
     public String getPointStr() {
         return ptStr;
     }
@@ -60,9 +57,7 @@ public final class SvgPolygon extends SvgElement {
     public void setPointStr(String pathStr) {
         this.ptStr = checkPointString(pathStr);
     }
-    
-    //endregion
-    
+
     public static Converter<SvgPolygon, GeneralPath> shapeConverter() {
         return CONVERTER_INST;
     }

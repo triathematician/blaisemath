@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graphics.svg;
+package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
@@ -20,18 +20,14 @@ package com.googlecode.blaisemath.graphics.svg;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.googlecode.blaisemath.geom.AffineTransformBuilder;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicComposite;
 import com.googlecode.blaisemath.graphics.GraphicUtils;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import com.googlecode.blaisemath.svg.SvgElement;
-import com.googlecode.blaisemath.svg.SvgRoot;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -41,7 +37,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPopupMenu;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Uses an {@link SvgElement} as a primitive to be rendered on a {@link JGraphicComponent}.
@@ -136,7 +133,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
             return null;
         }
         Rectangle2D viewBox = ((SvgRoot) element).getViewBoxAsRectangle();
-        return viewBox == null ? null : PanAndZoomHandler.scaleRectTransform(graphicBounds, viewBox);
+        return viewBox == null ? null : AffineTransformBuilder.transformingTo(graphicBounds, viewBox);
     }
     
     /** Inverse transform. Transforms the graphic bounds to the view box. */

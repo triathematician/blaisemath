@@ -20,10 +20,10 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="rect")
+@XmlRootElement(name="rect")
 public final class SvgRectangle extends SvgElement {
     
     private static final RectangleConverter CONVERTER_INST = new RectangleConverter();
@@ -75,7 +75,7 @@ public final class SvgRectangle extends SvgElement {
 
     //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getX() {
         return x;
     }
@@ -83,8 +83,8 @@ public final class SvgRectangle extends SvgElement {
     public void setX(double x) {
         this.x = x;
     }
-    
-    @JacksonXmlProperty(isAttribute = true)
+
+    @XmlAttribute
     public double getY() {
         return y;
     }
@@ -93,7 +93,7 @@ public final class SvgRectangle extends SvgElement {
         this.y = y;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getWidth() {
         return width;
     }
@@ -102,7 +102,7 @@ public final class SvgRectangle extends SvgElement {
         this.width = width;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getHeight() {
         return height;
     }
@@ -111,7 +111,7 @@ public final class SvgRectangle extends SvgElement {
         this.height = height;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getRx() {
         return rx;
     }
@@ -120,7 +120,7 @@ public final class SvgRectangle extends SvgElement {
         this.rx = rx;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getRy() {
         return ry;
     }

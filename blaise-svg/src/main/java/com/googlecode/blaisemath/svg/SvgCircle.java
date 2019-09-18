@@ -20,10 +20,10 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.geom.Ellipse2D;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="circle")
+@XmlRootElement(name="circle")
 public final class SvgCircle extends SvgElement {
     
     private static final CircleConverter CONVERTER_INST = new CircleConverter();
@@ -59,7 +59,7 @@ public final class SvgCircle extends SvgElement {
 
     //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getCx() {
         return cx;
     }
@@ -68,7 +68,7 @@ public final class SvgCircle extends SvgElement {
         this.cx = cx;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getCy() {
         return cy;
     }
@@ -77,7 +77,7 @@ public final class SvgCircle extends SvgElement {
         this.cy = cy;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getR() {
         return r;
     }

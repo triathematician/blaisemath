@@ -20,14 +20,13 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.svg.io.SvgIo;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.List;
@@ -41,7 +40,7 @@ import static java.util.stream.Collectors.toList;
  * Root element for SVG object tree.
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="svg")
+@XmlRootElement(name="svg", namespace="http://www.w3.org/2000/svg")
 public final class SvgRoot extends SvgGroup {
 
     private static final Logger LOG = Logger.getLogger(SvgRoot.class.getName());
@@ -56,7 +55,7 @@ public final class SvgRoot extends SvgGroup {
     
     //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public String getViewBox() {
         return viewBox == null ? null : String.format("%d %d %d %d", (int) viewBox.getMinX(), (int) viewBox.getMinY(), 
                 (int) viewBox.getWidth(), (int) viewBox.getHeight());
@@ -76,7 +75,7 @@ public final class SvgRoot extends SvgGroup {
         }
     }
 
-    @JsonIgnore
+    @XmlTransient
     public Rectangle2D getViewBoxAsRectangle() {
         return viewBox;
     }
@@ -85,7 +84,7 @@ public final class SvgRoot extends SvgGroup {
         this.viewBox = viewBox;
     }
 
-    @JsonIgnore
+    @XmlTransient
     public double getHeight() {
         return height;
     }
@@ -94,7 +93,7 @@ public final class SvgRoot extends SvgGroup {
         this.height = height;
     }
 
-    @JacksonXmlProperty(isAttribute = true, localName = "height")
+    @XmlAttribute(name = "height")
     private String getHeightString() {
         return height+"";
     }
@@ -103,7 +102,7 @@ public final class SvgRoot extends SvgGroup {
         setHeight(parseLength(ht));
     }
 
-    @JsonIgnore
+    @XmlTransient
     public double getWidth() {
         return width;
     }
@@ -112,7 +111,7 @@ public final class SvgRoot extends SvgGroup {
         this.width = width;
     }
 
-    @JacksonXmlProperty(isAttribute = true, localName = "width")
+    @XmlAttribute(name = "width")
     private String getWidthString() {
         return width+"";
     }

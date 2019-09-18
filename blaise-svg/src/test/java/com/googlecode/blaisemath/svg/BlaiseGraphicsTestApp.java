@@ -23,38 +23,33 @@ package com.googlecode.blaisemath.svg;
 import com.google.common.base.Functions;
 import com.google.common.collect.Maps;
 import com.google.common.graph.EndpointPair;
-import com.googlecode.blaisemath.geom.AnchoredIcon;
-import com.googlecode.blaisemath.geom.AnchoredText;
-import com.googlecode.blaisemath.graphics.*;
-import com.googlecode.blaisemath.graphics.editor.BasicPointStyleEditor;
-import com.googlecode.blaisemath.graphics.impl.BasicPointSetGraphic;
-import com.googlecode.blaisemath.graphics.impl.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.impl.DelegatingPointSetGraphic;
-import com.googlecode.blaisemath.graphics.svg.SvgElementGraphicConverter;
-import com.googlecode.blaisemath.graphics.swing.*;
-import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
-import com.googlecode.blaisemath.style.Anchor;
+import com.googlecode.blaisemath.geom.Points;
+import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.impl.*;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
+import com.googlecode.blaisemath.graphics.swing.render.*;
+import com.googlecode.blaisemath.primitive.*;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.style.ui.BasicPointStyleEditor;
 import com.googlecode.blaisemath.util.Colors;
-import com.googlecode.blaisemath.util.Images;
-import com.googlecode.blaisemath.util.geom.Points;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -70,12 +65,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     
     @Action
-    public void printSVG() throws JAXBException {
+    public void printSVG() throws IOException {
         SvgRoot root = SvgElementGraphicConverter.componentToSvg(canvas1);
-        JAXBContext jc = JAXBContext.newInstance(SvgRoot.class);
-        Marshaller m = jc.createMarshaller();
-        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        m.marshal(root, System.out);
+        SvgIo.write(root, System.out);
     }
 
     //region GENERAL
@@ -85,7 +77,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         root1.clearGraphics();
     }
     
-    private Point2D randomPoint() {
+    private Point2D.Double randomPoint() {
         return new Point2D.Double(Math.random()*canvas1.getWidth(), Math.random()*canvas1.getHeight());
     }
     
@@ -154,7 +146,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     private Icon randomIcon() {
         boolean img = Math.random() > .5;
         if (img) {
-            URL iconUrl = Images.class.getResource("resources/cherries.png");
+            URL iconUrl = SvgImage.class.getResource("resources/cherries.png");
             return new ImageIcon(iconUrl);
         } else {
             return new Icon() {
@@ -210,9 +202,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         Set<String> list = new HashSet<String>(Arrays.asList(
                 "Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", 
                 "Sequoia", "Asher Matthew Peterson", "Elisha", "Bob the Builder"));
-        Map<String,Point2D> crds = Maps.newLinkedHashMap();
+        Map<String,Point2D.Double> crds = Maps.newLinkedHashMap();
         for (String s : list) {
-            crds.put(s, new Point(10*s.length(), 50 + 10*s.indexOf(" ")));
+            crds.put(s, new Point2D.Double(10*s.length(), 50 + 10*s.indexOf(" ")));
         }
         DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<String,Graphics2D>(
                 MarkerRenderer.getInstance(), TextRenderer.getInstance());
@@ -238,7 +230,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void addDelegatingPointSet2() {
-        Map<Integer,Point2D> points2 = Maps.newLinkedHashMap();
+        Map<Integer,Point2D.Double> points2 = Maps.newLinkedHashMap();
         for (int i = 1; i <= 10; i++) {
             points2.put(i, randomPoint());
         }
@@ -270,7 +262,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addDelegatingGraph() {
         // initialize graph object
-        final Map<Integer,Point2D> pts = Maps.newLinkedHashMap();
+        final Map<Integer,Point2D.Double> pts = Maps.newLinkedHashMap();
         for (int i = 0; i < 15; i++) {
             pts.put(i, randomPoint());
         }         
@@ -337,7 +329,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void add2Point() {
         Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphic ag = new TwoPointGraphic(p1, p2);
+        TwoPointGraphic ag = new TwoPointGraphic(p1, p2, MarkerRenderer.getInstance());
         ag.setDefaultTooltip("<html><b>Two Points</b>: <i>" + p1 + ", " + p2 + "</i>");
         ag.setDragEnabled(true);
         root1.addGraphic(ag);        
@@ -346,7 +338,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addDraggableSegment() {
         Point2D p1 = randomPoint(), p2 = randomPoint();
-        SegmentGraphic ag = new SegmentGraphic(p1, p2, ArrowLocation.NONE);
+        SegmentGraphic ag = new SegmentGraphic(p1, p2, ArrowLocation.NONE, MarkerRenderer.getInstance(), PathRenderer.getInstance());
         ag.setDefaultTooltip("<html><b>Segment</b>: <i>" + p1 + ", " + p2 + "</i>");
         ag.setDragEnabled(true);
         root1.addGraphic(ag);        
@@ -355,7 +347,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addArrow() {      
         Point2D p1 = randomPoint(), p2 = randomPoint();
-        SegmentGraphic ag = new SegmentGraphic(p1, p2, ArrowLocation.END);
+        SegmentGraphic ag = new SegmentGraphic(p1, p2, ArrowLocation.END, MarkerRenderer.getInstance(), PathRenderer.getInstance());
         ag.setDefaultTooltip("<html><b>Arrow</b>: <i>" + p1 + ", " + p2 + "</i>");
         ag.setDragEnabled(true);
         root1.addGraphic(ag);
@@ -368,7 +360,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addRay() {
       Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphic ag = new TwoPointGraphic(p1, p2);
+        TwoPointGraphic ag = new TwoPointGraphic(p1, p2, MarkerRenderer.getInstance());
         MarkerRendererToClip rend = new MarkerRendererToClip();
         rend.setRayRenderer(new ArrowPathRenderer(ArrowLocation.END));
         ag.getStartGraphic().setRenderer(rend);
@@ -380,7 +372,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addLine() {
       Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphic ag = new TwoPointGraphic(p1, p2);
+        TwoPointGraphic ag = new TwoPointGraphic(p1, p2, MarkerRenderer.getInstance());
         MarkerRendererToClip rend = new MarkerRendererToClip();
         rend.setRayRenderer(new ArrowPathRenderer(ArrowLocation.BOTH));
         rend.setExtendBothDirections(true);

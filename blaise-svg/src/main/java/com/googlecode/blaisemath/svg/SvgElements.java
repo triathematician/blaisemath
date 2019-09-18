@@ -22,34 +22,23 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.geom.*;
-import com.googlecode.blaisemath.graphics.swing.StyledText;
-import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
+import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
+import com.googlecode.blaisemath.graphics.Renderer;
+import com.googlecode.blaisemath.graphics.swing.render.WrappedTextRenderer;
+import com.googlecode.blaisemath.primitive.*;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Images;
-import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RectangularShape;
-import java.awt.geom.RoundRectangle2D;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
 
 /**
  * Factory methods for converting to/from SVG Objects.

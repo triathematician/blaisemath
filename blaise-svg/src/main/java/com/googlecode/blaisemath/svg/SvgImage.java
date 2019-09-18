@@ -20,15 +20,15 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.geom.AnchoredImage;
+import com.googlecode.blaisemath.primitive.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.imageio.ImageIO;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -42,7 +42,7 @@ import java.util.logging.Logger;
  *
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="image")
+@XmlRootElement(name="image")
 public final class SvgImage extends SvgElement {
     
     private static final Logger LOG = Logger.getLogger(SvgImage.class.getName());
@@ -75,7 +75,7 @@ public final class SvgImage extends SvgElement {
 
     //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getX() {
         return x;
     }
@@ -84,7 +84,7 @@ public final class SvgImage extends SvgElement {
         this.x = x;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getY() {
         return y;
     }
@@ -93,7 +93,7 @@ public final class SvgImage extends SvgElement {
         this.y = y;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public Double getWidth() {
         return width;
     }
@@ -102,7 +102,7 @@ public final class SvgImage extends SvgElement {
         this.width = width;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public Double getHeight() {
         return height;
     }
@@ -111,7 +111,7 @@ public final class SvgImage extends SvgElement {
         this.height = height;
     }
 
-    @JacksonXmlProperty(isAttribute = true, localName="href", namespace="http://www.w3.org/1999/xlink")
+    @XmlAttribute(name="href", namespace="http://www.w3.org/1999/xlink")
     public String getImageRef() {
         return imageRef;
     }
@@ -137,7 +137,7 @@ public final class SvgImage extends SvgElement {
     private void loadImage() {
         BufferedImage img;
         try {
-            img = imageRef.startsWith(Images.DATA_URI_PREFIX) 
+            img = imageRef.startsWith(Images.DATA_URI_PREFIX)
                     ? Images.decodeDataUriBase64(imageRef)
                     : ImageIO.read(new URL(imageRef));
         } catch (IOException ex) {

@@ -20,18 +20,26 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Objects;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
+
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * SVG group object.
  * 
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="g")
+@XmlRootElement(name="g")
+@XmlSeeAlso({
+        SvgCircle.class, SvgEllipse.class, SvgImage.class, SvgLine.class, SvgPath.class,
+        SvgPolygon.class, SvgPolyline.class, SvgRectangle.class, SvgText.class
+})
 public class SvgGroup extends SvgElement {
     
     private List<SvgElement> obj = Lists.newArrayList();
@@ -54,8 +62,8 @@ public class SvgGroup extends SvgElement {
     }
 
     //region PROPERTIES
-    
-//    @XmlElementRef
+
+    @XmlElementRef
     public List<SvgElement> getElements() {
         return obj;
     }

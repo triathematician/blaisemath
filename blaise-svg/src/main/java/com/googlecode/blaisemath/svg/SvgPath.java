@@ -20,13 +20,14 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Floats;
+
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
@@ -42,7 +43,7 @@ import java.util.logging.Logger;
  *
  * @author Elisha Peterson
  */
-@JacksonXmlRootElement(localName="path")
+@XmlRootElement(name="path")
 public final class SvgPath extends SvgElement {
 
     private static final Logger LOG = Logger.getLogger(SvgPath.class.getName());
@@ -97,7 +98,7 @@ public final class SvgPath extends SvgElement {
     
     //region PROPERTIES
 
-    @JacksonXmlProperty(isAttribute = true, localName="d")
+    @XmlAttribute(name="d")
     public String getPathStr() {
         return pathStr;
     }

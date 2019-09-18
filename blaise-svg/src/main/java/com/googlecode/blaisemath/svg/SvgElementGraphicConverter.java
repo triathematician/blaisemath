@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.graphics.svg;
+package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
@@ -22,27 +22,24 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.geom.AnchoredIcon;
-import com.googlecode.blaisemath.geom.AnchoredImage;
-import com.googlecode.blaisemath.geom.AnchoredText;
-import com.googlecode.blaisemath.graphics.Graphic;
-import com.googlecode.blaisemath.graphics.GraphicComposite;
-import com.googlecode.blaisemath.graphics.PrimitiveArrayGraphicSupport;
-import com.googlecode.blaisemath.graphics.PrimitiveGraphicSupport;
+import com.googlecode.blaisemath.graphics.*;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import com.googlecode.blaisemath.graphics.swing.TextRenderer;
-import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
-import com.googlecode.blaisemath.style.*;
+import com.googlecode.blaisemath.graphics.swing.render.TextRenderer;
+import com.googlecode.blaisemath.graphics.swing.render.WrappedTextRenderer;
+import com.googlecode.blaisemath.primitive.AnchoredIcon;
+import com.googlecode.blaisemath.primitive.AnchoredImage;
+import com.googlecode.blaisemath.primitive.AnchoredText;
+import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSetCoder;
-import com.googlecode.blaisemath.svg.*;
-import com.googlecode.blaisemath.svg.SvgElement;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Colors;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+
+import javax.xml.namespace.QName;
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
@@ -158,17 +155,17 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
                 ? new AttributeSet()
                 : shapeStyle.copy();
         
-        Map<String, Object> attr = element.getOtherAttributes();
+        Map<QName, Object> attr = element.getOtherAttributes();
         if (attr != null) {
-            for (Entry<String, Object> en : attr.entrySet()) {
+            for (Entry<QName, Object> en : attr.entrySet()) {
                 Object val = new AttributeSetCoder().decode((String) en.getValue());
-                res.put(en.getKey(), val);
+                res.put(en.getKey().toString(), val);
             }
         }
         if (element.getId() != null) {
             res.put(Styles.ID, element.getId());
         }
-        updateColorFields(res);
+        AttributeSetAdapter.updateColorFields(res);
         return res;
     }
 
