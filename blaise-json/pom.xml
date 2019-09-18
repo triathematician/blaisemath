@@ -54,11 +54,8 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- set license attributes for license plugin -->
         <license.organizationName>Elisha Peterson</license.organizationName>
         <license.licenseName>apache_v2</license.licenseName>
-
-        <jackson.version>2.9.9</jackson.version>
     </properties>
 
     <dependencies>
