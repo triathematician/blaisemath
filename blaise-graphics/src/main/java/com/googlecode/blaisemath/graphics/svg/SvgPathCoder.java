@@ -22,16 +22,23 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.base.Strings;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Floats;
 import com.googlecode.blaisemath.encode.StringDecoder;
 import com.googlecode.blaisemath.encode.StringEncoder;
+
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,10 +50,34 @@ import java.util.logging.Logger;
 public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D> {
 
     private static final Logger LOG = Logger.getLogger(SvgPathCoder.class.getName());
+    private static final DecimalFormat DF = new DecimalFormat("#.######");
+    private static final DecimalFormat DF_LARGE = new DecimalFormat("#.######E0");
+
+    // TODO - is this reasonable, given that paths are not immutable?
+    private static final LoadingCache<Shape, String> PATH_CACHE = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .build(new CacheLoader<>() {
+                @Override
+                public String load(Shape shape) {
+                    return encodeIterator(shape.getPathIterator(null));
+                }
+            });
 
     @Override
     public String encode(Path2D obj) {
-        PathIterator pi = obj.getPathIterator(null);
+        return PATH_CACHE.getUnchecked(obj);
+    }
+
+    public String encodeShapePath(Shape obj) {
+        return PATH_CACHE.getUnchecked(obj);
+    }
+
+    /**
+     * Encode path iterator to an SVG path string.
+     * @param pi iterator
+     * @return path string
+     */
+    public static String encodeIterator(PathIterator pi) {
         float[] cur = new float[6];
         int curSegmentType;
         StringBuilder pathString = new StringBuilder();
@@ -54,16 +85,16 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
             curSegmentType = pi.currentSegment(cur);
             switch (curSegmentType) {
                 case PathIterator.SEG_MOVETO:
-                    pathString.append("M ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
+                    pathString.append("M ").append(numStr6(" ", cur[0], cur[1])).append(" ");
                     break;
                 case PathIterator.SEG_LINETO:
-                    pathString.append("L ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
+                    pathString.append("L ").append(numStr6(" ", cur[0], cur[1])).append(" ");
                     break;
                 case PathIterator.SEG_QUADTO:
-                    pathString.append("Q ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3])).append(" ");
+                    pathString.append("Q ").append(numStr6(" ", cur[0], cur[1], cur[2], cur[3])).append(" ");
                     break;
                 case PathIterator.SEG_CUBICTO:
-                    pathString.append("C ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3], cur[4], cur[5])).append(" ");
+                    pathString.append("C ").append(numStr6(" ", cur[0], cur[1], cur[2], cur[3], cur[4], cur[5])).append(" ");
                     break;
                 case PathIterator.SEG_CLOSE:
                     pathString.append("Z");
@@ -91,33 +122,32 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         int pos = 0;
         while (pos < tokens.length) {
             SvgPathOperator op = operatorOf(tokens[pos].toLowerCase()); 
-            float[] coords = nextFloats(tokens, pos+1);
+            float[] coordinates = nextFloats(tokens, pos+1);
             boolean relative = Character.isLowerCase(tokens[pos].charAt(0));
-            op.apply(gp, coords, start, loc, nextAnchor, relative);
-            pos += coords.length+1;
+            op.apply(gp, coordinates, start, loc, nextAnchor, relative);
+            pos += coordinates.length+1;
         }
         return gp;
     }
     
     //region STATIC UTILITIES
-    
-    /** Prints numbers w/ up to n digits of precision, removing trailing zeros */
-    static String numStr(int prec, double val) {
-        String res = String.format("%."+prec+"f", val);
-        return res.indexOf('.') < 0 ? res : res.replaceAll("0*$", "").replaceAll("\\.$", "");
-    }
-    
+
     /** Prints a sequence of numbers with the specified joiner and precision */
-    static String numStr(String join, int prec, double... vals) {
+    static String numStr6(String join, double... vals) {
         if (vals.length == 0) {
             return "";
         }
         StringBuilder res = new StringBuilder();
-        res.append(numStr(prec, vals[0]));
+        res.append(numStr6(vals[0]));
         for (int i = 1; i < vals.length; i++) {
-            res.append(join).append(numStr(prec, vals[i]));
+            res.append(join).append(numStr6(vals[i]));
         }
         return res.toString();
+    }
+
+    /** Prints numbers w/ up to 6 digits of precision, removing trailing zeros */
+    static String numStr6(double val) {
+        return Math.abs(val) < 1E7 ? DF.format(val) : DF_LARGE.format(val);
     }
     
     /** Tokenize the path string, first making sure we have spaces in front of all numbers */
@@ -146,16 +176,16 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
      * @return coordinates extracted from string
      */
     private static float[] nextFloats(String[] tokens, int start) {
-        List<Float> vals = Lists.newArrayList();
+        List<Float> values = Lists.newArrayList();
         for (int i = start; i < tokens.length; i++) {
             try {
-                vals.add(Float.valueOf(tokens[i]));
+                values.add(Float.valueOf(tokens[i]));
             } catch (NumberFormatException ex) {
                 LOG.log(Level.FINEST, "Not a float: " + tokens[i], ex);
                 break;
             }
         }
-        return Floats.toArray(vals);
+        return Floats.toArray(values);
     }
     
     /** See http://stackoverflow.com/questions/1805101/svg-elliptical-arcs-with-java. */
