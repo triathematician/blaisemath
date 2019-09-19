@@ -75,20 +75,10 @@
             <version>2.0.0-beta</version>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.blaisemath</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>blaise-app</artifactId>
-            <version>0.2.0-beta</version>
+            <version>1.0.0-beta</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.googlecode.blaisemath</groupId>
-                    <artifactId>firestarter</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.jnlp</groupId>
-                    <artifactId>jnlp</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

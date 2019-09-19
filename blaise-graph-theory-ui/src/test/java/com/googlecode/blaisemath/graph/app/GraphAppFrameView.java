@@ -23,18 +23,20 @@ package com.googlecode.blaisemath.graph.app;
 import com.google.common.collect.Multisets;
 import com.google.common.graph.Graph;
 import com.googlecode.blaisemath.app.ApplicationMenuConfig;
-import com.googlecode.blaisemath.primitive.ui.MarkerEditor;
+import com.googlecode.blaisemath.app.PropertyActionPanel;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
+import com.googlecode.blaisemath.firestarter.editor.EnumEditor;
+import com.googlecode.blaisemath.firestarter.swing.MPanel;
+import com.googlecode.blaisemath.firestarter.swing.RollupPanel;
 import com.googlecode.blaisemath.graph.*;
 import com.googlecode.blaisemath.graph.layout.SpringLayoutParameters;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.primitive.Anchor;
 import com.googlecode.blaisemath.primitive.Marker;
-import com.googlecode.blaisemath.ui.PropertyActionPanel;
+import com.googlecode.blaisemath.primitive.ui.MarkerEditor;
 import com.googlecode.blaisemath.util.SetSelectionModel;
-import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
-import com.googlecode.blaisemath.firestarter.editor.EnumEditor;
-import com.googlecode.blaisemath.firestarter.swing.MPanel;
-import com.googlecode.blaisemath.firestarter.swing.RollupPanel;
+import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.FrameView;
@@ -42,6 +44,7 @@ import org.jdesktop.application.FrameView;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Point2D;
 import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.util.Set;
@@ -85,8 +88,9 @@ public final class GraphAppFrameView extends FrameView {
         try {
             setMenuBar(ApplicationMenuConfig.readMenuBar(GraphApp.class, this, graphCanvas));
             setToolBar(ApplicationMenuConfig.readToolBar(GraphApp.class, this, graphCanvas));
-            graphCanvas.addContextMenuInitializer(GraphComponent.MENU_KEY_GRAPH,
-                    ApplicationMenuConfig.readMenuInitializer(CANVAS_CM_KEY, GraphApp.class, this, graphCanvas));    
+            var menuInit = ApplicationMenuConfig.readMenuInitializer(CANVAS_CM_KEY, GraphApp.class, this, graphCanvas);
+            graphCanvas.addContextMenuInitializer(GraphComponent.MENU_KEY_GRAPH, (popup, src, pt, focus, sel) ->
+                    menuInit.initContextMenu(popup, src, pt, focus, sel));
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Menu config failure.", ex);
         }
