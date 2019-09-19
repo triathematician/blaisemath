@@ -20,6 +20,9 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
@@ -37,6 +40,7 @@ import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +52,15 @@ import java.util.logging.Logger;
 public class SvgElements {
 
     private static final Logger LOG = Logger.getLogger(SvgElements.class.getName());
+
+    private static LoadingCache<Icon, String> ICON_CACHE = CacheBuilder.newBuilder()
+            .expireAfterAccess(60, TimeUnit.MINUTES)
+            .build(new CacheLoader<>() {
+                @Override
+                public String load(Icon icon) {
+                    return loadIconEncodingForCache(icon);
+                }
+            });
     
     // UTILITY CLASS - PREVENT INSTANTIATION
     private SvgElements() {
@@ -78,7 +91,7 @@ public class SvgElements {
         } else if (shape instanceof Path2D) {
             res = SvgPath.shapeConverter().reverse().convert((Path2D) shape);
         } else if (shape instanceof Area) {
-            res = SvgPath.create(shape.getPathIterator(null));
+            res = new SvgPath(shape);
         } else {
             Logger.getLogger(SvgElements.class.getName()).log(Level.WARNING, "Shapes of type {0} are not yet supported.", shape.getClass());
             return null;
@@ -200,7 +213,7 @@ public class SvgElements {
                 icon.getX() + offset.getX(), 
                 icon.getY() - icon.getIconHeight() + offset.getY(), 
                 (double) icon.getIconWidth(), (double) icon.getIconHeight(), 
-                encodeAsUri(icon.getIcon()));
+                ICON_CACHE.getUnchecked(icon.getIcon()));
         res.setId(id);
         AttributeSet sty = AttributeSet.create(style.getAttributeMap());
         sty.remove(Styles.TEXT_ANCHOR);
@@ -209,7 +222,7 @@ public class SvgElements {
         return res;        
     }
     
-    private static String encodeAsUri(Icon icon) {
+    private static String loadIconEncodingForCache(Icon icon) {
         try {
             BufferedImage bi = new BufferedImage(2*icon.getIconWidth(), 2*icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = bi.createGraphics();

@@ -36,6 +36,10 @@ import java.io.*;
 public class SvgIo {
 
     private static JAXBContext CONTEXT;
+    private static Unmarshaller UNMARSHALLER;
+    private static Marshaller MARSHALLER;
+    private static XMLFilter PARSE_FILTER;
+    private static UnmarshallerHandler UNMARSHALLER_HANDLER;
     
     public static SvgRoot read(String input) throws IOException {
         return flexibleNamespaceParse(new InputSource(new StringReader(input)));
@@ -74,16 +78,22 @@ public class SvgIo {
     //region HELPERS
 
     static SvgRoot flexibleNamespaceParse(InputSource input) throws IOException {
+        if (PARSE_FILTER == null || UNMARSHALLER == null) {
+            try {
+                PARSE_FILTER = new SvgNamespaceFilter();
+                SAXParserFactory factory = SAXParserFactory.newInstance();
+                factory.setNamespaceAware(true);
+                PARSE_FILTER.setParent(factory.newSAXParser().getXMLReader());
+                UNMARSHALLER_HANDLER = unmarshaller().getUnmarshallerHandler();
+                PARSE_FILTER.setContentHandler(UNMARSHALLER_HANDLER);
+            } catch (ParserConfigurationException | SAXException | JAXBException x) {
+                throw new IOException("Invalid svg or other error: " + input, x);
+            }
+        }
         try {
-            XMLFilter filter = new SvgNamespaceFilter();
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            filter.setParent(factory.newSAXParser().getXMLReader());
-            UnmarshallerHandler umHandler = unmarshaller().getUnmarshallerHandler();
-            filter.setContentHandler(umHandler);
-            filter.parse(input);
-            return (SvgRoot) umHandler.getResult();
-        } catch (ParserConfigurationException | SAXException | JAXBException x) {
+            PARSE_FILTER.parse(input);
+            return (SvgRoot) UNMARSHALLER_HANDLER.getResult();
+        } catch (SAXException | JAXBException x) {
             throw new IOException("Invalid svg or other error: "+input, x);
         }
     }
@@ -96,13 +106,18 @@ public class SvgIo {
     }
 
     static Unmarshaller unmarshaller() throws JAXBException {
-        return context().createUnmarshaller();
+        if (UNMARSHALLER == null) {
+            UNMARSHALLER = context().createUnmarshaller();
+        }
+        return UNMARSHALLER;
     }
 
     static Marshaller marshaller() throws JAXBException {
-        Marshaller m = context().createMarshaller();
-        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        return m;
+        if (MARSHALLER == null) {
+            MARSHALLER = context().createMarshaller();
+            MARSHALLER.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        }
+        return MARSHALLER;
     }
 
     //endregion

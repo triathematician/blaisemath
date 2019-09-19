@@ -65,6 +65,7 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
 
         JMenu fileMenu = new JMenu("File");
         fileMenu.add(new JMenuItem(actionMap.get("printSVG")));
+        fileMenu.add(new JMenuItem(actionMap.get("printSVG100")));
         fileMenu.add(new JMenuItem(actionMap.get("quit")));
         menuBar.add(fileMenu);
 
@@ -86,7 +87,6 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         
         JMenu compMenu = new JMenu("Compound Objects");
         compMenu.add(new JMenuItem(actionMap.get("addLabeledShape")));
-        compMenu.add(new JMenuItem(actionMap.get("addLabeledPoint")));
         compMenu.add(new JMenuItem(actionMap.get("addArrow")));
         compMenu.add(new JMenuItem(actionMap.get("add2Point")));
         compMenu.add(new JMenuItem(actionMap.get("addDraggableSegment")));

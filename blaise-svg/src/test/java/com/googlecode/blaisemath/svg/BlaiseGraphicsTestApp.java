@@ -63,11 +63,26 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     JGraphicComponent canvas1;
     final AttributeSet pointsetStyle = RandomStyles.point();
     
-    
     @Action
     public void printSVG() throws IOException {
         SvgRoot root = SvgElementGraphicConverter.componentToSvg(canvas1);
         SvgIo.write(root, System.out);
+    }
+
+    @Action
+    public void printSVG100() throws IOException {
+        long t0 = System.currentTimeMillis();
+        SvgRoot root = SvgElementGraphicConverter.componentToSvg(canvas1);
+        for (int i = 0; i < 1000; i++) {
+            SvgIo.writeToString(root);
+        }
+        long t1 = System.currentTimeMillis();
+        System.out.println((t1-t0)+"ms to write 1000 strings");
+        for (int i = 0; i < 1000; i++) {
+            SvgIo.writeToString(SvgElementGraphicConverter.componentToSvg(canvas1));
+        }
+        long t2 = System.currentTimeMillis();
+        System.out.println((t2-t1)+"ms to convert and write to string 1000 times");
     }
 
     //region GENERAL

@@ -29,4 +29,6 @@ module com.googlecode.blaisemath.svg {
     requires com.googlecode.blaisemath.common;
     requires com.googlecode.blaisemath.graphics;
     requires com.googlecode.blaisemath.json;
+
+    exports com.googlecode.blaisemath.svg;
 }

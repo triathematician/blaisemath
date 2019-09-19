@@ -122,7 +122,7 @@ public final class SvgPolyline extends SvgElement {
         while (!pi.isDone()) {
             curSegmentType = pi.currentSegment(cur);
             if (curSegmentType == PathIterator.SEG_LINETO || curSegmentType == PathIterator.SEG_MOVETO) {
-                String s = " "+ SvgPath.numStr(",", 6, cur[0], cur[1]);
+                String s = " "+ numStr(",", 6, cur[0], cur[1]);
                 pathString.append(s);
                 if (s0 == null) {
                     s0 = s;
@@ -135,6 +135,25 @@ public final class SvgPolyline extends SvgElement {
             pi.next();
         }
         return pathString.toString().trim();
+    }
+
+    /** Prints numbers w/ up to n digits of precision, removing trailing zeros */
+    static String numStr(int prec, double val) {
+        String res = String.format("%."+prec+"f", val);
+        return res.indexOf('.') < 0 ? res : res.replaceAll("0*$", "").replaceAll("\\.$", "");
+    }
+
+    /** Prints a sequence of numbers with the specified joiner and precision */
+    static String numStr(String join, int prec, double... vals) {
+        if (vals.length == 0) {
+            return "";
+        }
+        StringBuilder res = new StringBuilder();
+        res.append(numStr(prec, vals[0]));
+        for (int i = 1; i < vals.length; i++) {
+            res.append(join).append(numStr(prec, vals[i]));
+        }
+        return res.toString();
     }
     
     //endregion
