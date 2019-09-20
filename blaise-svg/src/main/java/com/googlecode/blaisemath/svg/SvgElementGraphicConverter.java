@@ -180,7 +180,7 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
     private static SvgElement graphicToSvg(Graphic<Graphics2D> v) {
         SvgElement res = null;
         if (v instanceof LabeledShapeGraphic) {
-            res = labeledShapeToSvg((LabeledShapeGraphic<Graphics2D>) v);
+            res = labeledShapeToSvg((LabeledShapeGraphic) v);
         } else if (v instanceof PrimitiveGraphicSupport) {
             PrimitiveGraphicSupport pgs = (PrimitiveGraphicSupport) v;
             res = primitiveStyleToSvg(pgs.getPrimitive(), v.getStyle(), pgs.getRenderer());
@@ -258,15 +258,15 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
     }
 
     /** Converts a labeled shape to svg */
-    private static SvgElement labeledShapeToSvg(LabeledShapeGraphic<Graphics2D> gfc) {
+    private static SvgElement labeledShapeToSvg(LabeledShapeGraphic<?> gfc) {
         SvgElement shape = primitiveStyleToSvg(gfc.getPrimitive(), gfc.renderStyle().flatCopy(), gfc.getRenderer());
         SvgElement text = labelToSvg(gfc);
         return text == null ? shape : SvgGroup.create(shape, text);
     }
 
     /** Generates element for object label */
-    private static SvgElement labelToSvg(LabeledShapeGraphic<Graphics2D> gfc) {
-        ObjectStyler<Graphics2D> styler = gfc.getObjectStyler();
+    private static <X> SvgElement labelToSvg(LabeledShapeGraphic<X> gfc) {
+        ObjectStyler<X> styler = gfc.getObjectStyler();
         if (styler == null) {
             return null;
         }
