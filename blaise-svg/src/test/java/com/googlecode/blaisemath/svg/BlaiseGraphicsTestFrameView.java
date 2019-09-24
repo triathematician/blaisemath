@@ -1,7 +1,3 @@
-/*
- * BlaiseGraphicsTestFrameView.java
- */
-
 package com.googlecode.blaisemath.svg;
 
 /*
@@ -31,9 +27,6 @@ import javax.swing.JMenuItem;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.SingleFrameApplication;
 
-/**
- * The application's main frame.
- */
 public class BlaiseGraphicsTestFrameView extends FrameView {
 
     public BlaiseGraphicsTestFrameView(SingleFrameApplication app) {
@@ -65,7 +58,9 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
 
         JMenu fileMenu = new JMenu("File");
         fileMenu.add(new JMenuItem(actionMap.get("printSVG")));
-        fileMenu.add(new JMenuItem(actionMap.get("printSVG100")));
+        fileMenu.add(new JMenuItem(actionMap.get("printSVG1000")));
+        fileMenu.add(new JMenuItem(actionMap.get("testBatik")));
+        fileMenu.add(new JMenuItem(actionMap.get("testBatik1000")));
         fileMenu.add(new JMenuItem(actionMap.get("quit")));
         menuBar.add(fileMenu);
 

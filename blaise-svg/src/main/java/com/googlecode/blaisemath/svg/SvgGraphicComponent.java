@@ -21,6 +21,8 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.svg.xml.SvgElement;
+import com.googlecode.blaisemath.svg.xml.SvgRoot;
 
 import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;

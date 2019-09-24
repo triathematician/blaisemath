@@ -23,6 +23,10 @@ package com.googlecode.blaisemath.svg;
 import java.io.IOException;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+
+import com.googlecode.blaisemath.svg.xml.SvgImage;
+import com.googlecode.blaisemath.svg.xml.SvgRect;
+import com.googlecode.blaisemath.svg.xml.SvgRoot;
 import org.junit.Test;
 
 public class SvgRootTest {
@@ -30,7 +34,7 @@ public class SvgRootTest {
     @Test
     public void testWrite() throws IOException {
         SvgRoot r = new SvgRoot();
-        r.addElement(new SvgRectangle());
+        r.elements.add(new SvgRect());
         String text = SvgRoot.saveToString(r);
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<svg height=\"100.0\" width=\"100.0\" style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
@@ -53,7 +57,7 @@ public class SvgRootTest {
         SvgRoot.load("<svg><rect height=\"0.0\" rx=\"0.0\" ry=\"0.0\" width=\"0.0\" x=\"0.0\" y=\"0.0\"/></svg>");
         
         SvgRoot r2 = SvgRoot.load("<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\"><image xlink:href=\"file:src/test/resources/com/googlecode/blaisemath/util/resources/cherries.png\"/></svg>");
-        assertTrue(r2.getElements().get(0) instanceof SvgImage);
+        assertTrue(r2.elements.get(0) instanceof SvgImage);
     }
 
 }

@@ -25,6 +25,10 @@ import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicComposite;
 import com.googlecode.blaisemath.graphics.GraphicUtils;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.svg.reader.SvgGroupReader;
+import com.googlecode.blaisemath.svg.reader.SvgReadException;
+import com.googlecode.blaisemath.svg.xml.SvgElement;
+import com.googlecode.blaisemath.svg.xml.SvgRoot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,19 +90,25 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
     }
     
     private void updateGraphics() {
-        Graphic<Graphics2D> nue = SvgElementGraphicConverter.getInstance()
-                .convert(element);
-        if (primitiveElement == null) {
-            addGraphic(nue);
-        } else {
-            replaceGraphics(Collections.singleton(primitiveElement), Collections.singleton(nue));
-        }
-        primitiveElement = nue;
-        
-        if (element instanceof SvgRoot) {
-            double wid = ((SvgRoot) element).getWidth();
-            double ht = ((SvgRoot) element).getHeight();
-            this.graphicBounds = new Rectangle2D.Double(0, 0, wid, ht);
+        Graphic<Graphics2D> nue = null;
+        try {
+            nue = SvgGroupReader.readGraphic(element);
+            if (primitiveElement == null) {
+                addGraphic(nue);
+            } else {
+                replaceGraphics(Collections.singleton(primitiveElement), Collections.singleton(nue));
+            }
+            primitiveElement = nue;
+
+            if (element instanceof SvgRoot) {
+                double wid = ((SvgRoot) element).getWidth();
+                double ht = ((SvgRoot) element).getHeight();
+                this.graphicBounds = new Rectangle2D.Double(0, 0, wid, ht);
+            }
+        } catch (SvgReadException e) {
+            LOG.log(Level.SEVERE, "Unable to read SVG", e);
+            primitiveElement = null;
+            clearGraphics();
         }
     }
     

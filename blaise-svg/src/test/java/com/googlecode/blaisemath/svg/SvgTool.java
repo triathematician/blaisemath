@@ -28,6 +28,10 @@ import com.google.common.io.Files;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.svg.xml.SvgElement;
+import com.googlecode.blaisemath.svg.xml.SvgPath;
+import com.googlecode.blaisemath.svg.xml.SvgRoot;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -174,12 +178,12 @@ public class SvgTool extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if (pathTB.isSelected()) {
-            gsvg.setElement(new SvgPath(text.getText()));
+            gsvg.setElement(SvgPath.create(text.getText()));
         } else {
             try {
                 SvgRoot root = SvgRoot.load(text.getText());
                 gsvg.setElement(root);
-                Object bg = root.getStyle().get("background");
+                Object bg = root.style.get("background");
                 if (bg instanceof Color) {
                     canvas.setBackground((Color) bg);
                 }
@@ -197,7 +201,7 @@ public class SvgTool extends javax.swing.JFrame {
                 SvgElement el = gsvg.getElement();
                 if (!(el instanceof SvgRoot)) {
                     SvgRoot rootEl = new SvgRoot();
-                    rootEl.addElement(el);
+                    rootEl.elements.add(el);
                     el = rootEl;
                 }
                 SvgRoot.save((SvgRoot) el, out);

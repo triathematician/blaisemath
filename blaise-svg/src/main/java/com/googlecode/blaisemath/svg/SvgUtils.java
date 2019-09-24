@@ -21,6 +21,7 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.googlecode.blaisemath.geom.AffineTransformBuilder;
+import com.googlecode.blaisemath.graphics.svg.SvgPathCoder;
 import com.googlecode.blaisemath.primitive.Marker;
 
 import java.awt.geom.Path2D;
@@ -49,16 +50,17 @@ public class SvgUtils {
      * @param svgPath SVG path string
      * @param sz size of the resulting marker, as the side length/diameter
      * @return marker
+     * @throws IllegalArgumentException if unable to construct path from provided string
      */
     public static final Marker pathToMarker(String svgPath, final float sz) {
-        final Path2D path = SvgPath.shapeConverter().convert(new SvgPath(svgPath));
+        final Path2D path = new SvgPathCoder().decode(svgPath);
         if (path == null) {
-            
+            throw new IllegalArgumentException("Invalid SVG path string: " + svgPath);
         }
         return (Point2D point, double orientation, float markerRadius) -> {
-            double scale = markerRadius/(.5*sz);
+            double scale = markerRadius / (.5 * sz);
             return path.createTransformedShape(new AffineTransformBuilder()
-                    .translate(point.getX()-markerRadius, point.getY()-markerRadius)
+                    .translate(point.getX() - markerRadius, point.getY() - markerRadius)
                     .scale(scale, scale)
                     .build());
         };

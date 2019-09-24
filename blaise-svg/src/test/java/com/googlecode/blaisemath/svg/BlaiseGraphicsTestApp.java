@@ -36,20 +36,30 @@ import com.googlecode.blaisemath.primitive.*;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.ui.BasicPointStyleEditor;
+import com.googlecode.blaisemath.svg.render.SvgRenderer;
+import com.googlecode.blaisemath.svg.xml.SvgImage;
+import com.googlecode.blaisemath.svg.xml.SvgIo;
+import com.googlecode.blaisemath.svg.xml.SvgRoot;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
+import org.apache.batik.dom.GenericDOMImplementation;
+import org.apache.batik.svggen.*;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -62,27 +72,64 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     JGraphicRoot root1;
     JGraphicComponent canvas1;
     final AttributeSet pointsetStyle = RandomStyles.point();
-    
-    @Action
-    public void printSVG() throws IOException {
-        SvgRoot root = SvgElementGraphicConverter.componentToSvg(canvas1);
-        SvgIo.write(root, System.out);
+
+    private static final DOMImplementation DOM_IMPL = GenericDOMImplementation.getDOMImplementation();
+    private static final String SVG_NS = "http://www.w3.org/2000/svg";
+    private static final CachedImageHandlerBase64Encoder IMAGE_HANDLER = new CachedImageHandlerBase64Encoder();
+    private static final Document DOCUMENT = DOM_IMPL.createDocument(SVG_NS, "svg", null);
+    private static final SVGGeneratorContext GENERATOR_CONTEXT = SVGGeneratorContext.createDefault(DOCUMENT);
+    static {
+        GENERATOR_CONTEXT.setGenericImageHandler(IMAGE_HANDLER);
     }
 
     @Action
-    public void printSVG100() throws IOException {
+    public void testBatik() throws IOException {
+        printAndCopyToClipboard(batikSvg(canvas1));
+    }
+
+    @Action
+    public void testBatik1000() throws IOException {
         long t0 = System.currentTimeMillis();
-        SvgRoot root = SvgElementGraphicConverter.componentToSvg(canvas1);
+        for (int i = 0; i < 1000; i++) {
+            batikSvg(canvas1);
+        }
+        long t1 = System.currentTimeMillis();
+        System.out.println((t1-t0)+"ms to write 1000 strings");
+    }
+
+    @Action
+    public void printSVG() throws IOException {
+        SvgRoot root = SvgRenderer.componentToSvg(canvas1);
+        printAndCopyToClipboard(SvgIo.writeToString(root));
+    }
+
+    @Action
+    public void printSVG1000() throws IOException {
+        long t0 = System.currentTimeMillis();
+        SvgRoot root = SvgRenderer.componentToSvg(canvas1);
         for (int i = 0; i < 1000; i++) {
             SvgIo.writeToString(root);
         }
         long t1 = System.currentTimeMillis();
         System.out.println((t1-t0)+"ms to write 1000 strings");
         for (int i = 0; i < 1000; i++) {
-            SvgIo.writeToString(SvgElementGraphicConverter.componentToSvg(canvas1));
+            SvgIo.writeToString(SvgRenderer.componentToSvg(canvas1));
         }
         long t2 = System.currentTimeMillis();
         System.out.println((t2-t1)+"ms to convert and write to string 1000 times");
+    }
+
+    private static void printAndCopyToClipboard(Object o) {
+        System.out.println(o);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(o+""), null);
+    }
+
+    private static String batikSvg(Component c) throws SVGGraphics2DIOException {
+        SVGGraphics2D svgGraphics = new SVGGraphics2D(GENERATOR_CONTEXT, false);
+        c.paint(svgGraphics);
+        StringWriter sw = new StringWriter();
+        svgGraphics.stream(sw, true);
+        return sw.toString();
     }
 
     //region GENERAL
