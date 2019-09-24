@@ -40,8 +40,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An object along with style and renderer information allowing it to be drawn
@@ -384,7 +384,7 @@ public abstract class Graphic<G> {
      * @param handler listener
      */
     public final void addMouseListener(MouseListener handler) {
-        checkNotNull(handler);
+        requireNonNull(handler);
         eventHandlers.add(MouseListener.class, handler);
     }
 
@@ -415,7 +415,7 @@ public abstract class Graphic<G> {
      * @param handler listener
      */
     public final void addMouseMotionListener(MouseMotionListener handler) {
-        checkNotNull(handler);
+        requireNonNull(handler);
         eventHandlers.add(MouseMotionListener.class, handler);
     }
 

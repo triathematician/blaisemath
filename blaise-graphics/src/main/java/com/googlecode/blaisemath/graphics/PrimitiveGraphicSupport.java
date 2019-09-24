@@ -44,7 +44,7 @@ import java.awt.geom.RectangularShape;
  *
  * @author Elisha Peterson
  */
-public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
+public abstract class PrimitiveGraphicSupport<O, G> extends Graphic<G> {
     
     public static final String P_PRIMITIVE = "primitive";
     public static final String P_RENDERER = "renderer";
@@ -52,7 +52,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     /** What is being drawn */
     protected @Nullable O primitive;
     /** Draws the primitive on the graphics canvas */
-    protected @Nullable Renderer<O,G> renderer = null;
+    protected @Nullable Renderer<O, G> renderer = null;
     
     /** Whether graphic can be dragged */
     protected boolean dragEnabled = false;

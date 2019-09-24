@@ -41,12 +41,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Elisha Peterson
  */
-public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
+public abstract class PrimitiveArrayGraphicSupport<O, G> extends Graphic<G> {
     
     /** What is being drawn */
     protected O[] primitive;
     /** Draws the primitive on the graphics canvas */
-    protected Renderer<O,G> renderer;
+    protected Renderer<O, G> renderer;
     
     //region PROPERTIES
 

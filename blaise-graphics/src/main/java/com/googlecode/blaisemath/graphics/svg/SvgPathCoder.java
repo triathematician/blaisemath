@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.graphics.svg;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -31,17 +30,13 @@ import com.googlecode.blaisemath.encode.StringDecoder;
 import com.googlecode.blaisemath.encode.StringEncoder;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Arc2D;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Path2D;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
+import java.awt.geom.*;
 import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Converts Java paths to/from SVG path strings.
@@ -110,7 +105,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
     @Override
     public Path2D decode(String svg) {
         if (Strings.isNullOrEmpty(svg)) {
-            return new GeneralPath();
+            return new Path2D.Float();
         }
         String[] tokens = tokenizeSvgPath(svg);
         
@@ -118,7 +113,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         float[] loc = {0f, 0f};
         float[] nextAnchor = {0f, 0f};
 
-        GeneralPath gp = new GeneralPath();
+        Path2D.Float gp = new Path2D.Float();
         int pos = 0;
         while (pos < tokens.length) {
             SvgPathOperator op = operatorOf(tokens[pos].toLowerCase()); 
@@ -189,7 +184,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
     }
     
     /** See http://stackoverflow.com/questions/1805101/svg-elliptical-arcs-with-java. */
-    private static void arcTo(GeneralPath path, float rx, float ry, float theta, boolean largeArcFlag, boolean sweepFlag, float x, float y) {
+    private static void arcTo(Path2D.Float path, float rx, float ry, float theta, boolean largeArcFlag, boolean sweepFlag, float x, float y) {
         // Ensure radii are valid
         if (rx == 0 || ry == 0) {
             path.lineTo(x, y);
@@ -290,7 +285,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
     private enum SvgPathOperator {
         MOVE('m') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-1; i+=2) {
                     loc[0] = relative ? loc[0]+coords[i] : coords[i];
                     loc[1] = relative ? loc[1]+coords[i+1] : coords[i+1];
@@ -308,7 +303,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         LINE('l') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-1; i+=2) {
                     loc[0] = relative ? loc[0]+coords[i] : coords[i];
                     loc[1] = relative ? loc[1]+coords[i+1] : coords[i+1];
@@ -320,7 +315,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         HLINE('h') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (float coord : coords) {
                     loc[0] = relative ? loc[0] + coord : coord;
                     gp.lineTo(loc[0], loc[1]);
@@ -331,7 +326,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         VLINE('v') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (float coord : coords) {
                     loc[1] = relative ? loc[1] + coord : coord;
                     gp.lineTo(loc[0], loc[1]);
@@ -342,7 +337,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         CUBIC_CURVE('c') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-5; i+=6) {
                     float x1 = relative ? loc[0]+coords[i] : coords[i];
                     float y1 = relative ? loc[1]+coords[i+1] : coords[i+1];
@@ -358,7 +353,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         SMOOTH_CURVE('s') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-3; i+=4) {
                     float x1 = nextAnchor[0];
                     float y1 = nextAnchor[1];
@@ -374,7 +369,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         QUAD_CURVE('q') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-3; i+=4) {
                     float x1 = relative ? loc[0]+coords[i] : coords[i];
                     float y1 = relative ? loc[1]+coords[i+1] : coords[i+1];
@@ -388,7 +383,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         SMOOTH_QUAD_CURVE('t') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-1; i+=2) {
                     float x1 = nextAnchor[0];
                     float y1 = nextAnchor[1];
@@ -402,7 +397,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         ARC('a') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 for (int i = 0; i < coords.length-6; i+=7) {
                     float rx = coords[i];
                     float ry = coords[i+1];
@@ -419,7 +414,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
         },
         CLOSE_PATH('z') {
             @Override
-            void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
+            void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative) {
                 gp.closePath();
                 loc[0] = start[0];
                 loc[1] = start[1];
@@ -443,7 +438,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
          * @param nextAnchor next anchor location (modified for curve commands)
          * @param relative whether coordinates are relative (true) or absolute (false)
          */
-        abstract void apply(GeneralPath gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative);
+        abstract void apply(Path2D.Float gp, float[] coords, float[] start, float[] loc, float[] nextAnchor, boolean relative);
     }
     
     //endregion

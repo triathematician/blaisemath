@@ -33,7 +33,7 @@ import java.awt.geom.Rectangle2D;
  * @param <G> the type of object used for rendering
  * @author Elisha Peterson
  */
-public interface Renderer<S,G> {
+public interface Renderer<S, G> {
     
     /**
      * Render the given object on the given graphics canvas.
