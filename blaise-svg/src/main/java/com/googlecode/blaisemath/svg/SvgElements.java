@@ -225,7 +225,7 @@ public class SvgElements {
     private static String loadIconEncodingForCache(Icon icon) {
         try {
             BufferedImage bi = new BufferedImage(2*icon.getIconWidth(), 2*icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = bi.createGraphics();
+            Graphics2D g2 = bi.createGraphics();j
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setTransform(AffineTransform.getScaleInstance(2, 2));
             icon.paintIcon(null, g2, 0, 0);
