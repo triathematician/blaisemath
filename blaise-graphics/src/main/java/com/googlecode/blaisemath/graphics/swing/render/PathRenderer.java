@@ -43,7 +43,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Elisha Peterson
  */
-public class PathRenderer implements Renderer<Shape, Graphics2D> {  
+public class PathRenderer implements Renderer<Shape, Graphics2D> {
 
     private static final PathRenderer INST = new PathRenderer();
     

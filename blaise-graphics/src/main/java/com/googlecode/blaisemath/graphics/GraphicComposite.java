@@ -51,6 +51,10 @@ public class GraphicComposite<G> extends Graphic<G> {
     public static final String P_BOUNDING_BOX_VISIBLE = "boundingBoxVisible";
     public static final String P_BOUNDING_BOX_STYLE = "boundingBoxStyle";
 
+    public PrimitiveGraphic<Shape, G> getBoundingBoxGraphic() {
+        return boundingBoxGraphic;
+    }
+
     /** Stores the shapes and their styles (in order) */
     protected final Set<Graphic<G>> entries = Sets.newLinkedHashSet();
     /** The attributes associated with the composite. These will be inherited by child graphics. */
