@@ -197,7 +197,15 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
      * @return value of target type if possible, else default; may return null if def is null
      */
     static <X> @Nullable X convertValue(@Nullable Object value, Class<X> targetType, @Nullable X def) {
-        return TypeConverter.convert(value, targetType, def);
+        try {
+            if ("null".equals(value)) {
+                return null;
+            }
+            return TypeConverter.convert(value, targetType, def);
+        } catch (IllegalArgumentException | UnsupportedOperationException x) {
+            LOG.log(Level.WARNING, "Unable to convert " + value + " to " + targetType);
+            return null;
+        }
     }
     
     //endregion
@@ -250,7 +258,7 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
      * @return decoded value, or null if unable to decode
      */
     @SuppressWarnings("unchecked")
-    static <X> @Nullable X decodeValue(String val, Class<X> type) {
+    public static <X> @Nullable X decodeValue(String val, Class<X> type) {
         requireNonNull(val);
         String trim = val.trim();
         try {
