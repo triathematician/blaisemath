@@ -82,6 +82,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>blaise-common</artifactId>
+            <version>1.0.8-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics</artifactId>
             <version>3.0.10</version>
         </dependency>

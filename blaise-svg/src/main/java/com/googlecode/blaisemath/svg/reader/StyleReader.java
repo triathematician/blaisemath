@@ -1,0 +1,52 @@
+package com.googlecode.blaisemath.svg.reader;
+
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.AttributeSetCoder;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.Colors;
+
+import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class StyleReader {
+
+    private static final Logger LOG = Logger.getLogger(StyleReader.class.getName());
+    private static final String[] COLOR_KEYS = { Styles.FILL, Styles.STROKE };
+
+    /**
+     * Create style object instance from SVG style string.
+     * @param style SVG style string
+     * @return new style instance
+     */
+    public static AttributeSet fromString(String style) {
+        AttributeSet res = new AttributeSetCoder().decode(style);
+        updateColorFields(res);
+        return res;
+    }
+
+    /**
+     * Update attribute set so fields that are typically used for color
+     * are decoded appropriately. Currently supports "fill" and "stroke", and
+     * allows using strings for color names.
+     * @param style attribute set
+     */
+    static void updateColorFields(AttributeSet style) {
+        for (String s : COLOR_KEYS) {
+            if (style.get(s) instanceof String) {
+                String ss = ((String) style.get(s)).trim();
+                if (!"null".equalsIgnoreCase(ss) && !"none".equalsIgnoreCase(ss)) {
+                    try {
+                        Color color = Colors.decode((String) style.get(s));
+                        if (color != null) {
+                            style.put(s, color);
+                        }
+                    } catch (IllegalArgumentException x) {
+                        LOG.log(Level.FINE, "Invalid color string: "+ss);
+                    }
+                }
+            }
+        }
+    }
+
+}

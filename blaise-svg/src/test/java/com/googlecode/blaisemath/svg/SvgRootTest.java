@@ -38,7 +38,7 @@ public class SvgRootTest {
         String text = SvgRoot.saveToString(r);
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<svg height=\"100.0\" width=\"100.0\" style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
-                + "    <rect height=\"0.0\" rx=\"0.0\" ry=\"0.0\" width=\"0.0\" x=\"0.0\" y=\"0.0\"/>\n"
+                + "    <rect x=\"0.0\" y=\"0.0\" width=\"0.0\" height=\"0.0\"/>\n"
                 + "</svg>\n",
                 text);
     }

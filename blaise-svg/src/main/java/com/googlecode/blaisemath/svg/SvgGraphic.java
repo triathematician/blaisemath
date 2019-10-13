@@ -29,6 +29,7 @@ import com.googlecode.blaisemath.svg.reader.SvgGroupReader;
 import com.googlecode.blaisemath.svg.reader.SvgReadException;
 import com.googlecode.blaisemath.svg.xml.SvgElement;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -138,7 +139,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
     //endregion
     
     /** Generate transform used to scale/translate the SVG. Transforms the view box to within the graphic bounds. */
-    private AffineTransform transform() {
+    private @Nullable AffineTransform transform() {
         if (graphicBounds == null || !(element instanceof SvgRoot)) {
             return null;
         }
@@ -147,13 +148,13 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
     }
     
     /** Inverse transform. Transforms the graphic bounds to the view box. */
-    private AffineTransform inverseTransform() {
+    private @Nullable AffineTransform inverseTransform() {
         if (graphicBounds == null || !(element instanceof SvgRoot)) {
             return null;
         }
-        AffineTransform t = transform();
+        AffineTransform tx = transform();
         try {
-            return t == null || t.getDeterminant() == 0 ? null : t.createInverse();
+            return tx == null || tx.getDeterminant() == 0 ? null : tx.createInverse();
         } catch (NoninvertibleTransformException ex) {
             LOG.log(Level.SEVERE, "Unexpected", ex);
             return null;
@@ -164,7 +165,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
     public Rectangle2D boundingBox(Graphics2D canvas) {
         AffineTransform tx = transform();
         Rectangle2D norm = GraphicUtils.boundingBox(entries, canvas);
-        return tx == null ? norm : tx.createTransformedShape(norm).getBounds2D();
+        return tx == null || norm == null ? norm : tx.createTransformedShape(norm).getBounds2D();
     }
 
     @Override

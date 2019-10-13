@@ -26,12 +26,17 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.svg.render.SvgRenderer;
+import com.googlecode.blaisemath.svg.xml.SvgIo;
+import com.googlecode.blaisemath.svg.xml.SvgRoot;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -39,27 +44,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
-/**
- *
- * @author Elisha Peterson
- */
+import static com.googlecode.blaisemath.svg.BlaiseGraphicsTestApp.printAndCopyToClipboard;
+
 public class HelloWorldSvg extends JFrame {
 
     public HelloWorldSvg() {
-//        try {
-//            String svg = "<svg height=\"210\" width=\"400\"><path style=\"fill:#ff0000\" d=\"M150 0 L75 200 L225 200 Z\"/></svg>";
-//            SvgRoot root = SvgRoot.load(svg);
-//            SvgGraphicComponent comp = SvgGraphicComponent.create(root);
-//            comp.setPreferredSize(new Dimension(401,211));
-//            setContentPane(comp);
-//        } catch (IOException ex) {
-//            Logger.getLogger(HelloWorldSvg.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
-//        String svg = "<svg height=\"210\" width=\"400\"><path style=\"fill:#ff0000\" d=\"M150 0 L75 200 L225 200 Z\"/></svg>";
-//        SvgGraphicComponent comp = SvgGraphicComponent.create(svg);
-//        setContentPane(comp);
-        
         JGraphicComponent gc = new JGraphicComponent();
         Graphic g1 = JGraphics.path(new Rectangle2D.Double(0, 0, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f));
         Graphic g2 = JGraphics.path(new Rectangle2D.Double(500, 500, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f));
@@ -81,6 +70,17 @@ public class HelloWorldSvg extends JFrame {
                 gfc.setBoundingBoxVisible(true);
                 gfc.setGraphicBounds(new Rectangle2D.Double(50, 50, 400, 300));
                 gc.getGraphicRoot().setGraphics((List) Arrays.asList(g1, g2, g3, gfc));
+            }
+        });
+        tb.add(new AbstractAction("Print SVG"){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SvgRoot root = SvgRenderer.componentToSvg(gc);
+                try {
+                    printAndCopyToClipboard(SvgIo.writeToString(root));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         p.add(tb, BorderLayout.NORTH);

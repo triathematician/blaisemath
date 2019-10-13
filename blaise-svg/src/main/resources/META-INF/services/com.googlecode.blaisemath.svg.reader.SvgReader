@@ -1,0 +1,10 @@
+com.googlecode.blaisemath.svg.reader.SvgGroupReader
+com.googlecode.blaisemath.svg.reader.SvgCircleReader
+com.googlecode.blaisemath.svg.reader.SvgEllipseReader
+com.googlecode.blaisemath.svg.reader.SvgImageReader
+com.googlecode.blaisemath.svg.reader.SvgLineReader
+com.googlecode.blaisemath.svg.reader.SvgPathReader
+com.googlecode.blaisemath.svg.reader.SvgPolygonReader
+com.googlecode.blaisemath.svg.reader.SvgPolylineReader
+com.googlecode.blaisemath.svg.reader.SvgRectReader
+com.googlecode.blaisemath.svg.reader.SvgTextReader

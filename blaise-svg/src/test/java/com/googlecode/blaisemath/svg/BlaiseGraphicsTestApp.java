@@ -119,7 +119,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         System.out.println((t2-t1)+"ms to convert and write to string 1000 times");
     }
 
-    private static void printAndCopyToClipboard(Object o) {
+    static void printAndCopyToClipboard(Object o) {
         System.out.println(o);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(o+""), null);
     }
