@@ -101,7 +101,7 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
     
     /** Joins values into the result string */
     private static final Joiner.MapJoiner CODER_JOINER = Joiner.on("; ")
-            .withKeyValueSeparator(":");
+            .withKeyValueSeparator(":").useForNull(NULL_STRING);
     /** Functions used to encode specific types. Listed in order of type checks for encoding. */
     private static final CoderMap CODERS = new CoderMap()
                     .put(Color.class, Colors::encode)
@@ -165,23 +165,23 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
     }
 
     @Override
-    public AttributeSet decode(String str) {
-        requireNonNull(str);
+    public AttributeSet decode(String s) {
+        requireNonNull(s);
         
         // perform two separate splits instead of using MapSplitter to allow for duplicate keys
         AttributeSet res = new AttributeSet();
-        List<String> pairs = DECODER_PAIR_SPLITTER.splitToList(str);
+        List<String> pairs = DECODER_PAIR_SPLITTER.splitToList(s);
         for (String p : pairs) {
             List<String> kv = DECODER_KEY_SPLITTER.splitToList(p);
             if (kv.size() != 2) {
-                LOG.log(Level.WARNING, "Invalid attribute string: {0}", str);
+                LOG.log(Level.WARNING, "Invalid attribute string: {0}", s);
                 return res;
             }
             String key = kv.get(0);
-            String sval = kv.get(1);
-            Object val = NULL_STRING.equals(sval) ? null
-                    : types.containsKey(key) ? decodeValue(sval, types.get(key))
-                    : decodeValue(sval, Object.class);
+            String str = kv.get(1);
+            Object val = NULL_STRING.equals(str) ? null
+                    : types.containsKey(key) ? decodeValue(str, types.get(key))
+                    : decodeValue(str, Object.class);
             res.put(key, val);
         }
         return res;

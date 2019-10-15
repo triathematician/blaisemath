@@ -48,15 +48,11 @@ public class AttributeSetCoderTest {
     
     @Test
     public void testEncode() {
-        System.out.println("testEncode");
-        
         assertEquals("fill:#ff0000; stroke:#00ff00", inst.encode(AttributeSet.of("fill", Color.red, "stroke", Color.green)));
     }
 
     @Test
     public void testDecode() {
-        System.out.println("testDecode");
-        
         AttributeSet as = inst.decode("fill:  #ff0000 ; stroke :#00ff00;");
         assertEquals(2, as.getAttributes().size());
         assertEquals(Color.red, as.get("fill"));
@@ -69,8 +65,6 @@ public class AttributeSetCoderTest {
     
     @Test
     public void testConvertNull() {
-        System.out.println("testConvertNull");
-
         assertEquals("none", AttributeSetCoder.encodeValue(null));
         assertNull(AttributeSetCoder.decodeValue("none", Object.class));
         try {
@@ -83,16 +77,12 @@ public class AttributeSetCoderTest {
     
     @Test
     public void testConvertString() {
-        System.out.println("testConvertString");
-
         assertEquals("x", AttributeSetCoder.encodeValue("x"));
         assertEquals("x", AttributeSetCoder.decodeValue("x", Object.class));
     }
     
     @Test
     public void testConvertColor() {
-        System.out.println("testConvertColor");
-
         assertEquals("#ff0000", AttributeSetCoder.encodeValue(Color.red));
         assertEquals("#ff000080", AttributeSetCoder.encodeValue(Colors.alpha(Color.red, 128)));
         assertEquals(Color.red, AttributeSetCoder.decodeValue("#ff0000", Object.class));
@@ -103,8 +93,6 @@ public class AttributeSetCoderTest {
     
     @Test
     public void testConvertBoolean() {
-        System.out.println("testConvertBoolean");
-
         assertEquals("true", AttributeSetCoder.encodeValue(true));
         assertEquals("true", AttributeSetCoder.encodeValue("true"));
         assertEquals(true, typedInst.decode("Boolean: true").get("Boolean"));
@@ -131,8 +119,6 @@ public class AttributeSetCoderTest {
     
     @Test
     public void testConvertDouble() {
-        System.out.println("testConvertDouble");
-
         assertEquals("4.0", AttributeSetCoder.encodeValue(4.0));
         assertEquals(4.0, AttributeSetCoder.decodeValue("4.0", Object.class));
         assertEquals(4.0, typedInst.decode("Double: 4").get("Double"));
@@ -140,8 +126,6 @@ public class AttributeSetCoderTest {
     
     @Test
     public void testConvertPoint() {
-        System.out.println("testConvertPoint");
-
         assertEquals("(5.000000,6.000000)", AttributeSetCoder.encodeValue(new Point2D.Double(5,6)));
         assertEquals("(5,6)", AttributeSetCoder.encodeValue(new Point(5,6)));
         assertEquals(new Point2D.Double(5, 6), AttributeSetCoder.decodeValue("(5.0,6.0)", Object.class));
@@ -150,8 +134,6 @@ public class AttributeSetCoderTest {
     
     @Test
     public void testConvertRect() {
-        System.out.println("testConvertRect");
-        
         assertEquals("rectangle(5,6,7,8)", AttributeSetCoder.encodeValue(new Rectangle(5, 6, 7, 8)));
         assertEquals("rectangle2d(5.000000,6.000000,7.000000,8.000000)", AttributeSetCoder.encodeValue(new Rectangle2D.Double(5, 6, 7, 8)));
         assertEquals(new Rectangle2D.Double(5, 6, 7, 8), AttributeSetCoder.decodeValue("rectangle2d(5,6,7,8) ", Object.class));
@@ -162,7 +144,6 @@ public class AttributeSetCoderTest {
     
     @Test
     public void testEncodeDecode1() {
-        System.out.println("testEncodeDecode1");
         assertEquals("fill:#ffffff", inst.encode(AttributeSet.of("fill", Color.white)));
         assertEquals(ImmutableMap.of("fill", Color.white), inst.decode("fill:#ffffff").getAttributeMap());
         assertEquals(ImmutableMap.of("fill", Color.white), inst.decode("fill:#fff").getAttributeMap());
@@ -178,7 +159,6 @@ public class AttributeSetCoderTest {
 
     @Test
     public void testEncodeDecode2() {
-        System.out.println("testEncodeDecode2");
         AttributeSetCoder result = new AttributeSetCoder(
                 ImmutableMap.of("fill", String.class));
 
