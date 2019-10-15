@@ -31,10 +31,12 @@ import com.googlecode.blaisemath.svg.xml.SvgElement;
 import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgPath;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
+import com.googlecode.blaisemath.util.Colors;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.io.FileInputStream;
@@ -50,11 +52,11 @@ import static com.googlecode.blaisemath.svg.BlaiseGraphicsTestApp.printAndCopyTo
 public class SvgTool extends javax.swing.JFrame {
 
     private SvgGraphic gsvg;
+    private SvgIcon icon = new SvgIcon();
 
     private final JFileChooser chooser = new JFileChooser();
     private JTextArea text = new JTextArea();
     private JGraphicComponent canvas;
-    private JRadioButton pathButton;
 
     public SvgTool() {
         initComponents();
@@ -63,6 +65,8 @@ public class SvgTool extends javax.swing.JFrame {
         setMaximumSize(new Dimension(600,600));
         gsvg = new SvgGraphic();
         gsvg.setStyle(Styles.strokeWidth(Color.blue, 2f));
+        gsvg.setRenderBounds(true);
+        gsvg.setRenderViewBox(true);
         canvas.addGraphic(gsvg);
         canvas.addGraphic(JGraphics.path(new Rectangle2D.Double(0, 0, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
         canvas.addGraphic(JGraphics.path(new Rectangle2D.Double(500, 500, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
@@ -80,18 +84,15 @@ public class SvgTool extends javax.swing.JFrame {
         tb1.add(button("Load", this::loadButtonAction));
         tb1.add(button("Save", this::saveButtonAction));
         tb1.add(button("Print", this::printButtonAction));
-        tb1.add(button("Draw", this::drawButtonAction));
-        tb1.add(button("Reset Bounds", this::boundButtonAction));
+        tb1.add(button("Reset Graphic Bounds", this::boundButtonAction));
         getContentPane().add(tb1, java.awt.BorderLayout.PAGE_START);
 
         // initialize input panel side
         JToolBar tb2 = new JToolBar();
-        ButtonGroup group = new ButtonGroup();
         tb2.setRollover(true);
         tb2.setFloatable(false);
-        pathButton = radioButton("Path", true, group);
-        tb2.add(pathButton);
-        tb2.add(radioButton("SVG XML", false, group));
+        tb2.add(button("Draw Path", this::drawPathButtonAction));
+        tb2.add(button("Draw Graphic", this::drawGraphicButtonAction));
 
         text = new JTextArea();
         text.setColumns(20);
@@ -108,7 +109,9 @@ public class SvgTool extends javax.swing.JFrame {
         JTabbedPane tabs = new JTabbedPane();
         tabs.add(canvas, "Graphic in Canvas");
         tabs.add(new JPanel(), "Entire Canvas");
-        tabs.add(new JLabel(), "Icon");
+        JPanel p = new JPanel();
+        p.add(new JLabel(icon));
+        tabs.add(p, "Icon");
 
         JSplitPane splitPane = new JSplitPane();
         splitPane.setResizeWeight(0.7);
@@ -125,28 +128,18 @@ public class SvgTool extends javax.swing.JFrame {
         return b;
     }
 
-    private static JRadioButton radioButton(String text, boolean selected, ButtonGroup group) {
-        JRadioButton res = new JRadioButton();
-        res.setText(text);
-        res.setSelected(selected);
-        group.add(res);
-        return res;
+    private void drawPathButtonAction(java.awt.event.ActionEvent evt) {
+        gsvg.setElement(SvgPath.create(text.getText()));
     }
 
-    private void drawButtonAction(java.awt.event.ActionEvent evt) {
-        if (pathButton.isSelected()) {
-            gsvg.setElement(SvgPath.create(text.getText()));
-        } else {
-            try {
-                SvgRoot root = SvgRoot.load(text.getText());
-                gsvg.setElement(root);
-                Object bg = StyleReader.fromString(root.style).get("background");
-                if (bg instanceof Color) {
-                    canvas.setBackground((Color) bg);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    private void drawGraphicButtonAction(ActionEvent evt) {
+        try {
+            SvgRoot root = SvgRoot.load(text.getText());
+            gsvg.setElement(root);
+            icon.setElement(root);
+            repaint();
+        } catch (IOException ex) {
+            Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

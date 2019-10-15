@@ -1,22 +1,17 @@
 package com.googlecode.blaisemath.svg.render;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.graphics.*;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.graphics.swing.render.*;
-import com.googlecode.blaisemath.primitive.StyledText;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.svg.render.todo.*;
 import com.googlecode.blaisemath.svg.xml.SvgGroup;
-import com.googlecode.blaisemath.svg.xml.SvgImage;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
-import com.googlecode.blaisemath.svg.xml.SvgText;
 import com.googlecode.blaisemath.util.Colors;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.w3c.dom.Text;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -24,6 +19,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
 public abstract class SvgRenderer<S> implements Renderer<S, SvgTreeBuilder> {
+
+    public static final String BACKGROUND = "background";
 
     private static final Map<Class<? extends Renderer>, SvgRenderer<?>> RENDER_LOOKUP = ImmutableMap.<Class<? extends Renderer>, SvgRenderer<?>>builder()
             .put(IconRenderer.class, new SvgIconRenderer())
@@ -69,7 +66,7 @@ public abstract class SvgRenderer<S> implements Renderer<S, SvgTreeBuilder> {
         builder.getRoot().setWidth(component.getWidth());
         builder.getRoot().setHeight(component.getHeight());
         builder.getRoot().setViewBoxAsRectangle(PanAndZoomHandler.getLocalBounds(component));
-        builder.getRoot().addStyle("background", Colors.encode(component.getBackground()));
+        builder.getRoot().addStyle(BACKGROUND, Colors.encode(component.getBackground()));
         builder.getRoot().addStyle(Styles.FONT_SIZE, Styles.DEFAULT_TEXT_STYLE.get(Styles.FONT_SIZE));
         builder.getRoot().addStyle(component.getGraphicRoot().getStyle().getAttributeMap());
         component.getGraphicRoot().getGraphics().forEach(g -> svgRender(g, builder));

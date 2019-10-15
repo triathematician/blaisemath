@@ -33,9 +33,38 @@ public class SvgRootTest extends TestCase {
 
     @Test
     public void testXml() throws IOException {
-        assertEquals(SVG_HEADER + "<svg height=\"100.0\" width=\"100.0\" style=\"font-family:sans-serif\" " + SVG_NS_CLOSE, SvgIo.writeToCompactString(SvgRoot.create()));
-        assertEquals(SVG_HEADER + "<svg height=\"100.0\" width=\"100.0\" style=\"font-family:sans-serif\" " + SVG_NS_OPEN + "<line x1=\"1.0\" y1=\"2.0\" x2=\"3.0\" y2=\"4.0\"/></svg>",
+        assertEquals(SVG_HEADER + "<svg style=\"font-family:sans-serif\" " + SVG_NS_CLOSE, SvgIo.writeToCompactString(SvgRoot.create()));
+        assertEquals(SVG_HEADER + "<svg style=\"font-family:sans-serif\" " + SVG_NS_OPEN + "<line x1=\"1.0\" y1=\"2.0\" x2=\"3.0\" y2=\"4.0\"/></svg>",
                 SvgIo.writeToCompactString(SvgRoot.create(SvgLine.create(1, 2, 3, 4))));
+    }
+
+    @Test
+    public void testWrite() throws IOException {
+        SvgRoot r = new SvgRoot();
+        r.elements.add(new SvgRect());
+        String text = SvgRoot.saveToString(r);
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                        + "<svg style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
+                        + "    <rect x=\"0.0\" y=\"0.0\" width=\"0.0\" height=\"0.0\"/>\n"
+                        + "</svg>\n",
+                text);
+    }
+
+    @Test
+    public void testLoad() throws IOException {
+        SvgRoot.load(SvgRootTest.class.getResource("resources/test.svg").openStream());
+        SvgRoot.load(SvgRootTest.class.getResource("resources/test2.svg").openStream());
+        SvgRoot.load(SvgRootTest.class.getResource("resources/test3.svg").openStream());
+
+        SvgRoot.load("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                + "<svg height=\"100\" width=\"100\" style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"
+                + "<rect height=\"0.0\" rx=\"0.0\" ry=\"0.0\" width=\"0.0\" x=\"0.0\" y=\"0.0\"/>"
+                + "</svg>");
+
+        SvgRoot.load("<svg><rect height=\"0.0\" rx=\"0.0\" ry=\"0.0\" width=\"0.0\" x=\"0.0\" y=\"0.0\"/></svg>");
+
+        SvgRoot r2 = SvgRoot.load("<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\"><image xlink:href=\"file:src/test/resources/com/googlecode/blaisemath/svg/resources/cherries.png\"/></svg>");
+        assertTrue(r2.elements.get(0) instanceof SvgImage);
     }
     
 }

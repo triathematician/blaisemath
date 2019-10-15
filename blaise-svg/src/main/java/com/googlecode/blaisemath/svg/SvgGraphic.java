@@ -46,23 +46,27 @@ import java.util.logging.Logger;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Uses an {@link SvgElement} as a primitive to be rendered on a {@link JGraphicComponent}.
- * Allows setting bounding boxes, so that the SVG element can be scaled or moved on the canvas.
+ * Uses an {@link SvgElement} as a primitive to be rendered on a {@link JGraphicComponent}. If the primitive is an {@link SvgRoot}
+ * with a non-null view box, then that view box will be resized to fit within the {@code graphicBounds} specified in this object.
+ * Otherwise, if not an {@code SvgRoot} or if the view box or graphic bounds are not available, the elements are rendered using
+ * without transformations.
  * 
  * @author Elisha Peterson
  */
 public class SvgGraphic extends GraphicComposite<Graphics2D> {
 
     private static final Logger LOG = Logger.getLogger(SvgGraphic.class.getName());
-    private static final boolean RENDER_BOUNDS = false;
-    private static final boolean RENDER_VIEW_BOX = false;
     
     /** Source SVG element to be drawn */
     private SvgElement element;
     /** Describes where on the canvas the element will be drawn */
-    private Rectangle2D graphicBounds;
+    private @Nullable Rectangle2D graphicBounds;
     /** The graphic object that will be rendered */
     private Graphic<Graphics2D> primitiveElement;
+    /** Whether bounding box should be rendered */
+    private boolean renderBounds = false;
+    /** Whether view box should be rendered */
+    private boolean renderViewBox = false;
     
     /**
      * Create a new instance for the provided SVG.
@@ -91,7 +95,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
     }
     
     private void updateGraphics() {
-        Graphic<Graphics2D> nue = null;
+        Graphic<Graphics2D> nue;
         try {
             nue = SvgGroupReader.readGraphic(element);
             if (primitiveElement == null) {
@@ -102,9 +106,9 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
             primitiveElement = nue;
 
             if (element instanceof SvgRoot) {
-                double wid = ((SvgRoot) element).getWidth();
-                double ht = ((SvgRoot) element).getHeight();
-                this.graphicBounds = new Rectangle2D.Double(0, 0, wid, ht);
+                Integer wid = ((SvgRoot) element).getWidth();
+                Integer ht = ((SvgRoot) element).getHeight();
+                this.graphicBounds = wid == null || ht == null ? null : new Rectangle2D.Double(0, 0, wid, ht);
             }
         } catch (SvgReadException e) {
             LOG.log(Level.SEVERE, "Unable to read SVG", e);
@@ -127,15 +131,33 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
         }
     }
 
-    public Rectangle2D getGraphicBounds() {
+    public @Nullable Rectangle2D getGraphicBounds() {
         return graphicBounds;
     }
 
-    public void setGraphicBounds(Rectangle2D graphicBounds) {
+    public void setGraphicBounds(@Nullable Rectangle2D graphicBounds) {
         this.graphicBounds = graphicBounds;
         fireGraphicChanged();
     }
-    
+
+    public boolean isRenderBounds() {
+        return renderBounds;
+    }
+
+    public void setRenderBounds(boolean renderBounds) {
+        this.renderBounds = renderBounds;
+        fireGraphicChanged();
+    }
+
+    public boolean isRenderViewBox() {
+        return renderViewBox;
+    }
+
+    public void setRenderViewBox(boolean renderViewBox) {
+        this.renderViewBox = renderViewBox;
+        fireGraphicChanged();
+    }
+
     //endregion
     
     /** Generate transform used to scale/translate the SVG. Transforms the view box to within the graphic bounds. */
@@ -224,10 +246,20 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
     @Override
     public void renderTo(Graphics2D canvas) {
         AffineTransform tx = transform();
-        if (RENDER_BOUNDS && graphicBounds != null) {
+        if (renderBounds && graphicBounds != null) {
+            canvas.setStroke(new BasicStroke(1f));
             canvas.setColor(Color.red);
             canvas.draw(graphicBounds);
         }
+        if (element == null) {
+            return;
+        }
+        SvgUtils.backgroundColor(element).ifPresent(bg -> {
+            if (graphicBounds != null) {
+                canvas.setColor(bg);
+                canvas.fill(graphicBounds);
+            }
+        });
         if (tx == null) {
             super.renderTo(canvas);
         } else {
@@ -238,7 +270,8 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
             if (oldClip != null) {
                 canvas.setClip(viewBox.createIntersection(transform(oldClip.getBounds2D())));
             }
-            if (RENDER_VIEW_BOX) {
+            if (renderViewBox) {
+                canvas.setStroke(new BasicStroke(1f));
                 canvas.setColor(Color.blue);
                 canvas.draw(viewBox);
             }

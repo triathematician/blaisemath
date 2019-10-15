@@ -26,22 +26,24 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import java.util.Optional;
+
 public class SvgUtilsTest {
 
     @Test
     public void testParseLength() {
-        assertEquals(0.0, parseLength(null), 1e-3);
-        assertEquals(0.0, parseLength("not a number"), 1e-3);
-        assertEquals(0.0, parseLength("auto"), 1e-3);
-        assertEquals(0.0, parseLength("50.5%"), 1e-3);
+        assertEquals(Optional.empty(), parseLength(null));
+        assertEquals(Optional.empty(), parseLength("not a number"));
+        assertEquals(Optional.empty(), parseLength("auto"));
+        assertEquals(Optional.empty(), parseLength("50.5%"));
                 
-        assertEquals(12.0, parseLength("12"), 1e-3);
-        assertEquals(15.5999, parseLength("12px"), 1e-3);
-        assertEquals(12.0, parseLength("12pt"), 1e-3);
-        assertEquals(864.0, parseLength("12in"), 1e-3);
-        assertEquals(143.4599, parseLength("12em"), 1e-3);
-        assertEquals(-143.4599, parseLength("-12ex"), 1e-3);
-        assertEquals(16.2499, parseLength("12.5px"), 1e-3);
+        assertEquals(12.0, parseLength("12").get(), 1e-3);
+        assertEquals(15.5999, parseLength("12px").get(), 1e-3);
+        assertEquals(12.0, parseLength("12pt").get(), 1e-3);
+        assertEquals(864.0, parseLength("12in").get(), 1e-3);
+        assertEquals(143.4599, parseLength("12em").get(), 1e-3);
+        assertEquals(-143.4599, parseLength("-12ex").get(), 1e-3);
+        assertEquals(16.2499, parseLength("12.5px").get(), 1e-3);
     }
     
 }

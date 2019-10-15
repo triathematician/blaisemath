@@ -22,6 +22,7 @@ package com.googlecode.blaisemath.svg.xml;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -45,9 +46,9 @@ public final class SvgRoot extends SvgGroup {
 
     private static final Logger LOG = Logger.getLogger(SvgRoot.class.getName());
     
-    private Rectangle2D viewBox = null;
-    private double height = 100;
-    private double width = 100;
+    private @Nullable Rectangle2D viewBox = null;
+    private Integer height = null;
+    private Integer width = null;
 
     public SvgRoot() {
         style = "font-family:sans-serif";
@@ -87,48 +88,48 @@ public final class SvgRoot extends SvgGroup {
     }
 
     @XmlTransient
-    public Rectangle2D getViewBoxAsRectangle() {
+    public @Nullable Rectangle2D getViewBoxAsRectangle() {
         return viewBox;
     }
 
-    public void setViewBoxAsRectangle(Rectangle2D viewBox) {
+    public void setViewBoxAsRectangle(@Nullable Rectangle2D viewBox) {
         this.viewBox = viewBox;
     }
 
     @XmlTransient
-    public double getHeight() {
+    public @Nullable Integer getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(@Nullable Integer height) {
         this.height = height;
     }
 
     @XmlAttribute(name = "height")
     private String getHeightString() {
-        return height+"";
+        return height == null ? null : height.toString();
     }
     
     private void setHeightString(String ht) {
-        setHeight(parseLength(ht));
+        setHeight(parseLength(ht).map(Double::intValue).orElse(null));
     }
 
     @XmlTransient
-    public double getWidth() {
+    public @Nullable Integer getWidth() {
         return width;
     }
 
-    public void setWidth(double width) {
+    public void setWidth(@Nullable Integer width) {
         this.width = width;
     }
 
     @XmlAttribute(name = "width")
     private String getWidthString() {
-        return width+"";
+        return width == null ? null : width.toString();
     }
     
     private void setWidthString(String ht) {
-        setWidth(parseLength(ht));
+        setWidth(parseLength(ht).map(Double::intValue).orElse(null));
     }
     
     //endregion

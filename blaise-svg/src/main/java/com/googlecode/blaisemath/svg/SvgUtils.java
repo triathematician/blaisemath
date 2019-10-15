@@ -23,13 +23,20 @@ package com.googlecode.blaisemath.svg;
 import com.googlecode.blaisemath.geom.AffineTransformBuilder;
 import com.googlecode.blaisemath.graphics.svg.SvgPathCoder;
 import com.googlecode.blaisemath.primitive.Marker;
+import com.googlecode.blaisemath.svg.reader.StyleReader;
+import com.googlecode.blaisemath.svg.xml.SvgElement;
+import com.googlecode.blaisemath.util.Colors;
 
+import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Utility class for SVG paths.
@@ -44,7 +51,23 @@ public class SvgUtils {
     
     private SvgUtils() {
     }
-    
+
+    /**
+     * Get background color from SVG element, if it's present.
+     * @param element the element
+     * @return color
+     */
+    public static Optional<Color> backgroundColor(SvgElement element) {
+        requireNonNull(element);
+        Object bg = StyleReader.fromString(element.style).get("background");
+        if (bg instanceof String) {
+            return Optional.of(Colors.decode((String) bg));
+        } else if (bg instanceof Color) {
+            return Optional.of((Color) bg);
+        }
+        return Optional.empty();
+    }
+
     /**
      * Convert the given path string to a marker with given size.
      * @param svgPath SVG path string
@@ -72,25 +95,25 @@ public class SvgUtils {
      * @param len input length
      * @return equivalent # of points
      */
-    public static double parseLength(String len) {
+    public static Optional<Double> parseLength(String len) {
         if (len == null) {
-            LOG.log(Level.WARNING, "Null length: {0}", len);
-            return 0;
+            LOG.log(Level.WARNING, "Null length");
+            return Optional.empty();
         }
         String uselen = len.trim();
         Matcher m = LEN_PATTERN.matcher(uselen);
         if (m.matches()) {
             if ("auto".equals(len) || len.contains("%")) {
                 LOG.log(Level.WARNING, "Unsupported length: {0}", len);
-                return 0;
+                return Optional.empty();
             }
             String sunit = m.group(2);
             Unit unit = unit(sunit);
             String num = sunit == null ? len : len.substring(0, len.length()-sunit.length());
             Double val = Double.parseDouble(num);
-            return unit.toPixels(val);
+            return Optional.of(unit.toPixels(val));
         }
-        return 0;
+        return Optional.empty();
     }
     
     private static Unit unit(String unit) {

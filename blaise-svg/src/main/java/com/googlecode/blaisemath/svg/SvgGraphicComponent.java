@@ -72,9 +72,6 @@ public class SvgGraphicComponent extends JGraphicComponent {
     }
 
     //region PROPERTIES
-    //
-    // PROPERTIES
-    //
     
     public SvgElement getElement() {
         return graphic.getElement();
