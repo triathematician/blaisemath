@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.awt.geom.Rectangle2D;
-import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -133,86 +132,5 @@ public final class SvgRoot extends SvgGroup {
     }
     
     //endregion
-    
-    //region STATIC UTILITIES
-            
-    /**
-     * Attempt to load an SVG root object from the given string.
-     * @param input string
-     * @return root object, if loaded properly
-     * @throws java.io.IOException if input fails
-     */
-    public static SvgRoot load(String input) throws IOException {
-        return SvgIo.read(input);
-    }
-    
-    /**
-     * Attempt to load an SVG root object from the given source.
-     * @param input source
-     * @return root object, if loaded properly
-     * @throws java.io.IOException if input fails
-     */
-    public static SvgRoot load(InputStream input) throws IOException {
-        return SvgIo.read(input);
-    }
 
-    /**
-     * Attempt to load an SVG root object from the given source.
-     * @param reader source
-     * @return root object, if loaded properly
-     * @throws java.io.IOException if input fails
-     */
-    public static SvgRoot load(Reader reader) throws IOException {
-        return SvgIo.read(reader);
-    }
-    
-    /**
-     * Attempt to save an SVG root object to the given source.
-     * @param root object to save
-     * @return SVG string
-     * @throws java.io.IOException if save fails
-     */
-    public static String saveToString(SvgRoot root) throws IOException {
-        return SvgIo.writeToString(root);
-    }
-    
-    /**
-     * Attempt to save an SVG element to the given source, wrapping in a root
-     * SVG if necessary.
-     * @param el object to save
-     * @return SVG string
-     * @throws java.io.IOException if save fails
-     */
-    public static String saveToString(SvgElement el) throws IOException {
-        if (el instanceof SvgRoot) {
-            return saveToString((SvgRoot) el);
-        } else {
-            SvgRoot root = new SvgRoot();
-            root.elements.add(el);
-            return saveToString(root);
-        }
-    }
-    
-    /**
-     * Attempt to save an SVG root object to the given source.
-     * @param root object to save
-     * @param output where to save it
-     * @throws java.io.IOException if save fails
-     */
-    public static void save(SvgRoot root, OutputStream output) throws IOException {
-        SvgIo.write(root, output);
-    }
-    
-    /**
-     * Attempt to save an SVG root object to the given source.
-     * @param root object to save
-     * @param writer where to save it
-     * @throws java.io.IOException if save fails
-     */
-    public static void save(SvgRoot root, Writer writer) throws IOException {
-        SvgIo.write(root, writer);
-    }
-    
-    //endregion
-    
 }

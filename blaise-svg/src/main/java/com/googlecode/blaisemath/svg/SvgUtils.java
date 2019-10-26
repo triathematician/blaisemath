@@ -61,7 +61,12 @@ public class SvgUtils {
         requireNonNull(element);
         Object bg = StyleReader.fromString(element.style).get("background");
         if (bg instanceof String) {
-            return Optional.of(Colors.decode((String) bg));
+            try {
+                return Optional.of(Colors.decode((String) bg));
+            } catch (IllegalArgumentException x) {
+                LOG.log(Level.FINE, "Invalid color string: " + bg, x);
+                return Optional.empty();
+            }
         } else if (bg instanceof Color) {
             return Optional.of((Color) bg);
         }

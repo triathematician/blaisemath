@@ -1,26 +1,43 @@
 package com.googlecode.blaisemath.svg;
 
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.svg.reader.StyleReader;
+/*-
+ * #%L
+ * blaise-svg
+ * --
+ * Copyright (C) 2014 - 2019 Elisha Peterson
+ * --
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import com.googlecode.blaisemath.svg.xml.SvgElement;
+import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
-import com.googlecode.blaisemath.util.Colors;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.util.Optional;
 
 /**
- * A component that displays SVG content.
+ * A component that renders SVG content within an {@link Icon}. Supports setting arbitrary width/height. The SVG content
+ * will resize to fit.
  * @author Elisha Peterson
  */
 public class SvgIcon implements Icon {
 
     private SvgElement element;
-    private Integer width = null;
-    private Integer height = null;
+    private int iconWidth = 10;
+    private int iconHeight = 10;
 
     /**
      * Construct icon from SVG element.
@@ -41,7 +58,7 @@ public class SvgIcon implements Icon {
      */
     public static SvgIcon create(String svg) throws IOException {
         SvgIcon res = new SvgIcon();
-        res.setElement(SvgRoot.load(svg));
+        res.setElement(SvgIo.read(svg));
         return res;
     }
 
@@ -55,25 +72,31 @@ public class SvgIcon implements Icon {
         this.element = element;
         if (element instanceof SvgRoot) {
             SvgRoot r = (SvgRoot) element;
-            width = r.getWidth();
-            height = r.getHeight();
+            if (r.getWidth() != null) {
+                iconWidth = r.getWidth();
+            }
+            if (r.getHeight() != null) {
+                iconHeight = r.getHeight();
+            }
         }
     }
 
-    public Integer getWidth() {
-        return width;
+    @Override
+    public int getIconWidth() {
+        return iconWidth;
     }
 
-    public void setWidth(Integer width) {
-        this.width = width;
+    public void setIconWidth(int iconWidth) {
+        this.iconWidth = iconWidth;
     }
 
-    public Integer getHeight() {
-        return height;
+    @Override
+    public int getIconHeight() {
+        return iconHeight;
     }
 
-    public void setHeight(Integer height) {
-        this.height = height;
+    public void setIconHeight(int iconHeight) {
+        this.iconHeight = iconHeight;
     }
 
     //endregion
@@ -83,47 +106,17 @@ public class SvgIcon implements Icon {
         if (element == null) {
             return;
         }
+        Graphics2D canvas = (Graphics2D) g;
         SvgUtils.backgroundColor(element).ifPresent(bg -> {
-            g.setColor(bg);
-            g.fillRect(x, y, getIconWidth(), getIconHeight());
+            canvas.setColor(bg);
+            canvas.fillRect(x, y, iconWidth, iconHeight);
         });
 
-        JGraphicComponent jg = new JGraphicComponent();
-        jg.addGraphic(SvgGraphic.create(element));
-        if (element instanceof SvgRoot && ((SvgRoot) element).getViewBoxAsRectangle() != null) {
-            Rectangle2D r = ((SvgRoot) element).getViewBoxAsRectangle();
-            g.translate((int) -r.getX(), (int) -r.getY());
-            jg.renderTo((Graphics2D) g);
-            g.translate((int) r.getX(), (int) r.getY());
-        }
-    }
-
-    @Override
-    public int getIconWidth() {
-        if (width != null) {
-            return width;
-        } else if (element instanceof SvgRoot) {
-            SvgRoot r = (SvgRoot) element;
-            Rectangle2D vb = r.getViewBoxAsRectangle();
-            if (vb != null) {
-                return (int) vb.getWidth();
-            }
-        }
-        return 0;
-    }
-
-    @Override
-    public int getIconHeight() {
-        if (height != null) {
-            return height;
-        } else if (element instanceof SvgRoot) {
-            SvgRoot r = (SvgRoot) element;
-            Rectangle2D vb = r.getViewBoxAsRectangle();
-            if (vb != null) {
-                return (int) vb.getHeight();
-            }
-        }
-        return 0;
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        SvgElementGraphic seg = SvgElementGraphic.create(element);
+        seg.setRenderBackground(false);
+        seg.setCanvasBounds(new Rectangle(x, y, iconWidth, iconHeight));
+        seg.renderTo((Graphics2D) g);
     }
 
 }

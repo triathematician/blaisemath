@@ -66,9 +66,11 @@ public class HelloWorldSvg extends JFrame {
                         + "<path style=\"fill:#ff0000\" d=\"M150 0 L75 200 L225 200 Z\"/>"
                         + "<path style=\"fill:#0000ff\" d=\"M150 0 L75 200 L05 100 Z\"/>"
                         + "</svg>";
-                SvgGraphic gfc = SvgGraphic.create(svg);
+                SvgElementGraphic gfc = SvgElementGraphic.create(svg);
                 gfc.setBoundingBoxVisible(true);
-                gfc.setGraphicBounds(new Rectangle2D.Double(50, 50, 400, 300));
+                gfc.setRenderViewBox(true);
+                gfc.setRenderCanvasBounds(true);
+                gfc.setCanvasBounds(new Rectangle2D.Double(50, 50, 400, 300));
                 gc.getGraphicRoot().setGraphics((List) Arrays.asList(g1, g2, g3, gfc));
             }
         });

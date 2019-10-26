@@ -22,6 +22,7 @@ package com.googlecode.blaisemath.svg;
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.svg.xml.SvgElement;
+import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
 
 import java.awt.Dimension;
@@ -32,14 +33,14 @@ import java.util.logging.Logger;
 
 /**
  * Swing component for displaying a single SVG element or elements.
- * 
+ *
  * @author Elisha Peterson
  */
 public class SvgGraphicComponent extends JGraphicComponent {
 
     private static final Logger LOG = Logger.getLogger(SvgGraphicComponent.class.getName());
 
-    protected final SvgGraphic graphic = new SvgGraphic();
+    protected final SvgElementGraphic graphic = new SvgElementGraphic();
 
     public SvgGraphicComponent() {
         addGraphic(graphic);
@@ -64,9 +65,9 @@ public class SvgGraphicComponent extends JGraphicComponent {
     public static SvgGraphicComponent create(String svg) {
         SvgGraphicComponent res = new SvgGraphicComponent();
         res.setSvgText(svg);
-        Rectangle2D bounds = res.graphic.getGraphicBounds();
+        Rectangle2D bounds = res.graphic.getCanvasBounds();
         if (bounds != null) {
-            res.setPreferredSize(new Dimension((int) bounds.getWidth()+1, (int) bounds.getHeight()+1));
+            res.setPreferredSize(new Dimension((int) bounds.getWidth() + 1, (int) bounds.getHeight() + 1));
         }
         return res;
     }
@@ -83,7 +84,7 @@ public class SvgGraphicComponent extends JGraphicComponent {
     
     public String getSvgText() {
         try {
-            return SvgRoot.saveToString(graphic.getElement());
+            return SvgIo.writeToString(graphic.getElement());
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Unable to save SVG", x);
             return "<svg/>";
@@ -92,7 +93,7 @@ public class SvgGraphicComponent extends JGraphicComponent {
     
     public void setSvgText(String svg) {
         try {
-            setElement(SvgRoot.load(svg));
+            setElement(SvgIo.read(svg));
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Set SVG Failed", x);
         }

@@ -25,17 +25,14 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.svg.reader.StyleReader;
 import com.googlecode.blaisemath.svg.render.SvgRenderer;
 import com.googlecode.blaisemath.svg.xml.SvgElement;
 import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgPath;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
-import com.googlecode.blaisemath.util.Colors;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
@@ -45,13 +42,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
 
 import static com.googlecode.blaisemath.svg.BlaiseGraphicsTestApp.printAndCopyToClipboard;
 
 public class SvgTool extends javax.swing.JFrame {
+    private static final Logger LOG = Logger.getLogger(SvgTool.class.getName());
 
-    private SvgGraphic gsvg;
+    private SvgElementGraphic gsvg;
     private SvgIcon icon = new SvgIcon();
 
     private final JFileChooser chooser = new JFileChooser();
@@ -63,9 +60,9 @@ public class SvgTool extends javax.swing.JFrame {
         setMinimumSize(new Dimension(400,400));
         setPreferredSize(new Dimension(500,500));
         setMaximumSize(new Dimension(600,600));
-        gsvg = new SvgGraphic();
+        gsvg = new SvgElementGraphic();
         gsvg.setStyle(Styles.strokeWidth(Color.blue, 2f));
-        gsvg.setRenderBounds(true);
+        gsvg.setRenderCanvasBounds(true);
         gsvg.setRenderViewBox(true);
         canvas.addGraphic(gsvg);
         canvas.addGraphic(JGraphics.path(new Rectangle2D.Double(0, 0, 1000, 1000), Styles.strokeWidth(new Color(128, 128, 128, 128), 1f)));
@@ -134,12 +131,14 @@ public class SvgTool extends javax.swing.JFrame {
 
     private void drawGraphicButtonAction(ActionEvent evt) {
         try {
-            SvgRoot root = SvgRoot.load(text.getText());
+            SvgRoot root = SvgIo.read(text.getText());
             gsvg.setElement(root);
             icon.setElement(root);
+            icon.setIconWidth(100);
+            icon.setIconHeight(100);
             repaint();
         } catch (IOException ex) {
-            Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
     
@@ -152,9 +151,9 @@ public class SvgTool extends javax.swing.JFrame {
                     rootEl.elements.add(el);
                     el = rootEl;
                 }
-                SvgRoot.save((SvgRoot) el, out);
+                SvgIo.write((SvgRoot) el, out);
             } catch (IOException x) {
-                Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, x);
+                LOG.log(Level.SEVERE, null, x);
             }
         }
     }
@@ -171,18 +170,18 @@ public class SvgTool extends javax.swing.JFrame {
     private void loadButtonAction(java.awt.event.ActionEvent evt) {
         if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
             try (FileInputStream fis = new FileInputStream(chooser.getSelectedFile())) {
-                SvgRoot r = SvgRoot.load(fis);
+                SvgRoot r = SvgIo.read(fis);
                 gsvg.setElement(r);
-                String fs = Files.toString(chooser.getSelectedFile(), Charset.defaultCharset());
+                String fs = Files.asCharSource(chooser.getSelectedFile(), Charset.defaultCharset()).read();
                 text.setText(fs);
             } catch (IOException x) {
-                Logger.getLogger(SvgTool.class.getName()).log(Level.SEVERE, null, x);
+                LOG.log(Level.SEVERE, null, x);
             }
         }
     }
 
     private void boundButtonAction(java.awt.event.ActionEvent evt) {
-        gsvg.setGraphicBounds(new Rectangle(20, 50, 40, 100));
+        gsvg.setCanvasBounds(new Rectangle(20, 50, 40, 100));
     }
 
     public static void main(String args[]) {

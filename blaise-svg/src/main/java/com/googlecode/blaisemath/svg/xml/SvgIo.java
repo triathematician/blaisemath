@@ -40,25 +40,71 @@ public class SvgIo {
     private static Marshaller MARSHALLER;
     private static XMLFilter PARSE_FILTER;
     private static UnmarshallerHandler UNMARSHALLER_HANDLER;
-    
+
+    /**
+     * Attempt to load an SVG root object from the given string.
+     * @param input string
+     * @return root object, if loaded properly
+     * @throws java.io.IOException if input fails
+     */
     public static SvgRoot read(String input) throws IOException {
         return flexibleNamespaceParse(new InputSource(new StringReader(input)));
     }
 
+    /**
+     * Attempt to load an SVG root object from the given source.
+     * @param input source
+     * @return root object, if loaded properly
+     * @throws java.io.IOException if input fails
+     */
     public static SvgRoot read(InputStream input) throws IOException {
         return flexibleNamespaceParse(new InputSource(input));
     }
 
+    /**
+     * Attempt to load an SVG root object from the given source.
+     * @param reader source
+     * @return root object, if loaded properly
+     * @throws java.io.IOException if input fails
+     */
     public static SvgRoot read(Reader reader) throws IOException {
         return flexibleNamespaceParse(new InputSource(reader));
     }
 
+    /**
+     * Attempt to write an SVG root object as a string.
+     * @param root object to save
+     * @return SVG string
+     * @throws java.io.IOException if save fails
+     */
     public static String writeToString(SvgRoot root) throws IOException {
         StringWriter sw = new StringWriter();
         write(root, sw);
         return sw.toString();
     }
 
+    /**
+     * Attempt to save an SVG element to the given source, wrapping in a root SVG if necessary.
+     * @param el object to save
+     * @return SVG string
+     * @throws java.io.IOException if save fails
+     */
+    public static String writeToString(SvgElement el) throws IOException {
+        if (el instanceof SvgRoot) {
+            return writeToString((SvgRoot) el);
+        } else {
+            SvgRoot root = new SvgRoot();
+            root.elements.add(el);
+            return writeToString(root);
+        }
+    }
+
+    /**
+     * Attempt to save an SVG root object to the given source.
+     * @param root object to save
+     * @param output where to save it
+     * @throws java.io.IOException if save fails
+     */
     public static void write(SvgRoot root, OutputStream output) throws IOException {
         try {
             marshaller().marshal(root, output);
@@ -67,6 +113,12 @@ public class SvgIo {
         }
     }
 
+    /**
+     * Attempt to save an SVG root object to the given source.
+     * @param root object to save
+     * @param writer where to save it
+     * @throws java.io.IOException if save fails
+     */
     public static void write(SvgRoot root, Writer writer) throws IOException {
         try {
             marshaller().marshal(root, writer);
@@ -75,7 +127,7 @@ public class SvgIo {
         }
     }
 
-    static String writeToString(Object element) throws IOException {
+    private static String writeToString(Object element) throws IOException {
         try {
             StringWriter sw = new StringWriter();
             marshaller().marshal(element, sw);

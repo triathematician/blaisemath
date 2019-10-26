@@ -31,4 +31,7 @@ module com.googlecode.blaisemath.svg {
     requires com.googlecode.blaisemath.json;
 
     exports com.googlecode.blaisemath.svg;
+    exports com.googlecode.blaisemath.svg.reader;
+    exports com.googlecode.blaisemath.svg.render;
+    exports com.googlecode.blaisemath.svg.xml;
 }

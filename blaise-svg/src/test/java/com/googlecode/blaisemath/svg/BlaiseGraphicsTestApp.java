@@ -71,7 +71,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     JGraphicRoot root1;
     JGraphicComponent canvas1;
-    final AttributeSet pointsetStyle = RandomStyles.point();
+    final AttributeSet pointSetStyle = RandomStyles.point();
 
     private static final DOMImplementation DOM_IMPL = GenericDOMImplementation.getDOMImplementation();
     private static final String SVG_NS = "http://www.w3.org/2000/svg";
@@ -235,7 +235,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addPointSet() {      
         final BasicPointSetGraphic bp = new BasicPointSetGraphic(new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
-                this.pointsetStyle, MarkerRenderer.getInstance());
+                this.pointSetStyle, MarkerRenderer.getInstance());
         bp.addContextMenuInitializer((ContextMenuInitializer<Graphic<Graphics2D>>) (menu, src, point, focus, selection) -> {
             Point2D pt = bp.getPoint(bp.indexOf(point, null));
             menu.add(Points.format(pt, 2));
@@ -246,7 +246,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     @Action
     public void editPointSetStyle() {        
-        BasicPointStyleEditor ed = new BasicPointStyleEditor(pointsetStyle);
+        BasicPointStyleEditor ed = new BasicPointStyleEditor(pointSetStyle);
         ed.addPropertyChangeListener("style", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 canvas1.repaint();

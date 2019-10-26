@@ -20,21 +20,19 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.googlecode.blaisemath.geom.AffineTransformBuilder;
 import com.googlecode.blaisemath.graphics.Graphic;
-import com.googlecode.blaisemath.graphics.GraphicComposite;
 import com.googlecode.blaisemath.graphics.GraphicUtils;
+import com.googlecode.blaisemath.graphics.svg.SvgGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.svg.reader.SvgGroupReader;
 import com.googlecode.blaisemath.svg.reader.SvgReadException;
 import com.googlecode.blaisemath.svg.xml.SvgElement;
+import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -53,18 +51,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 
  * @author Elisha Peterson
  */
-public class SvgGraphic extends GraphicComposite<Graphics2D> {
+public class SvgElementGraphic extends SvgGraphic {
 
-    private static final Logger LOG = Logger.getLogger(SvgGraphic.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgElementGraphic.class.getName());
     
     /** Source SVG element to be drawn */
     private SvgElement element;
-    /** Describes where on the canvas the element will be drawn */
-    private @Nullable Rectangle2D graphicBounds;
     /** The graphic object that will be rendered */
     private Graphic<Graphics2D> primitiveElement;
+
+    /** Whether background should be rendered */
+    private boolean renderBackground = true;
     /** Whether bounding box should be rendered */
-    private boolean renderBounds = false;
+    private boolean renderCanvasBounds = false;
     /** Whether view box should be rendered */
     private boolean renderViewBox = false;
     
@@ -73,9 +72,9 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
      * @param element SVG to draw
      * @return graphic
      */
-    public static SvgGraphic create(SvgElement element) {
+    public static SvgElementGraphic create(SvgElement element) {
         checkNotNull(element);
-        SvgGraphic res = new SvgGraphic();
+        SvgElementGraphic res = new SvgElementGraphic();
         res.setElement(element);
         return res;
     }
@@ -85,35 +84,12 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
      * @param svg svg as a string
      * @return graphic
      */
-    public static SvgGraphic create(String svg) {
+    public static SvgElementGraphic create(String svg) {
         try {
-            return create(SvgRoot.load(svg));
+            return create(SvgIo.read(svg));
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Invalid SVG", ex);
-            return new SvgGraphic();
-        }
-    }
-    
-    private void updateGraphics() {
-        Graphic<Graphics2D> nue;
-        try {
-            nue = SvgGroupReader.readGraphic(element);
-            if (primitiveElement == null) {
-                addGraphic(nue);
-            } else {
-                replaceGraphics(Collections.singleton(primitiveElement), Collections.singleton(nue));
-            }
-            primitiveElement = nue;
-
-            if (element instanceof SvgRoot) {
-                Integer wid = ((SvgRoot) element).getWidth();
-                Integer ht = ((SvgRoot) element).getHeight();
-                this.graphicBounds = wid == null || ht == null ? null : new Rectangle2D.Double(0, 0, wid, ht);
-            }
-        } catch (SvgReadException e) {
-            LOG.log(Level.SEVERE, "Unable to read SVG", e);
-            primitiveElement = null;
-            clearGraphics();
+            return new SvgElementGraphic();
         }
     }
     
@@ -131,21 +107,21 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
         }
     }
 
-    public @Nullable Rectangle2D getGraphicBounds() {
-        return graphicBounds;
+    public boolean isRenderBackground() {
+        return renderBackground;
     }
 
-    public void setGraphicBounds(@Nullable Rectangle2D graphicBounds) {
-        this.graphicBounds = graphicBounds;
+    public void setRenderBackground(boolean renderBackground) {
+        this.renderBackground = renderBackground;
         fireGraphicChanged();
     }
 
-    public boolean isRenderBounds() {
-        return renderBounds;
+    public boolean isRenderCanvasBounds() {
+        return renderCanvasBounds;
     }
 
-    public void setRenderBounds(boolean renderBounds) {
-        this.renderBounds = renderBounds;
+    public void setRenderCanvasBounds(boolean renderCanvasBounds) {
+        this.renderCanvasBounds = renderCanvasBounds;
         fireGraphicChanged();
     }
 
@@ -159,29 +135,33 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
     }
 
     //endregion
-    
-    /** Generate transform used to scale/translate the SVG. Transforms the view box to within the graphic bounds. */
-    private @Nullable AffineTransform transform() {
-        if (graphicBounds == null || !(element instanceof SvgRoot)) {
-            return null;
-        }
-        Rectangle2D viewBox = ((SvgRoot) element).getViewBoxAsRectangle();
-        return viewBox == null ? null : AffineTransformBuilder.transformingTo(graphicBounds, viewBox);
-    }
-    
-    /** Inverse transform. Transforms the graphic bounds to the view box. */
-    private @Nullable AffineTransform inverseTransform() {
-        if (graphicBounds == null || !(element instanceof SvgRoot)) {
-            return null;
-        }
-        AffineTransform tx = transform();
+
+    private void updateGraphics() {
+        Graphic<Graphics2D> nue;
         try {
-            return tx == null || tx.getDeterminant() == 0 ? null : tx.createInverse();
-        } catch (NoninvertibleTransformException ex) {
-            LOG.log(Level.SEVERE, "Unexpected", ex);
-            return null;
+            nue = SvgGroupReader.readGraphic(element);
+            if (primitiveElement == null) {
+                addGraphic(nue);
+            } else {
+                replaceGraphics(Collections.singleton(primitiveElement), Collections.singleton(nue));
+            }
+            primitiveElement = nue;
+
+            if (element instanceof SvgRoot) {
+                Integer wid = ((SvgRoot) element).getWidth();
+                Integer ht = ((SvgRoot) element).getHeight();
+                this.size = wid == null || ht == null ? null : new Dimension(wid, ht);
+                this.canvasBounds = wid == null || ht == null ? null : new Rectangle2D.Double(0, 0, wid, ht);
+                this.viewBox = ((SvgRoot) element).getViewBoxAsRectangle();
+            }
+        } catch (SvgReadException e) {
+            LOG.log(Level.SEVERE, "Unable to read SVG", e);
+            primitiveElement = null;
+            clearGraphics();
         }
     }
+
+    //region GRAPHICS API LOCATIONS
 
     @Override
     public Rectangle2D boundingBox(Graphics2D canvas) {
@@ -198,8 +178,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
 
     @Override
     public boolean intersects(Rectangle2D box, Graphics2D canvas) {
-        Rectangle2D vb = viewBox();
-        Rectangle2D tbox = vb == null ? transform(box) : transform(box).createIntersection(vb);
+        Rectangle2D tbox = viewBox == null ? transform(box) : transform(box).createIntersection(viewBox);
         return tbox.getWidth() >= 0 && tbox.getHeight() >= 0 && super.intersects(tbox, canvas);
     }
 
@@ -217,8 +196,7 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
 
     @Override
     public Set<Graphic<Graphics2D>> selectableGraphicsIn(Rectangle2D box, Graphics2D canvas) {
-        Rectangle2D vb = viewBox();
-        Rectangle2D tp = vb == null ? transform(box) : transform(box).createIntersection(vb);
+        Rectangle2D tp = viewBox == null ? transform(box) : transform(box).createIntersection(viewBox);
         return tp.getWidth() <= 0 || tp.getHeight() <= 0 ? Collections.emptySet()
                 : super.selectableGraphicsIn(tp, canvas);
     }
@@ -243,62 +221,72 @@ public class SvgGraphic extends GraphicComposite<Graphics2D> {
         }
     }
 
+    private Point2D transform(Point2D pt) {
+        AffineTransform tx = inverseTransform();
+        return tx == null ? pt : tx.transform(pt, null);
+    }
+
+    private Rectangle2D transform(Rectangle2D box) {
+        AffineTransform tx = inverseTransform();
+        return tx == null ? box : tx.createTransformedShape(box).getBounds2D();
+    }
+
+    /** Test if point is in view box, where point is in svg coords */
+    private boolean inViewBox(Point2D pt) {
+        return viewBox == null || viewBox.contains(pt);
+    }
+
+    //endregion
+
     @Override
     public void renderTo(Graphics2D canvas) {
         AffineTransform tx = transform();
-        if (renderBounds && graphicBounds != null) {
-            canvas.setStroke(new BasicStroke(1f));
-            canvas.setColor(Color.red);
-            canvas.draw(graphicBounds);
-        }
+        maybeRenderCanvasBounds(canvas);
         if (element == null) {
             return;
         }
-        SvgUtils.backgroundColor(element).ifPresent(bg -> {
-            if (graphicBounds != null) {
-                canvas.setColor(bg);
-                canvas.fill(graphicBounds);
-            }
-        });
+        maybeRenderBackground(canvas);
         if (tx == null) {
             super.renderTo(canvas);
         } else {
             AffineTransform original = canvas.getTransform();
             Shape oldClip = canvas.getClip();
             canvas.transform(tx);
-            Rectangle2D viewBox = viewBox();
             if (oldClip != null) {
                 canvas.setClip(viewBox.createIntersection(transform(oldClip.getBounds2D())));
             }
-            if (renderViewBox) {
-                canvas.setStroke(new BasicStroke(1f));
-                canvas.setColor(Color.blue);
-                canvas.draw(viewBox);
-            }
+            maybeRenderViewBox(canvas, viewBox);
             super.renderTo(canvas);
             canvas.setTransform(original);
             canvas.setClip(oldClip);
         }
     }
-    
-    private Point2D transform(Point2D pt) {
-        AffineTransform tx = inverseTransform();
-        return tx == null ? pt : tx.transform(pt, null);
-    }
-    
-    private Rectangle2D transform(Rectangle2D box) {
-        AffineTransform tx = inverseTransform();
-        return tx == null ? box : tx.createTransformedShape(box).getBounds2D();
-    }
-    
-    private Rectangle2D viewBox() {
-        return element instanceof SvgRoot ? ((SvgRoot) element).getViewBoxAsRectangle() : null;
+
+    private void maybeRenderBackground(Graphics2D canvas) {
+        if (renderBackground) {
+            SvgUtils.backgroundColor(element).ifPresent(bg -> {
+                if (canvasBounds != null) {
+                    canvas.setColor(bg);
+                    canvas.fill(canvasBounds);
+                }
+            });
+        }
     }
 
-    /** Test if point is in view box, where point is in svg coords */
-    private boolean inViewBox(Point2D pt) {
-        Rectangle2D box = viewBox();
-        return box == null || box.contains(pt);
+    private void maybeRenderCanvasBounds(Graphics2D canvas) {
+        if (renderCanvasBounds && canvasBounds != null) {
+            canvas.setStroke(new BasicStroke(1f));
+            canvas.setColor(Color.red);
+            canvas.draw(canvasBounds);
+        }
+    }
+
+    private void maybeRenderViewBox(Graphics2D canvas, Rectangle2D viewBox) {
+        if (renderViewBox) {
+            canvas.setStroke(new BasicStroke(1f));
+            canvas.setColor(Color.blue);
+            canvas.draw(viewBox);
+        }
     }
 
 }
