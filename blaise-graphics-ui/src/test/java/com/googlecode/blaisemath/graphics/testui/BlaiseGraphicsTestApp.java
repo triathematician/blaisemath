@@ -215,8 +215,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         LabeledShapeGraphic gfc = new LabeledShapeGraphic();
         gfc.setPrimitive(rect);
         gfc.getObjectStyler().setLabel("this is a long label for a rectangle that should get wrapped, "
-                + "since it needs to be really big so we can adequately test something with a long label\n"
-                + "and new line characters\nx");
+                + "since it needs to be really big so we can adequately test something with a\n long\n label\n"
+                + "and\n\n\n new line characters\nx");
         gfc.getObjectStyler().setLabelStyle(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
         root1.addGraphic(gfc);
     }
