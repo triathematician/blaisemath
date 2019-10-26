@@ -93,29 +93,24 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** 
      * Return style provider with default styles
      * @return style provider with default styles
-     * @throws IllegalStateException if the object returned would be null
      */
     public StyleContext getStyleContext() {
         if (styleContext != null) {
             return styleContext;
-        } else {
-            checkState(parent != null);
+        } else if (parent != null) {
             return parent.getStyleContext();
+        } else {
+            return new StyleContext();
         }
     }
     
     /** 
      * Sets default style provider for all child entries (may be null) 
-     * @param styler the style provider (may be null)
-     * @throws IllegalArgumentException if the styler is null, and the composite cannot
-     *    get a non-null context from its parent
+     * @param styleContext the style provider (may be null)
      */
-    public void setStyleContext(@Nullable StyleContext styler) { 
-        if (styler == null) {
-            checkState(parent != null);
-        }
-        if (styleContext != styler) { 
-            styleContext = styler; 
+    public void setStyleContext(@Nullable StyleContext styleContext) {
+        if (this.styleContext != styleContext) {
+            this.styleContext = styleContext;
             fireGraphicChanged(); 
         } 
     }

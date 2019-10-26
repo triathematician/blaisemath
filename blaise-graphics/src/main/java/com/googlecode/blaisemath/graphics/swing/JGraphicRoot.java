@@ -111,9 +111,9 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
     }
 
     @Override
-    public void setStyleContext(StyleContext rend) {
-        checkArgument(rend != null, "GraphicRoot must have a non-null StyleProvider!");
-        super.setStyleContext(rend);
+    public void setStyleContext(StyleContext styleContext) {
+        checkArgument(styleContext != null, "GraphicRoot must have a non-null StyleProvider!");
+        super.setStyleContext(styleContext);
     }
 
     /**

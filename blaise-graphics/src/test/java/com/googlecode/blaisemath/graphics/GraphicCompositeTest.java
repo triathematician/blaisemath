@@ -153,16 +153,11 @@ public class GraphicCompositeTest {
     @Test
     public void testGetStyleContext() {
         assertNotNull(gc.getStyleContext());
-        try {
-            gc.setStyleContext(null);
-            fail("Composites must have style contexts.");
-        } catch (IllegalStateException x) {
-            // expected
-        }
     }
 
     @Test
     public void testSetStyleContext() {
+        gc.setStyleContext(null);
         gc.setStyleContext(new StyleContext());
     }
 

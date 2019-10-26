@@ -48,7 +48,7 @@ public class SvgPathCoder implements StringEncoder<Path2D>, StringDecoder<Path2D
     private static final DecimalFormat DF = new DecimalFormat("#.######");
     private static final DecimalFormat DF_LARGE = new DecimalFormat("#.######E0");
 
-    // TODO - is this reasonable, given that paths are not immutable?
+    // TODO - is this reasonable, given that Shape objects are not immutable?
     private static final LoadingCache<Shape, String> PATH_CACHE = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .build(new CacheLoader<>() {
