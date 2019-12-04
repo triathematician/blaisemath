@@ -167,7 +167,7 @@ public class WrappedTextRenderer extends TextRenderer {
         Rectangle2D res = null;
         for (StyledText t : lines) {
             Rectangle2D box = TextRenderer.getInstance().boundingBox(t.getText(), t.getStyle());
-            res = res == null ? box : res.createUnion(box);
+            res = box == null ? res : res == null ? box : res.createUnion(box);
         }
         return res;
     }
