@@ -136,7 +136,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         }
 
         Font font = Styles.fontOf(style);
-        FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, false)
+        FontRenderContext frc = canvas == null ? new FontRenderContext(font.getTransform(), true, true)
                 : canvas.getFontRenderContext();
         TextBoundsInfo info = new TextBoundsInfo(primitive.getText(), font, frc);
         Rectangle2D.Double dimensions;
