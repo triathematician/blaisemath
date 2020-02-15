@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.googlecode.blaisemath.svg.xml.SvgElement;
 import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
 
@@ -35,16 +34,19 @@ import java.io.IOException;
  */
 public class SvgIcon implements Icon {
 
-    private SvgElement element;
+    private SvgRoot element;
     private int iconWidth = 10;
     private int iconHeight = 10;
+
+    private boolean renderViewport = false;
+    private boolean renderViewBox = false;
 
     /**
      * Construct icon from SVG element.
      * @param el base element
      * @return icon
      */
-    public static SvgIcon create(SvgElement el) {
+    public static SvgIcon create(SvgRoot el) {
         SvgIcon res = new SvgIcon();
         res.setElement(el);
         return res;
@@ -64,21 +66,14 @@ public class SvgIcon implements Icon {
 
     //region PROPERTIES
 
-    public SvgElement getElement() {
+    public SvgRoot getElement() {
         return element;
     }
 
-    public void setElement(SvgElement element) {
+    public void setElement(SvgRoot element) {
         this.element = element;
-        if (element instanceof SvgRoot) {
-            SvgRoot r = (SvgRoot) element;
-            if (r.getWidth() != null) {
-                iconWidth = r.getWidth();
-            }
-            if (r.getHeight() != null) {
-                iconHeight = r.getHeight();
-            }
-        }
+        iconWidth = element.getWidth();
+        iconHeight = element.getHeight();
     }
 
     @Override
@@ -99,6 +94,22 @@ public class SvgIcon implements Icon {
         this.iconHeight = iconHeight;
     }
 
+    public boolean isRenderViewport() {
+        return renderViewport;
+    }
+
+    public void setRenderViewport(boolean renderViewport) {
+        this.renderViewport = renderViewport;
+    }
+
+    public boolean isRenderViewBox() {
+        return renderViewBox;
+    }
+
+    public void setRenderViewBox(boolean renderViewBox) {
+        this.renderViewBox = renderViewBox;
+    }
+
     //endregion
 
     @Override
@@ -113,9 +124,10 @@ public class SvgIcon implements Icon {
         });
 
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        SvgElementGraphic seg = SvgElementGraphic.create(element);
-        seg.setRenderBackground(false);
-        seg.setCanvasBounds(new Rectangle(x, y, iconWidth, iconHeight));
+        SvgRootGraphic seg = SvgRootGraphic.create(element);
+        seg.setRenderViewport(renderViewport);
+        seg.setRenderViewBox(renderViewBox);
+        seg.setViewport(new Rectangle(x, y, iconWidth, iconHeight));
         seg.renderTo((Graphics2D) g);
     }
 

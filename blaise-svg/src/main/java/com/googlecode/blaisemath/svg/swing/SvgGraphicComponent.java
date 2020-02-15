@@ -21,7 +21,6 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.svg.xml.SvgElement;
 import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
 
@@ -40,7 +39,7 @@ public class SvgGraphicComponent extends JGraphicComponent {
 
     private static final Logger LOG = Logger.getLogger(SvgGraphicComponent.class.getName());
 
-    protected final SvgElementGraphic graphic = new SvgElementGraphic();
+    protected final SvgRootGraphic graphic = new SvgRootGraphic();
 
     public SvgGraphicComponent() {
         addGraphic(graphic);
@@ -51,7 +50,7 @@ public class SvgGraphicComponent extends JGraphicComponent {
      * @param svg the svg
      * @return component
      */
-    public static SvgGraphicComponent create(SvgElement svg) {
+    public static SvgGraphicComponent create(SvgRoot svg) {
         SvgGraphicComponent res = new SvgGraphicComponent();
         res.setElement(svg);
         return res;
@@ -61,42 +60,65 @@ public class SvgGraphicComponent extends JGraphicComponent {
      * Create the component with the given SVG string
      * @param svg the svg
      * @return component
+     * @throws IOException if SVG is invalid
      */
-    public static SvgGraphicComponent create(String svg) {
+    public static SvgGraphicComponent create(String svg) throws IOException {
         SvgGraphicComponent res = new SvgGraphicComponent();
         res.setSvgText(svg);
-        Rectangle2D bounds = res.graphic.getCanvasBounds();
-        if (bounds != null) {
-            res.setPreferredSize(new Dimension((int) bounds.getWidth() + 1, (int) bounds.getHeight() + 1));
-        }
+        Rectangle2D bounds = res.graphic.getViewport();
+        res.setPreferredSize(new Dimension((int) bounds.getWidth() + 1, (int) bounds.getHeight() + 1));
         return res;
     }
 
     //region PROPERTIES
     
-    public SvgElement getElement() {
+    public SvgRoot getElement() {
         return graphic.getElement();
     }
 
-    public void setElement(SvgElement el) {
+    public void setElement(SvgRoot el) {
         graphic.setElement(el);
     }
     
-    public String getSvgText() {
+    public String getSvgText() throws IOException {
+        return SvgIo.writeToString(graphic.getElement());
+    }
+    
+    public void setSvgText(String svg) throws IOException {
+        setElement(SvgIo.read(svg));
+    }
+
+    public String tryGetSvgText() {
         try {
-            return SvgIo.writeToString(graphic.getElement());
+            return getSvgText();
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Unable to save SVG", x);
             return "<svg/>";
         }
     }
-    
-    public void setSvgText(String svg) {
+
+    public void trySetSvgText(String svg) {
         try {
-            setElement(SvgIo.read(svg));
+            setSvgText(svg);
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Set SVG Failed", x);
         }
+    }
+
+    public boolean isRenderViewport() {
+        return graphic.isRenderViewport();
+    }
+
+    public void setRenderViewport(boolean value) {
+        graphic.setRenderViewport(value);
+    }
+
+    public boolean isRenderViewBox() {
+        return graphic.isRenderViewBox();
+    }
+
+    public void setRenderViewBox(boolean value) {
+        graphic.setRenderViewBox(value);
     }
     
     //endregion

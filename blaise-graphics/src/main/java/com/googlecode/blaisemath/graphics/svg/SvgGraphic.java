@@ -22,23 +22,23 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.geom.AffineTransformBuilder;
-import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicComposite;
-import com.googlecode.blaisemath.style.AttributeSet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A graphic designed to contain SVG content, to be rendered on a canvas. When drawn the source content will draw within
  * the target location on the canvas (defined by the {@code canvasBounds} property). To do this mapping, source content
- * should set eithr the {@code viewBox} field, to specify the boundaries to be fit explicitly, or else the
+ * should set either the {@code viewBox} field, to specify the boundaries to be fit explicitly, or else the
  *
  * @author Elisha Peterson
  */
@@ -51,42 +51,23 @@ public abstract class SvgGraphic extends GraphicComposite<Graphics2D> {
     public static final String VIEW_BOX = "viewBox";
     public static final String SIZE = "size";
 
-    /** Width/height of the content. */
-    protected @Nullable Dimension size = new Dimension(100, 100);
-    /** View box of the content to be drawn (in SVG coordinates) */
-    protected @Nullable Rectangle2D viewBox;
-    /** Boundary of view box in target canvas. */
-    protected @Nullable Rectangle2D canvasBounds;
+    /** View box, representing the dimensions of the source SVG content. */
+    protected @NonNull Rectangle2D viewBox = new Rectangle2D.Double(0, 0, 100, 100);
+    /** Viewport, representing the target rectangle on the canvas for content. */
+    protected @NonNull Rectangle2D viewport = new Rectangle2D.Double(0, 0, 100, 100);
     
     //region PROPERTIES
 
-    public @Nullable Dimension getSize() {
-        return size;
+    public @NonNull Dimension getSize() {
+        return new Dimension((int) viewport.getWidth(), (int) viewport.getHeight());
     }
 
-    public void setSize(@Nullable Dimension size) {
-        if (this.size != size) {
-            Object old = this.size;
-            this.size = size;
-            fireGraphicChanged();
-            pcs.firePropertyChange(SIZE, old, style);
-        }
-    }
-    
-    public int getWidth() {
-        return size == null ? 0 : size.width;
-    }
-
-    public int getHeight() {
-        return size == null ? 0 : size.height;
-    }
-
-    public @Nullable Rectangle2D getViewBox() {
+    public @NonNull Rectangle2D getViewBox() {
         return viewBox;
     }
 
-    public void setViewBox(@Nullable Rectangle2D viewBox) {
-        if (this.viewBox != viewBox) {
+    public void setViewBox(@NonNull Rectangle2D viewBox) {
+        if (this.viewBox != requireNonNull(viewBox)) {
             Object old = this.viewBox;
             this.viewBox = viewBox;
             fireGraphicChanged();
@@ -94,34 +75,34 @@ public abstract class SvgGraphic extends GraphicComposite<Graphics2D> {
         }
     }
 
-    public @Nullable Rectangle2D getCanvasBounds() {
-        return canvasBounds;
+    public @NonNull Rectangle2D getViewport() {
+        return viewport;
     }
 
-    public void setCanvasBounds(@Nullable Rectangle2D bounds) {
-        if (this.canvasBounds != bounds) {
-            Object old = this.canvasBounds;
-            this.canvasBounds = bounds;
+    public void setViewport(@NonNull Rectangle2D bounds) {
+        if (this.viewport != requireNonNull(bounds)) {
+            Object old = this.viewport;
+            Object oldSize = getSize();
+            this.viewport = bounds;
             fireGraphicChanged();
             pcs.firePropertyChange(CANVAS_BOUNDS, old, bounds);
+            pcs.firePropertyChange(SIZE, oldSize, getSize());
         }
     }
     
     //endregion
 
-    /** Generate transform used to scale/translate the SVG. Transforms the view box to within the graphic bounds. */
-    protected @Nullable AffineTransform transform() {
-        return canvasBounds == null || viewBox == null ? null
-                : AffineTransformBuilder.transformingTo(canvasBounds, viewBox);
+    /** Generate transform used to scale/translate the SVG. Transforms the viewbox to the viewport. */
+    protected AffineTransform transform() {
+        return AffineTransformBuilder.transformingTo(viewport, viewBox);
     }
 
     /** Inverse transform. Transforms the graphic bounds to the view box. */
     protected @Nullable AffineTransform inverseTransform() {
-        AffineTransform tx = transform();
         try {
-            return tx == null ? null : tx.createInverse();
+            return transform().createInverse();
         } catch (NoninvertibleTransformException ex) {
-            LOG.log(Level.SEVERE, "Unexpected", ex);
+            LOG.log(Level.SEVERE, "Target viewbox has 0 width or height!", ex);
             return null;
         }
     }
