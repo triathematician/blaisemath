@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg.util;
+package com.googlecode.blaisemath.svg.internal;
 
 /*
  * #%L

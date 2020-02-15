@@ -33,8 +33,8 @@ public class SvgRootTest extends TestCase {
 
     @Test
     public void testXml() throws IOException {
-        assertEquals(SVG_HEADER + "<svg style=\"font-family:sans-serif\" " + SVG_NS_CLOSE, SvgIo.writeToCompactString(SvgRoot.create()));
-        assertEquals(SVG_HEADER + "<svg style=\"font-family:sans-serif\" " + SVG_NS_OPEN + "<line x1=\"1.0\" y1=\"2.0\" x2=\"3.0\" y2=\"4.0\"/></svg>",
+        assertEquals(SVG_HEADER + "<svg height=\"150\" width=\"300\" style=\"font-family:sans-serif\" " + SVG_NS_CLOSE, SvgIo.writeToCompactString(SvgRoot.create()));
+        assertEquals(SVG_HEADER + "<svg height=\"150\" width=\"300\" style=\"font-family:sans-serif\" " + SVG_NS_OPEN + "<line x1=\"1.0\" y1=\"2.0\" x2=\"3.0\" y2=\"4.0\"/></svg>",
                 SvgIo.writeToCompactString(SvgRoot.create(SvgLine.create(1, 2, 3, 4))));
     }
 
@@ -44,7 +44,7 @@ public class SvgRootTest extends TestCase {
         r.elements.add(new SvgRect());
         String text = SvgIo.writeToString(r);
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        + "<svg style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
+                        + "<svg height=\"150\" width=\"300\" style=\"font-family:sans-serif\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
                         + "    <rect x=\"0.0\" y=\"0.0\" width=\"0.0\" height=\"0.0\"/>\n"
                         + "</svg>\n",
                 text);

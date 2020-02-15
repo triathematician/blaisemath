@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.swing;
 
 /*
  * #%L
@@ -24,6 +24,7 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.SingleFrameApplication;
 

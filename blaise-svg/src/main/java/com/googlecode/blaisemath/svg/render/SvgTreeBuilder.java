@@ -29,6 +29,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Builder object used for constructing a tree of SVG elements.
+ * @author Elisha Peterson
  */
 public class SvgTreeBuilder {
 

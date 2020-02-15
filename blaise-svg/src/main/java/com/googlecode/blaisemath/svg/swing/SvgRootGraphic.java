@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.swing;
 
 /*
  * #%L
@@ -24,6 +24,7 @@ import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicUtils;
 import com.googlecode.blaisemath.graphics.svg.SvgGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.svg.internal.SvgUtils;
 import com.googlecode.blaisemath.svg.reader.SvgGroupReader;
 import com.googlecode.blaisemath.svg.reader.SvgReadException;
 import com.googlecode.blaisemath.svg.xml.SvgIo;

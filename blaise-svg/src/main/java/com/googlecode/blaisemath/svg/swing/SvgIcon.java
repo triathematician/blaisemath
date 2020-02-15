@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.swing;
 
 /*-
  * #%L
@@ -20,6 +20,7 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.googlecode.blaisemath.svg.internal.SvgUtils;
 import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
 

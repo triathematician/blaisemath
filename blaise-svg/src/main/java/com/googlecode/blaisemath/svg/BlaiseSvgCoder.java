@@ -24,24 +24,28 @@ import com.googlecode.blaisemath.graphics.svg.SvgCoder;
 import com.googlecode.blaisemath.graphics.svg.SvgGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.svg.render.SvgRenderer;
-import com.googlecode.blaisemath.svg.xml.SvgElement;
+import com.googlecode.blaisemath.svg.swing.SvgRootGraphic;
 import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
 
 import java.io.IOException;
 
+/**
+ * Implements {@link SvgCoder} using Blaise libraries.
+ * @author Elisha Peterson
+ */
 public class BlaiseSvgCoder extends SvgCoder {
     @Override
     public SvgGraphic graphicFrom(JGraphicComponent comp) {
         SvgRoot root = SvgRenderer.componentToSvg(comp);
-        return SvgElementGraphic.create(root);
+        return SvgRootGraphic.create(root);
     }
 
     @Override
     public SvgGraphic decode(String str) {
         try {
             SvgRoot root = SvgIo.read(str);
-            return SvgElementGraphic.create(root);
+            return SvgRootGraphic.create(root);
         } catch (IOException e) {
             throw new IllegalArgumentException("Invalid SVG: "+str, e);
         }
@@ -49,9 +53,9 @@ public class BlaiseSvgCoder extends SvgCoder {
 
     @Override
     public String encode(SvgGraphic obj) {
-        if (obj instanceof SvgElementGraphic) {
+        if (obj instanceof SvgRootGraphic) {
             try {
-                return SvgIo.writeToString(((SvgElementGraphic) obj).getElement());
+                return SvgIo.writeToString(((SvgRootGraphic) obj).getElement());
             } catch (IOException e) {
                 throw new IllegalArgumentException("Failed to write string: " + obj);
             }

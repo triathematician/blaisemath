@@ -33,5 +33,7 @@ module com.googlecode.blaisemath.svg {
     exports com.googlecode.blaisemath.svg;
     exports com.googlecode.blaisemath.svg.reader;
     exports com.googlecode.blaisemath.svg.render;
+    exports com.googlecode.blaisemath.svg.swing;
     exports com.googlecode.blaisemath.svg.xml;
+    opens com.googlecode.blaisemath.svg.xml to java.xml.bind;
 }

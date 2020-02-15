@@ -22,6 +22,7 @@ package com.googlecode.blaisemath.svg.xml;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -33,11 +34,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.googlecode.blaisemath.svg.SvgUtils.parseLength;
+import static com.googlecode.blaisemath.svg.internal.SvgUtils.parseLength;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Root element for SVG object tree.
+ * Root element for SVG object tree. Stores width/height parameters as well as a viewbox to define the coordinate system
+ * for SVG content.
  * @author Elisha Peterson
  */
 @XmlRootElement(name="svg", namespace="http://www.w3.org/2000/svg")
@@ -46,8 +48,9 @@ public final class SvgRoot extends SvgGroup {
     private static final Logger LOG = Logger.getLogger(SvgRoot.class.getName());
     
     private @Nullable Rectangle2D viewBox = null;
-    private Integer height = null;
-    private Integer width = null;
+    private int height = 150;
+    private int width = 300;
+    private String preserveAspectRatio = null;
 
     public SvgRoot() {
         style = "font-family:sans-serif";
@@ -77,18 +80,18 @@ public final class SvgRoot extends SvgGroup {
             return;
         }
         try {
-            List<Double> vals = Splitter.onPattern("\\s+").splitToList(viewBox).stream()
+            List<Double> values = Splitter.onPattern("\\s+").splitToList(viewBox).stream()
                     .map(s -> s.contains(".") ? Double.valueOf(s) : Integer.valueOf(s))
                     .collect(toList());
-            this.viewBox = new Rectangle2D.Double(vals.get(0), vals.get(1), vals.get(2), vals.get(3));
+            this.viewBox = new Rectangle2D.Double(values.get(0), values.get(1), values.get(2), values.get(3));
         } catch (NumberFormatException | IndexOutOfBoundsException x) {
             LOG.log(Level.WARNING, "Invalid view box: " + viewBox, x);
         }
     }
 
     @XmlTransient
-    public @Nullable Rectangle2D getViewBoxAsRectangle() {
-        return viewBox;
+    public @NonNull Rectangle2D getViewBoxAsRectangle() {
+        return viewBox != null ? viewBox : new Rectangle2D.Double(0, 0, width, height);
     }
 
     public void setViewBoxAsRectangle(@Nullable Rectangle2D viewBox) {
@@ -96,41 +99,49 @@ public final class SvgRoot extends SvgGroup {
     }
 
     @XmlTransient
-    public @Nullable Integer getHeight() {
+    public int getHeight() {
         return height;
     }
 
-    public void setHeight(@Nullable Integer height) {
+    public void setHeight(int height) {
         this.height = height;
     }
 
     @XmlAttribute(name = "height")
     private String getHeightString() {
-        return height == null ? null : height.toString();
+        return height+"";
     }
     
     private void setHeightString(String ht) {
-        setHeight(parseLength(ht).map(Double::intValue).orElse(null));
+        setHeight(parseLength(ht).map(Double::intValue).orElse(150));
     }
 
     @XmlTransient
-    public @Nullable Integer getWidth() {
+    public int getWidth() {
         return width;
     }
 
-    public void setWidth(@Nullable Integer width) {
+    public void setWidth(int width) {
         this.width = width;
     }
 
     @XmlAttribute(name = "width")
     private String getWidthString() {
-        return width == null ? null : width.toString();
+        return width+"";
     }
     
     private void setWidthString(String ht) {
-        setWidth(parseLength(ht).map(Double::intValue).orElse(null));
+        setWidth(parseLength(ht).map(Double::intValue).orElse(300));
     }
-    
+
+    public @Nullable String getPreserveAspectRatio() {
+        return preserveAspectRatio;
+    }
+
+    public void setPreserveAspectRatio(@Nullable String preserveAspectRatio) {
+        this.preserveAspectRatio = preserveAspectRatio;
+    }
+
     //endregion
 
 }

@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.swing;
 
 /*
  * #%L
@@ -27,7 +27,6 @@ import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.svg.render.SvgRenderer;
-import com.googlecode.blaisemath.svg.swing.SvgRootGraphic;
 import com.googlecode.blaisemath.svg.xml.SvgIo;
 import com.googlecode.blaisemath.svg.xml.SvgRoot;
 

@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.swing;
 
 /*
  * #%L
@@ -41,8 +41,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.googlecode.blaisemath.svg.BlaiseGraphicsTestApp.printAndCopyToClipboard;
 
 public class SvgTool extends javax.swing.JFrame {
     private static final Logger LOG = Logger.getLogger(SvgTool.class.getName());
@@ -172,7 +170,7 @@ public class SvgTool extends javax.swing.JFrame {
     private void printButtonAction(java.awt.event.ActionEvent evt) {
         SvgRoot root = SvgRenderer.componentToSvg(canvas);
         try {
-            printAndCopyToClipboard(SvgIo.writeToString(root));
+            BlaiseGraphicsTestApp.printAndCopyToClipboard(SvgIo.writeToString(root));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

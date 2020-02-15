@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.svg.swing;
 
 /*
  * #%L
@@ -44,7 +44,6 @@ import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.*;
-import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import org.w3c.dom.DOMImplementation;
@@ -82,12 +81,12 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         GENERATOR_CONTEXT.setGenericImageHandler(IMAGE_HANDLER);
     }
 
-    @Action
+    @org.jdesktop.application.Action
     public void testBatik() throws IOException {
         printAndCopyToClipboard(batikSvg(canvas1));
     }
 
-    @Action
+    @org.jdesktop.application.Action
     public void testBatik1000() throws IOException {
         long t0 = System.currentTimeMillis();
         for (int i = 0; i < 1000; i++) {
@@ -97,13 +96,13 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         System.out.println((t1-t0)+"ms to write 1000 strings");
     }
 
-    @Action
+    @org.jdesktop.application.Action
     public void printSVG() throws IOException {
         SvgRoot root = SvgRenderer.componentToSvg(canvas1);
         printAndCopyToClipboard(SvgIo.writeToString(root));
     }
 
-    @Action
+    @org.jdesktop.application.Action
     public void printSVG1000() throws IOException {
         long t0 = System.currentTimeMillis();
         SvgRoot root = SvgRenderer.componentToSvg(canvas1);
@@ -119,7 +118,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         System.out.println((t2-t1)+"ms to convert and write to string 1000 times");
     }
 
-    static void printAndCopyToClipboard(Object o) {
+    public static void printAndCopyToClipboard(Object o) {
         System.out.println(o);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(o+""), null);
     }
@@ -133,8 +132,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     }
 
     //region GENERAL
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void clear1() {
         root1.clearGraphics();
     }
@@ -146,8 +145,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     //endregion
 
     //region BASIC
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addPoint() {        
         Point2D pt = randomPoint();
         PrimitiveGraphic bp = JGraphics.point(pt, RandomStyles.point());
@@ -155,16 +154,16 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         bp.setDragEnabled(true);
         root1.addGraphic(bp);
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addSegment() {        
         Line2D.Double line = new Line2D.Double(randomPoint(), randomPoint());
         PrimitiveGraphic bs = JGraphics.path(line, RandomStyles.path());
         bs.setDefaultTooltip("<html><b>Segment</b>: <i>" + line + "</i>");
         root1.addGraphic(bs);
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addRectangle() {        
         Rectangle2D.Double rect = new Rectangle2D.Double();
         rect.setFrameFromDiagonal(randomPoint(), randomPoint());
@@ -172,8 +171,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         bs.setDefaultTooltip("<html><b>Rectangle</b>: <i>" + rect + "</i>");
         root1.addGraphic(bs);
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addString() {        
         Point2D pt = randomPoint();
         AnchoredText txt = new AnchoredText(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
@@ -185,7 +184,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     private static final String[] ANCHORS = {Styles.TEXT_ANCHOR_END, Styles.TEXT_ANCHOR_MIDDLE, Styles.TEXT_ANCHOR_START};
     private static final String[] BASELINES = {Styles.ALIGN_BASELINE_BASELINE, Styles.ALIGN_BASELINE_MIDDLE, Styles.ALIGN_BASELINE_HANGING};
 
-    @Action
+    @org.jdesktop.application.Action
     public void addIcon() {
         Point2D pt = randomPoint();
         for (int i = 0; i < 3; i++) {
@@ -231,8 +230,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             };
         }
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addPointSet() {      
         final BasicPointSetGraphic bp = new BasicPointSetGraphic(new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
                 this.pointSetStyle, MarkerRenderer.getInstance());
@@ -243,8 +242,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         });
         root1.addGraphic(bp);
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void editPointSetStyle() {        
         BasicPointStyleEditor ed = new BasicPointStyleEditor(pointSetStyle);
         ed.addPropertyChangeListener("style", new PropertyChangeListener() {
@@ -258,8 +257,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     //endregion
 
     //region GRAPHICS WITH DELEGATORS
-        
-    @Action
+
+    @org.jdesktop.application.Action
     public void addDelegatingPointSet() {
         Set<String> list = new HashSet<String>(Arrays.asList(
                 "Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", 
@@ -289,8 +288,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         bp.setPointSelectionEnabled(true);
         root1.addGraphic(bp);        
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addDelegatingPointSet2() {
         Map<Integer,Point2D.Double> points2 = Maps.newLinkedHashMap();
         for (int i = 1; i <= 10; i++) {
@@ -320,8 +319,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         });
         root1.addGraphic(bp);        
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addDelegatingGraph() {
         // initialize graph object
         final Map<Integer,Point2D.Double> pts = Maps.newLinkedHashMap();
@@ -372,8 +371,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     //endregion
     
     //region COMPOSITES
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addLabeledShape() {
         Rectangle2D.Double rect = new Rectangle2D.Double();
         rect.setFrameFromDiagonal(randomPoint(), randomPoint());
@@ -388,7 +387,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         root1.addGraphic(gfc);
     }
 
-    @Action
+    @org.jdesktop.application.Action
     public void add2Point() {
         Point2D p1 = randomPoint(), p2 = randomPoint();
         TwoPointGraphic ag = new TwoPointGraphic(p1, p2, MarkerRenderer.getInstance());
@@ -396,8 +395,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         ag.setDragEnabled(true);
         root1.addGraphic(ag);        
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addDraggableSegment() {
         Point2D p1 = randomPoint(), p2 = randomPoint();
         SegmentGraphic ag = new SegmentGraphic(p1, p2, ArrowLocation.NONE, MarkerRenderer.getInstance(), PathRenderer.getInstance());
@@ -405,8 +404,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         ag.setDragEnabled(true);
         root1.addGraphic(ag);        
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addArrow() {      
         Point2D p1 = randomPoint(), p2 = randomPoint();
         SegmentGraphic ag = new SegmentGraphic(p1, p2, ArrowLocation.END, MarkerRenderer.getInstance(), PathRenderer.getInstance());
@@ -418,8 +417,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     //endregion
     
     //region COOL STUFF USING SPECIAL STYLES
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addRay() {
       Point2D p1 = randomPoint(), p2 = randomPoint();
         TwoPointGraphic ag = new TwoPointGraphic(p1, p2, MarkerRenderer.getInstance());
@@ -430,8 +429,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         ag.setDragEnabled(true);
         root1.addGraphic(ag);        
     }
-    
-    @Action
+
+    @org.jdesktop.application.Action
     public void addLine() {
       Point2D p1 = randomPoint(), p2 = randomPoint();
         TwoPointGraphic ag = new TwoPointGraphic(p1, p2, MarkerRenderer.getInstance());
@@ -472,7 +471,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
      * @return the instance of BlaiseGraphicsTestApp
      */
     public static BlaiseGraphicsTestApp getApplication() {
-        return Application.getInstance(BlaiseGraphicsTestApp.class);
+        return getInstance(BlaiseGraphicsTestApp.class);
     }
 
     /**

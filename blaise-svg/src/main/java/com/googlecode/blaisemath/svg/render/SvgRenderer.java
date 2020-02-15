@@ -38,6 +38,10 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
+/**
+ * Renders Blaise graphics content as SVG objects.
+ * @param <S> primitive object type
+ */
 public abstract class SvgRenderer<S> implements Renderer<S, SvgTreeBuilder> {
 
     public static final String BACKGROUND = "background";
