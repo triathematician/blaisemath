@@ -113,44 +113,49 @@ public class ArrowPathRenderer extends PathRenderer {
             return;
         }
 
-        // create arrowhead shape(s) at end of path
-        GeneralPath arrowShapes = new GeneralPath();
-        if (s instanceof Line2D) {
-            Line2D line = (Line2D) s;
-            if (arrowLoc == ArrowLocation.END || arrowLoc == ArrowLocation.BOTH) {
-                arrowShapes.append(createArrowhead(
-                        (float) line.getX1(), (float) line.getY1(),
-                        (float) line.getX2(), (float) line.getY2(), strokeWidth), false);
-            }
-            if (arrowLoc == ArrowLocation.START || arrowLoc == ArrowLocation.BOTH) {
-                arrowShapes.append(createArrowhead(
-                        (float) line.getX2(), (float) line.getY2(), 
-                        (float) line.getX1(), (float) line.getY1(), strokeWidth), false);
-            }
-        } else {
-            GeneralPath gp = (GeneralPath) s;
-            PathIterator pi = gp.getPathIterator(null);
-            float[] cur = new float[6], last = new float[6];
-            while (!pi.isDone()) {
-                int type = pi.currentSegment(cur);
-                if (type == PathIterator.SEG_LINETO) {
-                    if (arrowLoc == ArrowLocation.END || arrowLoc == ArrowLocation.BOTH) {
-                        arrowShapes.append(createArrowhead(last[0], last[1], cur[0], cur[1], strokeWidth), false);
-                    }
-                    if (arrowLoc == ArrowLocation.START || arrowLoc == ArrowLocation.BOTH) {
-                        arrowShapes.append(createArrowhead(cur[0], cur[1], last[0], last[1], strokeWidth), false);
-                    }
-                }
-                System.arraycopy(cur, 0, last, 0, 6);
-                pi.next();
-            }
-        }
-        
-        // draw filled arrowhead on top of path
+        // create and draw arrowhead shape(s) at end of path
+        GeneralPath arrowShapes = arrowShapes(s, arrowLoc, strokeWidth);
         canvas.setColor(stroke);
         canvas.fill(arrowShapes);
         canvas.setStroke(new BasicStroke(strokeWidth));
         PathRenderer.drawPatched(arrowShapes, canvas);
+    }
+
+    public static GeneralPath arrowShapes(Shape s, ArrowLocation loc, float strokeWidth) {
+        return s instanceof Line2D ? lineArrowShapes((Line2D) s, loc, strokeWidth) : pathArrowShapes((GeneralPath) s, loc, strokeWidth);
+    }
+
+    private static GeneralPath lineArrowShapes(Line2D line, ArrowLocation loc, float strokeWidth) {
+        GeneralPath res = new GeneralPath();
+        if (loc == ArrowLocation.END || loc == ArrowLocation.BOTH) {
+            res.append(createArrowhead((float) line.getX1(), (float) line.getY1(),
+                    (float) line.getX2(), (float) line.getY2(), strokeWidth), false);
+        }
+        if (loc == ArrowLocation.START || loc == ArrowLocation.BOTH) {
+            res.append(createArrowhead((float) line.getX2(), (float) line.getY2(),
+                    (float) line.getX1(), (float) line.getY1(), strokeWidth), false);
+        }
+        return res;
+    }
+
+    private static GeneralPath pathArrowShapes(GeneralPath path, ArrowLocation loc, float strokeWidth) {
+        GeneralPath res = new GeneralPath();
+        PathIterator pi = path.getPathIterator(null);
+        float[] cur = new float[6], last = new float[6];
+        while (!pi.isDone()) {
+            int type = pi.currentSegment(cur);
+            if (type == PathIterator.SEG_LINETO) {
+                if (loc == ArrowLocation.END || loc == ArrowLocation.BOTH) {
+                    res.append(createArrowhead(last[0], last[1], cur[0], cur[1], strokeWidth), false);
+                }
+                if (loc == ArrowLocation.START || loc == ArrowLocation.BOTH) {
+                    res.append(createArrowhead(cur[0], cur[1], last[0], last[1], strokeWidth), false);
+                }
+            }
+            System.arraycopy(cur, 0, last, 0, 6);
+            pi.next();
+        }
+        return res;
     }
     
     /** 
