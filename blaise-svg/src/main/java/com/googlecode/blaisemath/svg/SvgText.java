@@ -1,10 +1,15 @@
+/**
+ * SVGPolygon.java
+ * Created Sep 26, 2014
+ */
+
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +25,19 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.util.AnchoredText;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * SVG text object.
- *
- * @author Elisha Peterson
+ * <p>
+ *   SVG text object.
+ * </p>
+ * @author elisha
  */
-@JacksonXmlRootElement(localName="text")
-public final class SvgText extends SvgElement {
+@XmlRootElement(name="text")
+public final class SVGText extends SVGElement {
     
     private static final TextConverter CONVERTER_INST = new TextConverter();
     
@@ -39,20 +45,23 @@ public final class SvgText extends SvgElement {
     private double y;
     private String content;
 
-    public SvgText() {
+    public SVGText() {
         this(0, 0, "");
     }
 
-    public SvgText(double x, double y, String content) {
+    public SVGText(double x, double y, String content) {
         super("polygon");
         this.x = x;
         this.y = y;
         this.content = content;
     }
     
-    //region PROPERTIES
-
-    @JacksonXmlProperty(isAttribute = true)
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
+    @XmlAttribute
     public double getX() {
         return x;
     }
@@ -61,7 +70,7 @@ public final class SvgText extends SvgElement {
         this.x = x;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public double getY() {
         return y;
     }
@@ -80,21 +89,21 @@ public final class SvgText extends SvgElement {
         this.content = value;
     }
     
-    //endregion
+    //</editor-fold>
     
-    public static Converter<SvgText, AnchoredText> textConverter() {
+    public static Converter<SVGText, AnchoredText> textConverter() {
         return CONVERTER_INST;
     }
     
     
-    private static class TextConverter extends Converter<SvgText, AnchoredText> {
+    private static class TextConverter extends Converter<SVGText, AnchoredText> {
         @Override
-        protected SvgText doBackward(AnchoredText r) {
-            return new SvgText(r.getX(), r.getY(), r.getText());
+        protected SVGText doBackward(AnchoredText r) {
+            return new SVGText(r.getX(), r.getY(), r.getText());
         }
 
         @Override
-        protected AnchoredText doForward(SvgText r) {
+        protected AnchoredText doForward(SVGText r) {
             return new AnchoredText(r.x, r.y, r.content);
         }
     }

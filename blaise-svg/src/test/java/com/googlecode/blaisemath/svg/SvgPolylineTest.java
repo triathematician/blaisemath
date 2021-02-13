@@ -19,7 +19,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,12 +45,16 @@ import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 import org.junit.Test;
 
-public class SvgPolylineTest extends TestCase {
+/**
+ *
+ * @author elisha
+ */
+public class SVGPolylineTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgPolyline, GeneralPath> conv = SvgPolyline.shapeConverter();
+        Converter<SVGPolyline, GeneralPath> conv = SVGPolyline.shapeConverter();
         
         GeneralPath gp1 = new GeneralPath();
         gp1.moveTo(0, 0);
@@ -74,9 +78,9 @@ public class SvgPolylineTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgPolyline, GeneralPath> conv = SvgPolyline.shapeConverter();
+        Converter<SVGPolyline, GeneralPath> conv = SVGPolyline.shapeConverter();
         
-        SvgPolyline poly1 = new SvgPolyline("0,0 1,0 0,1");
+        SVGPolyline poly1 = new SVGPolyline("0,0 1,0 0,1");
         GeneralPath gp1 = conv.convert(poly1);
         PathIterator pi = gp1.getPathIterator(null);
         double[] crd = new double[6];
@@ -95,21 +99,21 @@ public class SvgPolylineTest extends TestCase {
         assertTrue(pi.isDone());
         
         try {
-            new SvgPolyline("not points");
+            new SVGPolyline("not points");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected
         }
         
         try {
-            new SvgPolyline("1,2,3 4,5 6,7");
+            new SVGPolyline("1,2,3 4,5 6,7");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected
         }
         
         try {
-            new SvgPolyline("1,a 4,5 6,7");
+            new SVGPolyline("1,a 4,5 6,7");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected

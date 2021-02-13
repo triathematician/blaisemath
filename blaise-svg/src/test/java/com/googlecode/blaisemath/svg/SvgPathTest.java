@@ -1,10 +1,15 @@
+/**
+ * SVGPathTest.java
+ * Created Dec 10, 2012
+ */
+
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +29,15 @@ import java.awt.geom.Path2D;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
-public class SvgPathTest {
+/**
+ * <p>
+ * </p>
+ * @author elisha
+ */
+public class SVGPathTest {
     
     private static Path2D toPath(String p) {
-        return SvgPath.shapeConverter().convert(new SvgPath(p));
+        return SVGPath.shapeConverter().convert(new SVGPath(p));
     }
     
     @Test
@@ -79,6 +89,6 @@ public class SvgPathTest {
     }
 
     private static String recyclePath(String path) {
-        return SvgPath.shapeConverter().reverse().convert(toPath(path)).getPathStr();
+        return SVGPath.shapeConverter().reverse().convert(toPath(path)).getPathStr();
     }
 }

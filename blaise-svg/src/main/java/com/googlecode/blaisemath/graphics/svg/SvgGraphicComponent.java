@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,8 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.svg.SvgElement;
-import com.googlecode.blaisemath.svg.SvgRoot;
-
+import com.googlecode.blaisemath.svg.SVGElement;
+import com.googlecode.blaisemath.svg.SVGRoot;
 import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -33,15 +32,15 @@ import java.util.logging.Logger;
 /**
  * Swing component for displaying a single SVG element or elements.
  * 
- * @author Elisha Peterson
+ * @author petereb1
  */
-public class SvgGraphicComponent extends JGraphicComponent {
+public class SVGGraphicComponent extends JGraphicComponent {
 
-    private static final Logger LOG = Logger.getLogger(SvgGraphicComponent.class.getName());
+    private static final Logger LOG = Logger.getLogger(SVGGraphicComponent.class.getName());
 
-    protected final SvgGraphic graphic = new SvgGraphic();
+    protected final SVGGraphic graphic = new SVGGraphic();
 
-    public SvgGraphicComponent() {
+    public SVGGraphicComponent() {
         addGraphic(graphic);
     }
     
@@ -50,8 +49,8 @@ public class SvgGraphicComponent extends JGraphicComponent {
      * @param svg the svg
      * @return component
      */
-    public static SvgGraphicComponent create(SvgElement svg) {
-        SvgGraphicComponent res = new SvgGraphicComponent();
+    public static SVGGraphicComponent create(SVGElement svg) {
+        SVGGraphicComponent res = new SVGGraphicComponent();
         res.setElement(svg);
         return res;
     }
@@ -61,8 +60,8 @@ public class SvgGraphicComponent extends JGraphicComponent {
      * @param svg the svg
      * @return component
      */
-    public static SvgGraphicComponent create(String svg) {
-        SvgGraphicComponent res = new SvgGraphicComponent();
+    public static SVGGraphicComponent create(String svg) {
+        SVGGraphicComponent res = new SVGGraphicComponent();
         res.setSvgText(svg);
         Rectangle2D bounds = res.graphic.getGraphicBounds();
         if (bounds != null) {
@@ -71,22 +70,22 @@ public class SvgGraphicComponent extends JGraphicComponent {
         return res;
     }
 
-    //region PROPERTIES
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
     
-    public SvgElement getElement() {
+    public SVGElement getElement() {
         return graphic.getElement();
     }
 
-    public void setElement(SvgElement el) {
+    public void setElement(SVGElement el) {
         graphic.setElement(el);
     }
     
     public String getSvgText() {
         try {
-            return SvgRoot.saveToString(graphic.getElement());
+            return SVGRoot.saveToString(graphic.getElement());
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Unable to save SVG", x);
             return "<svg/>";
@@ -95,12 +94,12 @@ public class SvgGraphicComponent extends JGraphicComponent {
     
     public void setSvgText(String svg) {
         try {
-            setElement(SvgRoot.load(svg));
+            setElement(SVGRoot.load(svg));
         } catch (IOException x) {
             LOG.log(Level.WARNING, "Set SVG Failed", x);
         }
     }
     
-    //endregion
+    //</editor-fold>
     
 }

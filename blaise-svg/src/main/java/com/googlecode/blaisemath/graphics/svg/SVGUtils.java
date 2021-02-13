@@ -1,10 +1,14 @@
-package com.googlecode.blaisemath.svg;
+/**
+ * SVGUtils.java
+ * Created on May 5, 2015
+ */
+package com.googlecode.blaisemath.graphics.svg;
 
 /*
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +25,11 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.util.geom.AffineTransformBuilder;
-
+import com.googlecode.blaisemath.svg.SVGPath;
+import com.googlecode.blaisemath.util.AffineTransformBuilder;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -32,16 +37,15 @@ import java.util.regex.Pattern;
 
 /**
  * Utility class for SVG paths.
- *
- * @author Elisha Peterson
+ * @author petereb1
  */
-public class SvgUtils {
+public class SVGUtils {
 
-    private static final Logger LOG = Logger.getLogger(SvgUtils.class.getName());
+    private static final Logger LOG = Logger.getLogger(SVGUtils.class.getName());
 
     private static final Pattern LEN_PATTERN = Pattern.compile("^auto$|^[+-]?[0-9]+\\.?([0-9]+)?(px|em|ex|%|in|cm|mm|pt|pc)?$");
     
-    private SvgUtils() {
+    private SVGUtils() {
     }
     
     /**
@@ -51,7 +55,7 @@ public class SvgUtils {
      * @return marker
      */
     public static final Marker pathToMarker(String svgPath, final float sz) {
-        final Path2D path = SvgPath.shapeConverter().convert(new SvgPath(svgPath));
+        final Path2D path = SVGPath.shapeConverter().convert(new SVGPath(svgPath));
         if (path == null) {
             
         }

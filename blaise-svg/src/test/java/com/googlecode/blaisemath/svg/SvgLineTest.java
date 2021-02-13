@@ -19,7 +19,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,15 +42,19 @@ import junit.framework.TestCase;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
-public class SvgLineTest extends TestCase {
+/**
+ *
+ * @author elisha
+ */
+public class SVGLineTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgLine, Line2D> conv = SvgLine.shapeConverter();
+        Converter<SVGLine, Line2D> conv = SVGLine.shapeConverter();
         
         Line2D l1 = new Line2D.Double(1.0, 2.0, 4.0, 3.0);
-        SvgLine line = conv.reverse().convert(l1);
+        SVGLine line = conv.reverse().convert(l1);
         assert line != null;
         assertEquals(1.0, line.getX1(), 1e-6);
         assertEquals(2.0, line.getY1(), 1e-6);
@@ -63,9 +67,9 @@ public class SvgLineTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgLine, Line2D> conv = SvgLine.shapeConverter();
+        Converter<SVGLine, Line2D> conv = SVGLine.shapeConverter();
         
-        SvgLine sLine = new SvgLine(1, 2, 3, 4);
+        SVGLine sLine = new SVGLine(1, 2, 3, 4);
         Line2D line = conv.convert(sLine);
         assert line != null;
         assertEquals(1.0, line.getX1(), 1e-6);

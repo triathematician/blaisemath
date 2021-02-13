@@ -19,7 +19,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,16 +37,21 @@ package com.googlecode.blaisemath.svg;
 
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.util.AnchoredText;
 import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
-public class SvgTextTest extends TestCase {
+/**
+ *
+ * @author elisha
+ */
+public class SVGTextTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgText, AnchoredText> conv = SvgText.textConverter();
+        Converter<SVGText, AnchoredText> conv = SVGText.textConverter();
         
         assertEquals(null, conv.reverse().convert(null));
         
@@ -55,7 +60,7 @@ public class SvgTextTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgText, AnchoredText> conv = SvgText.textConverter();
+        Converter<SVGText, AnchoredText> conv = SVGText.textConverter();
         
         assertEquals(null, conv.convert(null));
     }

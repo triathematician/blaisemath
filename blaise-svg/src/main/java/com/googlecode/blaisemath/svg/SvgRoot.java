@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,43 +20,44 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import static com.googlecode.blaisemath.graphics.svg.SVGUtils.parseLength;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.svg.io.SvgIo;
-
 import java.awt.geom.Rectangle2D;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.googlecode.blaisemath.svg.SvgUtils.parseLength;
 import static java.util.stream.Collectors.toList;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Root element for SVG object tree.
- * @author Elisha Peterson
+ * @author petereb1
  */
-@JacksonXmlRootElement(localName="svg")
-public final class SvgRoot extends SvgGroup {
+@XmlRootElement(name="svg")
+public final class SVGRoot extends SVGGroup {
 
-    private static final Logger LOG = Logger.getLogger(SvgRoot.class.getName());
+    private static final Logger LOG = Logger.getLogger(SVGRoot.class.getName());
     
     private Rectangle2D viewBox = null;
     private double height = 100;
     private double width = 100;
 
-    public SvgRoot() {
+    public SVGRoot() {
         setStyle(AttributeSet.of("font-family", "sans-serif"));
     }
     
-    //region PROPERTIES
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     public String getViewBox() {
         return viewBox == null ? null : String.format("%d %d %d %d", (int) viewBox.getMinX(), (int) viewBox.getMinY(), 
                 (int) viewBox.getWidth(), (int) viewBox.getHeight());
@@ -75,8 +76,8 @@ public final class SvgRoot extends SvgGroup {
             LOG.log(Level.WARNING, "Invalid view box: " + viewBox, x);
         }
     }
-
-    @JsonIgnore
+    
+    @XmlTransient
     public Rectangle2D getViewBoxAsRectangle() {
         return viewBox;
     }
@@ -85,7 +86,7 @@ public final class SvgRoot extends SvgGroup {
         this.viewBox = viewBox;
     }
 
-    @JsonIgnore
+    @XmlTransient
     public double getHeight() {
         return height;
     }
@@ -93,8 +94,8 @@ public final class SvgRoot extends SvgGroup {
     public void setHeight(double height) {
         this.height = height;
     }
-
-    @JacksonXmlProperty(isAttribute = true, localName = "height")
+    
+    @XmlAttribute(name = "height")
     private String getHeightString() {
         return height+"";
     }
@@ -103,7 +104,7 @@ public final class SvgRoot extends SvgGroup {
         setHeight(parseLength(ht));
     }
 
-    @JsonIgnore
+    @XmlTransient
     public double getWidth() {
         return width;
     }
@@ -111,8 +112,8 @@ public final class SvgRoot extends SvgGroup {
     public void setWidth(double width) {
         this.width = width;
     }
-
-    @JacksonXmlProperty(isAttribute = true, localName = "width")
+    
+    @XmlAttribute(name = "width")
     private String getWidthString() {
         return width+"";
     }
@@ -121,9 +122,9 @@ public final class SvgRoot extends SvgGroup {
         setWidth(parseLength(ht));
     }
     
-    //endregion
+    //</editor-fold>
     
-    //region STATIC UTILITIES
+    //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
             
     /**
      * Attempt to load an SVG root object from the given string.
@@ -131,7 +132,7 @@ public final class SvgRoot extends SvgGroup {
      * @return root object, if loaded properly
      * @throws java.io.IOException if input fails
      */
-    public static SvgRoot load(String input) throws IOException {
+    public static SVGRoot load(String input) throws IOException {
         return SvgIo.read(input);
     }
     
@@ -141,7 +142,7 @@ public final class SvgRoot extends SvgGroup {
      * @return root object, if loaded properly
      * @throws java.io.IOException if input fails
      */
-    public static SvgRoot load(InputStream input) throws IOException {
+    public static SVGRoot load(InputStream input) throws IOException {
         return SvgIo.read(input);
     }
 
@@ -151,7 +152,7 @@ public final class SvgRoot extends SvgGroup {
      * @return root object, if loaded properly
      * @throws java.io.IOException if input fails
      */
-    public static SvgRoot load(Reader reader) throws IOException {
+    public static SVGRoot load(Reader reader) throws IOException {
         return SvgIo.read(reader);
     }
     
@@ -161,7 +162,7 @@ public final class SvgRoot extends SvgGroup {
      * @return SVG string
      * @throws java.io.IOException if save fails
      */
-    public static String saveToString(SvgRoot root) throws IOException {
+    public static String saveToString(SVGRoot root) throws IOException {
         return SvgIo.writeToString(root);
     }
     
@@ -172,11 +173,11 @@ public final class SvgRoot extends SvgGroup {
      * @return SVG string
      * @throws java.io.IOException if save fails
      */
-    public static String saveToString(SvgElement el) throws IOException {
-        if (el instanceof SvgRoot) {
-            return saveToString((SvgRoot) el);
+    public static String saveToString(SVGElement el) throws IOException {
+        if (el instanceof SVGRoot) {
+            return saveToString((SVGRoot) el);
         } else {
-            SvgRoot root = new SvgRoot();
+            SVGRoot root = new SVGRoot();
             root.addElement(el);
             return saveToString(root);
         }
@@ -188,7 +189,7 @@ public final class SvgRoot extends SvgGroup {
      * @param output where to save it
      * @throws java.io.IOException if save fails
      */
-    public static void save(SvgRoot root, OutputStream output) throws IOException {
+    public static void save(SVGRoot root, OutputStream output) throws IOException {
         SvgIo.write(root, output);
     }
     
@@ -198,10 +199,10 @@ public final class SvgRoot extends SvgGroup {
      * @param writer where to save it
      * @throws java.io.IOException if save fails
      */
-    public static void save(SvgRoot root, Writer writer) throws IOException {
+    public static void save(SVGRoot root, Writer writer) throws IOException {
         SvgIo.write(root, writer);
     }
     
-    //endregion
+    //</editor-fold>
     
 }

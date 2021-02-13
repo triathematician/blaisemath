@@ -19,7 +19,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,17 +43,17 @@ import org.junit.Test;
 
 /**
  *
- * @author Elisha Peterson
+ * @author elisha
  */
-public class SvgEllipseTest extends TestCase {
+public class SVGEllipseTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgEllipse, Ellipse2D> conv = SvgEllipse.shapeConverter();
+        Converter<SVGEllipse, Ellipse2D> conv = SVGEllipse.shapeConverter();
         
         Ellipse2D e1 = new Ellipse2D.Double(1.0, 2.0, 2.0, 3.0);
-        SvgEllipse circ = conv.reverse().convert(e1);
+        SVGEllipse circ = conv.reverse().convert(e1);
         assert circ != null;
         assertEquals(2.0, circ.getCx(), 1e-6);
         assertEquals(3.5, circ.getCy(), 1e-6);
@@ -66,9 +66,9 @@ public class SvgEllipseTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgEllipse, Ellipse2D> conv = SvgEllipse.shapeConverter();
+        Converter<SVGEllipse, Ellipse2D> conv = SVGEllipse.shapeConverter();
         
-        SvgEllipse sEll = new SvgEllipse(1, 2, 3, 2);
+        SVGEllipse sEll = new SVGEllipse(1, 2, 3, 2);
         Ellipse2D ell = conv.convert(sEll);
         assert ell != null;
         assertEquals(-2.0, ell.getMinX(), 1e-6);

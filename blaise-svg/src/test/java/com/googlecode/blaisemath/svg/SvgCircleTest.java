@@ -1,10 +1,25 @@
+/*
+ * Copyright 2015 elisha.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +41,19 @@ import java.awt.geom.Ellipse2D;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class SvgCircleTest extends TestCase {
+/**
+ *
+ * @author elisha
+ */
+public class SVGCircleTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgCircle, Ellipse2D> conv = SvgCircle.shapeConverter();
+        Converter<SVGCircle, Ellipse2D> conv = SVGCircle.shapeConverter();
         
         Ellipse2D e1 = new Ellipse2D.Double(1.0, 2.0, 2.0, 2.0);
-        SvgCircle circ = conv.reverse().convert(e1);
+        SVGCircle circ = conv.reverse().convert(e1);
         assert circ != null;
         assertEquals(2.0, circ.getCx(), 1e-6);
         assertEquals(3.0, circ.getCy(), 1e-6);
@@ -53,9 +72,9 @@ public class SvgCircleTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SvgCircle, Ellipse2D> conv = SvgCircle.shapeConverter();
+        Converter<SVGCircle, Ellipse2D> conv = SVGCircle.shapeConverter();
         
-        SvgCircle circ = new SvgCircle(1, 2, 3);
+        SVGCircle circ = new SVGCircle(1, 2, 3);
         Ellipse2D ell = conv.convert(circ);
         assert ell != null;
         assertEquals(-2.0, ell.getMinX(), 1e-6);

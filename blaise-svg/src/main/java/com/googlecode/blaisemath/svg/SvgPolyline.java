@@ -1,10 +1,15 @@
+/**
+ * Polyline.java
+ * Created Sep 26, 2014
+ */
+
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,40 +25,42 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
-
-import java.awt.geom.GeneralPath;
-import java.awt.geom.PathIterator;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.PathIterator;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * SVG Polyline object.
- *
- * @author Elisha Peterson
+ * <p>
+ *   SVG Polyline object.
+ * </p>
+ * @author elisha
  */
-@JacksonXmlRootElement(localName="polyline")
-public final class SvgPolyline extends SvgElement {
+@XmlRootElement(name="polyline")
+public final class SVGPolyline extends SVGElement {
     
     private static final PolylineConverter CONVERTER_INST = new PolylineConverter();
     
     private String ptStr;
 
-    public SvgPolyline() {
+    public SVGPolyline() {
         super("polyline");
     }
 
-    public SvgPolyline(String pts) {
+    public SVGPolyline(String pts) {
         super("polyline");
         this.ptStr = checkPointString(pts);
     }
     
-    //region PROPERTIES
-
-    @JacksonXmlProperty(isAttribute = true, localName="points")
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
+    @XmlAttribute(name="points")
     public String getPointStr() {
         return ptStr;
     }
@@ -62,25 +69,25 @@ public final class SvgPolyline extends SvgElement {
         this.ptStr = checkPointString(ptStr);
     }
     
-    //endregion
+    //</editor-fold>
     
-    public static Converter<SvgPolyline, GeneralPath> shapeConverter() {
+    public static Converter<SVGPolyline, GeneralPath> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class PolylineConverter extends Converter<SvgPolyline, GeneralPath> {
+    private static final class PolylineConverter extends Converter<SVGPolyline, GeneralPath> {
         @Override
-        protected GeneralPath doForward(SvgPolyline a) {
+        protected GeneralPath doForward(SVGPolyline a) {
             return toPath(a.ptStr);
         }
 
         @Override
-        protected SvgPolyline doBackward(GeneralPath b) {
-            return new SvgPolyline(toPathString(b));
+        protected SVGPolyline doBackward(GeneralPath b) {
+            return new SVGPolyline(toPathString(b));
         }
     }
     
-    //region POINT STRING UTILITIES
+    //<editor-fold defaultstate="collapsed" desc="point string utilities">
     
     /** Ensures validity of a string of points */
     static String checkPointString(String s) {
@@ -126,7 +133,7 @@ public final class SvgPolyline extends SvgElement {
         while (!pi.isDone()) {
             curSegmentType = pi.currentSegment(cur);
             if (curSegmentType == PathIterator.SEG_LINETO || curSegmentType == PathIterator.SEG_MOVETO) {
-                String s = " "+ SvgPath.numStr(",", 6, cur[0], cur[1]);
+                String s = " "+SVGPath.numStr(",", 6, cur[0], cur[1]);
                 pathString.append(s);
                 if (s0 == null) {
                     s0 = s;
@@ -141,6 +148,6 @@ public final class SvgPolyline extends SvgElement {
         return pathString.toString().trim();
     }
     
-    //endregion
+    //</editor-fold>
 
 }

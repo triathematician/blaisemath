@@ -1,10 +1,15 @@
+/**
+ * SVGPath.java
+ * Created Dec 9, 2012
+ */
+
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +25,6 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.base.Strings;
@@ -36,36 +39,39 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * SVG path object.
- *
- * @author Elisha Peterson
+ * <p>
+ *   SVG path object.
+ * </p>
+ * @author elisha
  */
-@JacksonXmlRootElement(localName="path")
-public final class SvgPath extends SvgElement {
+@XmlRootElement(name="path")
+public final class SVGPath extends SVGElement {
 
-    private static final Logger LOG = Logger.getLogger(SvgPath.class.getName());
+    private static final Logger LOG = Logger.getLogger(SVGPath.class.getName());
 
     private static final PathConverter CONVERTER_INST = new PathConverter();
     
     private String pathStr;
     
-    public SvgPath() {
+    public SVGPath() {
         super("path");
     }
     
-    public SvgPath(String pathStr) {
+    public SVGPath(String pathStr) {
         super("path");
         this.pathStr = checkSvgPathStr(pathStr);
     }
         
     /**
-     * Create an {@code SvgPath} from a {@code PathIterator} object.
+     * Create an {@code SVGPath} from a {@code PathIterator} object.
      * @param pi path iterator
      * @return svg path
      */
-    public static SvgPath create(PathIterator pi) {
+    public static SVGPath create(PathIterator pi) {
         float[] cur = new float[6];
         int curSegmentType = -1;
         StringBuilder pathString = new StringBuilder();
@@ -92,12 +98,15 @@ public final class SvgPath extends SvgElement {
             }
             pi.next();
         }
-        return new SvgPath(pathString.toString().trim());
+        return new SVGPath(pathString.toString().trim());
     }
     
-    //region PROPERTIES
-
-    @JacksonXmlProperty(isAttribute = true, localName="d")
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
+    @XmlAttribute(name="d")
     public String getPathStr() {
         return pathStr;
     }
@@ -106,25 +115,25 @@ public final class SvgPath extends SvgElement {
         this.pathStr = checkSvgPathStr(pathStr);
     }
     
-    //endregion
+    //</editor-fold>
     
-    public static Converter<SvgPath, Path2D> shapeConverter() {
+    public static Converter<SVGPath, Path2D> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class PathConverter extends Converter<SvgPath, Path2D> {
+    private static final class PathConverter extends Converter<SVGPath, Path2D> {
         @Override
-        protected Path2D doForward(SvgPath path) {
+        protected Path2D doForward(SVGPath path) {
             return toPath(path.pathStr);
         }
 
         @Override
-        protected SvgPath doBackward(Path2D b) {
-            return SvgPath.create(b.getPathIterator(null));
+        protected SVGPath doBackward(Path2D b) {
+            return SVGPath.create(b.getPathIterator(null));
         }
     }
     
-    //region STATIC UTILITIES
+    //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
     
     /** Prints numbers w/ up to n digits of precision, removing trailing zeros */
     static String numStr(int prec, double val) {
@@ -305,8 +314,6 @@ public final class SvgPath extends SvgElement {
         AffineTransform rotation = AffineTransform.getRotateInstance(theta, cx, cy);
         path.append(rotation.createTransformedShape(arc), true);
     }
-
-    //endregion
 
     private enum SvgPathOperator {
         MOVE('m') {

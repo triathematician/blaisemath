@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.graphics.AnchoredIcon;
-import com.googlecode.blaisemath.graphics.AnchoredImage;
-import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveArrayGraphicSupport;
@@ -35,9 +32,28 @@ import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
-import com.googlecode.blaisemath.style.*;
-import com.googlecode.blaisemath.svg.*;
-import com.googlecode.blaisemath.svg.SvgElement;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.AttributeSets;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.style.xml.AttributeSetAdapter;
+import com.googlecode.blaisemath.svg.SVGCircle;
+import com.googlecode.blaisemath.svg.SVGElement;
+import com.googlecode.blaisemath.svg.SVGElements;
+import com.googlecode.blaisemath.svg.SVGEllipse;
+import com.googlecode.blaisemath.svg.SVGGroup;
+import com.googlecode.blaisemath.svg.SVGImage;
+import com.googlecode.blaisemath.svg.SVGLine;
+import com.googlecode.blaisemath.svg.SVGPath;
+import com.googlecode.blaisemath.svg.SVGPolygon;
+import com.googlecode.blaisemath.svg.SVGPolyline;
+import com.googlecode.blaisemath.svg.SVGRectangle;
+import com.googlecode.blaisemath.svg.SVGRoot;
+import com.googlecode.blaisemath.svg.SVGText;
+import com.googlecode.blaisemath.util.AnchoredIcon;
+import com.googlecode.blaisemath.util.AnchoredImage;
+import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -49,32 +65,33 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.namespace.QName;
 
 /** 
  * Adapter for converting SVG objects to/from Blaise {@link PrimitiveGraphicSupport} objects.
  * The conversion is imperfect in this implementation. Supported SVG types include:
  * <ul>
- *   <li>{@link SvgRectangle}, {@link SvgEllipse}, {@link SvgCircle}, {@link SvgPolygon}</li>
- *   <li>{@link SvgLine}, {@link SvgPolyline}</li>
- *   <li>{@link SvgPath}</li>
- *   <li>{@link SvgImage}</li>
- *   <li>{@link SvgText}</li>
- *   <li>{@link SvgGroup}</li>
+ *   <li>{@link SVGRectangle}, {@link SVGEllipse}, {@link SVGCircle}, {@link SVGPolygon}</li>
+ *   <li>{@link SVGLine}, {@link SVGPolyline}</li>
+ *   <li>{@link SVGPath}</li>
+ *   <li>{@link SVGImage}</li>
+ *   <li>{@link SVGText}</li>
+ *   <li>{@link SVGGroup}</li>
  * </ul>
- * This adapter also converts {@link SvgGroup} to/from {@link GraphicComposite}.
+ * This adapter also converts {@link SVGGroup} to/from {@link GraphicComposite}.
  * 
- * @author Elisha Peterson
+ * @author elisha
  */
-public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Graphics2D>> {
+public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Graphics2D>> {
     
-    private static final Logger LOG = Logger.getLogger(SvgElementGraphicConverter.class.getName());
-    private static final SvgElementGraphicConverter INST = new SvgElementGraphicConverter();
+    private static final Logger LOG = Logger.getLogger(SVGElementGraphicConverter.class.getName());
+    private static final SVGElementGraphicConverter INST = new SVGElementGraphicConverter();
 
     /**
      * Get global instance of the converter.
      * @return instance
      */
-    public static Converter<SvgElement, Graphic<Graphics2D>> getInstance() {
+    public static Converter<SVGElement, Graphic<Graphics2D>> getInstance() {
         return INST;
     }
 
@@ -83,65 +100,65 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
      * @param compt component to convert
      * @return result
      */
-    public static SvgRoot componentToSvg(JGraphicComponent compt) {
-        SvgRoot root = new SvgRoot();
+    public static SVGRoot componentToSvg(JGraphicComponent compt) {
+        SVGRoot root = new SVGRoot();
         root.setWidth(compt.getWidth());
         root.setHeight(compt.getHeight());
         root.setViewBoxAsRectangle(PanAndZoomHandler.getLocalBounds(compt));
-        root.getStyle().put("background", Colors.encode(compt.getBackground()));
+        root.getStyle().put("background", Colors.stringConverter().convert(compt.getBackground()));
         root.getStyle().put(Styles.FONT_SIZE, Styles.DEFAULT_TEXT_STYLE.get(Styles.FONT_SIZE));
-        SvgGroup group = (SvgGroup) SvgElementGraphicConverter.getInstance().reverse()
+        SVGGroup group = (SVGGroup) SVGElementGraphicConverter.getInstance().reverse()
                 .convert(compt.getGraphicRoot());
         group.getElements().forEach(root::addElement);
         return root;
     }
     
     /**
-     * Convert an {@link SvgElement} to a {@link Graphic}. The resulting object will
-     * be a {@link GraphicComposite} if the argument is an instance of {@link SvgGroup}
-     * or {@link SvgRoot}, and otherwise a {@link PrimitiveGraphicSupport}. In the case of
+     * Convert an {@link SVGElement} to a {@link Graphic}. The resulting object will
+     * be a {@link GraphicComposite} if the argument is an instance of {@link SVGGroup}
+     * or {@link SVGRoot}, and otherwise a {@link PrimitiveGraphicSupport}. In the case of
      * a group, recursive calls are made to convert all elements in the group.
      * 
      * @param sh the element to convert
      * @return the corresponding graphic
      */
     @Override
-    public Graphic<Graphics2D> doForward(SvgElement sh) {
+    public Graphic<Graphics2D> doForward(SVGElement sh) {
         Graphic<Graphics2D> prim = null;
         AttributeSet style = aggregateStyle(sh);
-        if (sh instanceof SvgRectangle) {
-            RectangularShape rsh = SvgRectangle.shapeConverter().convert((SvgRectangle) sh);
+        if (sh instanceof SVGRectangle) {
+            RectangularShape rsh = SVGRectangle.shapeConverter().convert((SVGRectangle) sh);
             prim = JGraphics.shape(rsh, style);
-        } else if (sh instanceof SvgEllipse) {
-            Shape rsh = SvgEllipse.shapeConverter().convert((SvgEllipse) sh);
+        } else if (sh instanceof SVGEllipse) {
+            Shape rsh = SVGEllipse.shapeConverter().convert((SVGEllipse) sh);
             prim = JGraphics.shape(rsh, style);
-        } else if (sh instanceof SvgCircle) {
-            Shape rsh = SvgCircle.shapeConverter().convert((SvgCircle) sh);
+        } else if (sh instanceof SVGCircle) {
+            Shape rsh = SVGCircle.shapeConverter().convert((SVGCircle) sh);
             prim = JGraphics.shape(rsh, style);
-        } else if (sh instanceof SvgPolygon) {
-            Shape rsh = SvgPolygon.shapeConverter().convert((SvgPolygon) sh);
+        } else if (sh instanceof SVGPolygon) {
+            Shape rsh = SVGPolygon.shapeConverter().convert((SVGPolygon) sh);
             prim = JGraphics.shape(rsh, style);
-        } else if (sh instanceof SvgLine) {
-            Line2D line = SvgLine.shapeConverter().convert((SvgLine) sh);
+        } else if (sh instanceof SVGLine) {
+            Line2D line = SVGLine.shapeConverter().convert((SVGLine) sh);
             prim = JGraphics.path(line, style);
-        } else if (sh instanceof SvgPolyline) {
-            Shape rsh = SvgPolyline.shapeConverter().convert((SvgPolyline) sh);
+        } else if (sh instanceof SVGPolyline) {
+            Shape rsh = SVGPolyline.shapeConverter().convert((SVGPolyline) sh);
             prim = JGraphics.shape(rsh, style);
-        } else if (sh instanceof SvgPath) {
-            Shape rsh = SvgPath.shapeConverter().convert((SvgPath) sh);
+        } else if (sh instanceof SVGPath) {
+            Shape rsh = SVGPath.shapeConverter().convert((SVGPath) sh);
             prim = JGraphics.shape(rsh, style);
-        } else if (sh instanceof SvgImage) {
-            AnchoredImage img = SvgImage.imageConverter().convert((SvgImage) sh);
+        } else if (sh instanceof SVGImage) {
+            AnchoredImage img = SVGImage.imageConverter().convert((SVGImage) sh);
             prim = JGraphics.image(img);
-            prim.setMouseDisabled(true);
-        } else if (sh instanceof SvgText) {
-            AnchoredText text = SvgText.textConverter().convert((SvgText) sh);
+            prim.setMouseEnabled(false);
+        } else if (sh instanceof SVGText) {
+            AnchoredText text = SVGText.textConverter().convert((SVGText) sh);
             prim = JGraphics.text(text, style);
-            prim.setMouseDisabled(true);
-        } else if (sh instanceof SvgGroup || sh instanceof SvgRoot) {
-            prim = new GraphicComposite<>();
+            prim.setMouseEnabled(false);
+        } else if (sh instanceof SVGGroup || sh instanceof SVGRoot) {
+            prim = new GraphicComposite<Graphics2D>();
             ((GraphicComposite)prim).setStyle(style);
-            for (SvgElement el : ((SvgGroup)sh).getElements()) {
+            for (SVGElement el : ((SVGGroup)sh).getElements()) {
                 ((GraphicComposite<Graphics2D>)prim).addGraphic(doForward(el));
             }
         } else {
@@ -151,17 +168,17 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
         return prim;
     }
 
-    private AttributeSet aggregateStyle(SvgElement element) {
+    private AttributeSet aggregateStyle(SVGElement element) {
         AttributeSet shapeStyle = element.getStyle();
         AttributeSet res = shapeStyle == null 
                 ? new AttributeSet()
                 : shapeStyle.copy();
         
-        Map<String, Object> attr = element.getOtherAttributes();
+        Map<QName, Object> attr = element.getOtherAttributes();
         if (attr != null) {
-            for (Entry<String, Object> en : attr.entrySet()) {
-                Object val = new AttributeSetCoder().decode((String) en.getValue());
-                res.put(en.getKey(), val);
+            for (Entry<QName, Object> en : attr.entrySet()) {
+                Object val = AttributeSets.valueFromString((String) en.getValue());
+                res.put(en.getKey().toString(), val);
             }
         }
         if (element.getId() != null) {
@@ -172,15 +189,15 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
     }
 
     @Override
-    public SvgElement doBackward(Graphic<Graphics2D> v) {
+    public SVGElement doBackward(Graphic<Graphics2D> v) {
         return graphicToSvg(v);
     }
     
-    //region UTILITIES
+    //<editor-fold defaultstate="collapsed" desc="PRIVATE UTILITIES">
     
     /** Converts a graphic element to an SVG element */
-    private static SvgElement graphicToSvg(Graphic<Graphics2D> v) {
-        SvgElement res = null;
+    private static SVGElement graphicToSvg(Graphic<Graphics2D> v) {
+        SVGElement res = null;
         if (v instanceof LabeledShapeGraphic) {
             res = labeledShapeToSvg((LabeledShapeGraphic<Graphics2D>) v);
         } else if (v instanceof PrimitiveGraphicSupport) {
@@ -212,14 +229,14 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
     }
 
     /** Converts a blaise composite to an SVG group */
-    private static SvgElement compositeToSvg(GraphicComposite<Graphics2D> gc) {
-        SvgGroup grp = new SvgGroup();
+    private static SVGElement compositeToSvg(GraphicComposite<Graphics2D> gc) {
+        SVGGroup grp = new SVGGroup();
         if (gc.getStyle() != null) {
             grp.setStyle(AttributeSet.create(gc.getStyle().getAttributeMap()));
         }
         for (Graphic<Graphics2D> g : gc.getGraphics()) {
             try {
-                SvgElement el = graphicToSvg(g);
+                SVGElement el = graphicToSvg(g);
                 if (el != null) {
                     grp.addElement(el);
                 } else {
@@ -233,8 +250,8 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
     }
 
     /** Converts a blaise array graphic to SVG group */
-    private static SvgElement primitiveArrayToSvg(PrimitiveArrayGraphicSupport pags) {
-        SvgGroup grp = new SvgGroup();
+    private static SVGElement primitiveArrayToSvg(PrimitiveArrayGraphicSupport pags) {
+        SVGGroup grp = new SVGGroup();
         grp.setStyle(pags.renderStyle().flatCopy());
         for (Object o : pags.getPrimitive()) {
             grp.addElement(primitiveStyleToSvg(o, pags.renderStyle().flatCopy(), pags.getRenderer()));
@@ -243,31 +260,31 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
     }
 
     /** Creates an SVG element from given primitive/style */
-    private static SvgElement primitiveStyleToSvg(Object primitive, AttributeSet sty, Renderer rend) {
+    private static SVGElement primitiveStyleToSvg(Object primitive, AttributeSet sty, Renderer rend) {
         if (primitive instanceof Shape) {
-            return SvgElements.create(null, (Shape) primitive, sty);
+            return SVGElements.create(null, (Shape) primitive, sty);
         } else if (primitive instanceof AnchoredText) {
-            return SvgElements.create(null, (AnchoredText) primitive, sty, rend);
+            return SVGElements.create(null, (AnchoredText) primitive, sty, rend);
         } else if (primitive instanceof AnchoredImage) {
-            return SvgElements.create(null, (AnchoredImage) primitive, sty);
+            return SVGElements.create(null, (AnchoredImage) primitive, sty);
         } else if (primitive instanceof AnchoredIcon) {
-            return SvgElements.create(null, (AnchoredIcon) primitive, sty);
+            return SVGElements.create(null, (AnchoredIcon) primitive, sty);
         } else if (primitive instanceof Point2D) {
-            return SvgElements.create(null, (Point2D) primitive, sty);
+            return SVGElements.create(null, (Point2D) primitive, sty);
         } else {
             throw new IllegalArgumentException("Graphic conversion not supported for primitive "+primitive);
         }
     }
 
     /** Converts a labeled shape to svg */
-    private static SvgElement labeledShapeToSvg(LabeledShapeGraphic<Graphics2D> gfc) {
-        SvgElement shape = primitiveStyleToSvg(gfc.getPrimitive(), gfc.renderStyle().flatCopy(), gfc.getRenderer());
-        SvgElement text = labelToSvg(gfc);
-        return text == null ? shape : SvgGroup.create(shape, text);
+    private static SVGElement labeledShapeToSvg(LabeledShapeGraphic<Graphics2D> gfc) {
+        SVGElement shape = primitiveStyleToSvg(gfc.getPrimitive(), gfc.renderStyle().flatCopy(), gfc.getRenderer());
+        SVGElement text = labelToSvg(gfc);
+        return text == null ? shape : SVGGroup.create(shape, text);
     }
 
     /** Generates element for object label */
-    private static SvgElement labelToSvg(LabeledShapeGraphic<Graphics2D> gfc) {
+    private static SVGElement labelToSvg(LabeledShapeGraphic<Graphics2D> gfc) {
         ObjectStyler<Graphics2D> styler = gfc.getObjectStyler();
         if (styler == null) {
             return null;
@@ -279,7 +296,7 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
         }
         Renderer<AnchoredText, Graphics2D> textRend = gfc.getTextRenderer();
         if (textRend instanceof WrappedTextRenderer) {
-            return SvgElements.createWrappedText(label, style, LabeledShapeGraphic.wrappedLabelBounds(gfc.getPrimitive()));
+            return SVGElements.createWrappedText(label, style, LabeledShapeGraphic.wrappedLabelBounds(gfc.getPrimitive()));
         } else if (textRend instanceof TextRenderer) {
             return primitiveStyleToSvg(new AnchoredText(label), style.flatCopy(), textRend);
         } else {
@@ -288,6 +305,6 @@ public class SvgElementGraphicConverter extends Converter<SvgElement, Graphic<Gr
         }
     }
     
-    //endregion
+    //</editor-fold>
     
 }

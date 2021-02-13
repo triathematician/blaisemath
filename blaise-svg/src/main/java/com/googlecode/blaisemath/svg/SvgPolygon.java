@@ -1,10 +1,15 @@
+/**
+ * SVGPolygon.java
+ * Created Sep 26, 2014
+ */
+
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,39 +25,42 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Converter;
-import static com.googlecode.blaisemath.svg.SvgPolyline.checkPointString;
-import static com.googlecode.blaisemath.svg.SvgPolyline.toPath;
-import static com.googlecode.blaisemath.svg.SvgPolyline.toPathString;
+import static com.googlecode.blaisemath.svg.SVGPolyline.checkPointString;
+import static com.googlecode.blaisemath.svg.SVGPolyline.toPath;
+import static com.googlecode.blaisemath.svg.SVGPolyline.toPathString;
 import java.awt.geom.GeneralPath;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * SVG Polygon object.
- *
- * @author Elisha Peterson
+ * <p>
+ *   SVG Polygon object.
+ * </p>
+ * @author elisha
  */
-@JacksonXmlRootElement(localName="polygon")
-public final class SvgPolygon extends SvgElement {
+@XmlRootElement(name="polygon")
+public final class SVGPolygon extends SVGElement {
     
     private static final PolygonConverter CONVERTER_INST = new PolygonConverter();
     
     private String ptStr = "";
 
-    public SvgPolygon() {
+    public SVGPolygon() {
         super("polygon");
     }
 
-    public SvgPolygon(String pts) {
+    public SVGPolygon(String pts) {
         super("polygon");
         this.ptStr = checkPointString(pts);
     }
     
-    //region PROPERTIES
-
-
-    @JacksonXmlProperty(isAttribute = true, localName="points")
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
+    @XmlAttribute(name="points")
     public String getPointStr() {
         return ptStr;
     }
@@ -61,24 +69,24 @@ public final class SvgPolygon extends SvgElement {
         this.ptStr = checkPointString(pathStr);
     }
     
-    //endregion
+    //</editor-fold>
     
-    public static Converter<SvgPolygon, GeneralPath> shapeConverter() {
+    public static Converter<SVGPolygon, GeneralPath> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class PolygonConverter extends Converter<SvgPolygon, GeneralPath> {
+    private static final class PolygonConverter extends Converter<SVGPolygon, GeneralPath> {
         @Override
-        protected GeneralPath doForward(SvgPolygon a) {
+        protected GeneralPath doForward(SVGPolygon a) {
             GeneralPath gp = toPath(a.ptStr);
             gp.closePath();
             return gp;
         }
 
         @Override
-        protected SvgPolygon doBackward(GeneralPath b) {
+        protected SVGPolygon doBackward(GeneralPath b) {
             String s = toPathString(b);
-            return new SvgPolygon(s);
+            return new SVGPolygon(s);
         }
     }
 

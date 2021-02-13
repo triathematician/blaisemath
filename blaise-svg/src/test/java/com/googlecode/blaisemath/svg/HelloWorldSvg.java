@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * blaise-svg
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package com.googlecode.blaisemath.svg;
 
 
 import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.svg.SvgGraphic;
+import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
@@ -42,15 +42,15 @@ import javax.swing.JToolBar;
 
 /**
  *
- * @author Elisha Peterson
+ * @author elisha
  */
 public class HelloWorldSvg extends JFrame {
 
     public HelloWorldSvg() {
 //        try {
 //            String svg = "<svg height=\"210\" width=\"400\"><path style=\"fill:#ff0000\" d=\"M150 0 L75 200 L225 200 Z\"/></svg>";
-//            SvgRoot root = SvgRoot.load(svg);
-//            SvgGraphicComponent comp = SvgGraphicComponent.create(root);
+//            SVGRoot root = SVGRoot.load(svg);
+//            SVGGraphicComponent comp = SVGGraphicComponent.create(root);
 //            comp.setPreferredSize(new Dimension(401,211));
 //            setContentPane(comp);
 //        } catch (IOException ex) {
@@ -58,7 +58,7 @@ public class HelloWorldSvg extends JFrame {
 //        }
         
 //        String svg = "<svg height=\"210\" width=\"400\"><path style=\"fill:#ff0000\" d=\"M150 0 L75 200 L225 200 Z\"/></svg>";
-//        SvgGraphicComponent comp = SvgGraphicComponent.create(svg);
+//        SVGGraphicComponent comp = SVGGraphicComponent.create(svg);
 //        setContentPane(comp);
         
         JGraphicComponent gc = new JGraphicComponent();
@@ -78,7 +78,7 @@ public class HelloWorldSvg extends JFrame {
                         + "<path style=\"fill:#ff0000\" d=\"M150 0 L75 200 L225 200 Z\"/>"
                         + "<path style=\"fill:#0000ff\" d=\"M150 0 L75 200 L05 100 Z\"/>"
                         + "</svg>";
-                SvgGraphic gfc = SvgGraphic.create(svg);
+                SVGGraphic gfc = SVGGraphic.create(svg);
                 gfc.setBoundingBoxVisible(true);
                 gfc.setGraphicBounds(new Rectangle2D.Double(50, 50, 400, 300));
                 gc.getGraphicRoot().setGraphics((List) Arrays.asList(g1, g2, g3, gfc));

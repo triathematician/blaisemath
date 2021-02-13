@@ -1,10 +1,15 @@
+/**
+ * SVGGroup.java
+ * Created Sep 26, 2014
+ */
+
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,23 +25,29 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import java.util.List;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  * SVG group object.
  * 
- * @author Elisha Peterson
+ * @author elisha
  */
-@JacksonXmlRootElement(localName="g")
-public class SvgGroup extends SvgElement {
+@XmlRootElement(name="g")
+@XmlSeeAlso({
+    SVGCircle.class, SVGEllipse.class, SVGImage.class, SVGLine.class, SVGPath.class,
+    SVGPolygon.class, SVGPolyline.class, SVGRectangle.class, SVGText.class
+})
+public class SVGGroup extends SVGElement {
     
-    private List<SvgElement> obj = Lists.newArrayList();
+    private List<SVGElement> obj = Lists.newArrayList();
 
-    public SvgGroup() {
+    public SVGGroup() {
         super("g");
     }
    
@@ -45,33 +56,36 @@ public class SvgGroup extends SvgElement {
      * @param elements elements to add
      * @return group
      */
-    public static SvgGroup create(SvgElement... elements) {
-        SvgGroup res = new SvgGroup();
-        for (SvgElement el : elements) {
+    public static SVGGroup create(SVGElement... elements) {
+        SVGGroup res = new SVGGroup();
+        for (SVGElement el : elements) {
             res.addElement(el);
         }
         return res;
     }
 
-    //region PROPERTIES
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
     
-//    @XmlElementRef
-    public List<SvgElement> getElements() {
+    @XmlElementRef
+    public List<SVGElement> getElements() {
         return obj;
     }
 
-    public void setElements(List<SvgElement> obj) {
+    public void setElements(List<SVGElement> obj) {
         this.obj = obj;
     }
     
-    public void addElement(SvgElement obj) {
+    public void addElement(SVGElement obj) {
         this.obj.add(checkNotNull(obj));
     }
     
-    //endregion
+    //</editor-fold>
 
-    public SvgElement getObjectById(String id) {
-        for (SvgElement ms : obj) {
+    public SVGElement getObjectById(String id) {
+        for (SVGElement ms : obj) {
             if (Objects.equal(ms.getId(), id)) {
                 return ms;
             }

@@ -1,10 +1,15 @@
+/**
+ * SVGObject.java
+ * Created Sep 26, 2014
+ */
+
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +25,23 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import com.googlecode.blaisemath.style.AttributeSet;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
+import com.googlecode.blaisemath.style.xml.AttributeSetAdapter;
 import java.util.Map;
+import javax.annotation.Nullable;
+import javax.xml.bind.annotation.XmlAnyAttribute;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.namespace.QName;
 
 /**
  * Common interface for SVG types.
  * 
- * @author Elisha Peterson
+ * @author elisha
  */
-public abstract class SvgElement {
+public abstract class SVGElement {
     
     public static final String ID_ATTR = "id";
 
@@ -45,23 +49,26 @@ public abstract class SvgElement {
     protected String id;
     protected String value;
     private AttributeSet style = null;
-    private Map<String, Object> otherAttr;
+    private Map<QName,Object> otherAttr;
 
-    protected SvgElement() {
+    protected SVGElement() {
         this.tag = null;
     }
     
-    protected SvgElement(String tag) {
+    protected SVGElement(String tag) {
         this.tag = tag;
     }
     
-    //region PROPERTIES
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
     
     /**
      * Get the tag associated with the object.
      * @return tag
      */
-    @JsonIgnore
+    @XmlTransient
     public String getTag() {
         return tag;
     }
@@ -70,7 +77,7 @@ public abstract class SvgElement {
      * Get the id associated with the object.
      * @return id
      */
-    @JsonIgnore
+    @XmlAttribute
     public String getId() {
         return id;
     }
@@ -83,32 +90,27 @@ public abstract class SvgElement {
         this.id = id;
     }
 
-    @JacksonXmlProperty(isAttribute = true)
-    @JsonSerialize(using = AttributeSetSerializer.class)
-    public @Nullable AttributeSet getStyle() {
+    @XmlAttribute
+    @XmlJavaTypeAdapter(AttributeSetAdapter.class)
+    @Nullable
+    public AttributeSet getStyle() {
         return style;
     }
 
-    @JsonDeserialize(using = AttributeSetDeserializer.class)
     public void setStyle(@Nullable AttributeSet style) {
         this.style = style;
     }
     
-    @JsonAnyGetter
-    public Map<String,Object> getOtherAttributes() {
+    @XmlAnyAttribute
+    public Map<QName,Object> getOtherAttributes() {
         return otherAttr;
     }
     
-    public void setOtherAttributes(Map<String,Object> other) {
+    public void setOtherAttributes(Map<QName,Object> other) {
         this.otherAttr = other;
     }
-
-    @JsonAnySetter
-    public void setOtherAttribute(String key, Object value) {
-        this.otherAttr.put(key, value);
-    }
     
-    @JacksonXmlText
+    @XmlValue
     public String getValue() {
         return value;
     }
@@ -117,6 +119,6 @@ public abstract class SvgElement {
         this.value = value;
     }
     
-    //endregion
+    //</editor-fold>
     
 }
