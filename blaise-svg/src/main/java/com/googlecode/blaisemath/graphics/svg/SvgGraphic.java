@@ -156,62 +156,62 @@ public class SVGGraphic extends GraphicComposite<Graphics2D> {
     }
 
     @Override
-    public Rectangle2D boundingBox() {
+    public Rectangle2D boundingBox(Graphics2D canvas) {
         AffineTransform tx = transform();
-        Rectangle2D norm = GraphicUtils.boundingBox(entries);
+        Rectangle2D norm = GraphicUtils.boundingBox(entries, canvas);
         return tx == null ? norm : tx.createTransformedShape(norm).getBounds2D();
     }
 
     @Override
-    public boolean contains(Point2D point) {
+    public boolean contains(Point2D point, Graphics2D canvas) {
         Point2D tp = transform(point);
-        return inViewBox(tp) && super.contains(tp);
+        return inViewBox(tp) && super.contains(tp, canvas);
     }
 
     @Override
-    public boolean intersects(Rectangle2D box) {
+    public boolean intersects(Rectangle2D box, Graphics2D canvas) {
         Rectangle2D vb = viewBox();
         Rectangle2D tbox = vb == null ? transform(box) : transform(box).createIntersection(vb);
-        return tbox.getWidth() >= 0 && tbox.getHeight() >= 0 && super.intersects(tbox);
+        return tbox.getWidth() >= 0 && tbox.getHeight() >= 0 && super.intersects(tbox, canvas);
     }
 
     @Override
-    public Graphic<Graphics2D> graphicAt(Point2D point) {
+    public Graphic<Graphics2D> graphicAt(Point2D point, Graphics2D canvas) {
         Point2D tp = transform(point);
-        return !inViewBox(tp) ? null : super.graphicAt(tp);
+        return !inViewBox(tp) ? null : super.graphicAt(tp, canvas);
     }
 
     @Override
-    public Graphic<Graphics2D> selectableGraphicAt(Point2D point) {
+    public Graphic<Graphics2D> selectableGraphicAt(Point2D point, Graphics2D canvas) {
         Point2D tp = transform(point);
-        return !inViewBox(tp) ? null : super.selectableGraphicAt(tp);
+        return !inViewBox(tp) ? null : super.selectableGraphicAt(tp, canvas);
     }
 
     @Override
-    public Set<Graphic<Graphics2D>> selectableGraphicsIn(Rectangle2D box) {
+    public Set<Graphic<Graphics2D>> selectableGraphicsIn(Rectangle2D box, Graphics2D canvas) {
         Rectangle2D vb = viewBox();
         Rectangle2D tp = vb == null ? transform(box) : transform(box).createIntersection(vb);
         return tp.getWidth() <= 0 || tp.getHeight() <= 0 ? Collections.emptySet()
-                : super.selectableGraphicsIn(tp);
+                : super.selectableGraphicsIn(tp, canvas);
     }
 
     @Override
-    public Graphic<Graphics2D> mouseGraphicAt(Point2D point) {
+    public Graphic<Graphics2D> mouseGraphicAt(Point2D point, Graphics2D canvas) {
         Point2D tp = transform(point);
-        return !inViewBox(tp) ? null : super.mouseGraphicAt(tp);
+        return !inViewBox(tp) ? null : super.mouseGraphicAt(tp, canvas);
     }
 
     @Override
-    public String getTooltip(Point2D p) {
+    public String getTooltip(Point2D p, Graphics2D canvas) {
         Point2D tp = transform(p);
-        return !inViewBox(tp) ? null : super.getTooltip(tp);
+        return !inViewBox(tp) ? null : super.getTooltip(tp, canvas);
     }
 
     @Override
-    public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
+    public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set<Graphic<Graphics2D>> selection, Graphics2D canvas) {
         Point2D tp = transform(point);
         if (inViewBox(tp)) {
-            super.initContextMenu(menu, src, tp, focus, selection);
+            super.initContextMenu(menu, src, tp, focus, selection, canvas);
         }
     }
 

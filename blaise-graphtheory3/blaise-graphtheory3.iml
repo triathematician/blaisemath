@@ -19,9 +19,9 @@
     <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.1.3" level="project" />
     <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.14" level="project" />
-    <orderEntry type="module" module-name="blaise-graphics (1)" />
+    <orderEntry type="module" module-name="blaise-graphics" />
     <orderEntry type="library" name="Maven: com.googlecode.blaisemath:firestarter:1.3.3" level="project" />
-    <orderEntry type="module" module-name="blaise-common (1)" />
+    <orderEntry type="module" module-name="blaise-common" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:11" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:11" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:11" level="project" />

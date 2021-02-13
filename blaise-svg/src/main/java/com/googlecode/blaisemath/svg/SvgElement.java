@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.svg;
 
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.xml.AttributeSetAdapter;
+
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAnyAttribute;

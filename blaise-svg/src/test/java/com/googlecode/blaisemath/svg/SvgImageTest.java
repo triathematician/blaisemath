@@ -36,12 +36,11 @@ package com.googlecode.blaisemath.svg;
  */
 
 
-import com.google.common.base.Converter;
-import com.googlecode.blaisemath.util.AnchoredImage;
-import java.io.File;
 import java.net.MalformedURLException;
+
+import com.google.common.base.Converter;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
 import junit.framework.TestCase;
-import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
 /**

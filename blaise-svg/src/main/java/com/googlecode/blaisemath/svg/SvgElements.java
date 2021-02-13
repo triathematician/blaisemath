@@ -26,6 +26,11 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
+import com.googlecode.blaisemath.graphics.AnchoredIcon;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
+import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.graphics.swing.StyledText;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -33,11 +38,7 @@ import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.AnchoredIcon;
-import com.googlecode.blaisemath.util.AnchoredImage;
-import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Images;
-import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -171,10 +172,10 @@ public class SVGElements {
         WrappedTextRenderer rend = new WrappedTextRenderer();
         rend.setMinWidthFactor(0);
         rend.setMaxReduceFontSize(0);
-        Iterable<WrappedTextRenderer.StyledText> lines = rend.computeLines(text, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
+        Iterable<StyledText> lines = rend.computeLines(text, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
         
         SVGGroup grp = new SVGGroup();
-        for (WrappedTextRenderer.StyledText st : lines) {
+        for (StyledText st : lines) {
             grp.addElement(create(null, st.getText(), st.getStyle(), null));
         }
         
@@ -192,7 +193,7 @@ public class SVGElements {
      */
     public static SVGImage create(String id, AnchoredImage img, AttributeSet style) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        Point2D offset = anchor.getRectOffset(img.getWidth(), img.getHeight());
+        Point2D offset = anchor.offsetForRectangle(img.getWidth(), img.getHeight());
         AnchoredImage adjustedImage = new AnchoredImage(
                 img.getX() + offset.getX(), 
                 img.getY() - img.getHeight()+ offset.getY(), 
@@ -213,7 +214,7 @@ public class SVGElements {
      */
     public static SVGImage create(String id, AnchoredIcon icon, AttributeSet style) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        Point2D offset = anchor.getRectOffset(icon.getIconWidth(), icon.getIconHeight());
+        Point2D offset = anchor.offsetForRectangle(icon.getIconWidth(), icon.getIconHeight());
         SVGImage res = new SVGImage(
                 icon.getX() + offset.getX(), 
                 icon.getY() - icon.getIconHeight() + offset.getY(), 

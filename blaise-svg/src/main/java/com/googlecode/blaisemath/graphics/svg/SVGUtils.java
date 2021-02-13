@@ -26,10 +26,10 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.svg.SVGPath;
-import com.googlecode.blaisemath.util.AffineTransformBuilder;
+import com.googlecode.blaisemath.util.geom.AffineTransformBuilder;
+
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import static java.util.Objects.requireNonNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;

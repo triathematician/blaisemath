@@ -22,6 +22,9 @@ package com.googlecode.blaisemath.graphics.svg;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
+import com.googlecode.blaisemath.graphics.AnchoredIcon;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
+import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveArrayGraphicSupport;
@@ -32,11 +35,7 @@ import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.AttributeSets;
-import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.style.*;
 import com.googlecode.blaisemath.style.xml.AttributeSetAdapter;
 import com.googlecode.blaisemath.svg.SVGCircle;
 import com.googlecode.blaisemath.svg.SVGElement;
@@ -51,10 +50,9 @@ import com.googlecode.blaisemath.svg.SVGPolyline;
 import com.googlecode.blaisemath.svg.SVGRectangle;
 import com.googlecode.blaisemath.svg.SVGRoot;
 import com.googlecode.blaisemath.svg.SVGText;
-import com.googlecode.blaisemath.util.AnchoredIcon;
-import com.googlecode.blaisemath.util.AnchoredImage;
-import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
+import com.googlecode.blaisemath.util.encode.ColorCoder;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -105,7 +103,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         root.setWidth(compt.getWidth());
         root.setHeight(compt.getHeight());
         root.setViewBoxAsRectangle(PanAndZoomHandler.getLocalBounds(compt));
-        root.getStyle().put("background", Colors.stringConverter().convert(compt.getBackground()));
+        root.getStyle().put("background", new ColorCoder().encode(compt.getBackground()));
         root.getStyle().put(Styles.FONT_SIZE, Styles.DEFAULT_TEXT_STYLE.get(Styles.FONT_SIZE));
         SVGGroup group = (SVGGroup) SVGElementGraphicConverter.getInstance().reverse()
                 .convert(compt.getGraphicRoot());
@@ -150,12 +148,12 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         } else if (sh instanceof SVGImage) {
             AnchoredImage img = SVGImage.imageConverter().convert((SVGImage) sh);
             prim = JGraphics.image(img);
-            prim.setMouseEnabled(false);
+            prim.setMouseDisabled(true);
         } else if (sh instanceof SVGText) {
             AnchoredText text = SVGText.textConverter().convert((SVGText) sh);
             prim = JGraphics.text(text, style);
-            prim.setMouseEnabled(false);
-        } else if (sh instanceof SVGGroup || sh instanceof SVGRoot) {
+            prim.setMouseDisabled(true);
+        } else if (sh instanceof SVGGroup) {
             prim = new GraphicComposite<Graphics2D>();
             ((GraphicComposite)prim).setStyle(style);
             for (SVGElement el : ((SVGGroup)sh).getElements()) {
@@ -177,7 +175,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         Map<QName, Object> attr = element.getOtherAttributes();
         if (attr != null) {
             for (Entry<QName, Object> en : attr.entrySet()) {
-                Object val = AttributeSets.valueFromString((String) en.getValue());
+                Object val = new AttributeSetCoder().decode((String) en.getValue());
                 res.put(en.getKey().toString(), val);
             }
         }

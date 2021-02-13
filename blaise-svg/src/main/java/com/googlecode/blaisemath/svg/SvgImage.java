@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.util.AnchoredImage;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
