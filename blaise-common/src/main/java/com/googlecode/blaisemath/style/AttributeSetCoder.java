@@ -155,7 +155,8 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
 
     @Override
     public String encode(AttributeSet style) {
-        requireNonNull(style);
+        if (style == null) return null;
+
         Map<String,String> props = Maps.newTreeMap();
         style.getAttributes().forEach(s -> tryPut(props, s, style.get(s)));
         return CODER_JOINER.join(props);
@@ -163,8 +164,8 @@ public class AttributeSetCoder implements StringEncoder<AttributeSet>, StringDec
 
     @Override
     public AttributeSet decode(String str) {
-        requireNonNull(str);
-        
+        if (str == null) return null;
+
         // perform two separate splits instead of using MapSplitter to allow for duplicate keys
         AttributeSet res = new AttributeSet();
         List<String> pairs = DECODER_PAIR_SPLITTER.splitToList(str);
