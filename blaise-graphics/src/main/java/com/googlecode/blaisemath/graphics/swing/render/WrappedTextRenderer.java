@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.swing.render;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2020 Elisha Peterson
+ * Copyright (C) 2009 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
