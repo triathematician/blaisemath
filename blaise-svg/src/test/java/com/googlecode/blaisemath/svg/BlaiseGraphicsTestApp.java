@@ -32,7 +32,7 @@ import com.googlecode.blaisemath.graphics.AnchoredIcon;
 import com.googlecode.blaisemath.graphics.AnchoredText;
 import com.googlecode.blaisemath.graphics.core.*;
 import com.googlecode.blaisemath.graphics.editor.BasicPointStyleEditor;
-import com.googlecode.blaisemath.graphics.svg.SVGElementGraphicConverter;
+import com.googlecode.blaisemath.graphics.svg.SvgElementGraphicConverter;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
@@ -91,9 +91,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     
     @Action
-    public void printSVG() throws JAXBException {
-        SVGRoot root = SVGElementGraphicConverter.componentToSvg(canvas1);
-        JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
+    public void printSvg() throws JAXBException {
+        SvgRoot root = SvgElementGraphicConverter.componentToSvg(canvas1);
+        JAXBContext jc = JAXBContext.newInstance(SvgRoot.class);
         Marshaller m = jc.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         m.marshal(root, System.out);

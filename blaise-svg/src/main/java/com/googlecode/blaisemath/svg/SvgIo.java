@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
 
 /**
- * Utilities for reading/writing SVG.
+ * Utilities for reading/writing Svg.
  * @author elisha
  */
 class SvgIo {
@@ -49,7 +49,7 @@ class SvgIo {
     
     static JAXBContext context() throws JAXBException {
         if (CONTEXT == null) {
-            CONTEXT = JAXBContext.newInstance(SVGRoot.class);
+            CONTEXT = JAXBContext.newInstance(SvgRoot.class);
         }
         return CONTEXT;
     }
@@ -58,7 +58,7 @@ class SvgIo {
         return context().createUnmarshaller();
     }
     
-    static SVGRoot flexibleNamespaceParse(InputSource input) throws IOException {
+    static SvgRoot flexibleNamespaceParse(InputSource input) throws IOException {
         try {
             XMLFilter filter = new SvgNamespaceFilter();
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -67,7 +67,7 @@ class SvgIo {
             UnmarshallerHandler umHandler = unmarshaller().getUnmarshallerHandler();
             filter.setContentHandler(umHandler);
             filter.parse(input);
-            return (SVGRoot) umHandler.getResult();
+            return (SvgRoot) umHandler.getResult();
         } catch (ParserConfigurationException | SAXException | JAXBException x) {
             throw new IOException("Invalid svg or other error: "+input, x);
         }
@@ -79,37 +79,37 @@ class SvgIo {
         return m;
     }
     
-    static SVGRoot read(String input) throws IOException {
+    static SvgRoot read(String input) throws IOException {
         return read(new StringReader(input));
     }
     
-    static SVGRoot read(InputStream input) throws IOException {
+    static SvgRoot read(InputStream input) throws IOException {
         return flexibleNamespaceParse(new InputSource(input));
     }
     
-    static SVGRoot read(Reader reader) throws IOException {
+    static SvgRoot read(Reader reader) throws IOException {
         return flexibleNamespaceParse(new InputSource(reader));
     }
     
-    static String writeToString(SVGRoot root) throws IOException {
+    static String writeToString(SvgRoot root) throws IOException {
         StringWriter sw = new StringWriter();
         write(root, sw);
         return sw.toString();
     }
     
-    static void write(SVGRoot root, OutputStream output) throws IOException {
+    static void write(SvgRoot root, OutputStream output) throws IOException {
         try {
             marshaller().marshal(root, output);
         } catch (JAXBException ex) {
-            throw new IOException("Could not save SVGRoot to output", ex);
+            throw new IOException("Could not save SvgRoot to output", ex);
         }
     }
     
-    static void write(SVGRoot root, Writer writer) throws IOException {
+    static void write(SvgRoot root, Writer writer) throws IOException {
         try {
             marshaller().marshal(root, writer);
         } catch (JAXBException ex) {
-            throw new IOException("Could not save SVGRoot to output", ex);
+            throw new IOException("Could not save SvgRoot to output", ex);
         }
     }
     

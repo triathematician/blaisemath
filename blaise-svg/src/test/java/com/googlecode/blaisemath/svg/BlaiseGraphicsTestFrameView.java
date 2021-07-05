@@ -64,7 +64,7 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         mainPanel.add(canvas1);
 
         JMenu fileMenu = new JMenu("File");
-        fileMenu.add(new JMenuItem(actionMap.get("printSVG")));
+        fileMenu.add(new JMenuItem(actionMap.get("printSvg")));
         fileMenu.add(new JMenuItem(actionMap.get("quit")));
         menuBar.add(fileMenu);
 

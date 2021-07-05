@@ -17,7 +17,7 @@ package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
- * BlaiseSVG
+ * BlaiseSvg
  * --
  * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
@@ -45,15 +45,15 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class SVGCircleTest extends TestCase {
+public class SvgCircleTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGCircle, Ellipse2D> conv = SVGCircle.shapeConverter();
+        Converter<SvgCircle, Ellipse2D> conv = SvgCircle.shapeConverter();
         
         Ellipse2D e1 = new Ellipse2D.Double(1.0, 2.0, 2.0, 2.0);
-        SVGCircle circ = conv.reverse().convert(e1);
+        SvgCircle circ = conv.reverse().convert(e1);
         assert circ != null;
         assertEquals(2.0, circ.getCx(), 1e-6);
         assertEquals(3.0, circ.getCy(), 1e-6);
@@ -72,9 +72,9 @@ public class SVGCircleTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGCircle, Ellipse2D> conv = SVGCircle.shapeConverter();
+        Converter<SvgCircle, Ellipse2D> conv = SvgCircle.shapeConverter();
         
-        SVGCircle circ = new SVGCircle(1, 2, 3);
+        SvgCircle circ = new SvgCircle(1, 2, 3);
         Ellipse2D ell = conv.convert(circ);
         assert ell != null;
         assertEquals(-2.0, ell.getMinX(), 1e-6);

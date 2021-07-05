@@ -17,7 +17,7 @@ package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
- * BlaiseSVG
+ * BlaiseSvg
  * --
  * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
@@ -49,12 +49,12 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class SVGPolylineTest extends TestCase {
+public class SvgPolylineTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGPolyline, GeneralPath> conv = SVGPolyline.shapeConverter();
+        Converter<SvgPolyline, GeneralPath> conv = SvgPolyline.shapeConverter();
         
         GeneralPath gp1 = new GeneralPath();
         gp1.moveTo(0, 0);
@@ -78,9 +78,9 @@ public class SVGPolylineTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGPolyline, GeneralPath> conv = SVGPolyline.shapeConverter();
+        Converter<SvgPolyline, GeneralPath> conv = SvgPolyline.shapeConverter();
         
-        SVGPolyline poly1 = new SVGPolyline("0,0 1,0 0,1");
+        SvgPolyline poly1 = new SvgPolyline("0,0 1,0 0,1");
         GeneralPath gp1 = conv.convert(poly1);
         PathIterator pi = gp1.getPathIterator(null);
         double[] crd = new double[6];
@@ -99,21 +99,21 @@ public class SVGPolylineTest extends TestCase {
         assertTrue(pi.isDone());
         
         try {
-            new SVGPolyline("not points");
+            new SvgPolyline("not points");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected
         }
         
         try {
-            new SVGPolyline("1,2,3 4,5 6,7");
+            new SvgPolyline("1,2,3 4,5 6,7");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected
         }
         
         try {
-            new SVGPolyline("1,a 4,5 6,7");
+            new SvgPolyline("1,a 4,5 6,7");
             fail("Shouldn't be able to create");
         } catch (IllegalArgumentException x) {
             // expected

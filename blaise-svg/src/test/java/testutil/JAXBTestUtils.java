@@ -8,7 +8,7 @@ package testutil;
 
 /*
  * #%L
- * BlaiseSVG
+ * BlaiseSvg
  * --
  * Copyright (C) 2014 - 2021 Elisha Peterson
  * --

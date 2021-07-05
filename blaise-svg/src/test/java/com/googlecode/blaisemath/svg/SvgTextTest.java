@@ -17,7 +17,7 @@ package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
- * BlaiseSVG
+ * BlaiseSvg
  * --
  * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
@@ -45,12 +45,12 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class SVGTextTest extends TestCase {
+public class SvgTextTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGText, AnchoredText> conv = SVGText.textConverter();
+        Converter<SvgText, AnchoredText> conv = SvgText.textConverter();
         
         assertEquals(null, conv.reverse().convert(null));
         
@@ -59,7 +59,7 @@ public class SVGTextTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGText, AnchoredText> conv = SVGText.textConverter();
+        Converter<SvgText, AnchoredText> conv = SvgText.textConverter();
         
         assertEquals(null, conv.convert(null));
     }

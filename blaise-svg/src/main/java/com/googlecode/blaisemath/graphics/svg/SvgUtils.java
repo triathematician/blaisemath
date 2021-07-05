@@ -1,12 +1,12 @@
 /**
- * SVGUtils.java
+ * SvgUtils.java
  * Created on May 5, 2015
  */
 package com.googlecode.blaisemath.graphics.svg;
 
 /*
  * #%L
- * BlaiseSVG
+ * BlaiseSvg
  * --
  * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.svg.SVGPath;
+import com.googlecode.blaisemath.svg.SvgPath;
 import com.googlecode.blaisemath.util.geom.AffineTransformBuilder;
 
 import java.awt.geom.Path2D;
@@ -36,26 +36,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Utility class for SVG paths.
+ * Utility class for Svg paths.
  * @author petereb1
  */
-public class SVGUtils {
+public class SvgUtils {
 
-    private static final Logger LOG = Logger.getLogger(SVGUtils.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgUtils.class.getName());
 
     private static final Pattern LEN_PATTERN = Pattern.compile("^auto$|^[+-]?[0-9]+\\.?([0-9]+)?(px|em|ex|%|in|cm|mm|pt|pc)?$");
     
-    private SVGUtils() {
+    private SvgUtils() {
     }
     
     /**
      * Convert the given path string to a marker with given size.
-     * @param svgPath SVG path string
+     * @param svgPath Svg path string
      * @param sz size of the resulting marker, as the side length/diameter
      * @return marker
      */
     public static final Marker pathToMarker(String svgPath, final float sz) {
-        final Path2D path = SVGPath.shapeConverter().convert(new SVGPath(svgPath));
+        final Path2D path = SvgPath.shapeConverter().convert(new SvgPath(svgPath));
         if (path == null) {
             
         }

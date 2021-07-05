@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
- * Filters SVG elements without a namespace.
+ * Filters Svg elements without a namespace.
  * @author elisha
  */
 class SvgNamespaceFilter extends XMLFilterImpl {

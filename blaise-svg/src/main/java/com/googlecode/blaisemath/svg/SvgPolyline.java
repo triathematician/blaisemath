@@ -35,22 +35,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG Polyline object.
+ *   Svg Polyline object.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="polyline")
-public final class SVGPolyline extends SVGElement {
+public final class SvgPolyline extends SvgElement {
     
     private static final PolylineConverter CONVERTER_INST = new PolylineConverter();
     
     private String ptStr;
 
-    public SVGPolyline() {
+    public SvgPolyline() {
         super("polyline");
     }
 
-    public SVGPolyline(String pts) {
+    public SvgPolyline(String pts) {
         super("polyline");
         this.ptStr = checkPointString(pts);
     }
@@ -71,19 +71,19 @@ public final class SVGPolyline extends SVGElement {
     
     //</editor-fold>
     
-    public static Converter<SVGPolyline, GeneralPath> shapeConverter() {
+    public static Converter<SvgPolyline, GeneralPath> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class PolylineConverter extends Converter<SVGPolyline, GeneralPath> {
+    private static final class PolylineConverter extends Converter<SvgPolyline, GeneralPath> {
         @Override
-        protected GeneralPath doForward(SVGPolyline a) {
+        protected GeneralPath doForward(SvgPolyline a) {
             return toPath(a.ptStr);
         }
 
         @Override
-        protected SVGPolyline doBackward(GeneralPath b) {
-            return new SVGPolyline(toPathString(b));
+        protected SvgPolyline doBackward(GeneralPath b) {
+            return new SvgPolyline(toPathString(b));
         }
     }
     
@@ -133,7 +133,7 @@ public final class SVGPolyline extends SVGElement {
         while (!pi.isDone()) {
             curSegmentType = pi.currentSegment(cur);
             if (curSegmentType == PathIterator.SEG_LINETO || curSegmentType == PathIterator.SEG_MOVETO) {
-                String s = " "+SVGPath.numStr(",", 6, cur[0], cur[1]);
+                String s = " "+SvgPath.numStr(",", 6, cur[0], cur[1]);
                 pathString.append(s);
                 if (s0 == null) {
                     s0 = s;

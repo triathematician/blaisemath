@@ -1,5 +1,5 @@
 /**
- * SVGObject.java
+ * SvgObject.java
  * Created Sep 26, 2014
  */
 
@@ -38,11 +38,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
 /**
- * Common interface for SVG types.
+ * Common interface for Svg types.
  * 
  * @author elisha
  */
-public abstract class SVGElement {
+public abstract class SvgElement {
     
     public static final String ID_ATTR = "id";
 
@@ -52,11 +52,11 @@ public abstract class SVGElement {
     private AttributeSet style = null;
     private Map<QName,Object> otherAttr;
 
-    protected SVGElement() {
+    protected SvgElement() {
         this.tag = null;
     }
     
-    protected SVGElement(String tag) {
+    protected SvgElement(String tag) {
         this.tag = tag;
     }
     

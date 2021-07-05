@@ -1,5 +1,5 @@
 /**
- * SVGCircle.java
+ * SvgCircle.java
  * Created Sep 26, 2014
  */
 
@@ -33,12 +33,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG-compatible circle.
+ *   Svg-compatible circle.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="circle")
-public final class SVGCircle extends SVGElement {
+public final class SvgCircle extends SvgElement {
     
     private static final CircleConverter CONVERTER_INST = new CircleConverter();
     
@@ -46,18 +46,18 @@ public final class SVGCircle extends SVGElement {
     private double cy;
     private double r;
 
-    public SVGCircle() {
+    public SvgCircle() {
         this(0, 0, 0);
     }
 
-    public SVGCircle(double cx, double cy, double r) {
+    public SvgCircle(double cx, double cy, double r) {
         super("circle");
         this.cx = cx;
         this.cy = cy;
         this.r = r;
     }
 
-    public static Converter<SVGCircle, Ellipse2D> shapeConverter() {
+    public static Converter<SvgCircle, Ellipse2D> shapeConverter() {
         return CONVERTER_INST;
     }
 
@@ -96,15 +96,15 @@ public final class SVGCircle extends SVGElement {
     //</editor-fold>
 
     
-    private static final class CircleConverter extends Converter<SVGCircle, Ellipse2D> {
+    private static final class CircleConverter extends Converter<SvgCircle, Ellipse2D> {
         @Override
-        protected SVGCircle doBackward(Ellipse2D r) {
+        protected SvgCircle doBackward(Ellipse2D r) {
             checkArgument(r.getWidth() == r.getHeight(), "Ellipse must have width=height");
-            return new SVGCircle(r.getCenterX(), r.getCenterY(), r.getWidth()/2);
+            return new SvgCircle(r.getCenterX(), r.getCenterY(), r.getWidth()/2);
         }
 
         @Override
-        protected Ellipse2D doForward(SVGCircle r) {
+        protected Ellipse2D doForward(SvgCircle r) {
             return new Ellipse2D.Double(r.cx-r.r, r.cy-r.r, 2*r.r, 2*r.r);
         }
     }

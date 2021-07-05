@@ -17,7 +17,7 @@ package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
- * BlaiseSVG
+ * BlaiseSvg
  * --
  * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
@@ -47,12 +47,12 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class SVGImageTest extends TestCase {
+public class SvgImageTest extends TestCase {
     
     @Test
     public void testLoadImage() throws MalformedURLException {
         System.out.println("loadImage");
-        SVGImage i = new SVGImage();
+        SvgImage i = new SvgImage();
         assertTrue(i.getImage() == null);
         
         i.setImageRef("cherries.png");
@@ -70,14 +70,14 @@ public class SVGImageTest extends TestCase {
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGImage, AnchoredImage> conv = SVGImage.imageConverter();
+        Converter<SvgImage, AnchoredImage> conv = SvgImage.imageConverter();
         assertEquals(null, conv.reverse().convert(null));
     }
 
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGImage, AnchoredImage> conv = SVGImage.imageConverter();
+        Converter<SvgImage, AnchoredImage> conv = SvgImage.imageConverter();
         assertEquals(null, conv.convert(null));
     }
     

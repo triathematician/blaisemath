@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     
     <name>blaise-svg</name>
-    <description>Utilities for working with SVG, and for converting SVG to/from Java2D graphics.</description>
+    <description>Utilities for working with Svg, and for converting Svg to/from Java2D graphics.</description>
     <url>https://github.com/triathematician/blaisemath</url>
     <inceptionYear>2014</inceptionYear>
     <licenses>
