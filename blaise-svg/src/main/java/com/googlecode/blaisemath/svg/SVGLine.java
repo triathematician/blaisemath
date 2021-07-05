@@ -1,5 +1,5 @@
 /**
- * SVGLine.java
+ * SvgLine.java
  * Created Sep 26, 2014
  */
 
@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG-compatible line.
+ *   Svg-compatible line.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="line")
-public final class SVGLine extends SVGElement {
+public final class SvgLine extends SvgElement {
     
     private static final LineConverter CONVERTER_INST = new LineConverter();
      
@@ -46,11 +46,11 @@ public final class SVGLine extends SVGElement {
     private double x2;
     private double y2;
 
-    public SVGLine() {
+    public SvgLine() {
         this(0, 0, 0, 0);
     }
 
-    public SVGLine(double x1, double y1, double x2, double y2) {
+    public SvgLine(double x1, double y1, double x2, double y2) {
         super("line");
         this.x1 = x1;
         this.y1 = y1;
@@ -101,18 +101,18 @@ public final class SVGLine extends SVGElement {
     
     //</editor-fold>
 
-    public static Converter<SVGLine, Line2D> shapeConverter() {
+    public static Converter<SvgLine, Line2D> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class LineConverter extends Converter<SVGLine, Line2D> {
+    private static final class LineConverter extends Converter<SvgLine, Line2D> {
         @Override
-        protected SVGLine doBackward(Line2D r) {
-            return new SVGLine(r.getX1(), r.getY1(), r.getX2(), r.getY2());
+        protected SvgLine doBackward(Line2D r) {
+            return new SvgLine(r.getX1(), r.getY1(), r.getX2(), r.getY2());
         }
 
         @Override
-        protected Line2D doForward(SVGLine r) {
+        protected Line2D doForward(SvgLine r) {
             return new Line2D.Double(r.x1, r.y1, r.x2, r.y2);
         }
     }

@@ -1,5 +1,5 @@
 /**
- * SVGCircle.java
+ * SvgCircle.java
  * Created Sep 26, 2014
  */
 
@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG-compatible ellipse.
+ *   Svg-compatible ellipse.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="ellipse")
-public final class SVGEllipse extends SVGElement {
+public final class SvgEllipse extends SvgElement {
     
     private static final EllipseConverter CONVERTER_INST = new EllipseConverter();
     
@@ -46,11 +46,11 @@ public final class SVGEllipse extends SVGElement {
     private double rx;
     private double ry;
 
-    public SVGEllipse() {
+    public SvgEllipse() {
         this(0, 0, 0, 0);
     }
 
-    public SVGEllipse(double cx, double cy, double rx, double ry) {
+    public SvgEllipse(double cx, double cy, double rx, double ry) {
         super("ellipse");
         this.cx = cx;
         this.cy = cy;
@@ -58,7 +58,7 @@ public final class SVGEllipse extends SVGElement {
         this.ry = ry;
     }
 
-    public static Converter<SVGEllipse, Ellipse2D> shapeConverter() {
+    public static Converter<SvgEllipse, Ellipse2D> shapeConverter() {
         return CONVERTER_INST;
     }
 
@@ -106,14 +106,14 @@ public final class SVGEllipse extends SVGElement {
     //</editor-fold>
 
     
-    private static final class EllipseConverter extends Converter<SVGEllipse, Ellipse2D> {
+    private static final class EllipseConverter extends Converter<SvgEllipse, Ellipse2D> {
         @Override
-        protected SVGEllipse doBackward(Ellipse2D r) {
-            return new SVGEllipse(r.getCenterX(), r.getCenterY(), r.getWidth()/2, r.getHeight()/2);
+        protected SvgEllipse doBackward(Ellipse2D r) {
+            return new SvgEllipse(r.getCenterX(), r.getCenterY(), r.getWidth()/2, r.getHeight()/2);
         }
 
         @Override
-        protected Ellipse2D doForward(SVGEllipse r) {
+        protected Ellipse2D doForward(SvgEllipse r) {
             return new Ellipse2D.Double(r.cx-r.rx, r.cy-r.ry, 2*r.rx, 2*r.ry);
         }
     }

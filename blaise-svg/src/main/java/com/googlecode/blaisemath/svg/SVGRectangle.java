@@ -1,5 +1,5 @@
 /**
- * SVGRectangle.java
+ * SvgRectangle.java
  * Created Sep 26, 2014
  */
 
@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG rectangle object.
+ *   Svg rectangle object.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="rect")
-public final class SVGRectangle extends SVGElement {
+public final class SvgRectangle extends SvgElement {
     
     private static final RectangleConverter CONVERTER_INST = new RectangleConverter();
     
@@ -51,15 +51,15 @@ public final class SVGRectangle extends SVGElement {
     private double rx;
     private double ry;
 
-    public SVGRectangle() {
+    public SvgRectangle() {
         this(0, 0, 0, 0, 0, 0);
     }
 
-    public SVGRectangle(double x, double y, double width, double height) {
+    public SvgRectangle(double x, double y, double width, double height) {
         this(x, y, width, height, 0, 0);
     }
     
-    public SVGRectangle(double x, double y, double width, double height, double rx, double ry) {
+    public SvgRectangle(double x, double y, double width, double height, double rx, double ry) {
         super("rect");
         this.x = x;
         this.y = y;
@@ -70,10 +70,10 @@ public final class SVGRectangle extends SVGElement {
     }
 
     /**
-     * Get converter that translates an {@link SVGRectangle} to/from a {@link RectangularShape}.
+     * Get converter that translates an {@link SvgRectangle} to/from a {@link RectangularShape}.
      * @return converter instance
      */
-    public static Converter<SVGRectangle, RectangularShape> shapeConverter() {
+    public static Converter<SvgRectangle, RectangularShape> shapeConverter() {
         return CONVERTER_INST;
     }
 
@@ -139,23 +139,23 @@ public final class SVGRectangle extends SVGElement {
     //</editor-fold>
 
     /** Handles conversion of rectangle to/from a rectangular shape */
-    private static final class RectangleConverter extends Converter<SVGRectangle, RectangularShape> {
+    private static final class RectangleConverter extends Converter<SvgRectangle, RectangularShape> {
         @Override
-        public SVGRectangle doBackward(RectangularShape r) {
+        public SvgRectangle doBackward(RectangularShape r) {
             checkArgument(r instanceof RoundRectangle2D || r instanceof Rectangle2D,
                     "Invalid shape: "+r);
             if (r instanceof RoundRectangle2D) {
                 RoundRectangle2D rr = (RoundRectangle2D) r;
-                return new SVGRectangle(rr.getX(), rr.getY(), rr.getWidth(), rr.getHeight(), rr.getArcWidth(), rr.getArcHeight());
+                return new SvgRectangle(rr.getX(), rr.getY(), rr.getWidth(), rr.getHeight(), rr.getArcWidth(), rr.getArcHeight());
             } else if (r instanceof Rectangle2D) {
-                return new SVGRectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+                return new SvgRectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight());
             } else {
                 throw new IllegalStateException();
             }
         }
 
         @Override
-        public RectangularShape doForward(SVGRectangle r) {
+        public RectangularShape doForward(SvgRectangle r) {
             if (r.rx == 0 && r.ry == 0) {
                 return new Rectangle2D.Double(r.x, r.y, r.width, r.height);
             } else {

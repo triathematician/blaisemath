@@ -1,5 +1,5 @@
 /**
- * SVGImage.java
+ * SvgImage.java
  * Created Sep 26, 2014
  */
 
@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.util.AnchoredImage;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
 import com.googlecode.blaisemath.util.Images;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -43,14 +43,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG-compatible image, with size parameters and a reference URL.
+ *   Svg-compatible image, with size parameters and a reference URL.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="image")
-public final class SVGImage extends SVGElement {
+public final class SvgImage extends SvgElement {
     
-    private static final Logger LOG = Logger.getLogger(SVGImage.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgImage.class.getName());
     private static final ImageConverter CONVERTER_INST = new ImageConverter();
     
     private double x;
@@ -61,15 +61,15 @@ public final class SVGImage extends SVGElement {
     
     private Image image;
 
-    public SVGImage() {
+    public SvgImage() {
         this(0, 0, null, null, "");
     }
     
-    public SVGImage(double x, double y, String ref) {
+    public SvgImage(double x, double y, String ref) {
         this(x, y, null, null, ref);
     }
 
-    public SVGImage(double x, double y, Double width, Double height, String ref) {
+    public SvgImage(double x, double y, Double width, Double height, String ref) {
         super("image");
         this.x = x;
         this.y = y;
@@ -168,18 +168,18 @@ public final class SVGImage extends SVGElement {
     
     //</editor-fold>
 
-    public static Converter<SVGImage, AnchoredImage> imageConverter() {
+    public static Converter<SvgImage, AnchoredImage> imageConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class ImageConverter extends Converter<SVGImage, AnchoredImage> {
+    private static final class ImageConverter extends Converter<SvgImage, AnchoredImage> {
         @Override
-        protected SVGImage doBackward(AnchoredImage r) {
-            return new SVGImage(r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getReference());
+        protected SvgImage doBackward(AnchoredImage r) {
+            return new SvgImage(r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getReference());
         }
 
         @Override
-        protected AnchoredImage doForward(SVGImage r) {
+        protected AnchoredImage doForward(SvgImage r) {
             Image bi = r.getImage();
             if (bi == null) {
                 return null;

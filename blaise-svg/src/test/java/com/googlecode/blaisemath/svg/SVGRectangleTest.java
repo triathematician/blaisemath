@@ -17,9 +17,9 @@ package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
- * BlaiseSVG
+ * BlaiseSvg
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,15 +48,15 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class SVGRectangleTest extends TestCase {
+public class SvgRectangleTest extends TestCase {
 
     @Test
     public void testConvertToSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGRectangle, RectangularShape> conv = SVGRectangle.shapeConverter();
+        Converter<SvgRectangle, RectangularShape> conv = SvgRectangle.shapeConverter();
         
         Rectangle2D r = new Rectangle2D.Double(1.0, 2.0, 4.0, 3.0);
-        SVGRectangle rect = conv.reverse().convert(r);
+        SvgRectangle rect = conv.reverse().convert(r);
         assert rect != null;
         assertEquals(1.0, rect.getX(), 1e-6);
         assertEquals(2.0, rect.getY(), 1e-6);
@@ -66,7 +66,7 @@ public class SVGRectangleTest extends TestCase {
         assertEquals(0, rect.getRy(), 1e-6);
         
         RoundRectangle2D rr = new RoundRectangle2D.Double(1.0, 2.0, 4.0, 3.0, .2, .3);
-        SVGRectangle rrect = conv.reverse().convert(rr);
+        SvgRectangle rrect = conv.reverse().convert(rr);
         assert rrect != null;
         assertEquals(1.0, rrect.getX(), 1e-6);
         assertEquals(2.0, rrect.getY(), 1e-6);
@@ -81,9 +81,9 @@ public class SVGRectangleTest extends TestCase {
     @Test
     public void testConvertFromSvg() {
         System.out.println("convertToSvg");
-        Converter<SVGRectangle, RectangularShape> conv = SVGRectangle.shapeConverter();
+        Converter<SvgRectangle, RectangularShape> conv = SvgRectangle.shapeConverter();
         
-        SVGRectangle sRect = new SVGRectangle(1, 2, 3, 4);
+        SvgRectangle sRect = new SvgRectangle(1, 2, 3, 4);
         RectangularShape rect = conv.convert(sRect);
         assert rect != null;
         assertTrue(rect instanceof Rectangle2D.Double);
@@ -92,7 +92,7 @@ public class SVGRectangleTest extends TestCase {
         assertEquals(3.0, rect.getWidth(), 1e-6);
         assertEquals(4.0, rect.getHeight(), 1e-6);
         
-        SVGRectangle sRect2 = new SVGRectangle(1, 2, 3, 4, .2, .3);
+        SvgRectangle sRect2 = new SvgRectangle(1, 2, 3, 4, .2, .3);
         RectangularShape rect2 = conv.convert(sRect2);
         assert rect2 != null;
         assertTrue(rect2 instanceof RoundRectangle2D.Double);

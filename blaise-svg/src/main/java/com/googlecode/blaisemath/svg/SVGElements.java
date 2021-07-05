@@ -1,14 +1,14 @@
 /**
- * SVGObjectFactory.java
+ * SvgObjectFactory.java
  * Created on Sep 26, 2014
  */
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
- * BlaiseSVG
+ * BlaiseSvg
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,11 @@ package com.googlecode.blaisemath.svg;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.coordinate.OrientedPoint2D;
+import com.googlecode.blaisemath.graphics.AnchoredIcon;
+import com.googlecode.blaisemath.graphics.AnchoredImage;
+import com.googlecode.blaisemath.graphics.AnchoredText;
+import com.googlecode.blaisemath.graphics.swing.StyledText;
 import com.googlecode.blaisemath.graphics.swing.WrappedTextRenderer;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -33,11 +38,7 @@ import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.AnchoredIcon;
-import com.googlecode.blaisemath.util.AnchoredImage;
-import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Images;
-import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -59,16 +60,16 @@ import javax.annotation.Nullable;
 import javax.swing.Icon;
 
 /**
- * Factory methods for converting to/from SVG Objects.
+ * Factory methods for converting to/from Svg Objects.
  * @author petereb1
  */
-public class SVGElements {
-    private static final Logger LOG = Logger.getLogger(SVGElements.class.getName());
+public class SvgElements {
+    private static final Logger LOG = Logger.getLogger(SvgElements.class.getName());
     
     //
     // UTILITY CLASS - PREVENT INSTANTIATION
     //
-    private SVGElements() {
+    private SvgElements() {
     }
 
     /**
@@ -80,25 +81,25 @@ public class SVGElements {
      * @param style object's style
      * @return svg object
      */
-    public static SVGElement create(String id, Shape shape, AttributeSet style) {
-        SVGElement res;
+    public static SvgElement create(String id, Shape shape, AttributeSet style) {
+        SvgElement res;
         if (shape instanceof Rectangle2D || shape instanceof RoundRectangle2D) {
-            res = SVGRectangle.shapeConverter().reverse().convert((RectangularShape) shape);
+            res = SvgRectangle.shapeConverter().reverse().convert((RectangularShape) shape);
         } else if (shape instanceof Ellipse2D) {
             Ellipse2D ell = (Ellipse2D) shape;
             if (ell.getWidth() == ell.getHeight()) {
-                res = SVGCircle.shapeConverter().reverse().convert(ell);
+                res = SvgCircle.shapeConverter().reverse().convert(ell);
             } else {
-                res = SVGEllipse.shapeConverter().reverse().convert(ell);
+                res = SvgEllipse.shapeConverter().reverse().convert(ell);
             }
         } else if (shape instanceof Line2D) {
-            res = SVGLine.shapeConverter().reverse().convert((Line2D) shape);
+            res = SvgLine.shapeConverter().reverse().convert((Line2D) shape);
         } else if (shape instanceof Path2D) {
-            res = SVGPath.shapeConverter().reverse().convert((Path2D) shape);
+            res = SvgPath.shapeConverter().reverse().convert((Path2D) shape);
         } else if (shape instanceof Area) {
-            res = SVGPath.create(shape.getPathIterator(null));
+            res = SvgPath.create(shape.getPathIterator(null));
         } else {
-            Logger.getLogger(SVGElements.class.getName()).log(Level.WARNING, "Shapes of type {0} are not yet supported.", shape.getClass());
+            Logger.getLogger(SvgElements.class.getName()).log(Level.WARNING, "Shapes of type {0} are not yet supported.", shape.getClass());
             return null;
         }
         res.setId(id);
@@ -119,7 +120,7 @@ public class SVGElements {
      * @param style object's style
      * @return svg object
      */
-    public static SVGElement create(String id, Point2D point, AttributeSet style) {
+    public static SvgElement create(String id, Point2D point, AttributeSet style) {
         Marker m = (Marker) style.get(Styles.MARKER);
         if (m == null) {
             m = Markers.CIRCLE;
@@ -138,13 +139,13 @@ public class SVGElements {
      * @param rend the text renderer
      * @return svg text object
      */
-    public static SVGElement create(String id, AnchoredText text, AttributeSet style, @Nullable Renderer rend) {
+    public static SvgElement create(String id, AnchoredText text, AttributeSet style, @Nullable Renderer rend) {
         if (rend instanceof WrappedTextRenderer) {
-            SVGElement res = createWrappedText(text.getText(), style, ((WrappedTextRenderer) rend).getTextBounds());
+            SvgElement res = createWrappedText(text.getText(), style, ((WrappedTextRenderer) rend).getTextBounds());
             res.setId(id);
             return res;
         }
-        SVGText res = SVGText.textConverter().reverse().convert(text);
+        SvgText res = SvgText.textConverter().reverse().convert(text);
         res.setId(id);
         Object ta = style.get(Styles.TEXT_ANCHOR);
         AttributeSet copy = AttributeSet.create(style.getAttributeMap());
@@ -166,19 +167,19 @@ public class SVGElements {
      * @param bounds text bounds
      * @return group element with several lines (or text element if a single line)
      */
-    public static SVGElement createWrappedText(String text, AttributeSet style, RectangularShape bounds) {
+    public static SvgElement createWrappedText(String text, AttributeSet style, RectangularShape bounds) {
         Graphics2D testCanvas = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB).createGraphics();
         WrappedTextRenderer rend = new WrappedTextRenderer();
         rend.setMinWidthFactor(0);
         rend.setMaxReduceFontSize(0);
-        Iterable<WrappedTextRenderer.StyledText> lines = rend.computeLines(text, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
+        Iterable<StyledText> lines = rend.computeLines(text, style, bounds, WrappedTextRenderer.defaultInsets(), testCanvas);
         
-        SVGGroup grp = new SVGGroup();
-        for (WrappedTextRenderer.StyledText st : lines) {
+        SvgGroup grp = new SvgGroup();
+        for (StyledText st : lines) {
             grp.addElement(create(null, st.getText(), st.getStyle(), null));
         }
-        
-        SVGElement res = grp.getElements().size() == 1 ? grp.getElements().get(0) : grp;
+
+        SvgElement res = grp.getElements().size() == 1 ? grp.getElements().get(0) : grp;
         res.setStyle(AttributeSet.create(style.getAttributeMap()));
         return res;
     }
@@ -190,15 +191,15 @@ public class SVGElements {
      * @param style object's style
      * @return svg image object
      */
-    public static SVGImage create(String id, AnchoredImage img, AttributeSet style) {
+    public static SvgImage create(String id, AnchoredImage img, AttributeSet style) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        Point2D offset = anchor.getRectOffset(img.getWidth(), img.getHeight());
+        Point2D offset = anchor.offsetForRectangle(img.getWidth(), img.getHeight());
         AnchoredImage adjustedImage = new AnchoredImage(
                 img.getX() + offset.getX(), 
                 img.getY() - img.getHeight()+ offset.getY(), 
                 (double) img.getWidth(), (double) img.getHeight(),
                 img.getOriginalImage(), img.getReference());
-        SVGImage res = SVGImage.imageConverter().reverse().convert(adjustedImage);
+        SvgImage res = SvgImage.imageConverter().reverse().convert(adjustedImage);
         res.setId(id);
         res.setStyle(AttributeSet.create(style.getAttributeMap()));
         return res;
@@ -211,10 +212,10 @@ public class SVGElements {
      * @param style object's style
      * @return svg image object
      */
-    public static SVGImage create(String id, AnchoredIcon icon, AttributeSet style) {
+    public static SvgImage create(String id, AnchoredIcon icon, AttributeSet style) {
         Anchor anchor = Styles.anchorOf(style, Anchor.NORTHWEST);
-        Point2D offset = anchor.getRectOffset(icon.getIconWidth(), icon.getIconHeight());
-        SVGImage res = new SVGImage(
+        Point2D offset = anchor.offsetForRectangle(icon.getIconWidth(), icon.getIconHeight());
+        SvgImage res = new SvgImage(
                 icon.getX() + offset.getX(), 
                 icon.getY() - icon.getIconHeight() + offset.getY(), 
                 (double) icon.getIconWidth(), (double) icon.getIconHeight(), 
@@ -246,8 +247,8 @@ public class SVGElements {
      * @param el an element
      * @return true if its a path
      */
-    public static boolean isPath(SVGElement el) {
-        return el instanceof SVGLine || el instanceof SVGPolyline;
+    public static boolean isPath(SvgElement el) {
+        return el instanceof SvgLine || el instanceof SvgPolyline;
     }
     
     /** 
@@ -257,11 +258,11 @@ public class SVGElements {
      * @param element the element to start with
      * @return iteration over this element, and all of its child elements
      */
-    public static Iterable<SVGElement> shapeIterator(SVGElement element) {
-        List<SVGElement> res = Lists.newArrayList();
+    public static Iterable<SvgElement> shapeIterator(SvgElement element) {
+        List<SvgElement> res = Lists.newArrayList();
         res.add(element);
-        if (element instanceof SVGGroup) {
-            for (SVGElement el : ((SVGGroup)element).getElements()) {
+        if (element instanceof SvgGroup) {
+            for (SvgElement el : ((SvgGroup)element).getElements()) {
                 Iterables.addAll(res, shapeIterator(el));
             }
         }

@@ -1,5 +1,5 @@
 /**
- * SVGPath.java
+ * SvgPath.java
  * Created Dec 9, 2012
  */
 
@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,34 +44,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG path object.
+ *   Svg path object.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="path")
-public final class SVGPath extends SVGElement {
+public final class SvgPath extends SvgElement {
 
-    private static final Logger LOG = Logger.getLogger(SVGPath.class.getName());
+    private static final Logger LOG = Logger.getLogger(SvgPath.class.getName());
 
     private static final PathConverter CONVERTER_INST = new PathConverter();
     
     private String pathStr;
     
-    public SVGPath() {
+    public SvgPath() {
         super("path");
     }
-    
-    public SVGPath(String pathStr) {
+
+    public SvgPath(String pathStr) {
         super("path");
         this.pathStr = checkSvgPathStr(pathStr);
     }
         
     /**
-     * Create an {@code SVGPath} from a {@code PathIterator} object.
+     * Create an {@code SvgPath} from a {@code PathIterator} object.
      * @param pi path iterator
      * @return svg path
      */
-    public static SVGPath create(PathIterator pi) {
+    public static SvgPath create(PathIterator pi) {
         float[] cur = new float[6];
         int curSegmentType = -1;
         StringBuilder pathString = new StringBuilder();
@@ -98,7 +98,7 @@ public final class SVGPath extends SVGElement {
             }
             pi.next();
         }
-        return new SVGPath(pathString.toString().trim());
+        return new SvgPath(pathString.toString().trim());
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -117,19 +117,19 @@ public final class SVGPath extends SVGElement {
     
     //</editor-fold>
     
-    public static Converter<SVGPath, Path2D> shapeConverter() {
+    public static Converter<SvgPath, Path2D> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class PathConverter extends Converter<SVGPath, Path2D> {
+    private static final class PathConverter extends Converter<SvgPath, Path2D> {
         @Override
-        protected Path2D doForward(SVGPath path) {
+        protected Path2D doForward(SvgPath path) {
             return toPath(path.pathStr);
         }
 
         @Override
-        protected SVGPath doBackward(Path2D b) {
-            return SVGPath.create(b.getPathIterator(null));
+        protected SvgPath doBackward(Path2D b) {
+            return SvgPath.create(b.getPathIterator(null));
         }
     }
     
@@ -154,13 +154,13 @@ public final class SVGPath extends SVGElement {
         return res.toString();
     }
 
-    /** Checks that the given string is a valid SVG path string. */
+    /** Checks that the given string is a valid Svg path string. */
     static String checkSvgPathStr(String svg) {
         toPath(svg);
         return svg;
     }
     
-    /** Converts SVG path string to a Java path */
+    /** Converts Svg path string to a Java path */
     static GeneralPath toPath(String svg) {
         if (Strings.isNullOrEmpty(svg)) {
             return new GeneralPath();
@@ -463,7 +463,7 @@ public final class SVGPath extends SVGElement {
         }
 
         /**
-         * Apply the SVG command, adding the results onto the path.
+         * Apply the Svg command, adding the results onto the path.
          * @param gp path to add results onto
          * @param coords coordinates associated with the current command
          * @param start starting location for current subpath (modified by move commands)

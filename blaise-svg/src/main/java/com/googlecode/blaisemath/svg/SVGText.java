@@ -1,5 +1,5 @@
 /**
- * SVGPolygon.java
+ * SvgPolygon.java
  * Created Sep 26, 2014
  */
 
@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,18 +26,18 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.base.Converter;
-import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.graphics.AnchoredText;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG text object.
+ *   Svg text object.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="text")
-public final class SVGText extends SVGElement {
+public final class SvgText extends SvgElement {
     
     private static final TextConverter CONVERTER_INST = new TextConverter();
     
@@ -45,11 +45,11 @@ public final class SVGText extends SVGElement {
     private double y;
     private String content;
 
-    public SVGText() {
+    public SvgText() {
         this(0, 0, "");
     }
 
-    public SVGText(double x, double y, String content) {
+    public SvgText(double x, double y, String content) {
         super("polygon");
         this.x = x;
         this.y = y;
@@ -91,19 +91,19 @@ public final class SVGText extends SVGElement {
     
     //</editor-fold>
     
-    public static Converter<SVGText, AnchoredText> textConverter() {
+    public static Converter<SvgText, AnchoredText> textConverter() {
         return CONVERTER_INST;
     }
     
     
-    private static class TextConverter extends Converter<SVGText, AnchoredText> {
+    private static class TextConverter extends Converter<SvgText, AnchoredText> {
         @Override
-        protected SVGText doBackward(AnchoredText r) {
-            return new SVGText(r.getX(), r.getY(), r.getText());
+        protected SvgText doBackward(AnchoredText r) {
+            return new SvgText(r.getX(), r.getY(), r.getText());
         }
 
         @Override
-        protected AnchoredText doForward(SVGText r) {
+        protected AnchoredText doForward(SvgText r) {
             return new AnchoredText(r.x, r.y, r.content);
         }
     }

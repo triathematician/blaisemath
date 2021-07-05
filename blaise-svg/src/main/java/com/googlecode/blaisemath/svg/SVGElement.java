@@ -1,5 +1,5 @@
 /**
- * SVGObject.java
+ * SvgObject.java
  * Created Sep 26, 2014
  */
 
@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.svg;
 
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.xml.AttributeSetAdapter;
+
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAnyAttribute;
@@ -37,11 +38,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
 /**
- * Common interface for SVG types.
+ * Common interface for Svg types.
  * 
  * @author elisha
  */
-public abstract class SVGElement {
+public abstract class SvgElement {
     
     public static final String ID_ATTR = "id";
 
@@ -51,11 +52,11 @@ public abstract class SVGElement {
     private AttributeSet style = null;
     private Map<QName,Object> otherAttr;
 
-    protected SVGElement() {
+    protected SvgElement() {
         this.tag = null;
     }
     
-    protected SVGElement(String tag) {
+    protected SvgElement(String tag) {
         this.tag = tag;
     }
     

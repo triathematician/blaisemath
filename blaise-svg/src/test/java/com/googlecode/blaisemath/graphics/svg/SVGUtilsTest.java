@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #%L
  * blaise-svg
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package com.googlecode.blaisemath.graphics.svg;
  */
 
 
-import static com.googlecode.blaisemath.graphics.svg.SVGUtils.parseLength;
+import static com.googlecode.blaisemath.graphics.svg.SvgUtils.parseLength;
 import static junit.framework.Assert.assertEquals;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class SVGUtilsTest {
+public class SvgUtilsTest {
 
     @Test
     public void testParseLength() {

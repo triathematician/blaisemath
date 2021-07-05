@@ -1,5 +1,5 @@
 /**
- * SVGPolygon.java
+ * SvgPolygon.java
  * Created Sep 26, 2014
  */
 
@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2019 Elisha Peterson
+ * Copyright (C) 2014 - 2021 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,31 +26,31 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.base.Converter;
-import static com.googlecode.blaisemath.svg.SVGPolyline.checkPointString;
-import static com.googlecode.blaisemath.svg.SVGPolyline.toPath;
-import static com.googlecode.blaisemath.svg.SVGPolyline.toPathString;
+import static com.googlecode.blaisemath.svg.SvgPolyline.checkPointString;
+import static com.googlecode.blaisemath.svg.SvgPolyline.toPath;
+import static com.googlecode.blaisemath.svg.SvgPolyline.toPathString;
 import java.awt.geom.GeneralPath;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG Polygon object.
+ *   Svg Polygon object.
  * </p>
  * @author elisha
  */
 @XmlRootElement(name="polygon")
-public final class SVGPolygon extends SVGElement {
+public final class SvgPolygon extends SvgElement {
     
     private static final PolygonConverter CONVERTER_INST = new PolygonConverter();
     
     private String ptStr = "";
 
-    public SVGPolygon() {
+    public SvgPolygon() {
         super("polygon");
     }
 
-    public SVGPolygon(String pts) {
+    public SvgPolygon(String pts) {
         super("polygon");
         this.ptStr = checkPointString(pts);
     }
@@ -71,22 +71,22 @@ public final class SVGPolygon extends SVGElement {
     
     //</editor-fold>
     
-    public static Converter<SVGPolygon, GeneralPath> shapeConverter() {
+    public static Converter<SvgPolygon, GeneralPath> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class PolygonConverter extends Converter<SVGPolygon, GeneralPath> {
+    private static final class PolygonConverter extends Converter<SvgPolygon, GeneralPath> {
         @Override
-        protected GeneralPath doForward(SVGPolygon a) {
+        protected GeneralPath doForward(SvgPolygon a) {
             GeneralPath gp = toPath(a.ptStr);
             gp.closePath();
             return gp;
         }
 
         @Override
-        protected SVGPolygon doBackward(GeneralPath b) {
+        protected SvgPolygon doBackward(GeneralPath b) {
             String s = toPathString(b);
-            return new SVGPolygon(s);
+            return new SvgPolygon(s);
         }
     }
 
