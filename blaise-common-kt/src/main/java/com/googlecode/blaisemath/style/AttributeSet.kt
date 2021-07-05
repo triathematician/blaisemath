@@ -141,24 +141,23 @@ open class AttributeSet(val parent: AttributeSet? = null) {
 
     //region TYPED ACCESSORS
 
-    /** Get the string value associated with the key. */
-    fun getString(key: String, defaultValue: String? = null) = TypeConverter.convert(get(key)) ?: defaultValue
-    /** Get the boolean value associated with the key. */
-    fun getBoolean(key: String, defaultValue: Boolean? = null) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getStringOrNull(key: String) = TypeConverter.convert<String>(get(key))
+    fun getBooleanOrNull(key: String) = TypeConverter.convert<Boolean>(get(key))
+    fun getIntegerOrNull(key: String) = TypeConverter.convert<Int>(get(key))
+    fun getFloatOrNull(key: String) = TypeConverter.convert<Float>(get(key))
+    fun getDoubleOrNull(key: String) = TypeConverter.convert<Double>(get(key))
+    fun getColorOrNull(key: String) = TypeConverter.convert<Color>(get(key))
+    fun getPointOrNull(key: String) = TypeConverter.convert<Point>(get(key))
+    fun getPoint2DOrNull(key: String) = TypeConverter.convert<Point2D>(get(key))
 
-    /** Get the integer value associated with the key. */
-    fun getInteger(key: String, defaultValue: Int? = null) = TypeConverter.convert(get(key)) ?: defaultValue
-    /** Get the float value associated with the key. */
-    fun getFloat(key: String, defaultValue: Float? = null) = TypeConverter.convert(get(key)) ?: defaultValue
-    /** Get the double value associated with the key. */
-    fun getDouble(key: String, defaultValue: Double? = null) = TypeConverter.convert(get(key)) ?: defaultValue
-
-    /** Get the color value associated with the key. */
-    fun getColor(key: String, defaultValue: Color? = null) = TypeConverter.convert(get(key)) ?: defaultValue
-    /** Get the point value associated with the key. */
-    fun getPoint(key: String, defaultValue: Point? = null) = TypeConverter.convert(get(key)) ?: defaultValue
-    /** Get the point value associated with the key. */
-    fun getPoint2D(key: String, defaultValue: Point2D? = null) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getString(key: String, defaultValue: String) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getBoolean(key: String, defaultValue: Boolean) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getInteger(key: String, defaultValue: Int) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getFloat(key: String, defaultValue: Float) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getDouble(key: String, defaultValue: Double) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getColor(key: String, defaultValue: Color) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getPoint(key: String, defaultValue: Point) = TypeConverter.convert(get(key)) ?: defaultValue
+    fun getPoint2D(key: String, defaultValue: Point2D) = TypeConverter.convert(get(key)) ?: defaultValue
 
     //endregion
 

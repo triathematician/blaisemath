@@ -30,11 +30,14 @@ typealias Rectangle2 = Rectangle2D.Double
 
 //region POINT XF
 
+fun point2(p: Point2D) = Point2(p.x, p.y)
 fun point2(x: Number, y: Number) = Point2(x.toDouble(), y.toDouble())
 fun pointPolar(r: Number, theta: Number) = point2(r.toDouble() * cos(theta.toDouble()), r.toDouble() * sin(theta.toDouble()))
 
 operator fun Point2D.plus(p: Point2D) = Point2(x + p.x, y + p.y)
 operator fun Point2D.minus(p: Point2D) = Point2(x - p.x, y - p.y)
+operator fun Point2D.times(r: Double) = Point2(r * x, r * y)
+operator fun Point2D.div(r: Double) = Point2(x / r, y / r)
 
 fun Point2D.format(n: Int) = String.format("(%.${n}f, %.${n}f)", x, y)
 
@@ -99,16 +102,15 @@ fun rectangle2FromDiagonal(corner1: Point2D, corner2: Point2D) = Rectangle2().ap
 
 val Rectangle2D.center
     get() = Point2(centerX, centerY)
+val Rectangle2D.min
+    get() = Point2(minX, minY)
+val Rectangle2D.max
+    get() = Point2(maxX, maxY)
 
 operator fun Rectangle2D.plus(p: Point2D) = Rectangle2(x + p.x, y + p.y, width, height)
 operator fun Rectangle2D.minus(p: Point2D) = Rectangle2(x - p.x, y - p.y, width, height)
 
 /** Compute rectangle that is smallest containing all rectangles in provided list, or null if the list is empty. */
-fun boundingBox(list: List<Rectangle2D>): Rectangle2D? {
-    if (list.isEmpty()) return null
-    var res: Rectangle2D? = null
-    for (r in list) res = res?.createUnion(r) ?: r
-    return res
-}
+fun List<Rectangle2D>.createUnion() = reduceOrNull { a, b -> a.createUnion(b) }
 
 //endregion
