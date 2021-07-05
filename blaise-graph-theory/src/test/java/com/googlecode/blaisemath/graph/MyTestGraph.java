@@ -214,6 +214,11 @@ final class MyTestGraph implements Graph<String> {
     }
 
     @Override
+    public ElementOrder<String> incidentEdgeOrder() {
+        return ElementOrder.insertion();
+    }
+
+    @Override
     public Set<EndpointPair<String>> incidentEdges(String x) {
         return edgeIndex.get(x);
     }
