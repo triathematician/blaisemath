@@ -29,6 +29,7 @@ module com.googlecode.blaisemath.svg {
     requires com.googlecode.blaisemath.common;
     requires com.googlecode.blaisemath.graphics;
     requires com.googlecode.blaisemath.json;
+    requires kotlin.stdlib;
 
     exports com.googlecode.blaisemath.svg;
     exports com.googlecode.blaisemath.svg.reader;

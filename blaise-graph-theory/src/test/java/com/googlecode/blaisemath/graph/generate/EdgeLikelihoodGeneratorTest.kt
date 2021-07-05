@@ -1,0 +1,42 @@
+package com.googlecode.blaisemath.graph.generate
+
+import com.googlecode.blaisemath.graph.GraphUtils
+import org.junit.Assert
+import org.junit.Test
+
+/*
+* #%L
+* BlaiseGraphTheory
+* --
+* Copyright (C) 2009 - 2021 Elisha Peterson
+* --
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* #L%
+*/   class EdgeLikelihoodGeneratorTest {
+    @Test
+    fun testEdgeLikelihoodGenerator() {
+        var result1 = EdgeLikelihoodGenerator().apply(EdgeLikelihoodGenerator.EdgeLikelihoodParameters(false, 10, 0f))
+        Assert.assertEquals(10, result1.nodes().size.toLong())
+        Assert.assertEquals(0, result1.edges().size.toLong())
+        result1 = EdgeLikelihoodGenerator().apply(EdgeLikelihoodGenerator.EdgeLikelihoodParameters(true, 10, 1f))
+        Assert.assertEquals(10, result1.nodes().size.toLong())
+        Assert.assertEquals(100, result1.edges().size.toLong())
+        result1 = EdgeLikelihoodGenerator().apply(EdgeLikelihoodGenerator.EdgeLikelihoodParameters(false, 10, 1f))
+        Assert.assertEquals(10, result1.nodes().size.toLong())
+        Assert.assertEquals(45, result1.edges().size.toLong())
+        result1 = EdgeLikelihoodGenerator().apply(EdgeLikelihoodGenerator.EdgeLikelihoodParameters(false, 10, .25f))
+        println("  UNDIRECTED (.25 probability): " + result1.edges().size + " edges, " + GraphUtils.printGraph(result1))
+        result1 = EdgeLikelihoodGenerator().apply(EdgeLikelihoodGenerator.EdgeLikelihoodParameters(true, 10, .25f))
+        println("  DIRECTED (.25 probability): " + result1.edges().size + " edges, " + GraphUtils.printGraph(result1))
+    }
+}
