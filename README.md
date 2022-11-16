@@ -1,6 +1,8 @@
 # blaisemath
 **blaisemath** is a collection of Java libraries for visualization and mathematics. The source code, javadocs, and jar files are available in the  [central maven repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.googlecode.blaisemath%22).
 
+Project documentation is available at http://triathematician.github.io/blaisemath/ (TBD)
+
 ## Core Libraries
 The core libraries are listed below with the latest artifact versions available on maven central. Note that they have been recently updated for Java 11 (September 2019). If using Java 8-10, see [this wiki page](https://github.com/triathematician/blaisemath/wiki/java-8) for documentation on which versions to use for Java 8.
 - **blaise-common** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-common/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.googlecode.blaisemath/blaise-common) [changes](https://github.com/triathematician/blaisemath/wiki/blaise-common-change-log)
