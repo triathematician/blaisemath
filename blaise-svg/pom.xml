@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-svg</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     
     <name>blaise-svg</name>
@@ -33,7 +33,7 @@
         <url>https://github.com/triathematician/blaisemath</url>
         <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
         <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>blaise-svg-1.0.3</tag>
     </scm>
     <issueManagement>
         <system>GitHub Issues</system>
@@ -83,23 +83,23 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-common</artifactId>
-            <version>1.0.9-SNAPSHOT</version>
+            <version>1.0.9</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics</artifactId>
-            <version>3.0.13-SNAPSHOT</version>
+            <version>3.0.13</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics-ui</artifactId>
-            <version>3.0.13-SNAPSHOT</version>
+            <version>3.0.13</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.blaisemath</groupId>
             <artifactId>blaise-json</artifactId>
-            <version>1.0.11-SNAPSHOT</version>
+            <version>1.0.12</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
