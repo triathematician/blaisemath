@@ -17,6 +17,17 @@
  * limitations under the License.
  * #L%
  */
+
+import com.googlecode.blaisemath.graph.GraphGenerator;
+import com.googlecode.blaisemath.graph.GraphMetric;
+import com.googlecode.blaisemath.graph.GraphNodeMetric;
+import com.googlecode.blaisemath.graph.GraphSubsetMetric;
+import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.generate.*;
+import com.googlecode.blaisemath.graph.layout.*;
+import com.googlecode.blaisemath.graph.metrics.*;
+
 module com.googlecode.blaisemath.graphtheory {
     requires java.desktop;
     requires java.logging;
@@ -30,4 +41,55 @@ module com.googlecode.blaisemath.graphtheory {
     exports com.googlecode.blaisemath.graph.generate;
     exports com.googlecode.blaisemath.graph.layout;
     exports com.googlecode.blaisemath.graph.metrics;
+
+    // services
+    uses GraphGenerator;
+    uses GraphMetric;
+    uses GraphNodeMetric;
+    uses GraphSubsetMetric;
+    uses IterativeGraphLayout;
+    uses StaticGraphLayout;
+
+    provides GraphGenerator with
+            EmptyGraphGenerator,
+            CycleGraphGenerator,
+            StarGraphGenerator,
+            WheelGraphGenerator,
+            CompleteGraphGenerator,
+            EdgeCountGenerator,
+            EdgeLikelihoodGenerator,
+            DegreeDistributionGenerator,
+            ProximityGraphGenerator,
+            WattsStrogatzGenerator,
+            PreferentialAttachmentGenerator;
+    provides GraphMetric with
+            AverageDegree,
+            ClusteringCoefficient,
+            ClusteringCoefficientByPath,
+            ComponentCount,
+            EdgeDensity,
+            GraphDiameter,
+            EdgeCount,
+            NodeCount,
+            GraphRadius;
+    provides GraphNodeMetric with
+            BetweenCentrality,
+            CliqueCount,
+            CliqueCountTwo,
+            ClosenessCentrality,
+            DecayCentrality,
+            Degree,
+            DegreeTwo,
+            EigenCentrality,
+            GraphCentrality,
+            InDegree,
+            OutDegree;
+    provides IterativeGraphLayout with
+            SpringLayout;
+    provides StaticGraphLayout with
+            CircleLayout,
+            RandomBoxLayout,
+            PositionalAddingLayout,
+            StaticSpringLayout;
+
 }
