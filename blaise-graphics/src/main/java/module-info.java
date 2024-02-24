@@ -17,6 +17,10 @@
  * limitations under the License.
  * #L%
  */
+
+import com.googlecode.blaisemath.graphics.svg.SvgCoder;
+import com.googlecode.blaisemath.graphics.svg.SvgCoderBlank;
+
 module com.googlecode.blaisemath.graphics {
     requires java.desktop;
 
@@ -31,4 +35,9 @@ module com.googlecode.blaisemath.graphics {
     exports com.googlecode.blaisemath.graphics.svg;
     exports com.googlecode.blaisemath.graphics.swing;
     exports com.googlecode.blaisemath.graphics.swing.render;
+
+    // services
+    uses SvgCoder;
+
+    provides SvgCoder with SvgCoderBlank;
 }
