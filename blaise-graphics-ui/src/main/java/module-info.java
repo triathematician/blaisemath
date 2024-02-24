@@ -17,6 +17,9 @@
  * limitations under the License.
  * #L%
  */
+
+import com.googlecode.blaisemath.primitive.Markers;
+
 module com.googlecode.blaisemath.graphics.ui {
     requires java.desktop;
 
@@ -30,4 +33,7 @@ module com.googlecode.blaisemath.graphics.ui {
     exports com.googlecode.blaisemath.palette.ui;
     exports com.googlecode.blaisemath.primitive.ui;
     exports com.googlecode.blaisemath.style.ui;
+
+    // services
+    uses Markers;
 }
