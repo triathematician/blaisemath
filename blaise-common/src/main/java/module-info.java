@@ -17,13 +17,17 @@
  * limitations under the License.
  * #L%
  */
+
+import com.googlecode.blaisemath.primitive.Marker;
+import com.googlecode.blaisemath.primitive.Markers;
+
 module com.googlecode.blaisemath.common {
     requires java.desktop;
     requires java.logging;
 
     requires com.google.common;
     requires org.checkerframework.checker.qual;
-    requires javafx.graphics;
+    requires csscolor4j;
 
     exports com.googlecode.blaisemath.annotation;
     exports com.googlecode.blaisemath.coordinate;
@@ -34,4 +38,30 @@ module com.googlecode.blaisemath.common {
     exports com.googlecode.blaisemath.style;
     exports com.googlecode.blaisemath.util;
     exports com.googlecode.blaisemath.util.swing;
+
+    // services (service loader API)
+    uses Marker;
+
+    provides Marker with
+            Markers.CircleMarker,
+            Markers.SquareMarker,
+            Markers.DiamondMarker,
+            Markers.TriangleMarker,
+            Markers.StarMarker5,
+            Markers.StarMarker7,
+            Markers.StarMarker11,
+            Markers.PlusMarker,
+            Markers.CrossMarker,
+            Markers.TargetMarker,
+            Markers.ArrowMarker,
+            Markers.GapArrowMarker,
+            Markers.ThickArrowMarker,
+            Markers.ChevronMarker,
+            Markers.TriangleMarkerForward,
+            Markers.ArrowheadMarker,
+            Markers.TeardropMarker,
+            Markers.HappyFaceMarker,
+            Markers.HouseMarker,
+            Markers.BlankMarker;
+
 }

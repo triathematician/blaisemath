@@ -20,25 +20,24 @@ package com.googlecode.blaisemath.primitive;
  * #L%
  */
 
-import com.googlecode.blaisemath.primitive.Markers;
-import com.googlecode.blaisemath.primitive.Marker;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.*;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 public class MarkersTest {
 
     @Test
     public void testGetAvailableMarkers() {
-        System.out.println("getAvailableMarkers");
         List<Marker> result = Markers.getAvailableMarkers();
-        Assert.assertFalse(result.isEmpty());
+        assertFalse(result.isEmpty());
         for (Marker m : result) {
             Shape s = m.create(new Point(), .5, 1f);
-            Assert.assertNotNull(s);
+            assertNotNull(s);
         }
+        assertEquals(20, result.size());
     }
     
 }

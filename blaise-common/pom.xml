@@ -66,9 +66,9 @@
             <version>32.0.0-jre</version>
         </dependency>
         <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>11.0.2</version>
+            <groupId>org.silentsoft</groupId>
+            <artifactId>csscolor4j</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

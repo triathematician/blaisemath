@@ -54,7 +54,7 @@ public final class Colors {
     }
     
     /**
-     * Flexible color decoder. Uses {@link javafx.scene.paint.Color#web(java.lang.String)} to decode.
+     * Flexible color decoder. Uses {@link org.silentsoft.csscolor4j.Color#valueOf(java.lang.String)} to decode.
      * @param v color string
      * @return color
      * @throws NullPointerException if v is null
@@ -62,9 +62,8 @@ public final class Colors {
      */
     public static Color decode(String v) {
         requireNonNull(v);
-        javafx.scene.paint.Color fx = javafx.scene.paint.Color.web(v);
-        return new Color((float) fx.getRed(), (float) fx.getGreen(),
-                (float) fx.getBlue(), (float) fx.getOpacity());
+        org.silentsoft.csscolor4j.Color fx = org.silentsoft.csscolor4j.Color.valueOf(v);
+        return new Color(fx.getRed(), fx.getGreen(), fx.getBlue(), (int) (fx.getOpacity() * 255));
     }
 
     /**
