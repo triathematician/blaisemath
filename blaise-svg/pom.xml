@@ -54,52 +54,43 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <license.organizationName>Elisha Peterson</license.organizationName>
         <license.licenseName>apache_v2</license.licenseName>
+        <batik.version>1.17</batik.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-svggen</artifactId>
-            <version>1.11</version>
+            <version>${batik.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-dom</artifactId>
-            <version>1.11</version>
+            <version>${batik.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-codec</artifactId>
-            <version>1.11</version>
+            <version>${batik.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>32.0.0-jre</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-common</artifactId>
-            <version>1.0.9</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics</artifactId>
-            <version>3.0.13</version>
+            <version>3.0.15</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics-ui</artifactId>
-            <version>3.0.13</version>
+            <version>3.0.15</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.blaisemath</groupId>
             <artifactId>blaise-json</artifactId>
-            <version>1.0.12</version>
+            <version>1.0.13</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>

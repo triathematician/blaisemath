@@ -2,7 +2,7 @@
  * #%L
  * blaise-svg
  * --
- * Copyright (C) 2014 - 2022 Elisha Peterson
+ * Copyright (C) 2014 - 2024 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,14 @@
  * limitations under the License.
  * #L%
  */
+
+import com.googlecode.blaisemath.graphics.svg.SvgCoder;
+import com.googlecode.blaisemath.svg.reader.*;
+import com.googlecode.blaisemath.svg.BlaiseSvgCoder;
+import com.googlecode.blaisemath.svg.xml.SvgLine;
+import com.googlecode.blaisemath.svg.xml.SvgPath;
+import com.googlecode.blaisemath.svg.xml.SvgRect;
+
 module com.googlecode.blaisemath.svg {
     requires java.desktop;
     requires java.logging;
@@ -35,5 +43,24 @@ module com.googlecode.blaisemath.svg {
     exports com.googlecode.blaisemath.svg.render;
     exports com.googlecode.blaisemath.svg.swing;
     exports com.googlecode.blaisemath.svg.xml;
+
     opens com.googlecode.blaisemath.svg.xml to java.xml.bind;
+
+    // services
+    uses SvgCoder;
+    uses SvgReader;
+
+    provides SvgCoder with
+            BlaiseSvgCoder;
+    provides SvgReader with
+            SvgGroupReader,
+            SvgCircleReader,
+            SvgEllipseReader,
+            SvgImageReader,
+            SvgLineReader,
+            SvgPathReader,
+            SvgPolygonReader,
+            SvgPolylineReader,
+            SvgRectReader,
+            SvgTextReader;
 }
