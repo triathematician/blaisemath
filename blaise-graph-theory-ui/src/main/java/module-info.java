@@ -17,6 +17,10 @@
  * limitations under the License.
  * #L%
  */
+
+import com.googlecode.blaisemath.graph.*;
+import com.googlecode.blaisemath.primitive.Markers;
+
 module com.googlecode.blaisemath.graphtheory.ui {
     requires java.desktop;
     requires java.logging;
@@ -29,4 +33,13 @@ module com.googlecode.blaisemath.graphtheory.ui {
     requires com.googlecode.blaisemath.graphtheory;
 
     exports com.googlecode.blaisemath.graph.view;
+
+    // services
+    uses GraphGenerator;
+    uses GraphMetric;
+    uses GraphNodeMetric;
+    uses GraphSubsetMetric;
+    uses IterativeGraphLayout;
+    uses StaticGraphLayout;
+    uses Markers;
 }
