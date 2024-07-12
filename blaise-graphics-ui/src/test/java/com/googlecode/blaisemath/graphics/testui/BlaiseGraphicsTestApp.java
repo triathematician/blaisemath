@@ -32,18 +32,13 @@ import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.impl.LabeledPointGraphic;
 import com.googlecode.blaisemath.graphics.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.*;
+import com.googlecode.blaisemath.graphics.swing.render.*;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.ui.BasicPointStyleEditor;
 import com.googlecode.blaisemath.graphics.impl.SegmentGraphic;
 import com.googlecode.blaisemath.graphics.impl.TwoPointGraphic;
-import com.googlecode.blaisemath.graphics.swing.render.ArrowPathRenderer;
-import com.googlecode.blaisemath.graphics.swing.render.MarkerRenderer;
-import com.googlecode.blaisemath.graphics.swing.render.MarkerRendererToClip;
-import com.googlecode.blaisemath.graphics.swing.render.PathRenderer;
-import com.googlecode.blaisemath.graphics.swing.render.SlopedTextRenderer;
-import com.googlecode.blaisemath.graphics.swing.render.TextRenderer;
 import com.googlecode.blaisemath.primitive.Anchor;
 import com.googlecode.blaisemath.primitive.AnchoredText;
 import com.googlecode.blaisemath.primitive.ArrowLocation;
@@ -51,10 +46,7 @@ import com.googlecode.blaisemath.primitive.Markers;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
@@ -208,6 +200,19 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             addWrappedTextSmall();
         }
     }
+
+    @Action
+    public void addWrappedTextPlain() {
+        PrimitiveGraphic<AnchoredText, Graphics2D> textGraphic = new PrimitiveGraphic<>();
+        textGraphic.setPrimitive(new AnchoredText(0.0, 0.0, "This is a long label for a rectangle that should get wrapped, "
+                + "since it needs to be really big so we can adequately test something with a\n long\n label\n"
+                + "and\n\n\n\n new line characters\nx but then we can continue writing some more with some more"
+                + "\n\nline breaks before\n\n other lines."));
+        Rectangle2D.Double rect = new Rectangle2D.Double();
+        rect.setFrameFromDiagonal(randomPoint(), randomPoint());
+        textGraphic.setRenderer(new WrappedTextRenderer().clipPath(rect));
+        root1.addGraphic(textGraphic);
+    }
     
     private void addWrappedTextRandom() {
         Rectangle2D.Double rect = new Rectangle2D.Double();
@@ -216,7 +221,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         gfc.setPrimitive(rect);
         gfc.getObjectStyler().setLabel("this is a long label for a rectangle that should get wrapped, "
                 + "since it needs to be really big so we can adequately test something with a\n long\n label\n"
-                + "and\n\n\n new line characters\nx");
+                + "and\n\n\n new line characters\nx but then we can continue writing some more with some more"
+                + "\n\nline breaks before\n\n other lines.");
         gfc.getObjectStyler().setLabelStyle(Styles.text(RandomStyles.color(), RandomStyles.fontSize(), Anchor.NORTHWEST));
         root1.addGraphic(gfc);
     }

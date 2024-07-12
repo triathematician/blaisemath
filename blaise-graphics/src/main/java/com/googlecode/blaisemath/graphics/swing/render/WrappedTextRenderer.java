@@ -159,7 +159,7 @@ public class WrappedTextRenderer extends TextRenderer {
         Rectangle2D res = null;
         for (StyledText t : lines) {
             Rectangle2D box = TextRenderer.getInstance().boundingBox(t.getText(), t.getStyle(), canvas);
-            res = res == null ? box : res.createUnion(box);
+            res = res == null ? box : box == null ? res : res.createUnion(box);
         }
         return res;
     }

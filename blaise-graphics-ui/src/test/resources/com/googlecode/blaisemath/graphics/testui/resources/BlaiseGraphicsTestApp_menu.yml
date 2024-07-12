@@ -11,6 +11,7 @@ MENUBAR:
         - addRectangle
         - addString
         - addWrappedText
+        - addWrappedTextPlain
     - Graphic Sets:
         - addPointSet
         - editPointSetStyle
