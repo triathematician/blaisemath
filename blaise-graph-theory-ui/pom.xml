@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-graph-theory-ui</artifactId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.1.0</version>
     <packaging>jar</packaging>
     
     <name>blaise-graph-theory-ui</name>
@@ -31,7 +31,7 @@
         <url>https://github.com/triathematician/blaisemath</url>
         <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
         <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>blaise-graph-theory-ui-4.1.0</tag>
   </scm>    
     <issueManagement>
         <system>GitHub Issues</system>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graph-theory</artifactId>
-            <version>4.1.0-SNAPSHOT</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
