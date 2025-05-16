@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graph.test;
  * #%L
  * BlaiseGraphTheory
  * --
- * Copyright (C) 2009 - 2024 Elisha Peterson
+ * Copyright (C) 2009 - 2025 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -210,6 +210,11 @@ final class MyTestGraph implements Graph<String> {
 
     @Override
     public ElementOrder<String> nodeOrder() {
+        return ElementOrder.insertion();
+    }
+
+    @Override
+    public ElementOrder<String> incidentEdgeOrder() {
         return ElementOrder.insertion();
     }
 
