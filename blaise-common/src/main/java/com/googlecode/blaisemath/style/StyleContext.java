@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.style;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2025 Elisha Peterson
+ * Copyright (C) 2014 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package com.googlecode.blaisemath.style;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Sets;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Arrays.asList;

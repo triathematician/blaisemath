@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.geom;
  * #%L
  * BlaiseSketch
  * --
- * Copyright (C) 2014 - 2025 Elisha Peterson
+ * Copyright (C) 2014 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Utility methods for creating shapes from two locations.

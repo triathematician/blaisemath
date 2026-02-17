@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.geom;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2014 - 2025 Elisha Peterson
+ * Copyright (C) 2014 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,10 @@ package com.googlecode.blaisemath.geom;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Provides methods for translating between graphic coordinate space and

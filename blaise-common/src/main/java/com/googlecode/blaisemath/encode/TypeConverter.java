@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.encode;
  * #%L
  * blaise-common
  * --
- * Copyright (C) 2014 - 2025 Elisha Peterson
+ * Copyright (C) 2014 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ package com.googlecode.blaisemath.encode;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.internal.Reflection;
+import org.jspecify.annotations.Nullable;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -36,7 +38,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Converts values from one type to another.

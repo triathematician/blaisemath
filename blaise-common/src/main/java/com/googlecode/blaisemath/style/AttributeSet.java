@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.style;
  * #%L
  * blaise-common
  * --
- * Copyright (C) 2014 - 2025 Elisha Peterson
+ * Copyright (C) 2014 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides a collection of key-value pairs for style elements, similar to what

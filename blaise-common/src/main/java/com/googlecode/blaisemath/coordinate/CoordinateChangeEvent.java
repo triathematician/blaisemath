@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.coordinate;
  * #%L
  * blaise-common
  * --
- * Copyright (C) 2014 - 2025 Elisha Peterson
+ * Copyright (C) 2014 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ package com.googlecode.blaisemath.coordinate;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventObject;
 import java.util.Map;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Tracks a change to a set of coordinate locations, in the form of a set of added
@@ -124,7 +124,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * Get the collection of coordinate that were added
      * @return map whose keys are the objects and values are their coordinates
      */
-    @Nullable 
+    @Nullable
     public Map<S,C> getAdded() {
         return added;
     }

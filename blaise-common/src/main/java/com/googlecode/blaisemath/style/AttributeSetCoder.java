@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.style;
  * #%L
  * blaise-common
  * --
- * Copyright (C) 2014 - 2025 Elisha Peterson
+ * Copyright (C) 2014 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ import com.googlecode.blaisemath.encode.RectangleCoder;
 import com.googlecode.blaisemath.encode.StringDecoder;
 import com.googlecode.blaisemath.encode.StringEncoder;
 import com.googlecode.blaisemath.encode.TypeConverter;
+import org.jspecify.annotations.Nullable;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
@@ -54,7 +56,6 @@ import static java.util.Objects.requireNonNull;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Encode/decodes {@link AttributeSet}s as strings. The key-value pairs in the
