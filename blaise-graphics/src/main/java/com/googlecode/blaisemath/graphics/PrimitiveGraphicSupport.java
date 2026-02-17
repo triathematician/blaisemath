@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2025 Elisha Peterson
+ * Copyright (C) 2009 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.graphics;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.coordinate.CoordinateBean;
 import com.googlecode.blaisemath.coordinate.DraggableCoordinate;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;

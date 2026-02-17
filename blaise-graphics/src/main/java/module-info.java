@@ -2,7 +2,7 @@
  * #%L
  * blaise-graphics
  * --
- * Copyright (C) 2009 - 2025 Elisha Peterson
+ * Copyright (C) 2009 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ import com.googlecode.blaisemath.graphics.svg.SvgCoderBlank;
 
 module com.googlecode.blaisemath.graphics {
     requires java.desktop;
+    requires java.logging;
 
     requires com.google.common;
-    requires org.checkerframework.checker.qual;
+    requires csscolor4j;
+    requires org.jspecify;
 
     requires com.googlecode.blaisemath.common;
-    requires java.logging;
 
     exports com.googlecode.blaisemath.graphics;
     exports com.googlecode.blaisemath.graphics.impl;

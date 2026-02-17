@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.swing;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2025 Elisha Peterson
+ * Copyright (C) 2009 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import com.googlecode.blaisemath.graphics.GraphicUtils;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.util.SetSelectionModel;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;

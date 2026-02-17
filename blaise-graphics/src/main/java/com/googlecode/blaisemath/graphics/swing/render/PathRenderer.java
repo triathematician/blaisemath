@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.swing.render;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2025 Elisha Peterson
+ * Copyright (C) 2009 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import java.awt.geom.Rectangle2D;
 
 import static com.google.common.primitives.Doubles.max;
 import static com.google.common.primitives.Doubles.min;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Draws a shape using a stroke (with thickness) and a fill color.

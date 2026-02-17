@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.swing.render;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2025 Elisha Peterson
+ * Copyright (C) 2009 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.googlecode.blaisemath.style.Styles;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Renderer for drawing an icon on a canvas. Anchor is used to position the icon relative to a point. The default anchor

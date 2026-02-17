@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2025 Elisha Peterson
+ * Copyright (C) 2009 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.graphics;
 
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.geom.Point2D;
 import java.util.Set;

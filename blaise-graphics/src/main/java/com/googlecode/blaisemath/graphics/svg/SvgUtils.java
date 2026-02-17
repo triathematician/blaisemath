@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #%L
  * blaise-graphics
  * --
- * Copyright (C) 2009 - 2025 Elisha Peterson
+ * Copyright (C) 2009 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package com.googlecode.blaisemath.graphics.svg;
 import com.google.common.annotations.Beta;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.util.Images;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.Component;
 import java.awt.Container;

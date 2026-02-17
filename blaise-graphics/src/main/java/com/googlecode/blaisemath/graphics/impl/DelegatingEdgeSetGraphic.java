@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.graphics.impl;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2025 Elisha Peterson
+ * Copyright (C) 2009 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.swing.MoreSwingUtilities;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.Shape;
 import java.awt.geom.Line2D;
