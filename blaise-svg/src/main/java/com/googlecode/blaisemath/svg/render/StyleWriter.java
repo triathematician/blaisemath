@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.svg.render;
  * #%L
  * blaise-svg
  * --
- * Copyright (C) 2014 - 2025 Elisha Peterson
+ * Copyright (C) 2014 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSetCoder;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Colors;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
