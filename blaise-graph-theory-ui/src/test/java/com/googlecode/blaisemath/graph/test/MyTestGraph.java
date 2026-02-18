@@ -210,13 +210,11 @@ final class MyTestGraph implements Graph<String> {
 
     @Override
     public ElementOrder<String> nodeOrder() {
-        return ElementOrder.insertion();
+        return ElementOrder.unordered();
     }
 
     @Override
-    public ElementOrder<String> incidentEdgeOrder() {
-        return ElementOrder.insertion();
-    }
+    public ElementOrder<String> incidentEdgeOrder() { return ElementOrder.unordered(); }
 
     @Override
     public Set<EndpointPair<String>> incidentEdges(String x) {

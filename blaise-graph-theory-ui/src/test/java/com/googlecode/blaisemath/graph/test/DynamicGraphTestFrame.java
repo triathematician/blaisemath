@@ -58,6 +58,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         initComponents();
 
         graphCopy = Graphs.copyOf(graph);
+                Graphs.copyOf(graph);
         plot.setGraph(graphCopy);
         plot.getAdapter().getViewGraph().setDragEnabled(true);
         plot.getAdapter().getViewGraph().setPointSelectionEnabled(true);
