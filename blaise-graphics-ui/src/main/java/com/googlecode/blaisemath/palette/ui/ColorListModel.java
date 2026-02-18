@@ -4,7 +4,7 @@ package com.googlecode.blaisemath.palette.ui;
  * #%L
  * blaise-graphics
  * --
- * Copyright (C) 2019 - 2025 Elisha Peterson
+ * Copyright (C) 2019 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.palette.Palette;
 import com.googlecode.blaisemath.palette.Palettes;
 import com.googlecode.blaisemath.primitive.Marker;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.Color;
 import static java.util.Collections.list;

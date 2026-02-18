@@ -2,7 +2,7 @@
  * #%L
  * blaise-graphics-ui
  * --
- * Copyright (C) 2019 - 2025 Elisha Peterson
+ * Copyright (C) 2019 - 2026 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ module com.googlecode.blaisemath.graphics.ui {
     requires java.desktop;
 
     requires com.google.common;
-    requires org.checkerframework.checker.qual;
+    requires csscolor4j;
+    requires org.jspecify;
 
     requires com.googlecode.blaisemath.firestarter;
     requires com.googlecode.blaisemath.common;
