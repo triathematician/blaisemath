@@ -20,20 +20,20 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import java.awt.Rectangle;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Deserializes a {@link RectangleProxy} to a {@link Rectangle}.
  * @author Elisha Peterson
  */
-public class RectangleDeserializer extends JsonDeserializer<Rectangle> {
+public class RectangleDeserializer extends ValueDeserializer<Rectangle> {
 
     @Override
-    public Rectangle deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Rectangle deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
         RectangleProxy proxy = p.readValueAs(RectangleProxy.class);
         return proxy.toRectangle();
     }

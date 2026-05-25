@@ -20,22 +20,22 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.SerializationContext;
 import com.googlecode.blaisemath.encode.FontCoder;
 
 import java.awt.*;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Serializes fonts as json strings/
  * @author Elisha Peterson
  */
-public class FontSerializer extends JsonSerializer<Font> {
+public class FontSerializer extends ValueSerializer<Font> {
 
     @Override
-    public void serialize(Font value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Font value, JsonGenerator gen, SerializationContext serializers) throws JacksonException {
         gen.writeString(new FontCoder().encode(value));
     }
 

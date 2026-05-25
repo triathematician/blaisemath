@@ -20,20 +20,20 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import java.io.IOException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.core.JacksonException;
 
 /**
  * Used for deserialization of class strings, allowing primitive strings to omit the "java.lang" prefix.
  * 
  * @author Elisha Peterson
  */
-public final class ClassSerializer extends JsonSerializer<Class> {
+public final class ClassSerializer extends ValueSerializer<Class> {
 
     @Override
-    public void serialize(Class value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Class value, JsonGenerator gen, SerializationContext serializers) throws JacksonException {
         String nm = value.getName();
         if (nm.startsWith("java.lang.") || nm.startsWith("java.util.")) {
             nm = nm.substring(10);

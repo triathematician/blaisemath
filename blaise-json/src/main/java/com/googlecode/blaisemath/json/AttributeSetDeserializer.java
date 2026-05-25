@@ -20,21 +20,21 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSetCoder;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Serializes an {@link AttributeSet} as a string.
  * @author Elisha Peterson
  */
-public class AttributeSetDeserializer extends JsonDeserializer<AttributeSet> {
+public class AttributeSetDeserializer extends ValueDeserializer<AttributeSet> {
 
     @Override
-    public AttributeSet deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public AttributeSet deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
         String val = p.readValueAs(String.class);
         return new AttributeSetCoder().decode(val);
     }

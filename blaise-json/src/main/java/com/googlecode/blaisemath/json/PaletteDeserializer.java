@@ -20,9 +20,9 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.encode.ColorCoder;
 import com.googlecode.blaisemath.palette.MapPalette;
@@ -31,17 +31,17 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSetCoder;
 import com.googlecode.blaisemath.util.Colors;
 import java.awt.Color;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 import java.util.Map;
 
 /**
  * Deserializes an {@link AttributeSet} from a string.
  * @author Elisha Peterson
  */
-public class PaletteDeserializer extends JsonDeserializer<Palette> {
+public class PaletteDeserializer extends ValueDeserializer<Palette> {
 
     @Override
-    public Palette deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Palette deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
         String val = p.readValueAs(String.class);
         return toPalette(new AttributeSetCoder().decode(val));
     }

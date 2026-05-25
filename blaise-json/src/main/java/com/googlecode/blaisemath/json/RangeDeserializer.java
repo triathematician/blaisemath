@@ -20,20 +20,20 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import com.google.common.collect.Range;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Deserializes a {@link RangeProxy} to a {@link Range}.
  * @author Elisha Peterson
  */
-public class RangeDeserializer extends JsonDeserializer<Range> {
+public class RangeDeserializer extends ValueDeserializer<Range> {
 
     @Override
-    public Range deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Range deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
         RangeProxy proxy = p.readValueAs(RangeProxy.class);
         return proxy.toRange();
     }

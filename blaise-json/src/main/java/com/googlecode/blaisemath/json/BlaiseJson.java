@@ -19,9 +19,9 @@ package com.googlecode.blaisemath.json;
  * limitations under the License.
  * #L%
  */
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.module.SimpleModule;
 import com.google.common.collect.Range;
 import com.googlecode.blaisemath.palette.Palette;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -55,6 +55,8 @@ public class BlaiseJson {
         sm.addDeserializer(Rectangle.class, new RectangleDeserializer());
         sm.addSerializer(Rectangle2D.Double.class, new Rectangle2DSerializer());
         sm.addDeserializer(Rectangle2D.Double.class, new Rectangle2DDeserializer());
+        // Note: no InsetsSerializer is registered; Insets serializes via Jackson's default
+        // behavior (public fields top/left/bottom/right), which InsetsProxy can read back.
         sm.addDeserializer(Insets.class, new InsetsDeserializer());
         sm.addSerializer(Point.class, new PointSerializer());
         sm.addDeserializer(Point.class, new PointDeserializer());
@@ -73,9 +75,9 @@ public class BlaiseJson {
      * @return mapper
      */
     public static ObjectMapper allMapper() {
-        ObjectMapper m = new ObjectMapper();
-        m.registerModule(allModule());
-        return m;
+        return new ObjectMapper().rebuild()
+                .addModule(allModule())
+                .build();
     }
     
     /**
@@ -97,6 +99,8 @@ public class BlaiseJson {
         sm.addSerializer(Rectangle.class, new RectangleSerializer());
         sm.addDeserializer(Rectangle.class, new RectangleDeserializer());
         sm.addSerializer(Rectangle2D.class, new Rectangle2DSerializer());
+        // Note: no InsetsSerializer is registered; Insets serializes via Jackson's default
+        // behavior (public fields top/left/bottom/right), which InsetsProxy can read back.
         sm.addDeserializer(Insets.class, new InsetsDeserializer());
         sm.addSerializer(Point.class, new PointSerializer());
         sm.addDeserializer(Point.class, new PointDeserializer());
@@ -111,9 +115,9 @@ public class BlaiseJson {
      * @return mapper
      */
     public static ObjectMapper awtMapper() {
-        ObjectMapper m = new ObjectMapper();
-        m.registerModule(awtModule());
-        return m;
+        return new ObjectMapper().rebuild()
+                .addModule(awtModule())
+                .build();
     }
     
 }

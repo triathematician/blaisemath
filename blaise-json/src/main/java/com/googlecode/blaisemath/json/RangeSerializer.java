@@ -20,21 +20,21 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.SerializationContext;
 import com.google.common.collect.Range;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Serializes a {@link Range} to a {@link RangeProxy}.
  * @author Elisha Peterson
  */
-public class RangeSerializer extends JsonSerializer<Range> {
+public class RangeSerializer extends ValueSerializer<Range> {
 
     @Override
-    public void serialize(Range value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        gen.writeObject(new RangeProxy(value));
+    public void serialize(Range value, JsonGenerator gen, SerializationContext serializers) throws JacksonException {
+        serializers.writeValue(gen, new RangeProxy(value));
     }
 
 }

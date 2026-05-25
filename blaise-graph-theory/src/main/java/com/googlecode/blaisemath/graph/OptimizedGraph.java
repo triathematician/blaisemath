@@ -25,6 +25,7 @@ import com.google.common.graph.ElementOrder;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.Graph;
 import com.google.common.graph.Graphs;
+import com.google.common.graph.Network;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -241,6 +242,11 @@ public final class OptimizedGraph<N> implements Graph<N> {
     @Override
     public boolean hasEdgeConnecting(EndpointPair<N> pair) {
         return hasEdgeConnecting(pair.nodeU(), pair.nodeV());
+    }
+
+    @Override
+    public Network<N, EndpointPair<N>> asNetwork() {
+        return base.asNetwork();
     }
 
     //endregion

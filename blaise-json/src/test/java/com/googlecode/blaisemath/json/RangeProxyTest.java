@@ -9,9 +9,9 @@ package com.googlecode.blaisemath.json;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,9 +22,12 @@ package com.googlecode.blaisemath.json;
 
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
-import java.io.IOException;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class RangeProxyTest {
 
@@ -35,24 +38,23 @@ public class RangeProxyTest {
         rp.setMinType(BoundType.OPEN);
         rp.setMax(2);
         rp.setMaxType(BoundType.CLOSED);
-        
         assertEquals(Range.openClosed(1, 2), rp.toRange());
     }
-    
+
     @Test
     public void testCycle() {
         testRecycle(Range.greaterThan(1));
         testRecycle(Range.lessThan(1));
-        testRecycle(Range.openClosed(1,2));
+        testRecycle(Range.openClosed(1, 2));
         testRecycle(Range.singleton(1));
-        testRecycle(Range.closed(1,2));
+        testRecycle(Range.closed(1, 2));
         assertException(() -> new RangeProxy(Range.<Integer>all()).toRange());
     }
-    
+
     private void testRecycle(Range r) {
         assertEquals(r, new RangeProxy(r).toRange());
     }
-    
+
     private void assertException(Runnable r) {
         try {
             r.run();
@@ -61,7 +63,7 @@ public class RangeProxyTest {
             // expected
         }
     }
-    
+
     @Test
     public void testCreate() {
         RangeProxy rp = new RangeProxy(Range.openClosed(1, 2));
@@ -70,11 +72,22 @@ public class RangeProxyTest {
         assertEquals(BoundType.OPEN, rp.getMinType());
         assertEquals(BoundType.CLOSED, rp.getMaxType());
     }
-    
+
     @Test
-    public void testSerialize() throws IOException {
-        Range r = Range.openClosed(1, 2);
-        BlaiseJson.writerWithDefaultPrettyPrinter().writeValue(System.out, r);
+    public void testRoundtrip() throws IOException {
+        assertRoundtrip(Range.greaterThan(1));
+        assertRoundtrip(Range.lessThan(1));
+        assertRoundtrip(Range.openClosed(1, 2));
+        assertRoundtrip(Range.singleton(1));
+        assertRoundtrip(Range.closed(1, 2));
+        assertRoundtrip(Range.open(1, 5));
+        assertRoundtrip(Range.closedOpen(0, 10));
     }
-    
+
+    @SuppressWarnings("rawtypes")
+    private void assertRoundtrip(Range r) throws IOException {
+        String json = BlaiseJson.allMapper().writeValueAsString(r);
+        assertEquals(r, BlaiseJson.allMapper().readValue(json, Range.class));
+    }
+
 }

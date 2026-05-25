@@ -20,21 +20,21 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.SerializationContext;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Serializes a {@link Rectangle2D} to a {@link Rectangle2DProxy}.
  * @author Elisha Peterson
  */
-public class Rectangle2DSerializer extends JsonSerializer<Rectangle2D> {
+public class Rectangle2DSerializer extends ValueSerializer<Rectangle2D> {
 
     @Override
-    public void serialize(Rectangle2D value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        gen.writeObject(new Rectangle2DProxy(value));
+    public void serialize(Rectangle2D value, JsonGenerator gen, SerializationContext serializers) throws JacksonException {
+        serializers.writeValue(gen, new Rectangle2DProxy(value));
     }
 
 }

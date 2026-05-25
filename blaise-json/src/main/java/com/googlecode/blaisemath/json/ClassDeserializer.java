@@ -20,12 +20,12 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 import java.util.Map;
 
 /**
@@ -33,7 +33,7 @@ import java.util.Map;
  * 
  * @author Elisha Peterson
  */
-public final class ClassDeserializer extends JsonDeserializer<Class> {
+public final class ClassDeserializer extends ValueDeserializer<Class> {
     
     private static final Map<String,Class> PRIMITIVE_LOOKUP = ImmutableMap.<String,Class>builder()
             .put("long", long.class)
@@ -47,8 +47,8 @@ public final class ClassDeserializer extends JsonDeserializer<Class> {
             .build();
 
     @Override
-    public Class deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        String name = ((JsonNode) p.getCodec().readTree(p)).asText();
+    public Class deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
+        String name = ((JsonNode) p.readValueAsTree()).asText();
         if (PRIMITIVE_LOOKUP.containsKey(name)) {
             return PRIMITIVE_LOOKUP.get(name);
         }
@@ -68,7 +68,7 @@ public final class ClassDeserializer extends JsonDeserializer<Class> {
         try {
             return Class.forName(name);
         } catch (ClassNotFoundException ex) {
-            throw new IOException(ex);
+            throw new RuntimeException(ex);
         }
     }
     

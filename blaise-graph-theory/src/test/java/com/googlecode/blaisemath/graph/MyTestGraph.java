@@ -24,6 +24,7 @@ import com.google.common.collect.*;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.Graph;
+import com.google.common.graph.Network;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -181,6 +182,11 @@ final class MyTestGraph implements Graph<String> {
     @Override
     public boolean hasEdgeConnecting(EndpointPair<String> edge) {
         return hasEdgeConnecting(edge.nodeU(), edge.nodeV());
+    }
+
+    @Override
+    public Network<String, EndpointPair<String>> asNetwork() {
+        throw new UnsupportedOperationException();
     }
 
     /**

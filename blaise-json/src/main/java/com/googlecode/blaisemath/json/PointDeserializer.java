@@ -20,20 +20,20 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import java.awt.Point;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Deserializes a {@link Point}.
  * @author Elisha Peterson
  */
-public class PointDeserializer extends JsonDeserializer<Point> {
+public class PointDeserializer extends ValueDeserializer<Point> {
 
     @Override
-    public Point deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Point deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
         return p.readValueAs(PointProxy.class).toPoint();
     }
 
