@@ -55,6 +55,8 @@ public class BlaiseJson {
         sm.addDeserializer(Rectangle.class, new RectangleDeserializer());
         sm.addSerializer(Rectangle2D.Double.class, new Rectangle2DSerializer());
         sm.addDeserializer(Rectangle2D.Double.class, new Rectangle2DDeserializer());
+        // Note: no InsetsSerializer is registered; Insets serializes via Jackson's default
+        // behavior (public fields top/left/bottom/right), which InsetsProxy can read back.
         sm.addDeserializer(Insets.class, new InsetsDeserializer());
         sm.addSerializer(Point.class, new PointSerializer());
         sm.addDeserializer(Point.class, new PointDeserializer());
@@ -97,6 +99,8 @@ public class BlaiseJson {
         sm.addSerializer(Rectangle.class, new RectangleSerializer());
         sm.addDeserializer(Rectangle.class, new RectangleDeserializer());
         sm.addSerializer(Rectangle2D.class, new Rectangle2DSerializer());
+        // Note: no InsetsSerializer is registered; Insets serializes via Jackson's default
+        // behavior (public fields top/left/bottom/right), which InsetsProxy can read back.
         sm.addDeserializer(Insets.class, new InsetsDeserializer());
         sm.addSerializer(Point.class, new PointSerializer());
         sm.addDeserializer(Point.class, new PointDeserializer());

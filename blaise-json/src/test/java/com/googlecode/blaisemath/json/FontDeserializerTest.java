@@ -41,5 +41,20 @@ public class FontDeserializerTest {
     public void testWrite() throws IOException {
         assertEquals("\"Serif-BOLD-18\"", BlaiseJson.allMapper().writeValueAsString(new Font("Serif", 1, 18)));
     }
-    
+
+    @Test
+    public void testRoundtrip() throws IOException {
+        assertRoundtrip(new Font("Serif", Font.BOLD, 18));
+        assertRoundtrip(new Font("SansSerif", Font.PLAIN, 12));
+        assertRoundtrip(new Font("Monospaced", Font.ITALIC, 14));
+    }
+
+    private void assertRoundtrip(Font f) throws IOException {
+        String json = BlaiseJson.allMapper().writeValueAsString(f);
+        Font result = BlaiseJson.allMapper().readValue(json, Font.class);
+        assertEquals(f.getFamily(), result.getFamily());
+        assertEquals(f.getStyle(), result.getStyle());
+        assertEquals(f.getSize(), result.getSize());
+    }
+
 }
