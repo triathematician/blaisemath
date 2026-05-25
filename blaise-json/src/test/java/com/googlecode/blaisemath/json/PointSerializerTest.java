@@ -20,7 +20,7 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class PointSerializerTest {
     }
     
     @Test
-    public void testWrite() throws JsonProcessingException {
+    public void testWrite() throws JacksonException {
         assertEquals("{\"x\":1,\"y\":2}", BlaiseJson.allMapper().writeValueAsString(new Point(1, 2)));
         assertEquals("{\"x\":1.0,\"y\":2.0}", BlaiseJson.allMapper().writeValueAsString(new Point2D.Double(1, 2)));
     }

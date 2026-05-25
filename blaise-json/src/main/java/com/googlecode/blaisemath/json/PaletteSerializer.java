@@ -20,22 +20,22 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.SerializationContext;
 import com.googlecode.blaisemath.palette.Palette;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.AttributeSetCoder;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Serializes palettes as json strings, by converting to an attribute set.
  * @author Elisha Peterson
  */
-public class PaletteSerializer extends JsonSerializer<Palette> {
+public class PaletteSerializer extends ValueSerializer<Palette> {
 
     @Override
-    public void serialize(Palette value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Palette value, JsonGenerator gen, SerializationContext serializers) throws JacksonException {
         gen.writeString(new AttributeSetCoder().encode(toAttributeSet(value)));
     }
     

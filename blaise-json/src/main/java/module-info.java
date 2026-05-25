@@ -21,8 +21,8 @@ module com.googlecode.blaisemath.json {
     requires java.desktop;
 
     requires com.google.common;
-    requires com.fasterxml.jackson.databind;
-    requires com.fasterxml.jackson.core;
+    requires tools.jackson.databind;
+    requires tools.jackson.core;
 
     requires com.googlecode.blaisemath.common;
 

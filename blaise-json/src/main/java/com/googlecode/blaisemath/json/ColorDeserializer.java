@@ -20,22 +20,22 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import com.googlecode.blaisemath.util.Colors;
 import java.awt.Color;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Reads color strings.
  * 
  * @author Elisha Peterson
  */
-public class ColorDeserializer extends JsonDeserializer<Color> {
+public class ColorDeserializer extends ValueDeserializer<Color> {
 
     @Override
-    public Color deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Color deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
         String val = p.readValueAs(String.class);
         return Colors.decode(val);
     }

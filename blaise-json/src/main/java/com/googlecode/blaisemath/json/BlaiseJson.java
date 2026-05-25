@@ -19,9 +19,9 @@ package com.googlecode.blaisemath.json;
  * limitations under the License.
  * #L%
  */
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.module.SimpleModule;
 import com.google.common.collect.Range;
 import com.googlecode.blaisemath.palette.Palette;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -73,9 +73,9 @@ public class BlaiseJson {
      * @return mapper
      */
     public static ObjectMapper allMapper() {
-        ObjectMapper m = new ObjectMapper();
-        m.registerModule(allModule());
-        return m;
+        return new ObjectMapper().rebuild()
+                .addModule(allModule())
+                .build();
     }
     
     /**
@@ -111,9 +111,9 @@ public class BlaiseJson {
      * @return mapper
      */
     public static ObjectMapper awtMapper() {
-        ObjectMapper m = new ObjectMapper();
-        m.registerModule(awtModule());
-        return m;
+        return new ObjectMapper().rebuild()
+                .addModule(awtModule())
+                .build();
     }
     
 }

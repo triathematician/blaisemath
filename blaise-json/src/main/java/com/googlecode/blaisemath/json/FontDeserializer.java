@@ -20,22 +20,22 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import com.googlecode.blaisemath.util.Colors;
 
 import java.awt.*;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Reads font strings.
  * @author Elisha Peterson
  */
-public class FontDeserializer extends JsonDeserializer<Font> {
+public class FontDeserializer extends ValueDeserializer<Font> {
 
     @Override
-    public Font deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Font deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
         String val = p.readValueAs(String.class);
         return Font.decode(val);
     }

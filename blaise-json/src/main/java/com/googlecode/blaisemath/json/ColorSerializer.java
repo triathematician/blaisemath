@@ -20,21 +20,21 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.SerializationContext;
 import com.googlecode.blaisemath.util.Colors;
 import java.awt.Color;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Serializes colors as json strings, using #RRGGBB notation.
  * @author Elisha Peterson
  */
-public class ColorSerializer extends JsonSerializer<Color> {
+public class ColorSerializer extends ValueSerializer<Color> {
 
     @Override
-    public void serialize(Color value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Color value, JsonGenerator gen, SerializationContext serializers) throws JacksonException {
         gen.writeString(Colors.encode(value));
     }
 

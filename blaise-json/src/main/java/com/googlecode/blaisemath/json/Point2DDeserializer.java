@@ -20,20 +20,20 @@ package com.googlecode.blaisemath.json;
  * #L%
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import java.awt.geom.Point2D;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 /**
  * Deserializes a {@link Point2D.Double}.
  * @author Elisha Peterson
  */
-public class Point2DDeserializer extends JsonDeserializer<Point2D.Double> {
+public class Point2DDeserializer extends ValueDeserializer<Point2D.Double> {
 
     @Override
-    public Point2D.Double deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Point2D.Double deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
         return p.readValueAs(Point2D.Double.class);
     }
 
