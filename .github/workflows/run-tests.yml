@@ -1,0 +1,61 @@
+name: Build and run tests for blaisemath modules
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Build order follows the dependency graph in CLAUDE.md — modules that
+      # others depend on are `install`ed so downstream modules in later
+      # steps of this job resolve them from the local repo; leaf modules
+      # (nothing else in this repo depends on them) only need `test`.
+
+      - name: Build and test blaise-common
+        working-directory: blaise-common
+        run: mvn install
+
+      - name: Build and test blaise-graphics
+        working-directory: blaise-graphics
+        run: mvn install
+
+      - name: Build and test blaise-graph-theory
+        working-directory: blaise-graph-theory
+        run: mvn install
+
+      - name: Build and test blaise-json
+        working-directory: blaise-json
+        run: mvn test
+
+      - name: Build and test blaise-graphics-ui
+        working-directory: blaise-graphics-ui
+        run: mvn install
+
+      - name: Build and test blaise-svg
+        working-directory: blaise-svg
+        run: mvn test
+
+      - name: Build and test blaise-graph-theory-ui
+        working-directory: blaise-graph-theory-ui
+        run: mvn test
