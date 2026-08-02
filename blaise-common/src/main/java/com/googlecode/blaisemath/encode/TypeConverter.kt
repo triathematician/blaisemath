@@ -1,175 +1,134 @@
+/*-
+ * #%L
+ * blaise-common
+ * --
+ * Copyright (C) 2014 - 2021 Elisha Peterson
+ * --
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package com.googlecode.blaisemath.encode
 
-import com.google.common.collect.ImmutableMap
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.internal.Reflection
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
 import com.googlecode.blaisemath.util.Colors
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.awt.Color
-import java.awt.Point
-import java.awt.geom.Point2D
+import com.googlecode.blaisemath.util.internal.findConstructor
+import com.googlecode.blaisemath.util.internal.findStaticMethod
+import com.googlecode.blaisemath.util.kotlin.warning
+import com.googlecode.blaisemath.util.kotlin.severe
 import java.lang.reflect.InvocationTargetException
-import java.util.*
-import java.util.function.Function
-import java.util.logging.Level
-import java.util.logging.Logger
 
-/*-
-* #%L
-* blaise-common
-* --
-* Copyright (C) 2014 - 2021 Elisha Peterson
-* --
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* #L%
-*/ /**
+/**
  * Converts values from one type to another.
- * @author Elisha Peterson
  */
 object TypeConverter {
-    private val LOG = Logger.getLogger(TypeConverter::class.java.name)
 
     /** Functions for decoding specific types  */
-    private val TYPE_DECODERS: MutableMap<Class<*>?, Function<String?, *>?>? = ImmutableMap.builder<Class<*>?, Function<String?, *>?>()
-            .put(Color::class.java, Function<String?, Any?> { obj: String? -> Colors.decode() })
-            .put(Point::class.java, Function<String?, Any?> { v: String? -> PointCoder().decode(v) })
-            .put(Point2D::class.java, Function<String?, Any?> { v: String? -> Point2DCoder().decode(v) })
-            .build()
+    private val TYPE_DECODERS: Map<Class<out Any>, (String) -> Any?> = mapOf(
+            java.awt.Color::class.java to { Colors.decode(it) },
+            java.awt.Point::class.java to { PointCoder.decode(it) },
+            java.awt.geom.Point2D::class.java to { Point2DCoder.decode(it) })
 
     /**
-     * Convert value to target type, if possible. Returns a default value if the
-     * input is null or cannot be converted to the target type.
+     * Convert value to target type, if possible. Returns a default value if the input is null or cannot be converted to the target type.
      * @param <X> target type
-     * @param value value to convert
-     * @param targetType target type
-     * @param def default value to return if value is null, or unable to convert
-     * @return converted value
-    </X> */
-    fun <X> convert(value: Any?, targetType: Class<X?>?, def: X?): X? {
+     * @throws UnsupportedOperationException if unable to convert
+     */
+    inline fun <reified X> convert(value: Any?) = convert(value, X::class.java)
+    /** Convert a general number to a specified numeric type. */
+    inline fun <reified X : Number> numericValue(n: Number): X = numericValue(n, X::class.java)
+
+    /**
+     * Convert value to target type, if possible. Return null if input is null or cannot be converted to the target type.
+     * @param <X> target type
+     * @throws UnsupportedOperationException if unable to convert
+     */
+    fun <X> convert(value: Any?, targetType: Class<X>): X? {
         try {
-            if (value == null) {
-                return def
-            } else if (targetType.isInstance(value)) {
-                return value as X?
-            } else if (targetType == String::class.java) {
-                return Objects.toString(value) as X
-            } else if (value is String) {
-                return convertFromString(value as String?, targetType, def)
-            } else if (Number::class.java.isAssignableFrom(targetType)) {
-                return convertToNumber<Number?>(value, targetType as Class<*>?, def as Number?) as X?
+            return when {
+                value == null -> null
+                targetType.isInstance(value) -> value as X
+                targetType == String::class.java -> value.toString() as X
+                value is Number && Number::class.java.isAssignableFrom(targetType) -> numericValue(value, targetType as Class<out Number>) as X
+                value is String -> convertFromString(value, targetType)
+                else -> throw UnsupportedOperationException()
             }
-            throw UnsupportedOperationException()
         } catch (x: UnsupportedOperationException) {
-            LOG.log(Level.WARNING, "Unable to convert {0} to {1}", arrayOf(value, targetType))
+            warning<TypeConverter>("Unable to convert $value to $targetType", x)
         }
-        return def
+        return null
     }
 
     /**
-     * Convert value from a string to a target type.
-     * @param <X> target type
-     * @param value value to convert
-     * @param targetType target type
-     * @param def default value to return if unable to convert
-     * @return converted value
+     * Convert value from a string to a target type, returning a default value if unable to convert.
      * @throws UnsupportedOperationException if unable to convert
-    </X> */
-    fun <X> convertFromString(value: String?, targetType: Class<X?>?, def: X?): X? {
+     */
+    fun <X> convertFromString(value: String?, targetType: Class<X>): X? {
         if (value == null) {
-            return def
+            return null
         } else if (TYPE_DECODERS.containsKey(targetType)) {
-            return TYPE_DECODERS.get(targetType).apply(value) as X
+            return TYPE_DECODERS[targetType]!!.invoke(value) as X
         }
-        val decoder = Reflection.staticMethod(targetType, arrayOf<String?>("valueOf", "decode"), String::class.java)
-        if (decoder.isPresent) {
+
+        // attempt to convert from a static method with string argument
+        findStaticMethod(targetType, arrayOf("valueOf", "decode"), String::class.java)?.let {
             try {
-                return decoder.get().invoke(null, value) as X
+                return it.invoke(null, value) as X
             } catch (ex: IllegalAccessException) {
-                LOG.log(Level.WARNING, "Failed to invoke factory method " + decoder.get(), ex)
+                severe<TypeConverter>("Failed to invoke factory method $it", ex)
             } catch (ex: IllegalArgumentException) {
-                LOG.log(Level.WARNING, "Failed to invoke factory method " + decoder.get(), ex)
+                severe<TypeConverter>("Failed to invoke factory method $it", ex)
             } catch (ex: InvocationTargetException) {
-                LOG.log(Level.WARNING, "Failed to invoke factory method " + decoder.get(), ex)
+                severe<TypeConverter>("Failed to invoke factory method $it", ex)
             } catch (ex: ClassCastException) {
-                LOG.log(Level.WARNING, "Failed to invoke factory method " + decoder.get(), ex)
+                severe<TypeConverter>("Failed to invoke factory method $it", ex)
             }
         }
-        val con = Reflection.constructor(targetType, String::class.java)
-        if (con.isPresent) {
+
+        // attempt to convert from a constructor with a string argument
+        findConstructor(targetType, String::class.java)?.let {
             try {
-                return con.get().newInstance(value) as X
+                return it.newInstance(value) as X
             } catch (ex: InstantiationException) {
-                LOG.log(Level.WARNING, "Failed to invoke constructor " + con.get(), ex)
+                severe<TypeConverter>("Failed to invoke constructor $it", ex)
             } catch (ex: IllegalAccessException) {
-                LOG.log(Level.WARNING, "Failed to invoke constructor " + con.get(), ex)
+                severe<TypeConverter>("Failed to invoke constructor $it", ex)
             } catch (ex: IllegalArgumentException) {
-                LOG.log(Level.WARNING, "Failed to invoke constructor " + con.get(), ex)
+                severe<TypeConverter>("Failed to invoke constructor $it", ex)
             } catch (ex: InvocationTargetException) {
-                LOG.log(Level.WARNING, "Failed to invoke constructor " + con.get(), ex)
+                severe<TypeConverter>("Failed to invoke constructor $it", ex)
             }
         }
+
         throw UnsupportedOperationException("Cannot construct instance of $targetType from a string.")
     }
+
     //region NUMBERS
-    /**
-     * Convert value to target numeric type, if possible. Returns a default value if unable
-     * to convert. If the input value is null, always returns null.
-     * @param <X> target type
-     * @param value value to convert
-     * @param targetType target type
-     * @param def default value to return if unable to convert
-     * @return converted value
-     * @throws UnsupportedOperationException if unable to convert
-    </X> */
-    fun <X : Number?> convertToNumber(value: Any?, targetType: Class<X?>?, def: X?): X? {
-        if (value == null) {
-            return def
-        }
-        return if (value is Number) {
-            numericValue(value as Number?, targetType)
-        } else {
-            throw UnsupportedOperationException()
-        }
+
+    /** Convert a general number to a specified numeric type. */
+    fun <X: Number> numericValue(n: Number, target: Class<X>): X = when (target) {
+        Byte::class.java -> n.toByte() as X
+        Short::class.java -> n.toShort() as X
+        Int::class.java -> n.toInt() as X
+        Long::class.java -> n.toLong() as X
+        Float::class.java -> n.toFloat() as X
+        Double::class.java -> n.toDouble() as X
+        java.lang.Byte::class.java -> n.toByte() as X
+        java.lang.Short::class.java -> n.toShort() as X
+        java.lang.Integer::class.java -> n.toInt() as X
+        java.lang.Long::class.java -> n.toLong() as X
+        java.lang.Float::class.java -> n.toFloat() as X
+        java.lang.Double::class.java -> n.toDouble() as X
+        else -> throw UnsupportedOperationException("Unsupported number: $n cannot be converted to type $target")
     }
 
-    /**
-     * Convert number to a given target type.
-     * @param <X> target type
-     * @param n number
-     * @param targetType target type
-     * @return converted number
-    </X> */
-    fun <X : Number?> numericValue(n: Number?, targetType: Class<X?>?): X? {
-        Objects.requireNonNull(n)
-        return if (targetType == Byte::class.java) {
-            n.toByte() as Byte as X
-        } else if (targetType == Double::class.java) {
-            n.toDouble() as Double as X
-        } else if (targetType == Float::class.java) {
-            n.toFloat() as Float as X
-        } else if (targetType == Int::class.java) {
-            n.toInt() as Int as X
-        } else if (targetType == Long::class.java) {
-            n.toLong() as Long as X
-        } else if (targetType == Short::class.java) {
-            n.toShort() as Short as X
-        } else {
-            throw UnsupportedOperationException("Unsupported number: $n")
-        }
-    } //endregion
+    //endregion
 }

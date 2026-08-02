@@ -20,9 +20,11 @@ import org.junit.Test
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/   class ColorSchemeTest {
+*/
+
+class ColorSchemeTest {
     @Test
     fun testSchemes() {
-        println(ColorSchemes.schemes())
+        println(ColorScheme.SCHEMES)
     }
 }

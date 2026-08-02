@@ -1,13 +1,5 @@
 package com.googlecode.blaisemath.encode
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-
 /*-
 * #%L
 * blaise-common
@@ -26,19 +18,23 @@ import org.junit.Before
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/** Converts an object to/from a string. */
+interface StringCoder<X> : StringEncoder<X>, StringDecoder<X>
+
+/**
  * Converts an object to a string, preferably in a way that can be also decoded.
- * Encoders may or may not handle null objects, and may or may not return null/empty strings.
- * Implementations should use [Nullable] annotations to indicate how they handle nulls.
- *
  * @param <X> type of object to converter
- * @author Elisha Peterson
-</X> */
+ */
 interface StringEncoder<X> {
-    /**
-     * Encode the object as a string.
-     * @param obj object to encode
-     * @return string value
-     */
-    open fun encode(obj: X?): String?
+    fun encode(obj: X): String
+}
+
+/**
+ * Converts an object from a string if possible.
+ * @param <X> type of object to converter
+ */
+interface StringDecoder<X> {
+    fun decode(str: String): X?
 }

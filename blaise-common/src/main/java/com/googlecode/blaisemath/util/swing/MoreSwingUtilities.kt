@@ -1,12 +1,6 @@
 package com.googlecode.blaisemath.util.swing
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import java.awt.event.*
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
 import javax.swing.event.AncestorEvent
@@ -30,40 +24,57 @@ import javax.swing.event.AncestorListener
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Utilities for swing.
- * @see SwingUtilities
- *
- * @author Elisha Peterson
- */
-object MoreSwingUtilities {
-    /**
-     * Executes the given runnable now, if the current thread is the swing event
-     * dispatch thread, or later on the EDT, if not.
-     * @param r job to run
-     */
-    fun invokeOnEventDispatchThread(r: Runnable?) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            r.run()
-        } else {
-            SwingUtilities.invokeLater(r)
-        }
-    }
+*/
 
-    /**
-     * Registers a listener for the component to request focus when it is shown
-     * @param c the component to focus
-     */
-    fun requestFocusWhenShown(c: JComponent?) {
-        val listener: AncestorListener = object : AncestorListener {
-            override fun ancestorAdded(event: AncestorEvent?) {
-                c.requestFocusInWindow()
-                c.removeAncestorListener(this)
-            }
-
-            override fun ancestorRemoved(event: AncestorEvent?) {}
-            override fun ancestorMoved(event: AncestorEvent?) {}
-        }
-        c.addAncestorListener(listener)
+/** Executes the given runnable now, if the current thread is the swing event dispatch thread, or later on the EDT, if not. */
+fun invokeOnEventDispatchThread(r: Runnable) {
+    when {
+        SwingUtilities.isEventDispatchThread() -> r.run()
+        else -> SwingUtilities.invokeLater(r)
     }
 }
+
+/** Add listener to component that requests focus when it is shown. */
+fun JComponent.requestFocusWhenShown() {
+    addAncestorListener(object : AncestorListener {
+        override fun ancestorAdded(event: AncestorEvent) {
+            requestFocusInWindow()
+            removeAncestorListener(this)
+        }
+        override fun ancestorRemoved(event: AncestorEvent) {}
+        override fun ancestorMoved(event: AncestorEvent) {}
+    })
+}
+
+//region MOUSE EVENTS
+
+/** Delegate a mouse event by type to the provided listener. */
+fun delegateEvent(e: MouseEvent, l: MouseListener) {
+    when (e.id) {
+        MouseEvent.MOUSE_ENTERED -> l.mouseEntered(e)
+        MouseEvent.MOUSE_EXITED -> l.mouseExited(e)
+        MouseEvent.MOUSE_PRESSED -> l.mousePressed(e)
+        MouseEvent.MOUSE_RELEASED -> l.mouseReleased(e)
+        MouseEvent.MOUSE_CLICKED -> l.mouseClicked(e)
+        else -> {}
+    }
+}
+
+/** Delegate a mouse motion event by type to the provided listener. */
+fun delegateMotionEvent(e: MouseEvent, l: MouseMotionListener) {
+    when (e.id) {
+        MouseEvent.MOUSE_DRAGGED -> l.mouseDragged(e)
+        MouseEvent.MOUSE_MOVED -> l.mouseMoved(e)
+        else -> {}
+    }
+}
+
+/** Delegate a mouse wheel event by type to the provided listener. */
+fun delegateWheelEvent(e: MouseWheelEvent, l: MouseWheelListener) {
+    when (e.id) {
+        MouseEvent.MOUSE_WHEEL -> l.mouseWheelMoved(e)
+        else -> {}
+    }
+}
+
+//endregion

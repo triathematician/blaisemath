@@ -1,18 +1,9 @@
 package com.googlecode.blaisemath.palette
 
-import com.google.common.collect.Maps
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
 import com.googlecode.blaisemath.util.Colors
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.util.kotlin.warning
 import java.awt.Color
 import java.util.*
-import java.util.logging.Level
-import java.util.logging.Logger
 
 /*
 * #%L
@@ -32,38 +23,35 @@ import java.util.logging.Logger
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Handles palette read/write operations.
  * @author Elisha Peterson
  */
 object PaletteIo {
-    private val LOG = Logger.getLogger(PaletteIo::class.java.name)
 
     /**
      * Loads palettes from properties file.
      * @param p properties file with key-value pairs defining individual palette colors
      * @return decoded palettes
      */
-    fun loadPalettes(p: Properties?): MutableMap<String?, Palette?>? {
-        val palettes: MutableMap<String?, MutableMap<String?, Color?>?>? = Maps.newTreeMap()
+    fun loadPalettes(p: Properties): Map<String, Palette> {
+        val palettes = mutableMapOf<String, MutableMap<String, Color>>()
         for (k in p.stringPropertyNames()) {
             if (k.startsWith("palette.")) {
                 val dot = k.indexOf('.', 8)
                 val palette = k.substring(8, dot)
-                palettes.putIfAbsent(palette, Maps.newLinkedHashMap())
+                palettes.putIfAbsent(palette, mutableMapOf())
                 val color = k.substring(dot + 1)
                 try {
-                    palettes.get(palette)[color] = Colors.decode(p.getProperty(k))
+                    palettes[palette]!![color] = Colors.decode(p.getProperty(k))
                 } catch (x: IllegalArgumentException) {
-                    LOG.log(Level.WARNING, "Invalid color: {0}", p.getProperty(k))
+                    warning<PaletteIo>("Invalid color: ${p.getProperty(k)}", x)
                 }
             }
         }
-        val res: MutableMap<String?, Palette?>? = Maps.newLinkedHashMap()
-        for (k in palettes.keys) {
-            res[k] = ImmutableMapPalette(palettes.get(k))
-        }
-        return res
+        return palettes.mapValues { ImmutableMapPalette(it.value) }
     }
 
     /**
@@ -71,16 +59,16 @@ object PaletteIo {
      * @param p properties file with schemes encoded as contiguous color strings
      * @return decoded schemes
      */
-    fun loadSchemes(p: Properties?): MutableMap<String?, ColorScheme?>? {
-        val res: MutableMap<String?, ColorScheme?>? = Maps.newTreeMap()
+    fun loadSchemes(p: Properties): Map<String, ColorScheme> {
+        val res = mutableMapOf<String, ColorScheme>()
         for (k in p.stringPropertyNames()) {
             if (k.startsWith("scheme.")) {
                 val scheme = k.substring(7)
-                val cs: ColorScheme = ColorScheme.Companion.create(scheme, *colors(p.getProperty(k)))
+                val cs = ColorScheme(scheme, true, colors(p.getProperty(k)))
                 res[scheme] = cs
             } else if (k.startsWith("scheme-gradient.")) {
                 val scheme = k.substring(16)
-                val cs: ColorScheme = ColorScheme.Companion.createGradient(scheme, *colors(p.getProperty(k)))
+                val cs = ColorScheme.gradient(scheme, colors(p.getProperty(k)))
                 res[scheme] = cs
             }
         }
@@ -88,19 +76,19 @@ object PaletteIo {
     }
 
     /** Decode array of colors from string.  */
-    fun colors(f: String?): Array<Color?>? {
-        val res = arrayOfNulls<Color?>(f.length / 6)
-        for (i in res.indices) {
-            res[i] = Color.decode("#" + f.substring(6 * i, 6 * (i + 1)))
+    fun colors(f: String): List<Color> {
+        val res = mutableListOf<Color>()
+        for (i in 0 until f.length / 6) {
+            res += Color.decode("#" + f.substring(6 * i, 6 * (i + 1)))
         }
         return res
     }
 
     /** Encode array of colors as a string.  */
-    fun colorString(colors: Array<Color?>?): String? {
+    fun colorString(colors: List<Color>): String? {
         val res = StringBuilder()
         for (c in colors) {
-            res.append(String.format("%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()))
+            res.append(String.format("%02x%02x%02x", c.red, c.green, c.blue))
         }
         return res.toString()
     }

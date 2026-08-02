@@ -23,48 +23,38 @@ import java.awt.Color
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/   class ColorCoderTest {
+*/
+
+class ColorCoderTest {
     @Test
     fun testEncode() {
-        println("encode")
-        assertNPE { ColorCoder().encode(null) }
-        Assert.assertEquals("#ff0000", ColorCoder().encode(Color.red))
-        Assert.assertEquals("#00ff00", ColorCoder().encode(Color.green))
-        Assert.assertEquals("#0000ff", ColorCoder().encode(Color.blue))
-        Assert.assertEquals("#01020304", ColorCoder().encode(Color(1, 2, 3, 4)))
+        Assert.assertEquals("#ff0000", ColorCoder.encode(Color.red))
+        Assert.assertEquals("#00ff00", ColorCoder.encode(Color.green))
+        Assert.assertEquals("#0000ff", ColorCoder.encode(Color.blue))
+        Assert.assertEquals("#01020304", ColorCoder.encode(Color(1, 2, 3, 4)))
     }
 
     @Test
     fun testDecode() {
-        println("decode")
-        Assert.assertEquals(Color.red, ColorCoder().decode("ff0000"))
-        Assert.assertEquals(Color.red, ColorCoder().decode("#ff0000"))
-        Assert.assertEquals(Color.green, ColorCoder().decode("#00ff00"))
-        Assert.assertEquals(Color.blue, ColorCoder().decode("#0000ff"))
-        Assert.assertEquals(Color(0, 0, 255, 128), ColorCoder().decode("#0000ff80"))
-        Assert.assertEquals(Color.blue, ColorCoder().decode("#00f"))
-        Assert.assertEquals(Colors.decode("#ff0033"), ColorCoder().decode("#f03"))
-        Assert.assertEquals(Color.blue, ColorCoder().decode("blue"))
-        Assert.assertEquals(Color(218, 165, 32), ColorCoder().decode("goldenrod"))
-        assertIllegal { ColorCoder().decode("null") }
-        assertIllegal { ColorCoder().decode("not a color") }
+        Assert.assertEquals(Color.red, ColorCoder.decode("ff0000"))
+        Assert.assertEquals(Color.red, ColorCoder.decode("#ff0000"))
+        Assert.assertEquals(Color.green, ColorCoder.decode("#00ff00"))
+        Assert.assertEquals(Color.blue, ColorCoder.decode("#0000ff"))
+        Assert.assertEquals(Color(0, 0, 255, 128), ColorCoder.decode("#0000ff80"))
+        Assert.assertEquals(Color.blue, ColorCoder.decode("#00f"))
+        Assert.assertEquals(Colors.decode("#ff0033"), ColorCoder.decode("#f03"))
+        Assert.assertEquals(Color.blue, ColorCoder.decode("blue"))
+        Assert.assertEquals(Color(218, 165, 32), ColorCoder.decode("goldenrod"))
+        assertIllegal { ColorCoder.decode("null") }
+        assertIllegal { ColorCoder.decode("not a color") }
     }
 
     companion object {
-        private fun assertIllegal(r: Runnable?) {
+        private fun assertIllegal(r: Runnable) {
             try {
                 r.run()
                 Assert.fail()
             } catch (x: IllegalArgumentException) {
-                // expected
-            }
-        }
-
-        private fun assertNPE(r: Runnable?) {
-            try {
-                r.run()
-                Assert.fail()
-            } catch (x: NullPointerException) {
                 // expected
             }
         }

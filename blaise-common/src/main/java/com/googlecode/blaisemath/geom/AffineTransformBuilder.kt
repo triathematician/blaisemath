@@ -1,16 +1,9 @@
 package com.googlecode.blaisemath.geom
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.util.kotlin.fine
 import java.awt.geom.AffineTransform
 import java.awt.geom.Rectangle2D
-import java.util.logging.Level
-import java.util.logging.Logger
+import kotlin.math.max
 
 /*
 * #%L
@@ -30,88 +23,65 @@ import java.util.logging.Logger
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Builder object for [AffineTransform].
- * @author Elisha Peterson
  */
 class AffineTransformBuilder {
-    private val res: AffineTransform? = AffineTransform()
-    //endregion
+
+    val result = AffineTransform()
+
     //region BUILDER PATTERNS
-    /**
-     * Concatenates this transform with a translation transformation.
-     * @param dx x translation
-     * @param dy y translation
-     * @return builder
-     */
-    fun translate(dx: Double, dy: Double): AffineTransformBuilder? {
-        res.translate(dx, dy)
+
+    /** Concatenates this transform with a translation transformation. */
+    fun translate(dx: Double, dy: Double): AffineTransformBuilder {
+        result.translate(dx, dy)
         return this
     }
 
-    /**
-     * Concatenates this transform with a scale transformation.
-     * @param rx x scale
-     * @param ry y scale
-     * @return builder
-     */
-    fun scale(rx: Double, ry: Double): AffineTransformBuilder? {
-        res.scale(rx, ry)
+    /** Concatenates this transform with a scale transformation. */
+    fun scale(sx: Double, sy: Double): AffineTransformBuilder {
+        result.scale(sx, sy)
         return this
     }
 
-    /**
-     * Concatenates this transform with a rotation transformation.
-     * @param theta rotation amount
-     * @return builder
-     */
-    fun rotate(theta: Double): AffineTransformBuilder? {
-        res.rotate(theta)
+    /** Concatenates this transform with a rotation transformation. */
+    fun rotate(theta: Double): AffineTransformBuilder {
+        result.rotate(theta)
         return this
     }
 
-    /**
-     * Concatenates this transform with a rotation transformation about a given point.
-     * @param theta rotation amount
-     * @param anchorx anchor location x
-     * @param anchory anchor location y
-     * @return builder
-     */
+    /** Concatenates this transform with a rotation transformation about a given point. */
     fun rotate(theta: Double, anchorx: Double, anchory: Double): AffineTransformBuilder? {
-        res.rotate(theta, anchorx, anchory)
+        result.rotate(theta, anchorx, anchory)
         return this
     }
+
     //endregion
-    /**
-     * Return the resulting transform.
-     * @return transform
-     */
-    fun build(): AffineTransform? {
-        return res
-    }
 
     companion object {
-        private val LOG = Logger.getLogger(AffineTransformBuilder::class.java.name)
-        //region FACTORIES
+
         /**
          * Create a transform that maps the "scaleFrom" rectangle into the "scaleTo" region.
          * @param scaleTo region to scale to
          * @param scaleFrom region to scale from
          * @return transform
          */
-        fun transformingTo(scaleTo: Rectangle2D?, scaleFrom: Rectangle2D?): AffineTransform? {
-            if (scaleTo.getWidth() == 0.0 || scaleTo.getHeight() == 0.0 || scaleFrom.getWidth() == 0.0 || scaleFrom.getHeight() == 0.0) {
-                LOG.log(Level.FINE, "Scaling with zero area rectangles: {0}, {1}. Returning identity transform.", arrayOf<Any?>(scaleFrom, scaleTo))
+        @JvmStatic
+        fun transformingTo(scaleTo: Rectangle2D, scaleFrom: Rectangle2D): AffineTransform {
+            if (scaleTo.width == 0.0 || scaleTo.height == 0.0 || scaleFrom.width == 0.0 || scaleFrom.height == 0.0) {
+                fine<AffineTransformBuilder>("Scaling with zero area rectangles: $scaleFrom, $scaleTo. Returning identity transform.")
                 return AffineTransform()
             }
-            val scaleX = scaleFrom.getWidth() / scaleTo.getWidth()
-            val scaleY = scaleFrom.getHeight() / scaleTo.getHeight()
-            val scale = Math.max(scaleX, scaleY)
-            val res = AffineTransform()
-            res.translate(scaleTo.getCenterX(), scaleTo.getCenterY())
-            res.scale(1 / scale, 1 / scale)
-            res.translate(-scaleFrom.getCenterX(), -scaleFrom.getCenterY())
-            return res
+            val scaleX = scaleFrom.width / scaleTo.width
+            val scaleY = scaleFrom.height / scaleTo.height
+            val scale = max(scaleX, scaleY)
+            return AffineTransform().apply {
+                translate(scaleTo.centerX, scaleTo.centerY)
+                scale(1 / scale, 1 / scale)
+                translate(-scaleFrom.centerX, -scaleFrom.centerY)
+            }
         }
     }
 }

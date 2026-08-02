@@ -1,12 +1,5 @@
 package com.googlecode.blaisemath.annotation
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 
@@ -57,5 +50,4 @@ annotation class InvokedFromThread(
          * What thread the method is invoked from.
          * @return string description of the thread, or `"unknown"` or `"multiple"`
          */
-        val value: String
-)
+        val value: String)

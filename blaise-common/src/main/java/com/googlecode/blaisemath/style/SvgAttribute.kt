@@ -1,13 +1,5 @@
 package com.googlecode.blaisemath.style
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-
 /*
 * #%L
 * BlaiseGraphics
@@ -26,9 +18,10 @@ import org.junit.Before
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Marker for attribute name values defined by SVG.
- *
- * @author Elisha Peterson
- */
+*/
+
+/** Marker for attribute name values defined by SVG. */
 annotation class SvgAttribute
+
+/** Marker for attribute name values defined by SVG. */
+annotation class SvgAttributeValue

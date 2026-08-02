@@ -14,6 +14,7 @@ import com.googlecode.blaisemath.primitive.Marker
 import com.googlecode.blaisemath.primitive.Markers
 import com.googlecode.blaisemath.style.AttributeSetCoderTest
 import com.googlecode.blaisemath.util.Colors
+import com.googlecode.blaisemath.util.Colors.alpha
 import com.googlecode.blaisemath.util.ColorsTest
 import junit.framework.TestCase
 import org.junit.Before
@@ -40,117 +41,107 @@ import java.util.stream.Stream
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Factory class providing convenience methods for easily creating styles.
- *
- * @author Elisha Peterson
- */
+*/
+
+/** Factory class providing convenience methods for easily creating styles. */
 object Styles {
-    private val LOG = Logger.getLogger(Styles::class.java.name)
 
     //region SVG STYLE ATTRIBUTE CONSTANTS
-    @SvgAttribute
-    val FILL: String? = "fill"
 
     @SvgAttribute
-    val FILL_OPACITY: String? = "fill-opacity"
+    val FILL = "fill"
+    @SvgAttribute
+    val FILL_OPACITY = "fill-opacity"
 
     @SvgAttribute
-    val STROKE: String? = "stroke"
+    val STROKE = "stroke"
+    @SvgAttribute
+    val STROKE_WIDTH = "stroke-width"
+    @SvgAttribute
+    val STROKE_DASHES = "stroke-dasharray"
+    @SvgAttribute
+    val STROKE_OPACITY = "stroke-opacity"
 
     @SvgAttribute
-    val STROKE_WIDTH: String? = "stroke-width"
+    val OPACITY = "opacity"
 
     @SvgAttribute
-    val STROKE_DASHES: String? = "stroke-dasharray"
-
+    val FONT = "font-family"
     @SvgAttribute
-    val STROKE_OPACITY: String? = "stroke-opacity"
-
-    @SvgAttribute
-    val OPACITY: String? = "opacity"
-
-    @SvgAttribute
-    val FONT: String? = "font-family"
-
-    @SvgAttribute
-    val FONT_SIZE: String? = "font-size"
-
+    val FONT_SIZE = "font-size"
     /** Denotes weight of text  */
+
     @SvgAttribute
-    val FONT_WEIGHT: String? = "font-weight"
-
+    val FONT_WEIGHT = "font-weight"
     @SvgAttributeValue
-    val FONT_WEIGHT_NORMAL: String? = "normal"
-
+    val FONT_WEIGHT_NORMAL = "normal"
     @SvgAttributeValue
-    val FONT_WEIGHT_BOLD: String? = "bold"
+    val FONT_WEIGHT_BOLD = "bold"
 
     /** Denotes style of text  */
     @SvgAttribute
-    val FONT_STYLE: String? = "font-style"
-
+    val FONT_STYLE = "font-style"
     @SvgAttributeValue
-    val FONT_STYLE_NORMAL: String? = "normal"
-
+    val FONT_STYLE_NORMAL = "normal"
     @SvgAttributeValue
-    val FONT_STYLE_ITALIC: String? = "italic"
+    val FONT_STYLE_ITALIC = "italic"
 
     /** Denotes anchor of text relative to a point  */
     @SvgAttribute
-    val TEXT_ANCHOR: String? = "text-anchor"
-
+    val TEXT_ANCHOR = "text-anchor"
     @SvgAttributeValue
-    val TEXT_ANCHOR_START: String? = "start"
-
+    val TEXT_ANCHOR_START = "start"
     @SvgAttributeValue
-    val TEXT_ANCHOR_MIDDLE: String? = "middle"
-
+    val TEXT_ANCHOR_MIDDLE = "middle"
     @SvgAttributeValue
-    val TEXT_ANCHOR_END: String? = "end"
+    val TEXT_ANCHOR_END = "end"
 
     /** Denotes anchor of text baseline  */
     @SvgAttribute
-    val ALIGN_BASELINE: String? = "alignment-baseline"
-
+    val ALIGN_BASELINE = "alignment-baseline"
     @SvgAttributeValue
-    val ALIGN_BASELINE_BASELINE: String? = "baseline"
-
+    val ALIGN_BASELINE_BASELINE = "baseline"
     @SvgAttributeValue
-    val ALIGN_BASELINE_MIDDLE: String? = "middle"
-
+    val ALIGN_BASELINE_MIDDLE = "middle"
     @SvgAttributeValue
-    val ALIGN_BASELINE_HANGING: String? = "hanging"
+    val ALIGN_BASELINE_HANGING = "hanging"
 
     //endregion
+
     //region CUSTOM STYLE ATTRIBUTE CONSTANTS
-    val ID: String? = "id"
-    val MARKER: String? = "marker"
-    val MARKER_RADIUS: String? = "marker-radius"
-    val MARKER_ORIENT: String? = "orient"
+
+    const val ID = "id"
+    const val MARKER = "marker"
+    const val MARKER_RADIUS = "marker-radius"
+    const val MARKER_ORIENT = "orient"
 
     /** Denotes offset from a point  */
-    val OFFSET: String? = "offset"
+    const val OFFSET = "offset"
 
     /** Tooltip text  */
-    val TOOLTIP: String? = "tooltip"
+    const val TOOLTIP = "tooltip"
 
     /** Associates text/baseline anchor settings with compass directions.  */
     private val ANCHOR_BASELINE_LOOKUP: Table<String?, String?, Anchor?>? = HashBasedTable.create()
 
     //endregion
+
     //region DEFAULT STYLE VALUES
-    private val FONT_DEFAULT: String? = "Dialog"
+
+    private val FONT_DEFAULT = "Dialog"
     private const val FONT_SIZE_DEFAULT = 12
-    val DEFAULT_SHAPE_STYLE: AttributeSet? = AttributeSet.Companion.of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f)
+
+    val DEFAULT_SHAPE_STYLE = AttributeSet.of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f)
             .immutable()
-    val DEFAULT_PATH_STYLE: AttributeSet? = AttributeSet.Companion.of(STROKE, Color.black, STROKE_WIDTH, 1f)
+    val DEFAULT_PATH_STYLE = AttributeSet.of(STROKE, Color.black, STROKE_WIDTH, 1f)
             .immutable()
-    val DEFAULT_POINT_STYLE: AttributeSet? = AttributeSet.Companion.of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f, MARKER, Markers.CIRCLE, MARKER_RADIUS, 4)
+    val DEFAULT_POINT_STYLE = AttributeSet.of(FILL, Color.white, STROKE, Color.black, STROKE_WIDTH, 1f, MARKER, Markers.CIRCLE, MARKER_RADIUS, 4)
             .immutable()
-    val DEFAULT_TEXT_STYLE: AttributeSet? = AttributeSet.Companion.of(FILL, Color.black, FONT, FONT_DEFAULT, FONT_SIZE, FONT_SIZE_DEFAULT, TEXT_ANCHOR, Anchor.SOUTHWEST)
+    val DEFAULT_TEXT_STYLE = AttributeSet.of(FILL, Color.black, FONT, FONT_DEFAULT, FONT_SIZE, FONT_SIZE_DEFAULT, TEXT_ANCHOR, Anchor.SOUTHWEST)
             .immutable()
+
     //region FACTORY METHODS
+
     /**
      * Create a basic shape style with given fill and stroke
      * @param fill fill color
@@ -158,7 +149,7 @@ object Styles {
      * @return shape style
      */
     fun fillStroke(fill: Color?, stroke: Color?): AttributeSet? {
-        return AttributeSet.Companion.of(FILL, fill, STROKE, stroke)
+        return AttributeSet.of(FILL, fill, STROKE, stroke)
     }
 
     /**
@@ -169,7 +160,7 @@ object Styles {
      * @return shape style
      */
     fun fillStroke(fill: Color?, stroke: Color?, width: Float): AttributeSet? {
-        return AttributeSet.Companion.of(FILL, fill, STROKE, stroke, STROKE_WIDTH, width)
+        return AttributeSet.of(FILL, fill, STROKE, stroke, STROKE_WIDTH, width)
     }
 
     /**
@@ -179,7 +170,7 @@ object Styles {
      * @return path style
      */
     fun strokeWidth(stroke: Color?, width: Float): AttributeSet? {
-        return AttributeSet.Companion.of(STROKE, stroke, STROKE_WIDTH, width)
+        return AttributeSet.of(STROKE, stroke, STROKE_WIDTH, width)
     }
 
     /**
@@ -190,7 +181,7 @@ object Styles {
      * @return text style
      */
     fun text(col: Color?, sz: Float, anchor: Anchor?): AttributeSet? {
-        return AttributeSet.Companion.of(FILL, col, FONT_SIZE, sz, TEXT_ANCHOR, anchor)
+        return AttributeSet.of(FILL, col, FONT_SIZE, sz, TEXT_ANCHOR, anchor)
     }
 
     /**
@@ -201,67 +192,30 @@ object Styles {
      * @return style
      */
     fun marker(marker: Marker?, fill: Color?, rad: Float): AttributeSet? {
-        return AttributeSet.Companion.of(MARKER, marker, FILL, fill, MARKER_RADIUS, rad)
+        return AttributeSet.of(MARKER, marker, FILL, fill, MARKER_RADIUS, rad)
     }
 
-    /**
-     * Modifies colors in a style set.
-     * @return color modifier
-     */
-    fun defaultColorModifier(): StyleModifier? {
-        return ColorModifier()
+    /** Create default style context, with standard modifiers for color and stroke width. */
+    fun defaultStyleContext() = StyleContext().apply {
+        modifiers += ColorModifier()
+        modifiers += StrokeWidthModifier()
     }
 
-    /**
-     * Modifies stroke widths in a style set.
-     * @return color modifier
-     */
-    fun defaultStrokeModifier(): StyleModifier? {
-        return StrokeWidthModifier()
-    }
-
-    /**
-     * Create default style context.
-     * @return a default style context w/ no parent, but with a standard set of styles
-     */
-    fun defaultStyleContext(): StyleContext? {
-        val res = StyleContext()
-        res.addModifier(defaultColorModifier())
-        res.addModifier(defaultStrokeModifier())
-        return res
-    }
     //endregion
+
     //region TYPED GETTERS
-    /**
-     * Test whether given style has fill parameters: a fill color.
-     * @param style style object
-     * @return true if fill
-     */
-    fun hasFill(style: AttributeSet?): Boolean {
-        return style.get(FILL) != null
-    }
 
-    /**
-     * Test whether given style has stroke parameters: a stroke color and a
-     * positive stroke width.
-     * @param style style object
-     * @return true if stroke
-     */
-    fun hasStroke(style: AttributeSet?): Boolean {
-        val stroke = style.getColor(STROKE)
-        val strokeWidth = style.getFloat(STROKE_WIDTH)
-        return stroke != null && strokeWidth != null && strokeWidth > 0
-    }
+    /** Test whether given style has fill parameters: a fill color. */
+    fun AttributeSet.hasFill() = get(FILL) != null
 
-    /**
-     * Get fill color from provided style.
-     * @param style style object
-     * @return fill color
-     */
-    fun fillColorOf(style: AttributeSet?): Color? {
+    /** Test whether given style has stroke parameters: a stroke color and a positive stroke width. */
+    fun AttributeSet.hasStroke() = getColor(STROKE) != null && (getFloat(STROKE_WIDTH)?.let { it > 0 } ?: false)
+
+    /** Get fill color from provided style. */
+    fun fillColorOf(style: AttributeSet): Color? {
         val fill = style.getColor(FILL)
         val alpha = if (style.contains(FILL_OPACITY)) (255 * style.getFloat(FILL_OPACITY, 1f)) as Int else if (style.contains(OPACITY)) (255 * style.getFloat(OPACITY, 1f)) as Int else -1
-        return if (alpha >= 0 && alpha <= 255) Colors.alpha(fill, alpha) else fill
+        return if (alpha in 0..255) fill.alpha(alpha) else fill
     }
 
     /**
@@ -272,7 +226,7 @@ object Styles {
     fun strokeColorOf(style: AttributeSet?): Color? {
         val stroke = style.getColor(STROKE)
         val alpha = if (style.contains(STROKE_OPACITY)) (255 * style.getFloat(STROKE_OPACITY, 1f)) as Int else if (style.contains(OPACITY)) (255 * style.getFloat(OPACITY, 1f)) as Int else -1
-        return if (alpha >= 0 && alpha <= 255) Colors.alpha(stroke, alpha) else stroke
+        return if (alpha in 0..255) Colors.alpha(stroke, alpha) else stroke
     }
 
     /**
@@ -364,8 +318,11 @@ object Styles {
             anchorFromAttributes(anchor as String?, baseline as String?, def)
         } else def
     }
+
     //endregion
+
     //region ANCHOR CONVERSIONS
+
     /**
      * Create an anchor from the given anchor string and baseline string.
      * If either argument is null/invalid, a default value is assumed.

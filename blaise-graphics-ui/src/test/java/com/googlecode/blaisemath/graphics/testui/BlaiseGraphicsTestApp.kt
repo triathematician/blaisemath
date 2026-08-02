@@ -14,7 +14,6 @@ import com.googlecode.blaisemath.graphics.swing.LabeledShapeGraphic
 import com.googlecode.blaisemath.graphics.swing.render.*
 import com.googlecode.blaisemath.primitive.Anchor
 import com.googlecode.blaisemath.primitive.AnchoredText
-import com.googlecode.blaisemath.primitive.ArrowLocation
 import com.googlecode.blaisemath.primitive.Markers
 import com.googlecode.blaisemath.style.AttributeSet
 import com.googlecode.blaisemath.style.ObjectStyler

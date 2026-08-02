@@ -1,15 +1,3 @@
-package com.googlecode.blaisemath.primitive
-
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.awt.Shape
-import java.awt.geom.Point2D
-
 /*-
 * #%L
 * blaise-common
@@ -28,19 +16,26 @@ import java.awt.geom.Point2D
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+package com.googlecode.blaisemath.primitive
+
+import java.awt.Shape
+import java.awt.geom.Point2D
+
+/**
  * Generates shapes at a given point. Angle and radius parameters allow the shape
  * to be sized and oriented as well. Partially inspired by http://www.w3.org/TR/SVG/painting.html#Markers.
- *
- * @author Elisha Peterson
  */
 interface Marker {
+
     /**
      * Generates a shape at specified point with specified radius.
      * @param point the center of the resulting shape
      * @param orientation specifies orientation of the resulting shape
-     * @param markerRadius specifies the radius of the resulting shape
+     * @param radius specifies the radius of the resulting shape
      * @return marker shape
      */
-    open fun create(point: Point2D?, orientation: Double, markerRadius: Float): Shape?
+    fun create(point: Point2D, orientation: Double, radius: Float): Shape
+
 }

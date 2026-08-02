@@ -1,15 +1,3 @@
-package com.googlecode.blaisemath.util.swing
-
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.awt.geom.Point2D
-import javax.swing.JPopupMenu
-
 /*-
 * #%L
 * blaise-common
@@ -28,18 +16,21 @@ import javax.swing.JPopupMenu
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Provides a method that can be used to initialize (add actions to) a [JPopupMenu].
- * The initializer will be provided as argument the source object
- * that is creating the menu, the location where it is being shown,
- * an optional focus object describing a more specific target for the menu,
- * and an optional selection of objects.
- *
+*/
+
+package com.googlecode.blaisemath.util.swing
+
+import java.awt.geom.Point2D
+import javax.swing.JPopupMenu
+
+/**
+ * Provides a method that can be used to initialize (add actions to) a [JPopupMenu]. The initializer will be provided as
+ * argument the source object that is creating the menu, the location where it is being shown, an optional focus object
+ * describing a more specific target for the menu, and an optional selection of objects.
  * @param <S> focus object type for menu
- *
- * @author Elisha Peterson
-</S> */
+ */
 interface ContextMenuInitializer<S> {
+
     /**
      * Initialize the context menu by adding any actions appropriate for the given parameters.
      * @param popup context menu
@@ -48,5 +39,6 @@ interface ContextMenuInitializer<S> {
      * @param focus object of focus
      * @param selection current selection
      */
-    open fun initContextMenu(popup: JPopupMenu?, src: S?, point: Point2D?, focus: Any?, selection: MutableSet<*>?)
+    fun initContextMenu(popup: JPopupMenu, src: S, point: Point2D, focus: Any? = null, selection: Set<*>? = null)
+
 }

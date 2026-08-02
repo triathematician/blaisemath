@@ -1,12 +1,5 @@
 package com.googlecode.blaisemath.coordinate
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
 import java.util.*
 
 /*-
@@ -27,109 +20,38 @@ import java.util.*
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Tracks a change to a set of coordinate locations, in the form of a set of added
  * locations and a set of removed objects. These collections will be propagated as
  * received to listeners; this class makes no guarantees of collection safety.
- *
  * @param <S> type of object owning the coordinates
  * @param <C> coordinate type
- * @author Elisha Peterson
-</C></S> */
-class CoordinateChangeEvent<S, C>
-/**
- * Initialize with given source object
- * @param src source of event
  */
-(src: Any?) : EventObject(src) {
-    /** Added coordinates  */
-    private var added: MutableMap<S?, C?>? = null
+class CoordinateChangeEvent<S, C>(src: Any?, val added: Map<S, C>? = null, val removed: Set<S>? = null) : EventObject(src) {
+    init { require(added != null || removed != null) }
 
-    /** Removed coordinates  */
-    private var removed: MutableSet<S?>? = null
+    override fun toString() = String.format("CoordinateChangeEvent[%d added,%d removed,source=%s]",
+            added?.size ?: 0, removed?.size ?: 0, source)
 
-    //endregion
-    override fun toString(): String {
-        return String.format("CoordinateChangeEvent[%d added,%d removed,source=%s]",
-                if (added == null) 0 else added.size, if (removed == null) 0 else removed.size, source)
-    }
+    val isAddEvent: Boolean
+        get() = added != null
+    val isRemoveEvent: Boolean
+        get() = removed != null
+}
 
+/**
+ * Receives updates regarding the locations of a collection of objects. Handlers
+ * should be aware that the update may be invoked from any thread.
+ * @param <S> type of object being located
+ * @param <C> type of coordinate
+ */
+interface CoordinateListener<S, C> {
     /**
-     * Whether event indicates added coords
-     * @return true if coordinates were added
+     * Called when coordinates/points are added or changed in a [CoordinateManager].
+     * This method is called from the same thread that made the change.
+     * @param evt description of what coordinates were added/removed/changed
      */
-    fun isAddEvent(): Boolean {
-        return added != null
-    }
-
-    /**
-     * Whether event indicates removed coords
-     * @return true if coordinates were removed
-     */
-    fun isRemoveEvent(): Boolean {
-        return removed != null
-    }
-
-    /**
-     * Get the collection of coordinate that were added
-     * @return map whose keys are the objects and values are their coordinates
-     */
-    fun getAdded(): MutableMap<S?, C?>? {
-        return added
-    }
-
-    /**
-     * Get the collection of objects whose coordinates were removed
-     * @return set of objects removed
-     */
-    fun getRemoved(): MutableSet<S?>? {
-        return removed
-    }
-
-    companion object {
-        //region FACTORY METHODS
-        /**
-         * Creates add event
-         * @param <S> type of object owning the coordinates
-         * @param <C> coordinate type
-         * @param src source of event
-         * @param added map of added objects, keys are objects/values are coordinates
-         * @return add event
-        </C></S> */
-        fun <S, C> createAddEvent(src: Any?, added: MutableMap<S?, C?>?): CoordinateChangeEvent<S?, C?>? {
-            val evt = CoordinateChangeEvent<S?, C?>(src)
-            evt.added = added
-            return evt
-        }
-
-        /**
-         * Creates remove event
-         * @param <S> type of object owning the coordinates
-         * @param <C> coordinate type
-         * @param src source of event
-         * @param removed set of removed objects
-         * @return remove event
-        </C></S> */
-        fun <S, C> createRemoveEvent(src: Any?, removed: MutableSet<S?>?): CoordinateChangeEvent<*, *>? {
-            val evt = CoordinateChangeEvent<S?, C?>(src)
-            evt.removed = removed
-            return evt
-        }
-
-        /**
-         * Creates add/remove event
-         * @param <S> type of object owning the coordinates
-         * @param <C> coordinate type
-         * @param src source of event
-         * @param added map of added objects, keys are objects/values are coordinates
-         * @param removed set of removed objects
-         * @return add/remove event
-        </C></S> */
-        fun <S, C> createAddRemoveEvent(src: Any?, added: MutableMap<S?, C?>?, removed: MutableSet<S?>?): CoordinateChangeEvent<S?, C?>? {
-            val evt = CoordinateChangeEvent<S?, C?>(src)
-            evt.added = added
-            evt.removed = removed
-            return evt
-        }
-    }
+    fun coordinatesChanged(evt: CoordinateChangeEvent<S, C>)
 }

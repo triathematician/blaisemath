@@ -1,18 +1,3 @@
-package com.googlecode.blaisemath.encode
-
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.awt.geom.Point2D
-import java.util.*
-import java.util.logging.Level
-import java.util.logging.Logger
-import java.util.regex.Pattern
-
 /*-
 * #%L
 * blaise-common
@@ -31,36 +16,33 @@ import java.util.regex.Pattern
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Adapter converting Point2D to/from strings of the form "(1.1,2)". Requires non-null values.
- *
- * @author Elisha Peterson
- */
-class Point2DCoder : StringEncoder<Point2D?>, StringDecoder<Point2D?> {
-    override fun encode(v: Point2D?): String? {
-        Objects.requireNonNull(v)
-        return String.format("(%f,%f)", v.getX(), v.getY())
-    }
+*/
+package com.googlecode.blaisemath.encode
 
-    override fun decode(v: String?): Point2D? {
-        Objects.requireNonNull(v)
-        val m = Pattern.compile("\\((.*),(.*)\\)").matcher(v.toLowerCase().trim { it <= ' ' })
+import com.googlecode.blaisemath.geom.Point2
+import com.googlecode.blaisemath.util.kotlin.fine
+import java.awt.geom.Point2D
+import java.util.regex.Pattern
+
+/**
+ * Adapter converting Point2D to/from strings of the form "(1.1,2)". Requires non-null values.
+ */
+object Point2DCoder : StringCoder<Point2D> {
+    override fun encode(obj: Point2D) = String.format("(%f,%f)", obj.x, obj.y)
+
+    override fun decode(obj: String): Point2D? {
+        val m = Pattern.compile("\\((.*),(.*)\\)").matcher(obj.toLowerCase().trim { it <= ' ' })
         return if (m.matches()) {
             try {
-                val x = m.group(1).trim { it <= ' ' }.toDouble()
-                val y = m.group(2).trim { it <= ' ' }.toDouble()
-                Point2D.Double(x, y)
+                Point2(m.groupAsDouble(1), m.groupAsDouble(2))
             } catch (x: NumberFormatException) {
-                LOG.log(Level.FINEST, "Not a double", x)
+                fine<Point2DCoder>("Not a double", x)
                 null
             }
         } else {
-            LOG.log(Level.FINEST, "Not a valid point", v)
+            fine<Point2DCoder>("Not a valid point: $obj")
             null
         }
     }
 
-    companion object {
-        private val LOG = Logger.getLogger(Point2DCoder::class.java.name)
-    }
 }

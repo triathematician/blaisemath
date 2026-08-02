@@ -1,18 +1,3 @@
-package com.googlecode.blaisemath.encode
-
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.awt.geom.Rectangle2D
-import java.util.*
-import java.util.logging.Level
-import java.util.logging.Logger
-import java.util.regex.Pattern
-
 /*-
 * #%L
 * blaise-common
@@ -31,38 +16,34 @@ import java.util.regex.Pattern
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Adapter converting Rectangle2D to/from strings, of the form "rectangle2d(x,y,wid,ht)". Requires non-null values.
- *
- * @author Elisha Peterson
- */
-class Rectangle2DCoder : StringEncoder<Rectangle2D?>, StringDecoder<Rectangle2D?> {
-    override fun encode(v: Rectangle2D?): String? {
-        Objects.requireNonNull(v)
-        return String.format("rectangle2d(%f,%f,%f,%f)", v.getX(), v.getY(), v.getWidth(), v.getHeight())
-    }
+*/
+package com.googlecode.blaisemath.encode
 
-    override fun decode(v: String?): Rectangle2D? {
-        Objects.requireNonNull(v)
+import com.googlecode.blaisemath.util.kotlin.fine
+import com.googlecode.blaisemath.geom.Rectangle2
+import java.awt.geom.Rectangle2D
+import java.util.regex.Pattern
+
+/**
+ * Convert [Rectangle2D] to/from strings, of the form "rectangle2d(x,y,wid,ht)". Requires non-null values.
+ */
+object Rectangle2DCoder : StringCoder<Rectangle2D> {
+
+    override fun encode(v: Rectangle2D) = String.format("rectangle2d(%f,%f,%f,%f)", v.x, v.y, v.width, v.height)
+
+    override fun decode(v: String): Rectangle2D? {
         val m = Pattern.compile("rectangle2d\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim { it <= ' ' })
         return if (m.matches()) {
             try {
-                val x = m.group(1).toDouble()
-                val y = m.group(2).toDouble()
-                val w = m.group(3).toDouble()
-                val h = m.group(4).toDouble()
-                Rectangle2D.Double(x, y, w, h)
+                Rectangle2(m.groupAsDouble(1), m.groupAsDouble(2), m.groupAsDouble(3), m.groupAsDouble(4))
             } catch (x: NumberFormatException) {
-                LOG.log(Level.FINEST, "Not a double", x)
+                fine<Rectangle2DCoder>("Not a double", x)
                 null
             }
         } else {
-            LOG.log(Level.FINEST, "Not a valid rectangle", v)
+            fine<Rectangle2DCoder>("Not a valid rectangle: $v")
             null
         }
     }
 
-    companion object {
-        private val LOG = Logger.getLogger(Rectangle2DCoder::class.java.name)
-    }
 }

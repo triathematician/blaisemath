@@ -9,7 +9,6 @@ import com.googlecode.blaisemath.graphics.swing.HelloWorldTestFrame
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomTestFrame
 import com.googlecode.blaisemath.graphics.swing.SelectionTestFrame
 import com.googlecode.blaisemath.graphics.swing.TooltipTestFrame
-import com.googlecode.blaisemath.primitive.ArrowLocation
 import com.googlecode.blaisemath.primitive.Markers
 import com.googlecode.blaisemath.style.AttributeSet
 import com.googlecode.blaisemath.style.StyleHints

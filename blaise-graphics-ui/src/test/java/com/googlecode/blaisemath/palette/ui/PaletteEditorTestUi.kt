@@ -1,7 +1,6 @@
 package com.googlecode.blaisemath.palette.ui
 
 import com.googlecode.blaisemath.firestarter.editor.EditorRegistration
-import com.googlecode.blaisemath.palette.ColorSchemes
 import com.googlecode.blaisemath.palette.MapPalette
 import com.googlecode.blaisemath.palette.Palettes
 import java.awt.EventQueue

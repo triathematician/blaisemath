@@ -1,5 +1,6 @@
-package com.googlecode.blaisemath.primitive
+package com.googlecode.blaisemath.style
 
+import com.googlecode.blaisemath.primitive.Markers
 import org.junit.Assert
 import org.junit.Test
 import java.awt.Point
@@ -22,11 +23,12 @@ import java.awt.Point
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/   class MarkersTest {
+*/
+
+class MarkersTest {
     @Test
     fun testGetAvailableMarkers() {
-        println("getAvailableMarkers")
-        val result = Markers.getAvailableMarkers()
+        val result = Markers.availableMarkers
         Assert.assertFalse(result.isEmpty())
         for (m in result) {
             val s = m.create(Point(), .5, 1f)

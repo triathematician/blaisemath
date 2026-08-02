@@ -1,12 +1,7 @@
 package com.googlecode.blaisemath.style
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.style.StyleHints.withStyleHintsApplied
+import java.awt.Color
 
 /*
 * #%L
@@ -26,11 +21,9 @@ import org.junit.Before
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Creates a modified version of a style based on criteria provided as hints.
- *
- * @author Elisha Peterson
- */
+*/
+
+/** Creates a modified version of a style based on criteria provided as hints. */
 interface StyleModifier {
     /**
      * Modify the attribute set according to the given set of hints.
@@ -38,5 +31,46 @@ interface StyleModifier {
      * @param hints the hints w/ modify instructions
      * @return the modified set
      */
-    open fun apply(style: AttributeSet?, hints: MutableSet<String?>?): AttributeSet?
+    fun apply(style: AttributeSet, hints: Set<String>): AttributeSet
+}
+
+
+/** Apply style hints to colors in the [AttributeSet]. */
+class ColorModifier : StyleModifier {
+    override fun apply(style: AttributeSet, hints: Set<String>) = AttributeSet().apply {
+        parent = style
+        for (key in style.attributesOfType<Color>()) {
+            put(key, style.getColor(key).withStyleHintsApplied(hints))
+        }
+    }
+}
+
+/**
+ * Applies fixed, preset fill/stroke attributes to [AttributeSet] when [StyleHints.HIGHLIGHT_HINT] or
+ * [StyleHints.SELECTED_HINT] is active.
+ */
+class PresetColorModifier : StyleModifier {
+    var highlightFill: Color? = null
+    var highlightStroke: Color? = null
+    var selectFill: Color? = null
+    var selectStroke: Color? = null
+
+    override fun apply(style: AttributeSet, hints: Set<String>) = AttributeSet().apply {
+        parent = style
+        if (hints.contains(StyleHints.HIGHLIGHT_HINT)) {
+            put(Styles.FILL, highlightFill)
+            put(Styles.STROKE, highlightStroke)
+        } else if (hints.contains(StyleHints.SELECTED_HINT)) {
+            put(Styles.FILL, selectFill)
+            put(Styles.STROKE, selectStroke)
+        }
+    }
+}
+
+/** Apply style hints to stroke-width in the [AttributeSet]. */
+class StrokeWidthModifier : StyleModifier {
+    override fun apply(style: AttributeSet, hints: Set<String>) = AttributeSet().apply {
+        parent = style
+        put(Styles.STROKE_WIDTH, StyleHints.strokeWithStyleHintsApplied(style.getFloat(Styles.STROKE_WIDTH), hints))
+    }
 }

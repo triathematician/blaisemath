@@ -1,12 +1,5 @@
 package com.googlecode.blaisemath.geom
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
 import java.awt.geom.AffineTransform
 import java.awt.geom.Point2D
 
@@ -28,7 +21,9 @@ import java.awt.geom.Point2D
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Provides methods for translating between graphic coordinate space and
  * window coordinate space.
  *
@@ -40,24 +35,24 @@ interface TransformedCoordinateSpace {
      * @param winLoc window location
      * @return graphic coordinate system location
      */
-    open fun toGraphicCoordinate(winLoc: Point2D?): Point2D?
+    fun toGraphicCoordinate(winLoc: Point2D?): Point2D?
 
     /**
      * Get the transform for the coordinate space
      * @return transform
      */
-    open fun getTransform(): AffineTransform?
+    fun getTransform(): AffineTransform?
 
     /**
      * Get the inverse transform for the coordinate space
      * @return inverse transform
      */
-    open fun getInverseTransform(): AffineTransform?
+    fun getInverseTransform(): AffineTransform?
 
     /**
      * Set the transform used for drawing objects on the canvas.
      * @param at the transform
      * @throws IllegalArgumentException if the transform is non-null but not invertible
      */
-    open fun setTransform(at: AffineTransform?)
+    fun setTransform(at: AffineTransform?)
 }

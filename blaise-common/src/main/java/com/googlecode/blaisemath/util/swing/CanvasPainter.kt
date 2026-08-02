@@ -1,19 +1,12 @@
 package com.googlecode.blaisemath.util.swing
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
 import java.awt.Component
 
 /*
 * #%L
 * BlaiseGraphics
 * --
-* Copyright (C) 2014 - 2021 Elisha Peterson
+* Copyright (C) 2009 - 2021 Elisha Peterson
 * --
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,17 +20,10 @@ import java.awt.Component
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * An object that paints on a graphics canvas.
- *
- * @param <G> type of component to draw on
- * @author Elisha Peterson
-</G> */
-interface CanvasPainter<G> {
-    /**
-     * Paint on canvas of given component.
-     * @param component component owning the canvas
-     * @param canvas the canvas
-     */
-    open fun paint(component: Component?, canvas: G?)
+*/
+
+/** An object that paints on a graphics canvas. */
+interface CanvasPainter<G : Any> {
+    /** Paint on canvas of given component. */
+    fun paint(component: Component, canvas: G)
 }

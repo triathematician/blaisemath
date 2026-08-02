@@ -1,13 +1,5 @@
 package com.googlecode.blaisemath.style
 
-import com.google.common.collect.Maps
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
 import java.awt.Color
 import java.util.*
 
@@ -29,108 +21,65 @@ import java.util.*
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Utilities for accessing values within styles.
- * @author Elisha Peterson
  */
 object StyleHelp {
-    /**
-     * Get the first non-null color within a style, or default if none found.
-     * @param style style to search
-     * @param def default color
-     * @param keys keys to lookup
-     * @return first non-null color, or default
-     */
-    fun firstColor(style: AttributeSet?, def: Color?, vararg keys: String?): Color? {
-        for (k in keys) {
-            val c = style.getColor(k)
-            if (c != null) {
-                return c
-            }
-        }
-        return def
-    }
 
-    /**
-     * Get the first non-null color within a style, or default if none found.
-     * @param style style to search
-     * @param def default color
-     * @param keys keys to lookup
-     * @return first non-null color, or default
-     */
-    fun firstFloat(style: AttributeSet?, def: Float?, vararg keys: String?): Float? {
-        for (k in keys) {
-            val c = style.getFloat(k)
-            if (c != null) {
-                return c
-            }
-        }
-        return def
-    }
+    /** Get the first non-null color within a style by key, or default if none found. */
+    fun firstColor(style: AttributeSet, def: Color?, vararg keys: String)
+            = keys.asSequence().map { style[it] as? Color }.firstOrNull() ?: def
+
+    /** Get the first non-null color within a style by key, or default if none found. */
+    fun firstFloat(style: AttributeSet, def: Float?, vararg keys: String)
+            = keys.asSequence().map { style[it] as? Float }.firstOrNull() ?: def
 
     /**
      * Gets subset of style starting with the given prefix, assuming a "dot notation".
      * If the prefix is "a.b" for instance, the result will include any parameters "a.b.x",
      * any parameters "a.x", and any parameters "x" as just "x".
-     *
-     * @param style base style object, with general parameters
-     * @param prefix style prefix to lookup
-     * @param defStyle default style parameters
-     * @return constructed style
      */
-    fun cascadingStyle(style: AttributeSet?, prefix: String?, defStyle: AttributeSet?): AttributeSet? {
-        val res = AttributeSet()
-        addStylesIfAbsent(res, style, prefix)
-        for (k in defStyle.getAllAttributes()) {
-            if (!res.contains(k)) {
-                res.put(k, defStyle.get(k))
-            }
+    fun cascadingStyle(style: AttributeSet, prefix: String, defStyle: AttributeSet) = AttributeSet().apply {
+        addStylesIfAbsent(style, prefix)
+        defStyle.getAllAttributes().onEach { putIfAbsent(it, defStyle[it]) }
+    }
+
+    /** Read a collection of styles defined within a properties file. Searches among provided prefixes only. */
+    fun readStyles(props: Properties, vararg prefixes: String): Map<String, AttributeSet> {
+        val res = mutableMapOf<String, AttributeSet>()
+        for (key in props.stringPropertyNames()) {
+            prefixes.filter { key.startsWith(it) }
+                    .mapNotNull { readStyle(props.getProperty(key)) }
+                    .firstOrNull()?.let { res[key] = it }
         }
         return res
     }
+
+    /** Creates a style from its encoded string. See [AttributeSetCoder]. */
+    fun readStyle(styleString: String) = AttributeSetCoder().decode(styleString)
 
     /**
-     * Read a collection of styles defined within a properties file. Searches among provided prefixes only.
-     * @param props properties to search
-     * @param prefixes prefixes to search with
-     * @return indexed collection of styles
+     * Adds styles starting with the given prefix in [source], after stripping the prefix.
+     * This might be used, for instance, to map "title.color" and "title.font-size" in [source] to "color" and "font-size".
+     * This works recursively, so "title.first.color" and "title.first.font-size" would be added under a recursive call with prefix "title.first".
      */
-    fun readStyles(props: Properties?, vararg prefixes: String?): MutableMap<String?, AttributeSet?>? {
-        val res: MutableMap<String?, AttributeSet?>? = Maps.newLinkedHashMap()
-        for (key in props.stringPropertyNames()) {
-            for (p in prefixes) {
-                if (!key.startsWith(p)) {
-                    continue
-                }
-                val sty = readStyle(props.getProperty(key))
-                if (sty != null) {
-                    res[key] = sty
-                    break
-                }
-            }
-        }
-        return res
-    }
-
-    fun readStyle(property: String?): AttributeSet? {
-        return AttributeSetCoder().decode(property)
-    }
-
-    private fun addStylesIfAbsent(result: AttributeSet?, style: AttributeSet?, prefix: String?) {
+    private fun AttributeSet.addStylesIfAbsent(source: AttributeSet, prefix: String) {
         // add prefix content
-        for (k in style.getAllAttributes()) {
-            if (k.startsWith("$prefix.")) {
-                val suffix = k.substring(prefix.length + 1)
-                if (suffix.length > 0 && !suffix.contains(".") && !result.contains(suffix)) {
-                    result.put(suffix, style.get(k))
+        source.getAllAttributes()
+                .filter { it.startsWith("$prefix.") }
+                .onEach { key ->
+                    val suffix = key.substring(prefix.length + 1)
+                    if (suffix.isNotEmpty() && !suffix.contains(".") && !contains(suffix)) {
+                        put(suffix, source[key])
+                    }
                 }
-            }
-        }
 
-        // add parent content
+        // add content from the parent prefix.
         if (prefix.contains(".")) {
             val parentPrefix = prefix.substring(0, prefix.lastIndexOf('.'))
-            addStylesIfAbsent(result, style, parentPrefix)
+            addStylesIfAbsent(source, parentPrefix)
         }
     }
 }

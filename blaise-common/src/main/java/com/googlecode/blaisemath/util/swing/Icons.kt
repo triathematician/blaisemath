@@ -1,15 +1,9 @@
 package com.googlecode.blaisemath.util.swing
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.Colors
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.geom.ellipse2
+import com.googlecode.blaisemath.util.Colors.alpha
+import com.googlecode.blaisemath.util.Colors.lightened
 import java.awt.*
-import java.awt.geom.Ellipse2D
 import javax.swing.Icon
 
 /*-
@@ -30,126 +24,59 @@ import javax.swing.Icon
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Utilities for creating icons.
- *
- * @author Elisha Peterson
- */
-object Icons {
-    /**
-     * Create icon that composites one over another.
-     * @param icons array of icons, in the order they will be drawn
-     * @return composite icon
-     */
-    fun composite(vararg icons: Icon?): Icon? {
-        return CompositeIcon(*icons)
+*/
+
+/** Icon with the same width and height. */
+abstract class SquareIcon(val size: Int) : Icon {
+    override fun getIconWidth() = size
+    override fun getIconHeight() = size
+}
+
+/** An icon that joins several other icons together on top of each other.  */
+class CompositeIcon(vararg _icons: Icon) : Icon {
+    private val icons = _icons
+
+    override fun getIconWidth() = icons.maxOf { it.iconWidth }
+    override fun getIconHeight() = icons.maxOf { it.iconHeight }
+
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+        icons.forEach { it.paintIcon(c, g, x, y) }
     }
+}
 
-    /**
-     * Create an icon by joining several horizontally.
-     * @param icons the icons
-     * @return joined icon
-     */
-    fun join(vararg icons: Icon?): Icon? {
-        return JoinIcon(*icons)
-    }
+/** An icon that joins several other icons together horizontally.  */
+class JoinIcon(vararg _icons: Icon) : Icon {
+    private val icons = _icons
 
-    /**
-     * Create an icon with a letter (or text string), a color, and a size.
-     * The icon displays a solid circle overlaid with the letter, using varying
-     * shades of the provided color.
-     * @param letter the icon letter/text
-     * @param color the color
-     * @param size the icon size
-     * @return icon
-     */
-    fun letterIcon(letter: String?, color: Color?, size: Int): Icon? {
-        return LetterIcon(letter, color, size)
-    }
-    //region INNER CLASSES
-    /** An icon that joins several other icons together on top of each other.  */
-    private class CompositeIcon private constructor(vararg icons: Icon?) : Icon {
-        private val icons: Array<Icon?>?
-        override fun getIconWidth(): Int {
-            var max = 0
-            for (i in icons) {
-                max = Math.max(max, i.getIconWidth())
-            }
-            return max
-        }
+    override fun getIconWidth() = icons.sumBy { it.iconWidth }
+    override fun getIconHeight() = icons.sumBy { it.iconHeight }
 
-        override fun getIconHeight(): Int {
-            var max = 0
-            for (i in icons) {
-                max = Math.max(max, i.getIconHeight())
-            }
-            return max
-        }
-
-        override fun paintIcon(c: Component?, g: Graphics?, x: Int, y: Int) {
-            for (i in icons) {
-                i.paintIcon(c, g, x, y)
-            }
-        }
-
-        init {
-            this.icons = icons
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+        var xp = x
+        icons.forEach {
+            it.paintIcon(c, g, x, y)
+            xp += it.iconWidth
         }
     }
+}
 
-    /** An icon that joins several other icons together horizontally.  */
-    private class JoinIcon private constructor(vararg icons: Icon?) : Icon {
-        private val icons: Array<Icon?>?
-        override fun getIconWidth(): Int {
-            var sum = 0
-            for (i in icons) {
-                sum += i.getIconWidth()
-            }
-            return sum
-        }
+/** An icon that displays a text string against a background shape  */
+class LetterIcon private constructor(val letter: String, val color: Color, size: Int) : SquareIcon(size) {
+    private val FONTNAME: String? = "Dialog"
 
-        override fun getIconHeight(): Int {
-            var max = 0
-            for (i in icons) {
-                max = Math.max(max, i.getIconHeight())
-            }
-            return max
-        }
-
-        override fun paintIcon(c: Component?, g: Graphics?, x: Int, y: Int) {
-            var xp = x
-            for (i in icons) {
-                i.paintIcon(c, g, xp, y)
-                xp += i.getIconWidth()
-            }
-        }
-
-        init {
-            this.icons = icons
-        }
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+        val g2 = g as Graphics2D
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        g2.color = color.lightened().alpha(128)
+        g2.fill(ellipse2(x + 1, y + 1, size - 2, size - 2))
+        g2.stroke = BasicStroke(2f)
+        g2.draw(ellipse2(x + 1, y + 1, size - 2, size - 2))
+        g2.font = Font(FONTNAME, Font.BOLD, size - 5)
+        g2.color = color
+        val bds = g2.fontMetrics.getStringBounds(letter, g)
+        val lm = g2.fontMetrics.getLineMetrics(letter, g)
+        g2.drawString(letter,
+                x + .5f * size - .5f * bds.width.toFloat(),
+                y + .5f * (size + 1) + .5f * bds.height.toFloat() + .5f * (lm.ascent + lm.descent) - lm.ascent)
     }
-
-    /** An icon that displays a text string against a background shape  */
-    private class LetterIcon private constructor(private val letter: String?, private val color: Color?, size: Int) : SquareIcon(size) {
-        override fun paintIcon(c: Component?, g: Graphics?, x: Int, y: Int) {
-            val g2 = g as Graphics2D?
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-            g2.setColor(Colors.alpha(Colors.lighterThan(color), 128))
-            g2.fill(Ellipse2D.Double(x + 1, y + 1, size - 2, size - 2))
-            g2.setStroke(BasicStroke(2f))
-            g2.draw(Ellipse2D.Double(x + 1, y + 1, size - 2, size - 2))
-            g2.setFont(Font(FONTNAME, Font.BOLD, size - 5))
-            g2.setColor(color)
-            val lett = letter
-            val bds = g2.getFontMetrics().getStringBounds(lett, g)
-            val lm = g2.getFontMetrics().getLineMetrics(lett, g)
-            g2.drawString(lett,
-                    x + .5f * size - .5f * bds.width as Float,
-                    y + .5f * (size + 1) + .5f * bds.height as Float + .5f * (lm.ascent + lm.descent) - lm.ascent)
-        }
-
-        companion object {
-            private val FONTNAME: String? = "Dialog"
-        }
-    } //endregion
 }

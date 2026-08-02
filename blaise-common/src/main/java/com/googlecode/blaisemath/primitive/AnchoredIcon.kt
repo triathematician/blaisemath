@@ -1,20 +1,13 @@
 package com.googlecode.blaisemath.primitive
 
-import com.googlecode.blaisemath.coordinate.Point2DBean
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.coordinate.HasPoint2D
 import javax.swing.Icon
 
 /*
 * #%L
 * BlaiseGraphics
 * --
-* Copyright (C) 2014 - 2021 Elisha Peterson
+* Copyright (C) 2009 - 2021 Elisha Peterson
 * --
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -28,25 +21,14 @@ import javax.swing.Icon
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * An icon anchored at a given location.
- * @author Elisha Peterson
- */
-class AnchoredIcon(x: kotlin.Double, y: kotlin.Double, private val icon: Icon?) : Point2DBean(x, y) {
-    override fun toString(): String {
-        return "AnchoredIcon{" + getX() + ',' + getY() + ',' + getIcon() + '}'
-    }
+*/
 
-    //region PROPERTIES
-    fun getIcon(): Icon? {
-        return icon
-    }
+/** An icon anchored at a given location. */
+class AnchoredIcon(x: kotlin.Double, y: kotlin.Double, val icon: Icon) : HasPoint2D(x, y) {
 
-    fun getIconWidth(): Int {
-        return icon.getIconWidth()
-    }
+    val iconWidth
+        get() = icon.iconWidth
+    val iconHeight
+        get() = icon.iconHeight
 
-    fun getIconHeight(): Int {
-        return icon.getIconHeight()
-    } //endregion
 }

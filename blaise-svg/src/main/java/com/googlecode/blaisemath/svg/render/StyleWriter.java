@@ -54,7 +54,7 @@ public class StyleWriter {
         }
         AttributeSet res = style.copy();
         // TODO - update opacity keys for alpha colors
-        for (String c : style.getAttributes()) {
+        for (String c : style.attributes()) {
             Object col = style.get(c);
             if (col instanceof Color) {
                 res.put(c, Colors.alpha((Color) col, 255));

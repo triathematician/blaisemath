@@ -1,14 +1,3 @@
-package com.googlecode.blaisemath.encode
-
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.awt.Font
-
 /*
 * #%L
 * BlaiseCommon
@@ -27,19 +16,23 @@ import java.awt.Font
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Adapter converting fonts to/from strings. Requires non-null values.
- *
- * @see Font.decode
- * @author Elisha Peterson
- */
-class FontCoder : StringEncoder<Font?>, StringDecoder<Font?> {
-    override fun encode(c: Font?): String? {
-        val styStr = if (c.isPlain()) "PLAIN" else if (c.isBold() && c.isItalic()) "BOLDITALIC" else if (c.isBold()) "BOLD" else "ITALIC"
-        return String.format("%s-%s-%s", c.getFamily(), styStr, "" + c.getSize())
+*/
+package com.googlecode.blaisemath.encode
+
+import java.awt.Font
+
+/** Adapter converting fonts to/from strings. Requires non-null values. */
+object FontCoder : StringCoder<Font> {
+
+    override fun encode(obj: Font): String {
+        val styStr = when {
+            obj.isPlain -> "PLAIN"
+            obj.isBold && obj.isItalic -> "BOLDITALIC"
+            obj.isBold -> "BOLD"
+            else -> "ITALIC"
+        }
+        return String.format("%s-%s-%s", obj.family, styStr, "" + obj.size)
     }
 
-    override fun decode(v: String?): Font? {
-        return Font.decode(v)
-    }
+    override fun decode(v: String) = Font.decode(v)!!
 }

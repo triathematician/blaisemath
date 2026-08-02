@@ -1,14 +1,9 @@
 package com.googlecode.blaisemath.style
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.Colors
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.util.Colors.alpha
+import com.googlecode.blaisemath.util.Colors.lightened
 import java.awt.Color
+import kotlin.math.max
 
 /*
 * #%L
@@ -28,84 +23,50 @@ import java.awt.Color
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Maintains a collection of visibility hints that can be used to change how an
- * object is drawn. The [StyleContext] is responsible for switching out the
- * default style for an alternate style, as appropriate for these hints.
- *
- * @author Elisha Peterson
+*/
+
+/**
+ * Maintains a collection of visibility hints that can be used to change how an object is drawn. The [StyleContext] is
+ * responsible for switching out the default style for an alternate style, as appropriate for these hints.
  */
 object StyleHints {
+
     /** Style hint indicating an invisible, non-functional element.  */
-    val HIDDEN_HINT: String? = "hidden"
-
+    const val HIDDEN_HINT = "hidden"
     /** Style hint indicating an invisible but still functional element (receives mouse events)  */
-    val HIDDEN_FUNCTIONAL_HINT: String? = "hidden_functional"
-
+    const val HIDDEN_FUNCTIONAL_HINT = "hidden_functional"
     /** Style hint indicating a selected element.  */
-    val SELECTED_HINT: String? = "selected"
-
+    const val SELECTED_HINT = "selected"
     /** Style hint indicating a highlighted element.  */
-    val HIGHLIGHT_HINT: String? = "highlight"
-
+    const val HIGHLIGHT_HINT = "highlight"
     /** Style hint indicating an outlined element.  */
-    val OUTLINE_HINT: String? = "outline"
-
+    const val OUTLINE_HINT = "outline"
     /** Style hint indicating a low-quality (but fast) rendered element.  */
-    val QUICK_RENDER_HINT: String? = "quick_render"
+    const val QUICK_RENDER_HINT = "quick_render"
 
-    /**
-     * Applies hints to a color
-     * @param color the color to apply hints to
-     * @param hints the hints to apply
-     * @return transformed color
-     */
-    fun modifyColorsDefault(color: Color?, hints: MutableSet<String?>?): Color? {
-        return if (color == null) {
-            null
-        } else if (hints.contains(HIDDEN_HINT)) {
-            Colors.alpha(color, 0)
-        } else if (hints.contains(HIGHLIGHT_HINT)) {
-            Colors.lighterThan(color)
-        } else {
-            color
-        }
+    /** Applies supported color hints. */
+    fun Color?.withStyleHintsApplied(hints: Set<String>) = when {
+        this == null -> null
+        hints.contains(HIDDEN_HINT) -> alpha(0)
+        hints.contains(HIGHLIGHT_HINT) -> lightened()
+        else -> this
     }
 
-    /**
-     * Applies hints to a stroke width
-     * @param width the width to apply to
-     * @param hints the hints to apply
-     * @return transformed width
-     */
-    fun modifyStrokeWidthDefault(width: Float?, hints: MutableSet<String?>?): Float {
+    /** Applies supported stroke width hints. */
+    fun strokeWithStyleHintsApplied(width: Float?, hints: Set<String>): Float {
         val wid = if (width == null || width.isNaN() || width.isInfinite()) 1f else width
-        return if (hints.contains(HIDDEN_HINT)) {
-            0f
-        } else if (hints.contains(SELECTED_HINT)) {
-            wid + 1f
-        } else if (hints.contains(HIGHLIGHT_HINT)) {
-            Math.max(wid - 1f, wid / 2f)
-        } else {
-            wid
+        return when {
+            hints.contains(HIDDEN_HINT) -> 0f
+            hints.contains(SELECTED_HINT) -> wid + 1f
+            hints.contains(HIGHLIGHT_HINT) -> max(wid - 1f, wid / 2f)
+            else -> wid
         }
     }
 
-    /**
-     * Test whether given hints object is hidden
-     * @param hints hints object
-     * @return true if hints contains the hidden hint
-     */
-    fun isInvisible(hints: MutableSet<String?>?): Boolean {
-        return hints.contains(HIDDEN_HINT) || hints.contains(HIDDEN_FUNCTIONAL_HINT)
-    }
+    /** Test whether given hints object is hidden. */
+    fun isInvisible(hints: Set<String>) = hints.contains(HIDDEN_HINT) || hints.contains(HIDDEN_FUNCTIONAL_HINT)
 
-    /**
-     * Test whether given hints object is hidden
-     * @param hints hints object
-     * @return true if hints contains the hidden hint
-     */
-    fun isFunctional(hints: MutableSet<String?>?): Boolean {
-        return !hints.contains(HIDDEN_HINT)
-    }
+    /** Test whether given hints object is functional. */
+    fun isFunctional(hints: Set<String>) = !hints.contains(HIDDEN_HINT)
+
 }

@@ -1,10 +1,3 @@
-package com.googlecode.blaisemath.geom
-
-import org.junit.Assert
-import org.junit.Test
-import java.awt.Point
-import java.awt.geom.Point2D
-
 /*-
 * #%L
 * blaise-common
@@ -23,12 +16,19 @@ import java.awt.geom.Point2D
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/   class PointsTest {
+*/
+
+package com.googlecode.blaisemath.geom
+
+import org.junit.Assert
+import org.junit.Test
+import java.awt.Point
+
+class GeometryTest {
     @Test
     fun testFormatPoint() {
-        println("formatPoint")
-        Assert.assertEquals("(0, 0)", Points.format(Point(), 0))
-        Assert.assertEquals("(0.0, 0.0)", Points.format(Point(), 1))
-        Assert.assertEquals("(1.02, -3.00)", Points.format(Point2D.Double(1.02, -3), 2))
+        Assert.assertEquals("(0, 0)", Point().format(0))
+        Assert.assertEquals("(0.0, 0.0)", Point().format( 1))
+        Assert.assertEquals("(1.02, -3.00)", point2(1.02, -3).format( 2))
     }
 }

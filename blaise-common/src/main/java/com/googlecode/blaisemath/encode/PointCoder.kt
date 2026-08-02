@@ -1,18 +1,3 @@
-package com.googlecode.blaisemath.encode
-
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.awt.Point
-import java.util.*
-import java.util.logging.Level
-import java.util.logging.Logger
-import java.util.regex.Pattern
-
 /*-
 * #%L
 * blaise-common
@@ -31,36 +16,36 @@ import java.util.regex.Pattern
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Adapter converting Point to/from strings of the form "(1,2)". Requires non-null values.
- *
- * @author Elisha Peterson
- */
-class PointCoder : StringEncoder<Point?>, StringDecoder<Point?> {
-    override fun encode(v: Point?): String? {
-        Objects.requireNonNull(v)
-        return String.format("(%d,%d)", v.x, v.y)
-    }
+*/
+package com.googlecode.blaisemath.encode
 
-    override fun decode(v: String?): Point? {
-        Objects.requireNonNull(v)
-        val m = Pattern.compile("\\((.*),(.*)\\)").matcher(v.toLowerCase().trim { it <= ' ' })
+import com.googlecode.blaisemath.util.kotlin.fine
+import com.googlecode.blaisemath.util.kotlin.javaTrim
+import java.awt.Point
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
+/** Convert [Point] to/from strings of the form "(1,2)". */
+object PointCoder : StringCoder<Point> {
+
+    override fun encode(v: Point) = String.format("(%d,%d)", v.x, v.y)
+
+    override fun decode(v: String): Point? {
+        val m = Pattern.compile("\\((.*),(.*)\\)").matcher(v.toLowerCase().javaTrim())
         return if (m.matches()) {
             try {
-                val x = Integer.valueOf(m.group(1).trim { it <= ' ' })
-                val y = Integer.valueOf(m.group(2).trim { it <= ' ' })
-                Point(x, y)
+                Point(m.groupAsInt(1), m.groupAsInt(2))
             } catch (x: NumberFormatException) {
-                LOG.log(Level.FINEST, "Not an integer", x)
+                fine<PointCoder>("Not an integer", x)
                 null
             }
         } else {
-            LOG.log(Level.FINEST, "Not a valid point", v)
+            fine<PointCoder>("Not a valid point: $v")
             null
         }
     }
 
-    companion object {
-        private val LOG = Logger.getLogger(PointCoder::class.java.name)
-    }
 }
+
+internal fun Matcher.groupAsInt(num: Int) = group(num).trim { it <= ' ' }.toInt()
+internal fun Matcher.groupAsDouble(num: Int) = group(num).trim { it <= ' ' }.toDouble()

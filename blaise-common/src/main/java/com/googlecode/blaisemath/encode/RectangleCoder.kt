@@ -1,18 +1,3 @@
-package com.googlecode.blaisemath.encode
-
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.awt.Rectangle
-import java.util.*
-import java.util.logging.Level
-import java.util.logging.Logger
-import java.util.regex.Pattern
-
 /*-
 * #%L
 * blaise-common
@@ -31,38 +16,34 @@ import java.util.regex.Pattern
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Adapter converting Rectangle to/from strings, of the form "rectangle(x,y,wid,ht)". Requires non-null values.
- *
- * @author Elisha Peterson
- */
-class RectangleCoder : StringEncoder<Rectangle?>, StringDecoder<Rectangle?> {
-    override fun encode(v: Rectangle?): String? {
-        Objects.requireNonNull(v)
-        return String.format("rectangle(%d,%d,%d,%d)", v.x, v.y, v.width, v.height)
-    }
+*/
 
-    override fun decode(v: String?): Rectangle? {
-        Objects.requireNonNull(v)
+package com.googlecode.blaisemath.encode
+
+import com.googlecode.blaisemath.util.kotlin.fine
+import java.awt.Rectangle
+import java.util.regex.Pattern
+
+/**
+ * Adapter converting Rectangle to/from strings, of the form "rectangle(x,y,wid,ht)". Requires non-null values.
+ */
+object RectangleCoder : StringCoder<Rectangle> {
+
+    override fun encode(v: Rectangle) = String.format("rectangle(%d,%d,%d,%d)", v.x, v.y, v.width, v.height)
+
+    override fun decode(v: String): Rectangle? {
         val m = Pattern.compile("rectangle\\s*\\((.*),(.*),(.*),(.*)\\)").matcher(v.toLowerCase().trim { it <= ' ' })
         return if (m.matches()) {
             try {
-                val x = m.group(1).toInt()
-                val y = m.group(2).toInt()
-                val w = m.group(3).toInt()
-                val h = m.group(4).toInt()
-                Rectangle(x, y, w, h)
+                Rectangle(m.groupAsInt(1), m.groupAsInt(2), m.groupAsInt(3), m.groupAsInt(4))
             } catch (x: NumberFormatException) {
-                LOG.log(Level.FINEST, "Not an integer", x)
+                fine<RectangleCoder>("Not an integer", x)
                 null
             }
         } else {
-            LOG.log(Level.FINEST, "Not a valid rectangle", v)
+            fine<RectangleCoder>("Not a valid rectangle: $v")
             null
         }
     }
 
-    companion object {
-        private val LOG = Logger.getLogger(RectangleCoder::class.java.name)
-    }
 }

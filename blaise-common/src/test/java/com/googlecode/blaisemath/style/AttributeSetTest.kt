@@ -204,7 +204,7 @@ import java.awt.Point
     fun testGetAttributes_Predicate() {
         println("getAttributes")
         val instance: AttributeSet = AttributeSet.Companion.of("a", 1, "a2", 2, "b", 3)
-        Assert.assertEquals(ImmutableSet.of("a", "a2"), instance.getAttributes { s: String? -> s.startsWith("a") })
+        Assert.assertEquals(ImmutableSet.of("a", "a2"), instance.attributes { s: String? -> s.startsWith("a") })
     }
 
     @Test

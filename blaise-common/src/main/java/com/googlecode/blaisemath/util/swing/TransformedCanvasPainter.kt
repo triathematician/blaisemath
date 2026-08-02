@@ -1,23 +1,15 @@
 package com.googlecode.blaisemath.util.swing
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
 import com.googlecode.blaisemath.geom.TransformedCoordinateSpace
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.util.kotlin.fine
 import java.awt.Component
 import java.awt.Graphics2D
-import java.util.logging.Level
-import java.util.logging.Logger
 
 /*
 * #%L
 * BlaiseGraphics
 * --
-* Copyright (C) 2014 - 2021 Elisha Peterson
+* Copyright (C) 2009 - 2021 Elisha Peterson
 * --
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,25 +23,26 @@ import java.util.logging.Logger
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Draws on a [Graphics2D] using the component's transform.
- *
- * @author Elisha Peterson
  */
-abstract class TransformedCanvasPainter : CanvasPainter<Graphics2D?> {
-    override fun paint(component: Component?, canvas: Graphics2D?) {
+abstract class TransformedCanvasPainter : CanvasPainter<Graphics2D> {
+
+    override fun paint(component: Component, canvas: Graphics2D) {
         if (component !is TransformedCoordinateSpace) {
-            LOG.log(Level.FINE, "Painting on a component that is not a TransformedCoordinateSpace")
+            fine<TransformedCoordinateSpace>("Painting on a component that is not a TransformedCoordinateSpace")
             paintTransformed(component, canvas)
         } else {
-            val oldTransform = canvas.getTransform()
-            val gc = component as TransformedCoordinateSpace?
+            val oldTransform = canvas.transform
+            val gc = component as TransformedCoordinateSpace
             val tr = gc.getTransform()
             if (tr != null) {
                 canvas.transform(tr)
             }
             paintTransformed(component, canvas)
-            canvas.setTransform(oldTransform)
+            canvas.transform = oldTransform
         }
     }
 
@@ -58,9 +51,5 @@ abstract class TransformedCanvasPainter : CanvasPainter<Graphics2D?> {
      * @param comp the component
      * @param canvas the canvas
      */
-    abstract fun paintTransformed(comp: Component?, canvas: Graphics2D?)
-
-    companion object {
-        private val LOG = Logger.getLogger(TransformedCanvasPainter::class.java.name)
-    }
+    abstract fun paintTransformed(comp: Component, canvas: Graphics2D)
 }

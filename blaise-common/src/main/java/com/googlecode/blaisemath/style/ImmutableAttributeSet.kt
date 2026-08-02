@@ -1,13 +1,5 @@
 package com.googlecode.blaisemath.style
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-
 /*-
 * #%L
 * blaise-common
@@ -26,25 +18,20 @@ import org.junit.Before
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Provides an attribute set that throws exceptions if attempting to put or remove values.
  * (But its parent and values may still be changed directly.)
- *
- * @author Elisha Peterson
  */
-internal class ImmutableAttributeSet  // prevent instantiation elsewhere
-private constructor() : AttributeSet() {
-    override fun remove(key: String?): Any? {
+internal class ImmutableAttributeSet: AttributeSet() {
+
+    override fun remove(key: String): Any? {
         notSupported()
         return null
     }
 
-    override fun put(key: String?, value: Any?): Any? {
-        notSupported()
-        return null
-    }
-
-    override fun and(key: String?, `val`: Any?): AttributeSet? {
+    override fun put(key: String, value: Any?): Any? {
         notSupported()
         return null
     }
@@ -54,30 +41,18 @@ private constructor() : AttributeSet() {
     }
 
     companion object {
-        /**
-         * Makes an immutable copy of the provided attribute set. Uses the same parent
-         * object if present.
-         * @param set the set to copy
-         * @return an immutable copy
-         */
-        fun immutableCopyOf(set: AttributeSet?): ImmutableAttributeSet? {
-            val res = ImmutableAttributeSet()
-            res.parent = set.parent
-            res.attributeMap.putAll(set.attributeMap)
-            return res
+
+        /** Makes an immutable copy of the provided attribute set. Uses the same parent. */
+        fun immutableCopyOf(set: AttributeSet) = ImmutableAttributeSet().apply {
+            parent = set.parent
+            attributeMap.putAll(set.attributeMap)
         }
 
-        /**
-         * Makes an immutable copy of the provided attribute set, with a different parent.
-         * @param set the set to copy
-         * @param par the parent
-         * @return an immutable copy
-         */
-        fun immutableCopyOf(set: AttributeSet?, par: AttributeSet?): ImmutableAttributeSet? {
-            val res = ImmutableAttributeSet()
-            res.parent = par
-            res.attributeMap.putAll(set.attributeMap)
-            return res
+        /** Makes an immutable copy of the provided attribute set, with a different parent. */
+        fun immutableCopyOf(set: AttributeSet, alternateParent: AttributeSet?) = ImmutableAttributeSet().apply {
+            parent = alternateParent
+            attributeMap.putAll(set.attributeMap)
         }
     }
+
 }

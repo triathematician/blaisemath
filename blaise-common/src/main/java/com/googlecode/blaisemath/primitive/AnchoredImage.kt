@@ -1,22 +1,15 @@
 package com.googlecode.blaisemath.primitive
 
-import com.googlecode.blaisemath.coordinate.Point2DBean
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.coordinate.HasPoint2D
+import com.googlecode.blaisemath.geom.Rectangle2
 import java.awt.Image
-import java.awt.geom.Rectangle2D
 import java.awt.image.ImageObserver
 
 /*
 * #%L
 * BlaiseGraphics
 * --
-* Copyright (C) 2014 - 2021 Elisha Peterson
+* Copyright (C) 2009 - 2021 Elisha Peterson
 * --
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -30,51 +23,29 @@ import java.awt.image.ImageObserver
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * An image anchored at a given location.
- * @author Elisha Peterson
- */
-class AnchoredImage(x: kotlin.Double, y: kotlin.Double, private val width: kotlin.Double?, private val height: kotlin.Double?, private val originalImage: Image?, private val ref: String?) : Point2DBean(x, y) {
-    private val scaledImage: Image? = null
+*/
 
-    constructor(x: kotlin.Double, y: kotlin.Double, image: Image?, ref: String?) : this(x, y, null, null, image, ref) {}
+/** An image anchored at a given location. */
+class AnchoredImage(x: kotlin.Double, y: kotlin.Double, private val _width: kotlin.Double? = null, private val _height: kotlin.Double? = null,
+                    val originalImage: Image, val reference: String?) : HasPoint2D(x, y) {
 
-    override fun toString(): String {
-        return "AnchoredImage{" + getX() + ',' + getY() + ',' + ref + '}'
-    }
+    val width: kotlin.Double
+        get() = _width ?: image.getWidth(null).toDouble()
+    val height: kotlin.Double
+        get() = _height ?: image.getHeight(null).toDouble()
 
-    //region PROPERTIES
-    fun getReference(): String? {
-        return ref
-    }
+    val image: Image = image()
 
-    fun getWidth(): kotlin.Double {
-        return width ?: scaledImage.getWidth(null)
-    }
-
-    fun getHeight(): kotlin.Double {
-        return height ?: scaledImage.getHeight(null)
-    }
-
-    fun getBounds(io: ImageObserver?): Rectangle2D? {
-        val iw: kotlin.Double = width ?: scaledImage.getWidth(io)
-        val ih: kotlin.Double = height ?: scaledImage.getHeight(io)
-        return Rectangle2D.Double(x, y, iw, ih)
-    }
-
-    fun getImage(): Image? {
-        return scaledImage
-    }
-
-    fun getOriginalImage(): Image? {
-        return originalImage
-    } //endregion
-
-    init {
-        if (width != null && width > 0 && height != null && height > 0 && (originalImage.getWidth(null).toDouble() != width || originalImage.getHeight(null).toDouble() != height)) {
-            scaledImage = originalImage.getScaledInstance(width.toInt(), height.toInt(), Image.SCALE_DEFAULT)
+    private fun image(): Image {
+        val widthPos = _width != null && _width > 0
+        val heightPos = _height != null && _height > 0
+        return if (widthPos && heightPos && (originalImage.getWidth(null).toDouble() != _width || originalImage.getHeight(null).toDouble() != _height)) {
+            originalImage.getScaledInstance(_width!!.toInt(), _height!!.toInt(), Image.SCALE_DEFAULT)
         } else {
-            scaledImage = originalImage
+            originalImage
         }
     }
+
+    fun getBounds(io: ImageObserver?) = Rectangle2(x, y, _width ?: image.getWidth(io).toDouble(), _height ?: image.getHeight(io).toDouble())
+
 }

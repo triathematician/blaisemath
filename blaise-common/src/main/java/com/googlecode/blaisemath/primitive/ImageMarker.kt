@@ -1,18 +1,13 @@
 package com.googlecode.blaisemath.primitive
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
 import com.googlecode.blaisemath.geom.AffineTransformBuilder
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.geom.rectangle2FromCenter
 import java.awt.Image
 import java.awt.Shape
 import java.awt.geom.AffineTransform
 import java.awt.geom.Point2D
 import java.awt.geom.Rectangle2D
+import kotlin.math.sqrt
 
 /*-
 * #%L
@@ -32,31 +27,16 @@ import java.awt.geom.Rectangle2D
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Marker defined by an image and clip path.
- * @author Elisha Peterson
- */
-class ImageMarker(private val name: String?, private val clip: Shape?, private val image: Image?) : Marker {
-    override fun toString(): String {
-        return name
-    }
+*/
 
-    fun getName(): String? {
-        return name
-    }
+/** Marker defined by an image and clip path. */
+class ImageMarker(val name: String, val clip: Shape, val image: Image) : Marker {
 
-    fun getClip(): Shape? {
-        return clip
-    }
-
-    fun getImage(): Image? {
-        return image
-    }
-
-    override fun create(point: Point2D?, orientation: Double, r: Float): Shape? {
-        val tgt: Rectangle2D = Rectangle2D.Double(point.getX() - r, point.getY() - r, 2 * r, 2 * r)
-        val src = clip.getBounds2D()
-        val at: AffineTransform = AffineTransformBuilder.Companion.transformingTo(tgt, src)
+    override fun create(point: Point2D, orientation: Double, r: Float): Shape {
+        val tgt = rectangle2FromCenter(point, r)
+        val src = clip.bounds2D
+        val at = AffineTransformBuilder.transformingTo(tgt, src)
         return ClippedImage(image, at.createTransformedShape(clip), null)
     }
+
 }

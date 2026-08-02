@@ -23,6 +23,6 @@ import org.junit.Test
 */   class PalettesTest {
     @Test
     fun testPalettes() {
-        println(Palettes.palettes())
+        println(Palettes.PALETTES)
     }
 }

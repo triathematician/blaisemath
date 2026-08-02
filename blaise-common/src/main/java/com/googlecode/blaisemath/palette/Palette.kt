@@ -1,14 +1,5 @@
 package com.googlecode.blaisemath.palette
 
-import com.google.common.collect.Maps
-import com.google.common.collect.Sets
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
 import java.awt.Color
 
 /*
@@ -29,74 +20,74 @@ import java.awt.Color
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * A simple color palette interface that provides a set of colors associated with string keys.
- *
- * @author Elisha Peterson
  */
 abstract class Palette {
-    /**
-     * Create a mutable copy of the palette.
-     * @return copy
-     */
-    fun mutableCopy(): MutablePalette? {
-        return MapPalette.Companion.create(Palettes.colorMap(this))
-    }
 
-    /**
-     * Get list of color keys available.
-     * @return color keys
-     */
-    abstract fun colors(): MutableCollection<String?>?
+    /** Get list of color keys available. */
+    abstract val colors: List<String>
 
-    /**
-     * Get color by id.
-     * @param id color id
-     * @return color
-     */
-    abstract fun color(id: String?): Color?
+    /** Get foreground color. */
+    val foreground
+        get() = color(FOREGROUND)
 
-    /**
-     * Get color by id, or default provided if none.
-     * @param id color id
-     * @param def default color to return if no color is associated with this id
-     * @return color
-     */
-    fun color(id: String?, def: Color?): Color? {
-        val res = color(id)
-        return res ?: def
-    }
+    /** Get background color. */
+    val background
+        get() = color(BACKGROUND)
 
-    /**
-     * Get foreground color.
-     * @return color
-     */
-    fun foreground(): Color? {
-        return color(FOREGROUND)
-    }
+    /** Get color by id. */
+    abstract fun color(id: String): Color?
 
-    /**
-     * Get background color.
-     * @return color
-     */
-    fun background(): Color? {
-        return color(BACKGROUND)
-    }
+   /** Get color by id, or default provided if none. */
+    fun color(id: String, def: Color) = color(id) ?: def
 
-    /**
-     * Get mapping of keys to colors.
-     * @return map
-     */
-    fun colorMap(): MutableMap<String?, Color?>? {
-        return Maps.asMap(Sets.newLinkedHashSet(colors())) { id: String? -> this.color(id) }
-    }
+    /** Get mapping of keys to colors. */
+    fun colorMap() = colors.map { it to color(it) }
+
+    /** Create a mutable copy of the palette. */
+    fun mutableCopy() = MapPalette().apply { colorMap = colors.map { it to color(it)!! }.toMap().toMutableMap() }
 
     companion object {
-        val FOREGROUND: String? = "fg"
-        val SUBTLE_FOREGROUND: String? = "fg-subtle"
-        val BRIGHT_FOREGROUND: String? = "fg-bright"
-        val BACKGROUND: String? = "bg"
-        val ANNOTATION: String? = "selection"
-        val SELECTION: String? = "annotation"
+        const val FOREGROUND = "fg"
+        const val SUBTLE_FOREGROUND = "fg-subtle"
+        const val BRIGHT_FOREGROUND = "fg-bright"
+        const val BACKGROUND = "bg"
+        const val ANNOTATION = "selection"
+        const val SELECTION = "annotation"
     }
+}
+
+/** Palette based on an immutable map. */
+class ImmutableMapPalette(val map: Map<String, Color>) : Palette() {
+    override val colors = map.keys.toList()
+    override fun color(id: String) = map[id]
+}
+
+/** A color palette that can be edited. */
+abstract class MutablePalette : Palette() {
+    abstract var name: String
+
+    /** Remove a key from the palette. */
+    abstract fun remove(key: String): Color?
+
+    /** Set or update a color in the palette. */
+    abstract operator fun set(key: String, value: Color)
+}
+
+/** A mutable palette backed by a key-value map. */
+class MapPalette : MutablePalette() {
+
+    var colorMap = mutableMapOf<String, Color>()
+
+    override var name: String = "unnamed"
+    override val colors
+        get() = colorMap.keys.toList()
+
+    override fun color(id: String) = colorMap[id]
+    override fun remove(key: String) = colorMap.remove(key)
+    override fun set(key: String, value: Color) = colorMap.set(key, value)
+
 }

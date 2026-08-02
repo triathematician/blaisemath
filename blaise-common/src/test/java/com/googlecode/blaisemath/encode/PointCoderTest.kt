@@ -22,41 +22,20 @@ import java.awt.Point
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/   class PointCoderTest {
+*/
+
+class PointCoderTest {
     @Test
     fun testEncode() {
-        println("encode")
-        assertNPE { PointCoder().encode(null) }
-        Assert.assertEquals("(0,0)", PointCoder().encode(Point()))
-        Assert.assertEquals("(3,4)", PointCoder().encode(Point(3, 4)))
-        Assert.assertEquals("(-3,4)", PointCoder().encode(Point(-3, 4)))
+        Assert.assertEquals("(0,0)", PointCoder.encode(Point()))
+        Assert.assertEquals("(3,4)", PointCoder.encode(Point(3, 4)))
+        Assert.assertEquals("(-3,4)", PointCoder.encode(Point(-3, 4)))
     }
 
     @Test
     fun testDecode() {
-        println("decode")
-        Assert.assertEquals(Point(), PointCoder().decode("(0, 0)"))
-        Assert.assertEquals(Point(3, 4), PointCoder().decode("(3,4)"))
-        Assert.assertEquals(Point(-3, 4), PointCoder().decode(" ( -3 , 4 ) "))
-    }
-
-    companion object {
-        private fun assertIllegal(r: Runnable?) {
-            try {
-                r.run()
-                Assert.fail()
-            } catch (x: IllegalArgumentException) {
-                // expected
-            }
-        }
-
-        private fun assertNPE(r: Runnable?) {
-            try {
-                r.run()
-                Assert.fail()
-            } catch (x: NullPointerException) {
-                // expected
-            }
-        }
+        Assert.assertEquals(Point(), PointCoder.decode("(0, 0)"))
+        Assert.assertEquals(Point(3, 4), PointCoder.decode("(3,4)"))
+        Assert.assertEquals(Point(-3, 4), PointCoder.decode(" ( -3 , 4 ) "))
     }
 }

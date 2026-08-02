@@ -21,91 +21,19 @@ import org.junit.Test
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/   class CoordinateManagerTest {
-    private val inst: CoordinateManager<*, *>? = CoordinateManager.Companion.create<Any?, Any?>(50)
+*/
+
+class CoordinateManagerTest {
+    private val inst = CoordinateManager<Any, Any>(50)
+
     @Test
     fun testCreate() {
-        println("create")
-        Assert.assertEquals(50, inst.getMaxCacheSize().toLong())
+        Assert.assertEquals(50, inst.maxCacheSize)
     }
 
     @Test
     fun testGetMaxCacheSize() {
-        println("getMaxCacheSize")
-        Assert.assertEquals(50, inst.getMaxCacheSize().toLong())
-    } //
-    //    @Test
-    //    public void testGetActive() {
-    //        System.out.println("getActive");
-    //    }
-    //
-    //    @Test
-    //    public void testGetInactive() {
-    //        System.out.println("getInactive");
-    //    }
-    //
-    //    @Test
-    //    public void testLocatesAll() {
-    //        System.out.println("locatesAll");
-    //    }
-    //
-    //    @Test
-    //    public void testGetActiveLocationCopy() {
-    //        System.out.println("getActiveLocationCopy");
-    //    }
-    //
-    //    @Test
-    //    public void testGetLocationCopy() {
-    //        System.out.println("getLocationCopy");
-    //    }
-    //
-    //    @Test
-    //    public void testGetInactiveLocationCopy() {
-    //        System.out.println("getInactiveLocationCopy");
-    //    }
-    //
-    //    @Test
-    //    public void testPut() {
-    //        System.out.println("put");
-    //    }
-    //
-    //    @Test
-    //    public void testPutAll() {
-    //        System.out.println("putAll");
-    //    }
-    //
-    //    @Test
-    //    public void testSetCoordinateMap() {
-    //        System.out.println("setCoordinateMap");
-    //    }
-    //
-    //    @Test
-    //    public void testForget() {
-    //        System.out.println("forget");
-    //    }
-    //
-    //    @Test
-    //    public void testDeactivate() {
-    //        System.out.println("deactivate");
-    //    }
-    //
-    //    @Test
-    //    public void testReactivate() {
-    //        System.out.println("reactivate");
-    //    }
-    //
-    //    @Test
-    //    public void testFireCoordinatesChanged() {
-    //        System.out.println("fireCoordinatesChanged");
-    //    }
-    //
-    //    @Test
-    //    public void testAddCoordinateListener() {
-    //        System.out.println("addCoordinateListener");
-    //    }
-    //
-    //    @Test
-    //    public void testRemoveCoordinateListener() {
-    //        System.out.println("removeCoordinateListener");
-    //    }
+        Assert.assertEquals(50, inst.maxCacheSize)
+    }
+
 }

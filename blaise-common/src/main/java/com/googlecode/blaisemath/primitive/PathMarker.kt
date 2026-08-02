@@ -1,17 +1,10 @@
 package com.googlecode.blaisemath.primitive
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
 import java.awt.Shape
 import java.awt.geom.AffineTransform
 import java.awt.geom.Path2D
 import java.awt.geom.Point2D
-import java.awt.geom.Rectangle2D
+import kotlin.math.max
 
 /*-
 * #%L
@@ -31,35 +24,23 @@ import java.awt.geom.Rectangle2D
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
- * Marker defined by a path.
- * @author Elisha Peterson
+*/
+
+/**
+ * Marker defined by an explicit path.
  */
-class PathMarker(private val name: String?, private val path: Path2D?) : Marker {
-    private val bds: Rectangle2D?
-    override fun toString(): String {
-        return name
-    }
+class PathMarker(val name: String, val path: Path2D) : Marker {
 
-    fun getName(): String? {
-        return name
-    }
+    private val bds = path.bounds2D
 
-    fun getPath(): Path2D? {
-        return path
-    }
-
-    override fun create(point: Point2D?, orientation: Double, markerRadius: Float): Shape? {
+    override fun create(point: Point2D, orientation: Double, markerRadius: Float): Shape {
         val at = AffineTransform()
-        val scale = 2 * markerRadius / Math.max(bds.getWidth(), bds.getHeight())
-        at.translate(point.getX(), point.getY())
+        val scale = 2 * markerRadius / max(bds.width, bds.height)
+        at.translate(point.x, point.y)
         at.scale(scale, scale)
         at.rotate(orientation)
-        at.translate(-bds.getX() - .5 * bds.getWidth(), -bds.getY() - .5 * bds.getHeight())
+        at.translate(-bds.x - .5 * bds.width, -bds.y - .5 * bds.height)
         return path.createTransformedShape(at)
     }
 
-    init {
-        bds = path.getBounds2D()
-    }
 }

@@ -1,17 +1,5 @@
 package com.googlecode.blaisemath.style
 
-import com.google.common.annotations.Beta
-import com.google.common.base.Preconditions
-import com.google.common.collect.Sets
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
-import java.util.*
-
 /*
 * #%L
 * BlaiseGraphics
@@ -30,78 +18,29 @@ import java.util.*
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Maintains multiple types of styles within a single context, and also
  * contains logic for modifying the style attribute sets based on "hints".
- *
- * @author Elisha Peterson
  */
-@Beta
-class StyleContext @JvmOverloads constructor(
-        /** Parent context.  */
-        private val parent: StyleContext? = null
-) {
+class StyleContext(private val parent: StyleContext? = null) {
+
     /** Modifiers that apply to the styles in this context.  */
-    private val modifiers: MutableSet<StyleModifier?>? = Sets.newHashSet()
-    //region PROPERTIES
-    /**
-     * Get collection of style types supported by this context, not including
-     * types supported by the parent.
-     * @return types
-     */
-    fun getModifiers(): MutableSet<StyleModifier?>? {
-        return modifiers
-    }
+    val modifiers = mutableSetOf<StyleModifier>()
 
-    /**
-     * Add new modifier.
-     * @param mod modifier
-     * @return true if changed
-     */
-    fun addModifier(mod: StyleModifier?): Boolean {
-        return modifiers.add(mod)
-    }
+    /** Get all supported style modifiers, including those of parent context. */
+    val allModifiers: Set<StyleModifier>
+        get() = modifiers + (parent?.allModifiers ?: setOf())
 
-    /**
-     * Remove modifier.
-     * @param mod modifier
-     * @return true if removed
-     */
-    fun removeModifier(mod: StyleModifier?): Boolean {
-        return modifiers.remove(mod)
-    }
-    //endregion
-    /**
-     * Get collection of style types supported by this context, including
-     * types supported by the parent context.
-     * @return types
-     */
-    fun getAllModifiers(): MutableSet<StyleModifier?>? {
-        return if (parent != null) Sets.union(parent.getAllModifiers(), modifiers) else modifiers
-    }
+    /** Applies all modifiers in this context to the given style, returning the result. */
+    fun applyModifiers(style: AttributeSet, vararg hints: String) = applyModifiers(style, hints.toSet())
 
-    /**
-     * Applies all modifiers in this context to the given style, returning the result.
-     * @param style the style to modify
-     * @param hints the hints to apply
-     * @return the modified style
-     */
-    fun applyModifiers(style: AttributeSet?, vararg hints: String?): AttributeSet? {
-        return applyModifiers(style, Sets.newLinkedHashSet(Arrays.asList(*hints)))
-    }
-
-    /**
-     * Applies all modifiers in this context to the given style, returning the result.
-     * @param style the style to modify
-     * @param hints the hints to apply
-     * @return the modified style
-     */
-    fun applyModifiers(style: AttributeSet?, hints: MutableSet<String?>?): AttributeSet? {
-        Preconditions.checkNotNull(style)
+    /** Applies all modifiers in this context to the given style, returning the result. */
+    fun applyModifiers(style: AttributeSet, hints: Set<String>): AttributeSet {
         var res = style
-        for (mod in getAllModifiers()) {
-            res = mod.apply(res, hints)
-        }
+        allModifiers.forEach { res = it.apply(res, hints) }
         return res
     }
+
 }

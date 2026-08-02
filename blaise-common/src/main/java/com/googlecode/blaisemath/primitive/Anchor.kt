@@ -1,12 +1,6 @@
 package com.googlecode.blaisemath.primitive
 
-import com.googlecode.blaisemath.encode.ColorCoderTest
-import com.googlecode.blaisemath.encode.FontCoderTest
-import com.googlecode.blaisemath.encode.PointCoderTest
-import com.googlecode.blaisemath.style.AttributeSetCoderTest
-import com.googlecode.blaisemath.util.ColorsTest
-import junit.framework.TestCase
-import org.junit.Before
+import com.googlecode.blaisemath.geom.*
 import java.awt.geom.Point2D
 import java.awt.geom.Rectangle2D
 
@@ -28,114 +22,52 @@ import java.awt.geom.Rectangle2D
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * #L%
-*/ /**
+*/
+
+/**
  * Represents anchor locations and utilities for using them in practice. These anchors can be used for finding points
  * around a circle or for shifting rectangles so various corners are anchored at a target point.
- *
- * @author Elisha Peterson
  */
-enum class Anchor
-/**
- * Initialize parameters for the anchor point.
- * @param angle orientation of the anchor relative to the center point (for circles)
- * @param xOff horizontal offset from rectangle center
- * @param yOff vertical offset from rectangle center
- */(private val angle: Double, private val xOff: Double, private val yOff: Double) {
-    CENTER(0, 0, 0), WEST(Math.PI, -.5, 0), NORTHWEST(-0.75 * Math.PI, -.5, -.5), NORTH(-0.5 * Math.PI, 0, -.5), NORTHEAST(-0.25 * Math.PI, .5, -.5), EAST(0, .5, 0), SOUTHEAST(0.25 * Math.PI, .5, .5), SOUTH(0.5 * Math.PI, 0, .5), SOUTHWEST(0.75 * Math.PI, -.5, .5);
+enum class Anchor(val angle: Double, val xOff: Double, val yOff: Double) {
+    CENTER(0.0, 0.0, 0.0),
+    WEST(Math.PI, -.5, 0.0),
+    NORTHWEST(-0.75 * Math.PI, -.5, -0.5),
+    NORTH(-0.5 * Math.PI, 0.0, -.5),
+    NORTHEAST(-0.25 * Math.PI, .5, -.5),
+    EAST(0.0, .5, 0.0),
+    SOUTHEAST(0.25 * Math.PI, .5, .5),
+    SOUTH(0.5 * Math.PI, 0.0, .5),
+    SOUTHWEST(0.75 * Math.PI, -.5, .5);
 
-    /**
-     * Get the opposite anchor point.
-     * @return opposite
-     */
-    fun opposite(): Anchor? {
-        return when (this) {
-            CENTER -> CENTER
-            WEST -> EAST
-            NORTHWEST -> SOUTHEAST
-            NORTH -> SOUTH
-            NORTHEAST -> SOUTHWEST
-            EAST -> WEST
-            SOUTHEAST -> NORTHWEST
-            SOUTH -> NORTH
-            SOUTHWEST -> NORTHEAST
-            else -> throw IllegalStateException()
-        }
+    /** Get the opposite anchor point. */
+    fun opposite() = when (this) {
+        CENTER -> CENTER
+        WEST -> EAST
+        NORTHWEST -> SOUTHEAST
+        NORTH -> SOUTH
+        NORTHEAST -> SOUTHWEST
+        EAST -> WEST
+        SOUTHEAST -> NORTHWEST
+        SOUTH -> NORTH
+        SOUTHWEST -> NORTHEAST
     }
 
-    /**
-     * Represents the relative angle for the specified anchor. This is the location of
-     * the anchor relative to a central point.
-     * @return angle of anchor
-     */
-    fun angle(): Double {
-        return angle
-    }
-
-    /**
-     * Returns the relative offset of an anchor point for a circle of radius r.
-     * @param r radius
-     * @return offset of anchor point
-     */
-    fun offsetForCircle(r: Double): Point2D? {
-        return if (this == CENTER) Point2D.Double() else Point2D.Double(r * Math.cos(angle), r * Math.sin(angle))
-    }
-
-    /**
-     * Returns the absolute location of an anchor point on a circle of radius r.
-     * @param center center point of circle
-     * @param r radius
-     * @return anchor point location
-     */
-    fun onCircle(center: Point2D?, r: Double): Point2D? {
-        return if (this == CENTER) center else Point2D.Double(center.getX() + r * Math.cos(angle), center.getY() + r * Math.sin(angle))
-    }
+    /** Returns the relative offset of an anchor point for a circle of radius r. */
+    fun offsetForCircle(r: Double) = if (this == CENTER) Point2() else pointPolar(r, angle)
+    /** Returns the absolute location of an anchor point on a circle of radius r. */
+    fun onCircle(center: Point2D, r: Double) = center + offsetForCircle(r)
 
     /**
      * Returns the relative offset of an anchor point for a rectangle of given size. This indicates how much the given anchor
      * point on the outside of the rectangle is shifted from the center of the rectangle.
-     * @param wid width of rectangle
-     * @param ht height of rectangle
-     * @return offset of anchor point
-     */
-    fun offsetForRectangle(wid: Double, ht: Double): Point2D? {
-        return if (this == CENTER) Point2D.Double() else Point2D.Double(xOff * wid, yOff * ht)
-    }
+     * */
+    fun offsetForRectangle(wid: Double, ht: Double) = if (this == CENTER) Point2() else Point2(xOff * wid, yOff * ht)
+    /** Returns the absolute location of an anchor point on a rectangle of given size. */
+    fun onRectangle(rectangle: Rectangle2D) = rectangle.center + offsetForRectangle(rectangle.width, rectangle.height)
 
-    /**
-     * Returns the absolute location of an anchor point on a rectangle of given size.
-     * @param rectangle the rectangle
-     * @return anchor point location
-     */
-    fun onRectangle(rectangle: Rectangle2D?): Point2D? {
-        return if (this == CENTER) Point2D.Double(rectangle.getCenterX(), rectangle.getCenterY()) else Point2D.Double(rectangle.getCenterX() + xOff * rectangle.getWidth(), rectangle.getCenterY() + yOff * rectangle.getHeight())
-    }
+    /** Get the rectangle of given size whose corner matching this anchor is pt. */
+    fun rectangleAnchoredAt(pt: Point2D, wid: Double, ht: Double) = rectangleAnchoredAt(pt.x, pt.y, wid, ht)
+    /** Get the rectangle of given size whose corner matching this anchor is pt. */
+    fun rectangleAnchoredAt(x: Double, y: Double, wid: Double, ht: Double) = rectangle2FromCenter(x, y, wid, ht) - offsetForRectangle(wid, ht)
 
-    /**
-     * Get the rectangle of given size whose corner matching this anchor is pt.
-     *
-     * @param pt the anchor point
-     * @param wid width of rectangle
-     * @param ht height of rectangle
-     * @return offset position
-     */
-    fun rectangleAnchoredAt(pt: Point2D?, wid: Double, ht: Double): Rectangle2D? {
-        return rectangleAnchoredAt(pt.getX(), pt.getY(), wid, ht)
-    }
-
-    /**
-     * Get the rectangle of given size whose corner matching this anchor is pt.
-     *
-     * @param x anchor x
-     * @param y anchor y
-     * @param wid width of rectangle
-     * @param ht height of rectangle
-     * @return offset position
-     */
-    fun rectangleAnchoredAt(x: Double, y: Double, wid: Double, ht: Double): Rectangle2D? {
-        val offset = offsetForRectangle(wid, ht)
-        val center: Point2D = Point2D.Double(x - offset.getX(), y - offset.getY())
-        val res: Rectangle2D = Rectangle2D.Double()
-        res.setFrameFromCenter(center.x, center.y, center.x + .5 * wid, center.y + .5 * ht)
-        return res
-    }
 }
